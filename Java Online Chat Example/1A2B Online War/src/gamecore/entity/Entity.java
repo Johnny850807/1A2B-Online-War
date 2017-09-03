@@ -1,16 +1,11 @@
-package Core;
+package gamecore.entity;
 
-import java.io.Serializable;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.UUID;
 
-public class Entity implements Comparable<Entity>, Serializable{
-	private static final long serialVersionUID = 1L;
-	
+public class Entity implements Comparable<Entity> {
 	protected String id;
 
-	public Entity() throws RemoteException{
+	public Entity(){
 		this.id = UUID.randomUUID().toString();
 	}
 	
@@ -54,3 +49,4 @@ public class Entity implements Comparable<Entity>, Serializable{
 	
 	
 }
+
