@@ -1,5 +1,11 @@
 package communication;
 
+import java.util.regex.Pattern;
+
 public enum Event {
-	signIn
+	signIn, signOut;
+	
+	public boolean match(String regex) {
+		return Pattern.matches(regex, this.toString());
+	}
 }

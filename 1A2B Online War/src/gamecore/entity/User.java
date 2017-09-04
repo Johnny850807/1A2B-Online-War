@@ -4,7 +4,7 @@ import communication.Message;
 
 public interface User extends Entity {
 
-	void sendMessage(Message<? extends Entity> message);
+	void sendMessage(Message<? super Entity> message);
 
 	String getName();
 

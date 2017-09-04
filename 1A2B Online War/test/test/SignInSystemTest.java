@@ -51,8 +51,8 @@ public class SignInSystemTest {
 	
 	@Test
 	public void testRequestParser() {
-		Message<User> message = requestParser.parseRequest(signInRequestJson);
-		assertEquals("Test", message.getData().getName());
+		Message<? extends Entity> message = requestParser.parseRequest(signInRequestJson);
+		assertEquals("Test", ((User)message.getData()).getName());
 		assertEquals(signIn, message.getEvent());
 	}
 	
@@ -68,12 +68,13 @@ public class SignInSystemTest {
 	@Test
 	public void wholeTest() {
 		MockService service = new MockService();
-		Message<User> message = requestParser.parseRequest(signInRequestJson);
+		Message<? extends Entity> message = requestParser.parseRequest(signInRequestJson);
 		Command signInCommand = commandParser.parse(message);
 		gamecore.executeCommand(signInCommand);
 		
+		User expect = (User) message.getData();
 		User result = (User) service.getReceivedData();
-		assertEquals(message.getData().getName(), result.getName());
+		assertEquals(expect.getName(), result.getName());
 	}
 
 }

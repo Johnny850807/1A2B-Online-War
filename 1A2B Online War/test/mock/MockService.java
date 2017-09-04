@@ -9,7 +9,7 @@ public class MockService implements UserService{
 	private Object data;
 	
 	@Override
-	public <T extends Entity> void respond(Message<T> message) {
+	public void respond(Message<? super Entity> message) {
 		System.out.println(message);
 		data = message.getData();
 	}

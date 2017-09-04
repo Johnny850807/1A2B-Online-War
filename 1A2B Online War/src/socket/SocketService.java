@@ -21,10 +21,9 @@ public class SocketService implements UserService{
 		// TODO °»Å¥I/O
 		
 	}
-
-
+	
 	@Override
-	public <T extends Entity> void respond(Message<T> message) {
+	public void respond(Message<? super Entity> message) {
 		// TODO Auto-generated method stub
 		
 	}

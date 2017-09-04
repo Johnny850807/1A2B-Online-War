@@ -8,6 +8,8 @@ public class Message<TData extends Entity> {
 	private Status status = Status.none;
 	private TData data;
 	
+	public Message() {}
+	
 	public Message(Event event, Status status, TData data) {
 		this.event = event;
 		this.status = status;

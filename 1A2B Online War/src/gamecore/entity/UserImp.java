@@ -6,12 +6,14 @@ import socket.UserService;
 public class UserImp extends BaseEntity implements User{
 	private String name;
 	
+	public UserImp() {}
+	
 	public UserImp(String name) {
 		this.name = name;
 	}
 
 	@Override
-	public void sendMessage(Message<? extends Entity> message){
+	public void sendMessage(Message<? super Entity> message){
 		System.out.println(message);
 	}
 	

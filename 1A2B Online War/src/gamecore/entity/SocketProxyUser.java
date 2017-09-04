@@ -20,7 +20,7 @@ public class SocketProxyUser implements User{
 	}
 
 	@Override
-	public void sendMessage(Message<? extends Entity> message) {
+	public void sendMessage(Message<? super Entity> message) {
 		service.respond(message);
 		user.sendMessage(message);
 	}
