@@ -1,6 +1,6 @@
 package gamecore.entity;
 
-import command.Message;
+import communication.Message;
 import socket.UserService;
 
 public class SocketProxyUser implements User{
@@ -33,6 +33,21 @@ public class SocketProxyUser implements User{
 	@Override
 	public void setName(String name) {
 		user.setName(name);
+	}
+
+	@Override
+	public void setId(String id) {
+		user.setId(id);
+	}
+
+	@Override
+	public String getId() {
+		return user.getId();
+	}
+
+	@Override
+	public int compareTo(BaseEntity o) {
+		return user.compareTo(o);
 	}
 
 }

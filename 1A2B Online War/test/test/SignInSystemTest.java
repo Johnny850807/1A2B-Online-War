@@ -1,43 +1,79 @@
 package test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.*;import javax.net.ssl.ExtendedSSLSession;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import command.CommandParser;
-import command.Message;
+import command.Command;
+import command.SignInCommand;
+import communication.CommandParser;
+import communication.Message;
+import communication.RequestParser;
 import factory.GameFactory;
 import factory.GameOnlineReleaseFactory;
 import gamecore.GameCore;
+import gamecore.entity.Entity;
 import gamecore.entity.User;
+import gamecore.entity.UserImp;
+
+import static communication.Status.*;
+import static communication.Event.*;
 import mock.MockService;
+import socket.UserService;
 
 public class SignInSystemTest {
 	private GameFactory factory;
 	private GameCore gamecore;
-	private CommandParser parser;
+	private CommandParser commandParser;
+	private RequestParser requestParser;
 	private String signInRequestJson;
+	
+	//Mocked
+	private UserService mockService;
 	
 	@Before
 	public void setup(){
 		factory = new GameOnlineReleaseFactory();
 		gamecore = factory.createGameCore();
 		signInRequestJson = createSignInRequestJson();
-		parser = factory.createCommandParser();
+		commandParser = factory.createCommandParser();
+		requestParser = factory.createRequestParser();
+		mockService = new MockService();
 	}
 	
 	private String createSignInRequestJson(){
-		//TODO create json which imposed to sign in
-		return "";
+		return "{\"event\": \"signIn\","+
+				"\"data\": {	"+
+					"\"name\" : \"Test\""+
+				"}"+
+				"}";
 	}
 	
 	@Test
-	public void test() {
-		String name = "test";
+	public void testRequestParser() {
+		Message<User> message = requestParser.parseRequest(signInRequestJson);
+		assertEquals("Test", message.getData().getName());
+		assertEquals(signIn, message.getEvent());
+	}
+	
+	@Test
+	public void testCommandParser() {
+		String name = "Test";
+		User user = new UserImp(name);
+		Message<User> message = new Message<User>(signIn, none, user);
+		Command command = commandParser.parse(message);
+		assertTrue(command instanceof SignInCommand);
+	}
+	
+	@Test
+	public void wholeTest() {
 		MockService service = new MockService();
-		User user = gamecore.signIn(service, name);
-		assertEquals(name, user.getName());
-		assertTrue(service.hasBeenResponded());
+		Message<User> message = requestParser.parseRequest(signInRequestJson);
+		Command signInCommand = commandParser.parse(message);
+		gamecore.executeCommand(signInCommand);
+		
+		User result = (User) service.getReceivedData();
+		assertEquals(message.getData().getName(), result.getName());
 	}
 
 }

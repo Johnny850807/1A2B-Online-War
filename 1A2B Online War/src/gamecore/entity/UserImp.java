@@ -1,9 +1,9 @@
 package gamecore.entity;
 
-import command.Message;
+import communication.Message;
 import socket.UserService;
 
-public class UserImp extends Entity implements User{
+public class UserImp extends BaseEntity implements User{
 	private String name;
 	
 	public UserImp(String name) {

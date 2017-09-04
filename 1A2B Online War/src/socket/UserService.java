@@ -1,8 +1,9 @@
 package socket;
 
-import command.Message;
+import communication.Message;
+import gamecore.entity.BaseEntity;
 import gamecore.entity.Entity;
 
-public interface UserService {
-	void respond(Message<? extends Entity> message);
+public interface UserService extends Runnable{
+	<T extends Entity> void respond(Message<T> message);
 }

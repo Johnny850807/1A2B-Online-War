@@ -1,5 +1,7 @@
-package command;
+package communication;
 
+import command.Command;
+import gamecore.entity.BaseEntity;
 import gamecore.entity.Entity;
 
 public abstract class CommandParser {

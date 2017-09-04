@@ -1,6 +1,6 @@
 package gamecore.entity;
 
-public class Room extends Entity{
+public class Room extends BaseEntity{
 	private String name;
 	
 	//TODO Room's game 

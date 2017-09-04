@@ -1,13 +1,32 @@
 package socket;
 
-import command.Message;
+import communication.Message;
+import communication.RequestParser;
+import factory.GameFactory;
 import gamecore.entity.Entity;
 
 public class SocketService implements UserService{
+	private GameFactory factory;
+	private RequestParser requestParser;
+	
+
+	public SocketService(GameFactory factory) {
+		this.factory = factory;
+		requestParser = factory.createRequestParser();
+	}
+
 
 	@Override
-	public void respond(Message<? extends Entity> message) {
-		// TODO 回傳訊息給client socket
+	public void run() {
+		// TODO 偵聽I/O
+		
+	}
+
+
+	@Override
+	public <T extends Entity> void respond(Message<T> message) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

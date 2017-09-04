@@ -1,8 +1,8 @@
 package gamecore.entity;
 
-import command.Message;
+import communication.Message;
 
-public interface User {
+public interface User extends Entity {
 
 	void sendMessage(Message<? extends Entity> message);
 

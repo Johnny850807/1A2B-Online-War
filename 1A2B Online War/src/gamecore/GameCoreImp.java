@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import command.Command;
 import factory.GameFactory;
 import gamecore.entity.Room;
 import gamecore.entity.User;
@@ -24,6 +25,11 @@ public class GameCoreImp implements GameCore{
 		User user = factory.createUser(userService, name);
 		onlineUsers.add(user);
 		return user;
+	}
+
+	@Override
+	public void executeCommand(Command command) {
+		command.execute();
 	}
 	
 	
