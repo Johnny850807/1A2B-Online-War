@@ -15,7 +15,7 @@ public interface GameFactory {
 	GameCore createGameCore();
 	UserService createService(InputStream input, OutputStream output);
 	User createUser(UserService userService, String name);
-	CommandParserFactory getCommandParserFactory();
+	CommandParserFactory createCommandParserFactory();
 	CommandParser createCommandParser(UserService userService);
 	Room createRoom(String name);
 	ProtocolFactory createProtocolFactory();

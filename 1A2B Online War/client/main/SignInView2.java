@@ -2,7 +2,7 @@ package main;
 
 import Util.Input;
 
-public class SignInView extends View{
+public class SignInView2 extends View{
 	
 	@Override
 	public void onCreate() {
@@ -13,10 +13,9 @@ public class SignInView extends View{
 	@Override
 	public void onRecycleActions() {
 		//TODO µn¤J´ú¸Õ
-		String name = Input.next("Input your name: ");
-		if (name.contains("go"))
-			new SignInView2().start();
-		
+		String name = Input.next("Input your name2: ");
+		if (name.contains("end"))
+			finish();
 	}
 
 	@Override
