@@ -1,6 +1,6 @@
 package socket;
 
-import factory.GameFactory;
+import gamefactory.GameFactory;
 
 public class SocketAccepter implements Runnable{
 	private GameFactory factory;
@@ -13,7 +13,7 @@ public class SocketAccepter implements Runnable{
 
 	@Override
 	public void run() {
-		// TODO 偵聽新的 socket 
+		// TODO 不停偵聽新的 socket 
 		
 	}
 	

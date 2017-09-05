@@ -1,6 +1,8 @@
-package gamecore.entity;
+package gamecore.entity.user;
 
-import communication.Message;
+import communication.message.Message;
+import gamecore.entity.BaseEntity;
+import gamecore.entity.Entity;
 import socket.UserService;
 
 public class UserImp extends BaseEntity implements User{
@@ -13,7 +15,7 @@ public class UserImp extends BaseEntity implements User{
 	}
 
 	@Override
-	public void sendMessage(Message<? super Entity> message){
+	public void sendMessage(Message<? extends Entity> message){
 		System.out.println(message);
 	}
 	

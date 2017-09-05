@@ -3,7 +3,7 @@ package gamecore;
 import java.util.List;
 
 import command.Command;
-import gamecore.entity.User;
+import gamecore.entity.user.User;
 import socket.UserService;
 
 public interface GameCore {

@@ -1,13 +1,15 @@
 package command;
 
-import communication.Message;
-import communication.Status;
+import static communication.message.Event.signIn;
+import static communication.message.Status.success;
+
+import communication.message.Message;
 import gamecore.GameCore;
 import gamecore.entity.Entity;
-import gamecore.entity.User;
+import gamecore.entity.user.User;
+import gamecore.entity.user.UserImp;
 import socket.UserService;
-import static communication.Event.*;
-import static communication.Status.*;
+import utils.JsonConverter;
 
 public class SignInCommand implements Command{
 	private GameCore gamecore;
@@ -22,8 +24,14 @@ public class SignInCommand implements Command{
 
 	@Override
 	public void execute() {
+		// The user created is a proxy that will make the json serialization ugly.
 		User user = gamecore.signIn(userService, message.getData().getName());
-		Message<? super Entity> message = new Message<>(signIn, success, user);
+		
+		// So I make a bean to contain only needed info
+		UserImp userBean = new UserImp(user.getName());
+		userBean.setId(user.getId());
+		
+		Message<User> message = new Message<>(signIn, success, userBean);
 		user.sendMessage(message);
 	}
 

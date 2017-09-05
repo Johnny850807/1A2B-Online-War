@@ -1,6 +1,10 @@
-package gamecore.entity;
+package gamecore.entity.user;
 
-import communication.Message;
+import com.google.gson.annotations.Expose;
+
+import communication.message.Message;
+import gamecore.entity.BaseEntity;
+import gamecore.entity.Entity;
 import socket.UserService;
 
 public class SocketProxyUser implements User{
@@ -20,7 +24,7 @@ public class SocketProxyUser implements User{
 	}
 
 	@Override
-	public void sendMessage(Message<? super Entity> message) {
+	public void sendMessage(Message<? extends Entity> message) {
 		service.respond(message);
 		user.sendMessage(message);
 	}

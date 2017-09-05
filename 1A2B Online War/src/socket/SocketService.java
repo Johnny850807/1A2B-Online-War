@@ -1,18 +1,17 @@
 package socket;
 
-import communication.Message;
-import communication.RequestParser;
-import factory.GameFactory;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import communication.message.Message;
 import gamecore.entity.Entity;
+import gamefactory.GameFactory;
 
 public class SocketService implements UserService{
 	private GameFactory factory;
-	private RequestParser requestParser;
-	
 
-	public SocketService(GameFactory factory) {
+	public SocketService(GameFactory factory, InputStream input, OutputStream output) {
 		this.factory = factory;
-		requestParser = factory.createRequestParser();
 	}
 
 
@@ -23,7 +22,13 @@ public class SocketService implements UserService{
 	}
 	
 	@Override
-	public void respond(Message<? super Entity> message) {
+	public void respond(Message<? extends Entity> message) {
+		// TODO 回應訊息給 client
+	}
+
+
+	@Override
+	public void disconnect() throws Exception {
 		// TODO Auto-generated method stub
 		
 	}

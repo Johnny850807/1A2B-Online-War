@@ -1,15 +1,15 @@
 package communication;
 
 import command.Command;
-import gamecore.entity.BaseEntity;
-import gamecore.entity.Entity;
+import communication.protocol.Protocol;
+import communication.protocol.ProtocolFactory;
 
 public abstract class CommandParser {
 	protected CommandParser next;
 	
-	public CommandParser(CommandParser next){
+	public CommandParser(ProtocolFactory protocolFactory, CommandParser next){
 		this.next = next;
 	}
 	
-	public abstract Command parse(Message<? extends Entity> event);
+	public abstract Command parse(Protocol protocol);
 }

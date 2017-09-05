@@ -1,14 +1,16 @@
-package factory;
+package gamefactory;
+
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import communication.CommandParser;
-import communication.RequestParser;
-import communication.RequestParserImp;
+import communication.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.GameCoreImp;
 import gamecore.entity.Room;
-import gamecore.entity.SocketProxyUser;
-import gamecore.entity.User;
-import gamecore.entity.UserImp;
+import gamecore.entity.user.SocketProxyUser;
+import gamecore.entity.user.User;
+import gamecore.entity.user.UserImp;
 import socket.SocketService;
 import socket.UserService;
 
@@ -20,7 +22,7 @@ public class GameOnlineReleaseFactory implements GameFactory{
 	}
 	
 	@Override
-	public CommandParser createCommandParser(){
+	public CommandParser createCommandParser(ProtocolFactory protocolFactory){
 		return null;
 	}
 
@@ -38,13 +40,8 @@ public class GameOnlineReleaseFactory implements GameFactory{
 	}
 
 	@Override
-	public RequestParser createRequestParser() {
-		return new RequestParserImp();
-	}
-
-	@Override
-	public UserService createService() {
-		return new SocketService(this);
+	public UserService createService(InputStream input, OutputStream output) {
+		return new SocketService(this, input, output);
 	}
 
 }

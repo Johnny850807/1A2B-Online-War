@@ -1,80 +1,81 @@
 package test;
-import static org.junit.Assert.*;import javax.net.ssl.ExtendedSSLSession;
+import static communication.message.Event.signIn;
+import static communication.message.Status.none;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import command.Command;
 import command.SignInCommand;
 import communication.CommandParser;
-import communication.Message;
-import communication.RequestParser;
-import factory.GameFactory;
-import factory.GameOnlineReleaseFactory;
+import communication.message.Event;
+import communication.message.Message;
+import communication.message.Status;
+import communication.protocol.Protocol;
+import communication.protocol.ProtocolFactory;
+import communication.protocol.XXXDelimiterFactory;
 import gamecore.GameCore;
 import gamecore.entity.Entity;
-import gamecore.entity.User;
-import gamecore.entity.UserImp;
-
-import static communication.Status.*;
-import static communication.Event.*;
+import gamecore.entity.user.User;
+import gamecore.entity.user.UserImp;
+import gamefactory.GameFactory;
+import gamefactory.GameOnlineReleaseFactory;
 import mock.MockService;
 import socket.UserService;
 
 public class SignInSystemTest {
-	private GameFactory factory;
+	private final String EVENT = "signIn";
+	private final String STATUS = "request";
+	private final String XXX = "XXX";
+	
+	private ProtocolFactory protocolFactory;
+	private GameFactory gameFactory;
 	private GameCore gamecore;
 	private CommandParser commandParser;
-	private RequestParser requestParser;
-	private String signInRequestJson;
+	
+	private String signInRequest;
 	
 	//Mocked
 	private UserService mockService;
 	
 	@Before
-	public void setup(){
-		factory = new GameOnlineReleaseFactory();
-		gamecore = factory.createGameCore();
-		signInRequestJson = createSignInRequestJson();
-		commandParser = factory.createCommandParser();
-		requestParser = factory.createRequestParser();
+	public void setup() throws IOException{
+		protocolFactory = new XXXDelimiterFactory();
+		gameFactory = new GameOnlineReleaseFactory();
+		gamecore = gameFactory.createGameCore();
+		commandParser = gameFactory.createCommandParser(protocolFactory);
+		
 		mockService = new MockService();
+		signInRequest = EVENT + XXX + STATUS + 
+				XXX + FileUtils.readFileToString(new File("userSignIn.json"), "UTF-8");
 	}
-	
-	private String createSignInRequestJson(){
-		return "{\"event\": \"signIn\","+
-				"\"data\": {	"+
-					"\"name\" : \"Test\""+
-				"}"+
-				"}";
-	}
-	
-	@Test
-	public void testRequestParser() {
-		Message<? extends Entity> message = requestParser.parseRequest(signInRequestJson);
-		assertEquals("Test", ((User)message.getData()).getName());
-		assertEquals(signIn, message.getEvent());
-	}
-	
+
+
 	@Test
 	public void testCommandParser() {
-		String name = "Test";
-		User user = new UserImp(name);
-		Message<User> message = new Message<User>(signIn, none, user);
-		Command command = commandParser.parse(message);
+		Protocol protocol = protocolFactory.createProtocol(signInRequest);
+		Command command = commandParser.parse(protocol);
 		assertTrue(command instanceof SignInCommand);
 	}
 	
 	@Test
-	public void wholeTest() {
+	public void testSignInCommand() {
+		User expect = new UserImp("Test");
 		MockService service = new MockService();
-		Message<? extends Entity> message = requestParser.parseRequest(signInRequestJson);
-		Command signInCommand = commandParser.parse(message);
-		gamecore.executeCommand(signInCommand);
+		Message<User> message = new Message<>(Event.signIn, Status.request, expect);
+		Command command = new SignInCommand(gamecore, service, message);
+		gamecore.executeCommand(command);
 		
-		User expect = (User) message.getData();
-		User result = (User) service.getReceivedData();
+		User result = (User) service.getMessage().getData();
 		assertEquals(expect.getName(), result.getName());
 	}
+	
+	
 
 }

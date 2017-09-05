@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import communication.Message;
+import communication.message.Message;
 import gamecore.entity.BaseEntity;
 import gamecore.entity.Entity;
 

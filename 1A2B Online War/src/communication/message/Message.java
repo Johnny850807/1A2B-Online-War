@@ -1,4 +1,4 @@
-package communication;
+package communication.message;
 
 import gamecore.entity.Entity;
 import utils.JsonConverter;

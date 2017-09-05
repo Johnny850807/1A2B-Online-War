@@ -5,10 +5,10 @@ import java.util.Collections;
 import java.util.List;
 
 import command.Command;
-import factory.GameFactory;
 import gamecore.entity.Room;
-import gamecore.entity.User;
-import gamecore.entity.UserImp;
+import gamecore.entity.user.User;
+import gamecore.entity.user.UserImp;
+import gamefactory.GameFactory;
 import socket.UserService;
 
 public class GameCoreImp implements GameCore{
