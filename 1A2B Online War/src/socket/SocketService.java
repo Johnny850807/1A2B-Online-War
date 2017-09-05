@@ -23,7 +23,9 @@ public class SocketService implements UserService{
 	@Override
 	public void run() {
 		// TODO °»Å¥I/O
-		
+		while(true) {
+			
+		}
 	}
 	
 	@Override
