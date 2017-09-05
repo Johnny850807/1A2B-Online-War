@@ -4,9 +4,11 @@ import java.util.Stack;
 
 public abstract class View {
 	private static Stack<View> viewStack = new Stack<>();
+	private String name;
 	
 	public void start() {
 		viewStack.push(this);
+		name = getViewName();
 		onCreate();
 		onStart();
 	}
@@ -15,8 +17,10 @@ public abstract class View {
 	
 	public abstract void onRecycleActions();
 	
+	public abstract String getViewName();
+	
 	public void onRestart() {
-		
+		System.out.println(name + " View restarting..¡C");
 	}
 	
 	public void onStart() {
@@ -30,7 +34,7 @@ public abstract class View {
 		onDestroy();
 		
 		if (viewStack.isEmpty())
-			System.out.println("´ú¸Õµ²§ô");
+			System.out.println("Test over.");
 		else
 			viewStack.peek().onRestart();
 	}

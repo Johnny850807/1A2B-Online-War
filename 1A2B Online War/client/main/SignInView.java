@@ -13,13 +13,18 @@ public class SignInView extends View{
 	@Override
 	public void onRecycleActions() {
 		//TODO 登入測試
-		String name = Input.next("請輸入暱稱: ");
+		String name = Input.next("Input your name: ");
 		
 	}
 
 	@Override
 	public void onDestroy() {
 		//TODO 資源釋放
+	}
+
+	@Override
+	public String getViewName() {
+		return "Sign-In View";
 	}
 	
 }
