@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import command.Command;
-import command.SignInCommand;
+import command.user.SignInCommand;
 import communication.commandparser.CommandParser;
 import communication.commandparser.CommandParserFactory;
 import communication.message.Event;
@@ -50,20 +50,19 @@ public class CommandExecutionTest {
 
 	@Test
 	public void testSignInCommand() throws IOException {
-		String signInRequest = FileUtils.readFileToString(new File("userSignIn.txt"), "UTF-8");
+		String signInRequest = FileUtils.readFileToString(new File("userSignIn.txt"));
+		Protocol protocol = protocolFactory.createProtocol(signInRequest);
 		int currentSize = gamecore.getOnlineUsers().size();
-		
 		MockService mockService = new MockService();
-		User expect = new UserImp("Test");
-		Message<User> message = new Message<>(Event.signIn, Status.request, expect);
-		Command command = new SignInCommand(gamecore, mockService, message);
+		
+		CommandParser parser = gameFactory.createCommandParser(mockService);
+		Command command = parser.parse(protocol);
 		gamecore.executeCommand(command);
 		
 		User result = (User) mockService.getMessage().getData();
-		assertEquals(expect.getName(), result.getName()); // same user
+		assertEquals("Test", result.getName()); // same user
 		assertEquals(currentSize + 1, gamecore.getOnlineUsers().size()); // online user plus one
 	}
-	
 	
 
 }

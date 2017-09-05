@@ -1,28 +1,38 @@
 package communication.protocol;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class XXXDelimiterProtocol implements Protocol{
-	static final String DELIMITER = "XXX";
+	static final String DELIMITER = "XOXOX";
 	private String content;
+	private String event;
+	private String status;
+	private String data;
 	
 	public XXXDelimiterProtocol(String content) {
 		this.content = content;
+		String[] snippets = content.split(DELIMITER);
+		event = snippets[0];
+		status = snippets[1];
+		data = snippets[2];
 	}
 	
 	//TODO parse protocol
 	
 	@Override
 	public String getEvent() {
-		return "";  //TODO stub
+		return event;
 	}
 
 	@Override
 	public String getStatus() {
-		return ""; //TODO stub
+		return status; //TODO stub
 	}
 
 	@Override
 	public String getData() {
-		return ""; //TODO stub
+		return data; //TODO stub
 	}
 	
 	@Override

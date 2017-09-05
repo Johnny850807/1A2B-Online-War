@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import com.google.gson.Gson;
 
 import command.Command;
-import command.SignInCommand;
+import command.user.SignInCommand;
 import communication.message.Event;
 import communication.message.Message;
 import communication.message.Status;
@@ -25,7 +25,6 @@ public class UserCommandParser extends CommandParser{
 	@Override
 	public Command parse(Protocol protocol) {
 		String event = protocol.getEvent();
-		
 		if (Pattern.matches("^((?i)sign).*", event))
 		{
 			Message<User> message = protocolToMessage(protocol);

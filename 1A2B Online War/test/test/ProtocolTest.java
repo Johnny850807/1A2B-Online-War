@@ -54,11 +54,14 @@ public class ProtocolTest {
 	
 	@Parameterized.Parameters
 	public static Collection primeNumbers() {
+		// content, expected-event, expected-status, expected-data
 		return Arrays.asList(new Object[][] {
-			{"eventXXXstatusXXXdata","event","status","data"},
-			{"xxxXXXxxxXXXxxx","xxx","xxx","xxx"},
-			{"\"\"\"XXX\\\\\\XXX1238949834720834907230","\"\"\"","\\\\\\","1238949834720834907230"},
-			{"1 2 3 4XXX5   6    7     8   XXX9	9	9	1	1	","1 2 3 4","5   6    7     8   ","9	9	9	1	1	"}
+			{"eventXOXOXstatusXOXOXdata","event","status","data"},
+			{"XXXXXOXOXXXX X X X XOXOXXXXXOXXX","XXXX","XXX X X X ","XXXXOXXX"},
+			{"xxxXOXOXxxxXOXOXxxx","xxx","xxx","xxx"},
+			{"\"\"\"XOXOX\\\\\\XOXOX1238949834720834907230","\"\"\"","\\\\\\","1238949834720834907230"},
+			{"1 2 3 4XOXOX5   6    7     8   XOXOX9	9	9	1	1	","1 2 3 4","5   6    7     8   ","9	9	9	1	1	"},
+			{"asdsd asd8asd89axXoxoxoX AASODASOOXOX OXOXOXASD4A6544D56  4 54AS5D4A6SDA31234+XOXOXD SMAKDM XOX DK xoxo","asdsd asd8asd89axXoxoxoX AASODASOOXOX O","ASD4A6544D56  4 54AS5D4A6SDA31234+","D SMAKDM XOX DK xoxo"}
 	      });
 	}
 }

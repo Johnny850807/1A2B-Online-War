@@ -1,8 +1,9 @@
-package command;
+package command.user;
 
 import static communication.message.Event.signIn;
 import static communication.message.Status.success;
 
+import command.Command;
 import communication.message.Message;
 import gamecore.GameCore;
 import gamecore.entity.Entity;

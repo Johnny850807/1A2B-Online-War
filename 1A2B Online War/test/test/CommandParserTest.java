@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import command.Command;
-import command.SignInCommand;
+import command.user.SignInCommand;
 import communication.commandparser.CommandParser;
 import communication.protocol.Protocol;
 import communication.protocol.ProtocolFactory;
