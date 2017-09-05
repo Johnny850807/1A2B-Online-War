@@ -47,6 +47,8 @@ public class ProtocolTest {
 		assertEquals(expectEvent, desProtocol.getEvent());
 		assertEquals(expectStatus, desProtocol.getStatus());
 		assertEquals(expectData, desProtocol.getData());
+		
+		assertEquals(request, desProtocol.toString());
 	}
 	
 	

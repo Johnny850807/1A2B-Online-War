@@ -32,5 +32,13 @@ public class GameCoreImp implements GameCore{
 		command.execute();
 	}
 	
+	@Override
+	public List<User> getOnlineUsers() {
+		return onlineUsers;
+	}
 	
+	@Override
+	public List<Room> getRoomList() {
+		return roomList;
+	}
 }

@@ -66,6 +66,8 @@ public class SignInSystemTest {
 	
 	@Test
 	public void testSignInCommand() {
+		int currentSize = gamecore.getOnlineUsers().size();
+		
 		User expect = new UserImp("Test");
 		MockService service = new MockService();
 		Message<User> message = new Message<>(Event.signIn, Status.request, expect);
@@ -73,7 +75,8 @@ public class SignInSystemTest {
 		gamecore.executeCommand(command);
 		
 		User result = (User) service.getMessage().getData();
-		assertEquals(expect.getName(), result.getName());
+		assertEquals(expect.getName(), result.getName()); // same user
+		assertEquals(currentSize + 1, gamecore.getOnlineUsers().size()); // online user plus one
 	}
 	
 	
