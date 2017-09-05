@@ -4,14 +4,19 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import communication.message.Message;
+import communication.protocol.ProtocolFactory;
 import gamecore.entity.Entity;
 import gamefactory.GameFactory;
 
 public class SocketService implements UserService{
-	private GameFactory factory;
+	private GameFactory gameFactory;
+	private ProtocolFactory protocolFactory;
 
 	public SocketService(GameFactory factory, InputStream input, OutputStream output) {
-		this.factory = factory;
+		this.gameFactory = factory;
+		this.protocolFactory = gameFactory.createProtocolFactory();
+		
+		//TODO handle input and output stream
 	}
 
 
@@ -29,7 +34,7 @@ public class SocketService implements UserService{
 
 	@Override
 	public void disconnect() throws Exception {
-		// TODO Auto-generated method stub
+		// TODO ¤¤Â_³s±µ
 		
 	}
 

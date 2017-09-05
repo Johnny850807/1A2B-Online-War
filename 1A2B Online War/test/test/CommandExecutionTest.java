@@ -13,7 +13,8 @@ import org.junit.Test;
 
 import command.Command;
 import command.SignInCommand;
-import communication.CommandParser;
+import communication.commandparser.CommandParser;
+import communication.commandparser.CommandParserFactory;
 import communication.message.Event;
 import communication.message.Message;
 import communication.message.Status;
@@ -29,52 +30,36 @@ import gamefactory.GameOnlineReleaseFactory;
 import mock.MockService;
 import socket.UserService;
 
-public class SignInSystemTest {
-	private final String EVENT = "signIn";
-	private final String STATUS = "request";
+public class CommandExecutionTest {
 	private final String XXX = "XXX";
 	
 	private ProtocolFactory protocolFactory;
 	private GameFactory gameFactory;
 	private GameCore gamecore;
-	private CommandParser commandParser;
+	private CommandParserFactory commandParserFactory;
 	
-	private String signInRequest;
-	
-	//Mocked
-	private UserService mockService;
 	
 	@Before
 	public void setup() throws IOException{
-		protocolFactory = new XXXDelimiterFactory();
 		gameFactory = new GameOnlineReleaseFactory();
+		protocolFactory = gameFactory.createProtocolFactory();
 		gamecore = gameFactory.createGameCore();
-		commandParser = gameFactory.createCommandParser(protocolFactory);
-		
-		mockService = new MockService();
-		signInRequest = EVENT + XXX + STATUS + 
-				XXX + FileUtils.readFileToString(new File("userSignIn.json"), "UTF-8");
+		commandParserFactory = gameFactory.getCommandParserFactory();
 	}
 
 
 	@Test
-	public void testCommandParser() {
-		Protocol protocol = protocolFactory.createProtocol(signInRequest);
-		Command command = commandParser.parse(protocol);
-		assertTrue(command instanceof SignInCommand);
-	}
-	
-	@Test
-	public void testSignInCommand() {
+	public void testSignInCommand() throws IOException {
+		String signInRequest = FileUtils.readFileToString(new File("userSignIn.txt"), "UTF-8");
 		int currentSize = gamecore.getOnlineUsers().size();
 		
+		MockService mockService = new MockService();
 		User expect = new UserImp("Test");
-		MockService service = new MockService();
 		Message<User> message = new Message<>(Event.signIn, Status.request, expect);
-		Command command = new SignInCommand(gamecore, service, message);
+		Command command = new SignInCommand(gamecore, mockService, message);
 		gamecore.executeCommand(command);
 		
-		User result = (User) service.getMessage().getData();
+		User result = (User) mockService.getMessage().getData();
 		assertEquals(expect.getName(), result.getName()); // same user
 		assertEquals(currentSize + 1, gamecore.getOnlineUsers().size()); // online user plus one
 	}

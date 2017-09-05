@@ -1,4 +1,6 @@
-package gamecore.entity;
+package gamecore.entity.room;
+
+import gamecore.entity.BaseEntity;
 
 public class Room extends BaseEntity{
 	private String name;

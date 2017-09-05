@@ -1,13 +1,14 @@
 package socket;
 
+import communication.protocol.ProtocolFactory;
 import gamefactory.GameFactory;
 
 public class SocketAccepter implements Runnable{
-	private GameFactory factory;
+	private GameFactory gameFactory;
 
 	
 	public SocketAccepter(GameFactory factory){
-		this.factory = factory;
+		this.gameFactory = factory;
 	}
 
 

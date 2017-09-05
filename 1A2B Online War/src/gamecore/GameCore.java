@@ -3,7 +3,7 @@ package gamecore;
 import java.util.List;
 
 import command.Command;
-import gamecore.entity.Room;
+import gamecore.entity.room.Room;
 import gamecore.entity.user.User;
 import socket.UserService;
 

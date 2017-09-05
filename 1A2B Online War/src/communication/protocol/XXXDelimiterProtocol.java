@@ -1,7 +1,7 @@
 package communication.protocol;
 
 public class XXXDelimiterProtocol implements Protocol{
-	private static final String DELIMITER = "XXX";
+	static final String DELIMITER = "XXX";
 	private String content;
 	
 	public XXXDelimiterProtocol(String content) {
@@ -12,17 +12,17 @@ public class XXXDelimiterProtocol implements Protocol{
 	
 	@Override
 	public String getEvent() {
-		return "";
+		return "";  //TODO stub
 	}
 
 	@Override
 	public String getStatus() {
-		return "";
+		return ""; //TODO stub
 	}
 
 	@Override
 	public String getData() {
-		return "";
+		return ""; //TODO stub
 	}
 	
 	@Override
@@ -30,6 +30,7 @@ public class XXXDelimiterProtocol implements Protocol{
 		return getEvent() + DELIMITER + getStatus() + DELIMITER + getData();
 	}
 	
+	@Override
 	public Protocol toProtocol(String event, String status, String data) {
 		return new XXXDelimiterProtocol(event + DELIMITER + status + DELIMITER + data);
 	}
