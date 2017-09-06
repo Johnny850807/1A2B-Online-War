@@ -7,39 +7,46 @@ import java.net.Socket;
 import communication.protocol.ProtocolFactory;
 import gamefactory.GameFactory;
 
-public class SocketAccepter implements Runnable{
+public class SocketAccepter implements Runnable 
+{
 	private GameFactory gameFactory;
-
+	private final static int PORT = 5278;
+	private ServerSocket server;
 	
-	public SocketAccepter(GameFactory factory){
+	public SocketAccepter(GameFactory factory) 
+	{
 		this.gameFactory = factory;
 	}
-
-
+	
 	@Override
-	public void run() {
-		// TODO 不停偵聽新的 socket 
-		int port = 9526;
-		
+	public void run() 
+	{
 		try {
-			ServerSocket server = new ServerSocket(port);
-			
-			while(true)	{
-				Socket clientSocket = server.accept();
-				if(clientSocket.isConnected()) {
-					
-					SocketService clientService = new SocketService(gameFactory,clientSocket.getInputStream(),clientSocket.getOutputStream());
-					
-					new Thread(clientService).start();
-						
-					clientSocket.close();
-				}
-			}
-			
+			server = new ServerSocket(PORT);
+			listeningInput();
 		} catch (IOException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} finally {
+			try {
+				server.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
+	}
+	
+	private void listeningInput() throws IOException
+	{
+		while(true)	
+		{
+			Socket clientSocket = server.accept();
+			if(clientSocket.isConnected()) 
+			{
+				UserService userService = gameFactory.createService(clientSocket.getInputStream(),clientSocket.getOutputStream());
+				new Thread(userService).start();
+			}
+		}
 	}
 	
 	
