@@ -37,12 +37,17 @@ public class SignInView extends View {
 	public void onRecycleActions() {
 		//TODO µn¤J´ú¸Õ
 		String name = Input.next("Input your name: ");
+<<<<<<< HEAD
 		UserImp user = new UserImp(name);
 		
 		Gson gson = new Gson();
 		String json = gson.toJson(user);
 		Protocol protocol = protocolfactory.createProtocol("signIn","request",json);
 		System.out.println(protocol);
+=======
+		if (name.contains("go"))
+			new SignInView2().start();
+>>>>>>> 22924f02c683cdb8d2556d2d297f6575d1c8b426
 		
 		DataOutputStream d = new DataOutputStream(output);
 		

@@ -9,7 +9,7 @@ import communication.commandparser.CommandParser;
 import communication.commandparser.CommandParserFactory;
 import communication.commandparser.CommandReleaseParserFactory;
 import communication.protocol.ProtocolFactory;
-import communication.protocol.XXXDelimiterFactory;
+import communication.protocol.XOXOXDelimiterFactory;
 import gamecore.GameCore;
 import gamecore.GameCoreImp;
 import gamecore.entity.room.Room;
@@ -53,14 +53,14 @@ public class GameOnlineReleaseFactory implements GameFactory{
 	@Override
 	@Singleton
 	public ProtocolFactory createProtocolFactory() {
-		return protocolFactory == null ? protocolFactory = new XXXDelimiterFactory()
+		return protocolFactory == null ? protocolFactory = new XOXOXDelimiterFactory()
 				: protocolFactory;
 	}
 
 
 	@Override
 	@Singleton
-	public CommandParserFactory getCommandParserFactory() {
+	public CommandParserFactory createCommandParserFactory() {
 		return commandParserFactory == null ? 
 				commandParserFactory = new CommandReleaseParserFactory(createProtocolFactory(), createGameCore())
 				: commandParserFactory;
@@ -68,7 +68,7 @@ public class GameOnlineReleaseFactory implements GameFactory{
 
 	@Override
 	public CommandParser createCommandParser(UserService userService) {
-		return getCommandParserFactory().createCommandParser(userService);
+		return createCommandParserFactory().createCommandParser(userService);
 	}
 
 }

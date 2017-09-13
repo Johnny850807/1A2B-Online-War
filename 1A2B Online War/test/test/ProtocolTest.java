@@ -12,7 +12,7 @@ import org.junit.runners.Parameterized;
 
 import communication.protocol.Protocol;
 import communication.protocol.ProtocolFactory;
-import communication.protocol.XXXDelimiterFactory;
+import communication.protocol.XOXOXDelimiterFactory;
 
 @RunWith(Parameterized.class)
 public class ProtocolTest {
@@ -32,7 +32,7 @@ public class ProtocolTest {
 
 	@Before
 	public void setup() {
-		protocolFactory = new XXXDelimiterFactory();
+		protocolFactory = new XOXOXDelimiterFactory();
 	}
 
 	@Test

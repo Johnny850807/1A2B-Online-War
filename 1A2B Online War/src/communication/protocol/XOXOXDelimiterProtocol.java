@@ -3,14 +3,14 @@ package communication.protocol;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class XXXDelimiterProtocol implements Protocol{
+public class XOXOXDelimiterProtocol implements Protocol{
 	static final String DELIMITER = "XOXOX";
 	private String content;
 	private String event;
 	private String status;
 	private String data;
 	
-	public XXXDelimiterProtocol(String content) {
+	public XOXOXDelimiterProtocol(String content) {
 		this.content = content;
 		String[] snippets = content.split(DELIMITER);
 		event = snippets[0];
@@ -42,7 +42,7 @@ public class XXXDelimiterProtocol implements Protocol{
 	
 	@Override
 	public Protocol toProtocol(String event, String status, String data) {
-		return new XXXDelimiterProtocol(event + DELIMITER + status + DELIMITER + data);
+		return new XOXOXDelimiterProtocol(event + DELIMITER + status + DELIMITER + data);
 	}
 	
 }

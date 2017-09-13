@@ -20,7 +20,7 @@ import communication.message.Message;
 import communication.message.Status;
 import communication.protocol.Protocol;
 import communication.protocol.ProtocolFactory;
-import communication.protocol.XXXDelimiterFactory;
+import communication.protocol.XOXOXDelimiterFactory;
 import gamecore.GameCore;
 import gamecore.entity.Entity;
 import gamecore.entity.user.User;
@@ -44,7 +44,7 @@ public class CommandExecutionTest {
 		gameFactory = new GameOnlineReleaseFactory();
 		protocolFactory = gameFactory.createProtocolFactory();
 		gamecore = gameFactory.createGameCore();
-		commandParserFactory = gameFactory.getCommandParserFactory();
+		commandParserFactory = gameFactory.createCommandParserFactory();
 	}
 
 
