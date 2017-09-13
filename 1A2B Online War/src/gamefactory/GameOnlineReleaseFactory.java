@@ -17,7 +17,8 @@ import gamecore.entity.user.SocketProxyUser;
 import gamecore.entity.user.User;
 import gamecore.entity.user.UserImp;
 import socket.SocketService;
-import socket.UserService;
+import userservice.ServiceIO;
+import userservice.UserService;
 import utils.Singleton;
 
 public class GameOnlineReleaseFactory implements GameFactory{
@@ -28,7 +29,7 @@ public class GameOnlineReleaseFactory implements GameFactory{
 	
 	@Override
 	@Singleton
-	public GameCore createGameCore() {
+	public GameCore getGameCore() {
 		return gameCore == null ? gameCore = new GameCoreImp(this) : gameCore;
 	}
 	
@@ -46,13 +47,13 @@ public class GameOnlineReleaseFactory implements GameFactory{
 	}
 
 	@Override
-	public UserService createService(InputStream input, OutputStream output) {
-		return new SocketService(this, input, output);
+	public UserService createService(ServiceIO io) {
+		return new SocketService(this, io);
 	}
 
 	@Override
 	@Singleton
-	public ProtocolFactory createProtocolFactory() {
+	public ProtocolFactory getProtocolFactory() {
 		return protocolFactory == null ? protocolFactory = new XOXOXDelimiterFactory()
 				: protocolFactory;
 	}
@@ -60,15 +61,15 @@ public class GameOnlineReleaseFactory implements GameFactory{
 
 	@Override
 	@Singleton
-	public CommandParserFactory createCommandParserFactory() {
+	public CommandParserFactory getCommandParserFactory() {
 		return commandParserFactory == null ? 
-				commandParserFactory = new CommandReleaseParserFactory(createProtocolFactory(), createGameCore())
+				commandParserFactory = new CommandReleaseParserFactory(getProtocolFactory(), getGameCore())
 				: commandParserFactory;
 	}
 
 	@Override
 	public CommandParser createCommandParser(UserService userService) {
-		return createCommandParserFactory().createCommandParser(userService);
+		return getCommandParserFactory().createCommandParser(userService);
 	}
 
 }

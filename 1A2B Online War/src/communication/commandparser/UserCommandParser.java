@@ -14,7 +14,7 @@ import communication.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.user.User;
 import gamecore.entity.user.UserImp;
-import socket.UserService;
+import userservice.UserService;
 
 public class UserCommandParser extends CommandParser{
 

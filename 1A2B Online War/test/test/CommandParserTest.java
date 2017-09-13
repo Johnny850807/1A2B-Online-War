@@ -22,7 +22,7 @@ public class CommandParserTest {
 	@Before
 	public void setup() {
 		GameFactory factory = new GameOnlineReleaseFactory();
-		protocolFactory = factory.createProtocolFactory();
+		protocolFactory = factory.getProtocolFactory();
 		parser = factory.createCommandParser(new MockService());
 	}
 	

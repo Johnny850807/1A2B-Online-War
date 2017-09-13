@@ -5,7 +5,7 @@ import java.util.List;
 import command.Command;
 import gamecore.entity.room.Room;
 import gamecore.entity.user.User;
-import socket.UserService;
+import userservice.UserService;
 
 public interface GameCore {
 	User signIn(UserService service, String name);

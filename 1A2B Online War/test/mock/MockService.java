@@ -5,7 +5,7 @@ import communication.message.Message;
 import communication.message.Status;
 import gamecore.entity.Entity;
 import gamecore.entity.user.UserImp;
-import socket.UserService;
+import userservice.UserService;
 
 public class MockService implements UserService{
 

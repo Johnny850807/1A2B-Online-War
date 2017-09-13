@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose;
 import communication.message.Message;
 import gamecore.entity.BaseEntity;
 import gamecore.entity.Entity;
-import socket.UserService;
+import userservice.UserService;
 
 public class SocketProxyUser implements User{
 	private UserService service;

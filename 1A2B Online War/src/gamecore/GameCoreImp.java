@@ -9,7 +9,7 @@ import gamecore.entity.room.Room;
 import gamecore.entity.user.User;
 import gamecore.entity.user.UserImp;
 import gamefactory.GameFactory;
-import socket.UserService;
+import userservice.UserService;
 
 public class GameCoreImp implements GameCore{
 	private GameFactory factory;

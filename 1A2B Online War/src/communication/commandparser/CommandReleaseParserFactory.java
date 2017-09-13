@@ -2,7 +2,7 @@ package communication.commandparser;
 
 import communication.protocol.ProtocolFactory;
 import gamecore.GameCore;
-import socket.UserService;
+import userservice.UserService;
 
 public class CommandReleaseParserFactory implements CommandParserFactory {
 	protected ProtocolFactory protocolFactory;

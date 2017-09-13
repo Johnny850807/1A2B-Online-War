@@ -1,14 +1,10 @@
 package socket;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+
+import com.google.gson.Gson;
 
 import command.Command;
 import communication.commandparser.CommandParser;
@@ -16,39 +12,48 @@ import communication.commandparser.CommandParserFactory;
 import communication.message.Message;
 import communication.protocol.Protocol;
 import communication.protocol.ProtocolFactory;
+import gamecore.GameCore;
 import gamecore.entity.Entity;
 import gamefactory.GameFactory;
+import userservice.ServiceIO;
+import userservice.UserService;
 
 public class SocketService implements UserService{
 	private GameFactory gameFactory;
 	private ProtocolFactory protocolFactory;
 	private CommandParserFactory commandParserFactory;
+	private GameCore gameCore;
 	
 	private DataInputStream dataInput;
 	private DataOutputStream dataOutput;
 
-	public SocketService(GameFactory factory, InputStream input, OutputStream output) {
+	public SocketService(GameFactory factory, ServiceIO io) {
 		this.gameFactory = factory;
-		this.protocolFactory = gameFactory.createProtocolFactory();
+		this.commandParserFactory = gameFactory.getCommandParserFactory();
+		this.protocolFactory = gameFactory.getProtocolFactory();
+		this.gameCore = gameFactory.getGameCore();
 		
-		dataOutput =  new DataOutputStream(output);
-		dataInput =  new DataInputStream(input);
-
+		try {
+			dataOutput =  new DataOutputStream(io.getOutputStream());
+			dataInput =  new DataInputStream(io.getInputStream());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void run() {
-		while(true)	
-		{
-			try {
+		try {
+			while (true) 
+			{
 				String content = dataInput.readUTF();
 				Protocol protocol = protocolFactory.createProtocol(content);
-				Command command = commandParserFactory.createCommandParser(this).parse(protocol);
-				gameFactory.createGameCore().executeCommand(command);
-				
-			} catch (IOException e) {
-				e.printStackTrace();
+				CommandParser parser = commandParserFactory.createCommandParser(this);
+				Command command = parser.parse(protocol);
+				gameCore.executeCommand(command);
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -57,8 +62,9 @@ public class SocketService implements UserService{
 		// TODO 回應訊息給 client
 		String event = message.getEvent().toString();
 		String status = message.getStatus().toString();
-		String data = message.getData().toString();
-		protocolFactory.createProtocol(event,status,data);
+		String jsonData = new Gson().toJson(message.getData());
+		Protocol protocol = protocolFactory.createProtocol(event,status,jsonData);
+		System.out.println("Success : " + protocol);
 	}
 
 

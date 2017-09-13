@@ -1,6 +1,6 @@
 package communication.commandparser;
 
-import socket.UserService;
+import userservice.UserService;
 
 public interface CommandParserFactory {
 	CommandParser createCommandParser(UserService userService);

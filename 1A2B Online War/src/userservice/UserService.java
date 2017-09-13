@@ -1,4 +1,4 @@
-package socket;
+package userservice;
 
 import communication.message.Message;
 import gamecore.entity.BaseEntity;

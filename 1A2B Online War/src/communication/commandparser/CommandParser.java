@@ -6,7 +6,7 @@ import communication.message.Message;
 import communication.protocol.Protocol;
 import communication.protocol.ProtocolFactory;
 import gamecore.GameCore;
-import socket.UserService;
+import userservice.UserService;
 
 public abstract class CommandParser {
 	protected ProtocolFactory protocolFactory;

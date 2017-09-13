@@ -6,6 +6,8 @@ import java.net.Socket;
 
 import communication.protocol.ProtocolFactory;
 import gamefactory.GameFactory;
+import userservice.ServiceIO;
+import userservice.UserService;
 
 public class SocketAccepter implements Runnable 
 {
@@ -43,7 +45,8 @@ public class SocketAccepter implements Runnable
 			Socket clientSocket = server.accept();
 			if(clientSocket.isConnected()) 
 			{
-				UserService userService = gameFactory.createService(clientSocket.getInputStream(),clientSocket.getOutputStream());
+				ServiceIO io = new SocketIO(clientSocket);
+				UserService userService = gameFactory.createService(io);
 				new Thread(userService).start();
 			}
 		}

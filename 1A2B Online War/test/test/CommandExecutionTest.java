@@ -28,7 +28,7 @@ import gamecore.entity.user.UserImp;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
 import mock.MockService;
-import socket.UserService;
+import userservice.UserService;
 
 public class CommandExecutionTest {
 	private final String XXX = "XXX";
@@ -42,9 +42,9 @@ public class CommandExecutionTest {
 	@Before
 	public void setup() throws IOException{
 		gameFactory = new GameOnlineReleaseFactory();
-		protocolFactory = gameFactory.createProtocolFactory();
-		gamecore = gameFactory.createGameCore();
-		commandParserFactory = gameFactory.createCommandParserFactory();
+		protocolFactory = gameFactory.getProtocolFactory();
+		gamecore = gameFactory.getGameCore();
+		commandParserFactory = gameFactory.getCommandParserFactory();
 	}
 
 

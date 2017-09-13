@@ -9,7 +9,7 @@ import gamecore.GameCore;
 import gamecore.entity.Entity;
 import gamecore.entity.user.User;
 import gamecore.entity.user.UserImp;
-import socket.UserService;
+import userservice.UserService;
 import utils.JsonConverter;
 
 public class SignInCommand implements Command{

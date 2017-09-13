@@ -3,7 +3,7 @@ package gamecore.entity.user;
 import communication.message.Message;
 import gamecore.entity.BaseEntity;
 import gamecore.entity.Entity;
-import socket.UserService;
+import userservice.UserService;
 
 public class UserImp extends BaseEntity implements User{
 	private String name;
