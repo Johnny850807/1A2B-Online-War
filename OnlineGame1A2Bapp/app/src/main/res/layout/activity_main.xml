@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/board"
+    android:background="@drawable/background"
     tools:context="com.example.joanna_zhang.test.MainActivity">
 
 
@@ -36,11 +36,13 @@
             android:text=""
             android:textSize="22sp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/randomNameButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/dice"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/dice"
             android:onClick="randomNameButtonOnClick"/>
 
     </LinearLayout>
