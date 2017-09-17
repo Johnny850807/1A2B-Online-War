@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">1A2B</string>
+    <string name="login">登入</string>
+    <string name="autoLogin">自動登入</string>
+    <string name="inputName">輸入名稱</string>
+    <string name="status">伺服器狀態</string>
+</resources>
