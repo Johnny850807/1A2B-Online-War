@@ -1,70 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
     android:background="@drawable/background"
     tools:context="com.example.joanna_zhang.test.MainActivity">
 
-
-    <ImageView
-        android:layout_width="220dp"
-        android:layout_height="220dp"
-        android:src="@drawable/logo"
-        android:layout_marginBottom="25dp" />
-
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:background="#ffffff"
-        android:padding="6dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:paddingBottom="50dp"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:src="@drawable/logo"
+            android:layout_marginBottom="25dp" />
 
-        <EditText
-            android:id="@+id/inputName"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             android:background="#ffffff"
-            android:hint="@string/inputName"
-            android:maxLines="1"
-            android:inputType="text"
-            android:ems="6"
-            android:text=""
-            android:textSize="22sp" />
+            android:padding="6dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/randomNameButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/dice"
-            android:onClick="randomNameButtonOnClick"/>
+            <EditText
+                android:id="@+id/inputName"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:background="#ffffff"
+                android:hint="@string/inputName"
+                android:maxLines="1"
+                android:inputType="text"
+                android:ems="6"
+                android:text=""
+                android:textSize="22sp" />
 
+            <ImageButton
+                android:id="@+id/randomNameButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/dice"
+                android:onClick="randomNameButtonOnClick"/>
+
+        </LinearLayout>
+
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/autoLogin"
+            android:textSize="22sp"
+            android:layout_margin="10dp"/>
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:textSize="24sp"
+            android:background="@drawable/corner"
+            android:onClick="loginButtonOnClick"/>
     </LinearLayout>
 
-
-    <CheckBox
-        android:id="@+id/checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/autoLogin"
-        android:textSize="22sp"
-        android:layout_margin="10dp"/>
-
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:textSize="24sp"
-        android:onClick="loginButtonOnClick"/>
 
     <TextView
         android:id="@+id/serverStatus"
@@ -72,6 +80,9 @@
         android:layout_height="wrap_content"
         android:text="@string/status"
         android:layout_marginTop="70dp"
-       android:layout_gravity="end"/>
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="end"/>
 
-</LinearLayout>
+</RelativeLayout>
