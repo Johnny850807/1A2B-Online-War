@@ -11,10 +11,11 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:gravity="center"
         android:paddingBottom="50dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
         <ImageView
             android:layout_width="220dp"
             android:layout_height="220dp"
@@ -59,18 +60,18 @@
             android:id="@+id/checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:text="@string/autoLogin"
-            android:textSize="22sp"
-            android:layout_margin="10dp"/>
+            android:textSize="22sp" />
 
         <Button
             android:id="@+id/loginButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login"
-            android:textSize="24sp"
             android:background="@drawable/corner"
-            android:onClick="loginButtonOnClick"/>
+            android:onClick="loginButtonOnClick"
+            android:text="@string/login"
+            android:textSize="24sp" />
     </LinearLayout>
 
 
