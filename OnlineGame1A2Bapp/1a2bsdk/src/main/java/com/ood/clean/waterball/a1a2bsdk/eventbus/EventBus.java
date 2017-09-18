@@ -5,6 +5,8 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import java.util.HashMap;
 import java.util.Map;
 
+import communication.message.Message;
+import gamecore.entity.Entity;
 import utils.Singleton;
 
 @Singleton
@@ -22,7 +24,7 @@ public final class EventBus {
         return instance;
     }
 
-    public void registerCallback(Class clazz, GameCallBack callBack){
+    public void registerCallback(Class<? extends GameCallBack> clazz, GameCallBack callBack){
         callBackMap.put(clazz, callBack);
     }
 
@@ -32,5 +34,7 @@ public final class EventBus {
         return clazz.cast(callBackMap.get(clazz));
     }
 
-
+    public void handleMessage(Message<? extends Entity> message){
+        // todo
+    }
 }

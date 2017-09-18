@@ -1,4 +1,4 @@
-package com.ood.clean.waterball.a1a2bsdk.core.signIn.exceptions;
+package com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.exceptions;
 
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.GameCoreException;

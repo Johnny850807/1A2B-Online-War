@@ -1,10 +1,10 @@
-package com.ood.clean.waterball.a1a2bsdk.core.mock;
+package com.ood.clean.waterball.a1a2bsdk.mock;
 
 import android.support.annotation.NonNull;
 
 import com.ood.clean.waterball.a1a2bsdk.core.model.User;
-import com.ood.clean.waterball.a1a2bsdk.core.signIn.UserSigningModule;
-import com.ood.clean.waterball.a1a2bsdk.core.signIn.exceptions.UserNameFormatException;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.exceptions.UserNameFormatException;
 
 
 public class MockUserSigningModule implements UserSigningModule {

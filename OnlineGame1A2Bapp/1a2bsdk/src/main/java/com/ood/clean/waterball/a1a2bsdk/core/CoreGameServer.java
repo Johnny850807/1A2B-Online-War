@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
-import com.ood.clean.waterball.a1a2bsdk.core.factory.MockGameModuleInflater;
-import com.ood.clean.waterball.a1a2bsdk.service.socket.SocketListenerService;
+import com.ood.clean.waterball.a1a2bsdk.core.factory.moduleinflater.MockGameModuleInflater;
+import com.ood.clean.waterball.a1a2bsdk.service.GameService;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ public final class CoreGameServer {
         moduleMap = Collections.checkedMap(new HashMap<ModuleName, GameModule>(),ModuleName.class, GameModule.class);
 
         //TODO Mocked
-        new MockGameModuleInflater().onPrepare(moduleMap);
+        new MockGameModuleInflater().onPrepareModules(moduleMap);
     }
 
     public static CoreGameServer getInstance(){
@@ -42,7 +42,7 @@ public final class CoreGameServer {
      */
     public void startEngine(@NonNull Context context){
         //todo run all modules and start the service of socket
-        context.startService(new Intent(context, SocketListenerService.class));
+        context.startService(new Intent(context, GameService.class));
     }
 
     /**
