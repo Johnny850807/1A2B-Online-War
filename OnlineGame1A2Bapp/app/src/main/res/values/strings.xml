@@ -4,4 +4,6 @@
     <string name="autoLogin">自動登入</string>
     <string name="inputName">輸入名稱</string>
     <string name="status">伺服器狀態</string>
+    <string name="signInWrongMessage">登入錯誤</string>
+    <string name="signInWelcomeMessage">歡迎光臨</string>
 </resources>
