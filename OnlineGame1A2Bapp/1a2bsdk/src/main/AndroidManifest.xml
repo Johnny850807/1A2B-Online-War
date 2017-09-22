@@ -2,7 +2,7 @@
 
     package="com.ood.clean.waterball.a1a2bsdk">
 
-    <application android:allowBackup="true" android:label="@string/app_name"
+    <application android:allowBackup="true"
         android:supportsRtl="true">
 
     </application>
