@@ -2,9 +2,7 @@ package com.example.joanna_zhang.test.Game;
 
 import com.example.joanna_zhang.test.NameCreator.NameCreator;
 
-/**
- * Created by Lin on 2017/9/17.
- */
+
 
 public class RandomNameCreator implements NameCreator {
 

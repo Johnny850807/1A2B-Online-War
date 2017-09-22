@@ -1,8 +1,5 @@
 package com.example.joanna_zhang.test.Game;
 
-/**
- * Created by Lin on 2017/9/17.
- */
 
 public class Result {
 
