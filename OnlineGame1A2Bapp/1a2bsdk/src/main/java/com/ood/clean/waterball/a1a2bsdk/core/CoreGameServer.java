@@ -57,8 +57,12 @@ public final class CoreGameServer {
     }
 
 
-    public GameServerInformation getInformation(){
-        return new GameServerInformation(5,2); //todo mock
+    public void getInformation(@NonNull CoreGameServer.Callback callback){
+        callback.onGetInformation(new GameServerInformation(5,2));
+    }
+
+    public interface Callback{
+        void onGetInformation(GameServerInformation gameServerInformation);
     }
 
 
