@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.joanna_zhang.test.Game.RandomNameCreator;
+import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
+import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.model.User;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.exceptions.UserNameFormatException;
@@ -39,11 +42,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void loginButtonOnClick(View view) {
         name = editText.getText().toString();
-        Intent changeActivity = new Intent(MainActivity.this, RoomListActivity.class);
-        changeActivity.putExtra("user", new User(name));
-        startActivity(changeActivity);
+        CoreGameServer server = CoreGameServer.getInstance();
+        server.startEngine(MainActivity.this);
+        UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
+        signingModule.signIn(name , new UserSigningModule.Callback() {
+            @Override
+            public void onSignInSuccessfully(@NonNull User user) {
+                Intent intent = new Intent(MainActivity.this, RoomListActivity.class);
+                intent.putExtra("user", user); // send the user data to the next activity
+                startActivity(intent);
+            }
 
-        //if (checkBox.isChecked());
+            @Override
+            public void onSignInFailed(@NonNull Exception err) throws UserNameFormatException {
+                if (err instanceof UserNameFormatException)
+                    errorMessage();
+            }
+        });
+
+        //todo if (checkBox.isChecked());
     }
 
     public void errorMessage(){
@@ -58,4 +75,8 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    public void randomNameButtonOnClick(View view) {
+        name = new RandomNameCreator().createRandomName();
+        editText.setText(name);
+    }
 }
