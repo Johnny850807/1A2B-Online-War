@@ -11,7 +11,6 @@ import com.ood.clean.waterball.a1a2bsdk.core.model.User;
 
 public class RoomListActivity extends AppCompatActivity {
 
-    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

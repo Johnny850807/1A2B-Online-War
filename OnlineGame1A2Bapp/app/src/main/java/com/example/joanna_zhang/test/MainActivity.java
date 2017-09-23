@@ -1,6 +1,5 @@
 package com.example.joanna_zhang.test;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,8 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox checkBox;
     private TextView serverStatus;
     private String name;
-    private RandomNameCreator randomNameCreator; // 這是她媽的依賴具體嗎?
-    private Exception e;
+    private RandomNameCreator randomNameCreator = new RandomNameCreator();  // 這是她媽的依賴具體嗎?
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,28 +54,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSignInFailed(@NonNull Exception err) throws UserNameFormatException {
                 if (err instanceof UserNameFormatException)
-                    errorMessage();
+                    errorMessage(String.valueOf(R.string.signInFailedMessage));
             }
         });
 
         //todo if (checkBox.isChecked());
     }
 
-    public void errorMessage(){
+    public void errorMessage(String exceptionMessage){
         new AlertDialog.Builder(MainActivity.this)
                 .setTitle(R.string.errorMessage)
-                .setMessage(exceptionMessage(e.getMessage()))
-                .setPositiveButton("確認", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
-                })
+                .setMessage(exceptionMessage)
+                .setPositiveButton(R.string.confirm, null)
                 .show();
     }
 
-
-    public String exceptionMessage(String message){
-        return message;
+    public String exceptionMessage(){
+        return "登入失敗";
     }
 
     public void randomNameButtonOnClick(View view) {
