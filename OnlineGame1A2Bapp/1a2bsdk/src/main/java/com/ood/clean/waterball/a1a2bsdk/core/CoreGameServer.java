@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 import com.ood.clean.waterball.a1a2bsdk.core.factory.moduleinflater.MockGameModuleInflater;
+import com.ood.clean.waterball.a1a2bsdk.core.model.GameServerInformation;
 import com.ood.clean.waterball.a1a2bsdk.service.GameService;
 
 import java.util.Collections;
@@ -53,6 +54,11 @@ public final class CoreGameServer {
         if (!moduleMap.containsKey(name))
             throw new IllegalArgumentException(name.toString() + " module is not prepared.");
         return moduleMap.get(name);
+    }
+
+
+    public GameServerInformation getInformation(){
+        return new GameServerInformation(5,2); //todo mock
     }
 
 

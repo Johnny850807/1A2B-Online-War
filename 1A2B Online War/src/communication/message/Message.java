@@ -3,7 +3,7 @@ package communication.message;
 import gamecore.entity.Entity;
 import utils.JsonConverter;
 
-public class Message<TData extends Entity> {
+public class Message<TData> {
 	private Event event;
 	private Status status = Status.none;
 	private TData data;

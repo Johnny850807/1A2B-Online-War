@@ -5,9 +5,9 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import command.Command;
+import command.base.Command;
 import command.user.SignInCommand;
-import communication.commandparser.CommandParser;
+import communication.commandparser.base.CommandParser;
 import communication.protocol.Protocol;
 import communication.protocol.ProtocolFactory;
 import gamefactory.GameFactory;

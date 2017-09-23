@@ -3,7 +3,8 @@ package command.user;
 import static communication.message.Event.signIn;
 import static communication.message.Status.success;
 
-import command.Command;
+import command.base.BaseCommand;
+import command.base.Command;
 import communication.message.Message;
 import gamecore.GameCore;
 import gamecore.entity.Entity;
@@ -12,15 +13,10 @@ import gamecore.entity.user.UserImp;
 import userservice.UserService;
 import utils.JsonConverter;
 
-public class SignInCommand implements Command{
-	private GameCore gamecore;
-	private UserService userService;
-	private Message<User> message;
-	
+public class SignInCommand extends BaseCommand<User> {
+
 	public SignInCommand(GameCore gamecore, UserService userService, Message<User> message) {
-		this.gamecore = gamecore;
-		this.userService = userService;
-		this.message = message;
+		super(gamecore, userService, message);
 	}
 
 	@Override

@@ -2,10 +2,8 @@ package communication.commandparser;
 
 import java.util.regex.Pattern;
 
-import com.google.gson.Gson;
-
 import command.base.Command;
-import command.user.SignInCommand;
+import command.server.GetServerInformationCommand;
 import communication.commandparser.base.CommandParser;
 import communication.message.Event;
 import communication.message.Message;
@@ -14,30 +12,30 @@ import communication.message.Status;
 import communication.protocol.Protocol;
 import communication.protocol.ProtocolFactory;
 import gamecore.GameCore;
-import gamecore.entity.user.User;
-import gamecore.entity.user.UserImp;
+import gamecore.entity.server.ServerInformation;
 import userservice.UserService;
 
-public class UserCommandParser extends CommandParser{
+public class ServerCommandParser extends CommandParser{
 
-	UserCommandParser(GameCore gamecore, ProtocolFactory protocolFactory, UserService userService, CommandParser next) {
+	protected ServerCommandParser(GameCore gamecore, ProtocolFactory protocolFactory, UserService userService,
+			CommandParser next) {
 		super(gamecore, protocolFactory, userService, next);
 	}
 
 	@Override
 	public Command parse(Protocol protocol) {
 		String event = protocol.getEvent();
-		if (Pattern.matches("^(sign).*", event))
+		
+		if (Pattern.matches("(server)", event))
 		{
-			Message<User> message = MessageUtils.protocolToMessage(protocol, UserImp.class);
-			
-			if (Pattern.matches(".*(in)$", event))
-				return new SignInCommand(gameCore, userService, message);
-			
-			//TODO signOut
+			Message<String> message = MessageUtils.protocolToMessage(protocol);
+			if (Pattern.matches(".*(information)", event)) //serverinformation
+				return new GetServerInformationCommand(gameCore, userService, message);
+				
 		}
 		
 		return nextParse(protocol);
 	}
 	
+
 }

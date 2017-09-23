@@ -1,4 +1,4 @@
-package communication.commandparser;
+package communication.commandparser.base;
 
 import userservice.UserService;
 

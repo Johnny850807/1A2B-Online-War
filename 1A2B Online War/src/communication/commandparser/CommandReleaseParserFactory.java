@@ -1,5 +1,7 @@
 package communication.commandparser;
 
+import communication.commandparser.base.CommandParser;
+import communication.commandparser.base.CommandParserFactory;
 import communication.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import userservice.UserService;

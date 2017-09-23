@@ -3,6 +3,7 @@ package main;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.Socket;
 
 import com.google.gson.Gson;
@@ -25,8 +26,11 @@ public class SignInView extends View {
 		gamefactory = new GameOnlineReleaseFactory();
 		protocolfactory = gamefactory.getProtocolFactory();
 		try{
-			Socket s = new Socket("127.0.0.1",5278);
+			Socket s = new Socket("35.194.206.10",5278);
 			output = s.getOutputStream();
+		}catch (ConnectException e) {
+			System.out.println("Error: " + e.getMessage());
+			System.exit(0);
 		}catch(IOException e){
 			e.printStackTrace();
 		}

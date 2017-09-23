@@ -5,15 +5,15 @@ import java.io.OutputStream;
 
 import org.hamcrest.Factory;
 
-import communication.commandparser.CommandParser;
-import communication.commandparser.CommandParserFactory;
 import communication.commandparser.CommandReleaseParserFactory;
+import communication.commandparser.base.CommandParser;
+import communication.commandparser.base.CommandParserFactory;
 import communication.protocol.ProtocolFactory;
 import communication.protocol.XOXOXDelimiterFactory;
 import gamecore.GameCore;
 import gamecore.GameCoreImp;
 import gamecore.entity.room.Room;
-import gamecore.entity.user.SocketProxyUser;
+import gamecore.entity.user.ServiceProxyUser;
 import gamecore.entity.user.User;
 import gamecore.entity.user.UserImp;
 import socket.SocketService;
@@ -35,7 +35,7 @@ public class GameOnlineReleaseFactory implements GameFactory{
 	
 	@Override
 	public User createUser(UserService userService, String name) {
-		SocketProxyUser proxyUser = new SocketProxyUser(new UserImp(name));
+		ServiceProxyUser proxyUser = new ServiceProxyUser(new UserImp(name));
 		proxyUser.setService(userService);
 		return proxyUser;
 	}

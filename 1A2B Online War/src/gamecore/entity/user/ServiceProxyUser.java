@@ -7,11 +7,11 @@ import gamecore.entity.BaseEntity;
 import gamecore.entity.Entity;
 import userservice.UserService;
 
-public class SocketProxyUser implements User{
+public class ServiceProxyUser implements User{
 	private UserService service;
 	private User user;
 	
-	public SocketProxyUser(User user) {
+	public ServiceProxyUser(User user) {
 		this.user = user;
 	}
 	
@@ -50,7 +50,7 @@ public class SocketProxyUser implements User{
 	}
 
 	@Override
-	public int compareTo(BaseEntity o) {
+	public int compareTo(Entity o) {
 		return user.compareTo(o);
 	}
 

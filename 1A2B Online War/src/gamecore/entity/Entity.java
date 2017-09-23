@@ -1,6 +1,6 @@
 package gamecore.entity;
 
-public interface Entity extends Comparable<BaseEntity>{
+public interface Entity extends Comparable<Entity>{
 
 	int hashCode();
 

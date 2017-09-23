@@ -1,7 +1,7 @@
 package gamefactory;
 
-import communication.commandparser.CommandParser;
-import communication.commandparser.CommandParserFactory;
+import communication.commandparser.base.CommandParser;
+import communication.commandparser.base.CommandParserFactory;
 import communication.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.room.Room;

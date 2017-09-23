@@ -6,9 +6,9 @@ import java.io.IOException;
 
 import com.google.gson.Gson;
 
-import command.Command;
-import communication.commandparser.CommandParser;
-import communication.commandparser.CommandParserFactory;
+import command.base.Command;
+import communication.commandparser.base.CommandParser;
+import communication.commandparser.base.CommandParserFactory;
 import communication.message.Message;
 import communication.protocol.Protocol;
 import communication.protocol.ProtocolFactory;

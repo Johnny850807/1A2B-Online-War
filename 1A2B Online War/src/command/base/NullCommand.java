@@ -1,4 +1,4 @@
-package command;
+package command.base;
 
 public class NullCommand implements Command{
 	// Null object pattern which the command does nothing at all

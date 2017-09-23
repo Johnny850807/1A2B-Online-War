@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import command.Command;
+import command.base.Command;
 import gamecore.entity.room.Room;
 import gamecore.entity.user.User;
 import gamecore.entity.user.UserImp;
