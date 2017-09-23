@@ -36,9 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void loginButtonOnClick(View view) {
         name = editText.getText().toString();
-        Intent activity = new Intent(MainActivity.this, RoomList.class);
-        activity.putExtra("user", new User(name));
-        startActivity(activity);
+        Intent changeActivity = new Intent(MainActivity.this, RoomList.class);
+        changeActivity.putExtra("user", new User(name));
+        startActivity(changeActivity);
         //if (checkBox.isChecked());
     }
 
