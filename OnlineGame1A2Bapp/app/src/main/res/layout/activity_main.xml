@@ -39,6 +39,7 @@
                 android:maxLines="1"
                 android:inputType="text"
                 android:ems="6"
+                android:maxLength="6"
                 android:text=""
                 android:textSize="22sp" />
 
