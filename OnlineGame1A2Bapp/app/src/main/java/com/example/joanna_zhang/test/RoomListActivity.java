@@ -24,7 +24,7 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     private String welcomeUserMessage() {
-        String message = user.getName() + "歡迎登入!!";
+        String message = "歡迎登入!!";
         return message;
     }
 
