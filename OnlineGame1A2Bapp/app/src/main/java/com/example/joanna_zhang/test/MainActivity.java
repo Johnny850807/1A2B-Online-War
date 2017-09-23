@@ -1,5 +1,6 @@
 package com.example.joanna_zhang.test;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,15 +14,17 @@ import android.widget.TextView;
 import com.example.joanna_zhang.test.Game.RandomNameCreator;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
+import com.ood.clean.waterball.a1a2bsdk.core.model.GameServerInformation;
 import com.ood.clean.waterball.a1a2bsdk.core.model.User;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.exceptions.UserNameFormatException;
 
-public class MainActivity extends AppCompatActivity implements UserSigningModule.Callback {
+public class MainActivity extends AppCompatActivity implements UserSigningModule.Callback, CoreGameServer.Callback {
 
+    private CoreGameServer server = CoreGameServer.getInstance();
     private EditText editText;
     private CheckBox checkBox;
-    private TextView serverStatus;
+    private TextView serverStatusTxt;
     private String name;
     private RandomNameCreator randomNameCreator = new RandomNameCreator();  // 這是她媽的依賴具體嗎?
 
@@ -30,17 +33,17 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViews();
+        server.getInformation(this);
     }
 
     private void findViews() {
         editText = (EditText) findViewById(R.id.inputName);
         checkBox = (CheckBox) findViewById(R.id.checkbox);
-        serverStatus = (TextView) findViewById(R.id.serverStatus);
+        serverStatusTxt = (TextView) findViewById(R.id.serverStatus);
     }
 
     public void loginButtonOnClick(View view) {
         name = editText.getText().toString();
-        CoreGameServer server = CoreGameServer.getInstance();
         server.startEngine(MainActivity.this);
         UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
         signingModule.signIn(name, this);
@@ -69,7 +72,15 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     @Override
     public void onSignInFailed(@NonNull Exception err) {
         if (err instanceof UserNameFormatException)
-            errorMessage(String.valueOf(R.string.signInFailedMessage));
+            errorMessage(getString(R.string.signInFailedMessage));
     }
 
+    @SuppressLint("StringFormatInvalid")
+    @Override
+    public void onGetInformation(GameServerInformation gameServerInformation) {
+        int roomAmount = gameServerInformation.getRoomAmount();
+        int onlineAmount = gameServerInformation.getOnlineAmount();
+        String statusFormat = getString(R.string.serverStatus);
+        serverStatusTxt.setText(String.format(statusFormat, roomAmount, onlineAmount));
+    }
 }
