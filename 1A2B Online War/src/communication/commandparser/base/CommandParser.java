@@ -1,7 +1,7 @@
-package communication.commandparser;
+package communication.commandparser.base;
 
-import command.Command;
-import command.NullCommand;
+import command.base.Command;
+import command.base.NullCommand;
 import communication.message.Message;
 import communication.protocol.Protocol;
 import communication.protocol.ProtocolFactory;
@@ -14,7 +14,7 @@ public abstract class CommandParser {
 	protected UserService userService;
 	protected CommandParser next;
 	
-	CommandParser(GameCore gamecore, 
+	protected CommandParser(GameCore gamecore, 
 			ProtocolFactory protocolFactory, 
 			UserService userService,
 			CommandParser next){

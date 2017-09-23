@@ -45,8 +45,8 @@ public class BaseEntity implements Entity {
 	}
 
 	@Override
-	public int compareTo(BaseEntity o) {
-		return id.compareTo(((Entity)o).getId());
+	public int compareTo(Entity o) {
+		return id.compareTo(o.getId());
 	}
 	
 	

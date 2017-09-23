@@ -11,10 +11,10 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import command.Command;
+import command.base.Command;
 import command.user.SignInCommand;
-import communication.commandparser.CommandParser;
-import communication.commandparser.CommandParserFactory;
+import communication.commandparser.base.CommandParser;
+import communication.commandparser.base.CommandParserFactory;
 import communication.message.Event;
 import communication.message.Message;
 import communication.message.Status;

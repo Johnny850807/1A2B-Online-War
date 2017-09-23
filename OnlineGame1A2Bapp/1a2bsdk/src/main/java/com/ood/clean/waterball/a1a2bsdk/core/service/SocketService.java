@@ -1,12 +1,18 @@
 package com.ood.clean.waterball.a1a2bsdk.core.service;
 
 
+import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutException;
+
+import java.io.IOException;
+import java.net.Socket;
+
 import communication.message.Message;
 import gamecore.entity.Entity;
 import userservice.ServiceIO;
 import userservice.UserService;
 
-import static com.ood.clean.waterball.a1a2bsdk.core.service.SocketService.Constant.*;
+import static com.ood.clean.waterball.a1a2bsdk.core.service.SocketService.Constant.PORT;
+import static com.ood.clean.waterball.a1a2bsdk.core.service.SocketService.Constant.SERVER_ADDRESS;
 
 public class SocketService implements UserService{
     private static SocketService instance;
@@ -27,7 +33,12 @@ public class SocketService implements UserService{
 
     @Override
     public void run() {
-        //TODO start socket listening
+        try {
+            io = new SocketServiceIO(new Socket("35.194.206.10",5278));
+
+        } catch (IOException e) {
+            throw new ConnectionTimedOutException(e);
+        }
     }
 
 
@@ -54,7 +65,7 @@ public class SocketService implements UserService{
     }
 
     public interface Constant {
-        String SERVER_ADDRESS = "52...."; // todo
+        String SERVER_ADDRESS = "35.194.206.10";
         int PORT = 5278;
     }
 }

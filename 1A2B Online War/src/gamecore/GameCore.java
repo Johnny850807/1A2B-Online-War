@@ -2,7 +2,7 @@ package gamecore;
 
 import java.util.List;
 
-import command.Command;
+import command.base.Command;
 import gamecore.entity.room.Room;
 import gamecore.entity.user.User;
 import userservice.UserService;
