@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
                 .show();
     }
 
-
     public void randomNameButtonOnClick(View view) {
         editText.setText(randomNameCreator.createRandomName());
     }

@@ -5,9 +5,8 @@
     <string name="inputName">輸入名稱</string>
     <string name="status">伺服器狀態</string>
     <string name="signInFailedMessage">登入失敗</string>
-    <string name="signInWelcomeMessage">歡迎光臨</string>
+    <string name="signInWelcomeMessage">歡迎回來!!</string>
     <string name="errorMessage">錯誤訊息</string>
-    <string name="welcomeMessage">歡迎登入!!</string>
-    <string name="welcome">歡迎</string>
+    <string name="SignInMessage">登入訊息</string>
     <string name="confirm">確認</string>
 </resources>

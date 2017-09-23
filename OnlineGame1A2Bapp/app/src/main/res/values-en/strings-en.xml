@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">1A2B</string>
+    <string name="login">Login</string>
+    <string name="autoLogin">AutoLogin</string>
+    <string name="inputName">Input your name</string>
+    <string name="status">Status</string>
+    <string name="signInFailedMessage">Sign In Failed.</string>
+    <string name="signInWelcomeMessage">Welcome Back!!</string>
+    <string name="errorMessage">Error Message</string>
+    <string name="SignInMessage">Sign In Message</string>
+    <string name="confirm">Confirm</string>
+</resources>
