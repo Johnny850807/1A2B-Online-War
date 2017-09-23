@@ -8,10 +8,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.ood.clean.waterball.a1a2bsdk.core.model.Room;
 import com.ood.clean.waterball.a1a2bsdk.core.model.User;
-
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void loginButtonOnClick(View view) {
         name = editText.getText().toString();
-        Intent changeActivity = new Intent(MainActivity.this, RoomList.class);
+        Intent changeActivity = new Intent(MainActivity.this, RoomListActivity.class);
         changeActivity.putExtra("user", new User(name));
         startActivity(changeActivity);
         //if (checkBox.isChecked());
