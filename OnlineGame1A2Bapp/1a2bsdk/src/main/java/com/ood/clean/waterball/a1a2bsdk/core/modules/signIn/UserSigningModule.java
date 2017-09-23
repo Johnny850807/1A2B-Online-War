@@ -17,6 +17,11 @@ public interface UserSigningModule extends GameModule{
     void signIn(@NonNull String name, @NonNull UserSigningModule.Callback callback);
 
     /**
+     * @return the user who has signed in to the roomlist
+     */
+    User getCurrentUser();
+
+    /**
      * used to listen to the sign event
      */
     public interface Callback extends GameCallBack{

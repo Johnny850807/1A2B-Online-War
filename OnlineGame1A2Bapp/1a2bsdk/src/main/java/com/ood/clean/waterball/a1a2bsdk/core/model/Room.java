@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import gamecore.entity.BaseEntity;
 
-
-public class Room extends BaseEntity {
+public class Room extends SerializableEntity {
     private List<User> userList = Collections.checkedList(new ArrayList<User>(), User.class);
     private String name;
     private int limitOfPlayer;
