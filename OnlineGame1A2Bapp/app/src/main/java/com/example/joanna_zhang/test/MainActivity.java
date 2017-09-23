@@ -8,10 +8,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.ood.clean.waterball.a1a2bsdk.core.model.Room;
 import com.ood.clean.waterball.a1a2bsdk.core.model.User;
-
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
