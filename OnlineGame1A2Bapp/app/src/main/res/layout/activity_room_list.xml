@@ -6,4 +6,10 @@
     android:layout_height="match_parent"
     tools:context="com.example.joanna_zhang.test.RoomListActivity">
 
+    <TextView
+        android:id="@+id/test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="123456"/>
+
 </android.support.constraint.ConstraintLayout>
