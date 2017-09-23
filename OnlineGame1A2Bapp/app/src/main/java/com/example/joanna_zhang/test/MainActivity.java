@@ -69,9 +69,6 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    public String exceptionMessage(){
-        return "登入失敗";
-    }
 
     public void randomNameButtonOnClick(View view) {
         editText.setText(randomNameCreator.createRandomName());
