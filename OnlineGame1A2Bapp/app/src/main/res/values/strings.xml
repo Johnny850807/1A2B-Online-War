@@ -9,4 +9,5 @@
     <string name="errorMessage">錯誤訊息</string>
     <string name="welcomeMessage">歡迎登入!!</string>
     <string name="welcome">歡迎</string>
+    <string name="confirm">確認</string>
 </resources>

@@ -13,11 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Game.RandomNameCreator;
-<<<<<<< HEAD
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
-=======
->>>>>>> 2bc7faa057d5c43662f785cb560bed93b995a4be
 import com.ood.clean.waterball.a1a2bsdk.core.model.User;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.exceptions.UserNameFormatException;
@@ -28,8 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox checkBox;
     private TextView serverStatus;
     private String name;
-    private RandomNameCreator randomNameCreator;
-    private Exception e;
+    private RandomNameCreator randomNameCreator = new RandomNameCreator();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
     public void errorMessage(){
         new AlertDialog.Builder(MainActivity.this)
                 .setTitle(R.string.errorMessage)
-                .setMessage(exceptionMessage(e.getMessage()))
-                .setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                .setMessage(exceptionMessage())
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                     }
@@ -80,17 +76,11 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-<<<<<<< HEAD
-    public void randomNameButtonOnClick(View view) {
-        name = new RandomNameCreator().createRandomName();
-        editText.setText(name);
-=======
-    public String exceptionMessage(String message){
-        return message;
+    public String exceptionMessage(){
+        return "登入失敗";
     }
 
     public void randomNameButtonOnClick(View view) {
         editText.setText(randomNameCreator.createRandomName());
->>>>>>> 2bc7faa057d5c43662f785cb560bed93b995a4be
     }
 }
