@@ -3,15 +3,19 @@ package com.example.joanna_zhang.test;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Game.RandomNameCreator;
 import com.ood.clean.waterball.a1a2bsdk.core.model.User;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.exceptions.UserNameFormatException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         Intent changeActivity = new Intent(MainActivity.this, RoomListActivity.class);
         changeActivity.putExtra("user", new User(name));
         startActivity(changeActivity);
+
         //if (checkBox.isChecked());
     }
 
