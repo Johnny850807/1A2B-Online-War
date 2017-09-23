@@ -57,22 +57,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSignInFailed(@NonNull Exception err) throws UserNameFormatException {
                 if (err instanceof UserNameFormatException)
-                    errorMessage();
+                    errorMessage(String.valueOf(R.string.signInFailedMessage));
             }
         });
 
         //todo if (checkBox.isChecked());
     }
 
-    public void errorMessage(){
+    public void errorMessage(String exceptionMessage){
         new AlertDialog.Builder(MainActivity.this)
                 .setTitle(R.string.errorMessage)
-                .setMessage(exceptionMessage())
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
-                })
+                .setMessage(exceptionMessage)
+                .setPositiveButton(R.string.confirm, null)
                 .show();
     }
 
