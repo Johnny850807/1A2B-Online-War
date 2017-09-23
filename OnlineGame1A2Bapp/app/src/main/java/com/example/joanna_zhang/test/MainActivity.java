@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.joanna_zhang.test.Game.RandomNameCreator;
 import com.ood.clean.waterball.a1a2bsdk.core.model.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox checkBox;
     private TextView serverStatus;
     private String name;
+    private RandomNameCreator randomNameCreator;
+    private Exception e;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     public void errorMessage(){
         new AlertDialog.Builder(MainActivity.this)
                 .setTitle(R.string.errorMessage)
-                .setMessage("登入錯誤")
+                .setMessage(exceptionMessage(e.getMessage()))
                 .setPositiveButton("確認", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -53,4 +56,11 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    public String exceptionMessage(String message){
+        return message;
+    }
+
+    public void randomNameButtonOnClick(View view) {
+        editText.setText(randomNameCreator.createRandomName());
+    }
 }
