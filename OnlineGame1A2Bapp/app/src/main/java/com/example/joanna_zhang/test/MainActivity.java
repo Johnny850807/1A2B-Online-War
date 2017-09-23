@@ -10,14 +10,10 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Game.RandomNameCreator;
-<<<<<<< HEAD
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
-=======
->>>>>>> 2bc7faa057d5c43662f785cb560bed93b995a4be
 import com.ood.clean.waterball.a1a2bsdk.core.model.User;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.exceptions.UserNameFormatException;
@@ -28,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox checkBox;
     private TextView serverStatus;
     private String name;
-    private RandomNameCreator randomNameCreator;
+    private RandomNameCreator randomNameCreator; // 這是她媽的依賴具體嗎?
     private Exception e;
 
     @Override
@@ -36,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViews();
-
     }
 
     private void findViews() {
@@ -80,17 +75,12 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-<<<<<<< HEAD
-    public void randomNameButtonOnClick(View view) {
-        name = new RandomNameCreator().createRandomName();
-        editText.setText(name);
-=======
+
     public String exceptionMessage(String message){
         return message;
     }
 
     public void randomNameButtonOnClick(View view) {
         editText.setText(randomNameCreator.createRandomName());
->>>>>>> 2bc7faa057d5c43662f785cb560bed93b995a4be
     }
 }
