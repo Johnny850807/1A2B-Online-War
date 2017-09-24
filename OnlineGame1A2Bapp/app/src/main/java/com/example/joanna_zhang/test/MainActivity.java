@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.joanna_zhang.test.Game.RandomNameCreator;
+import com.example.joanna_zhang.test.NameCreator.NameCreator;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.model.GameServerInformation;
@@ -22,11 +23,11 @@ import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.exceptions.UserNameF
 public class MainActivity extends AppCompatActivity implements UserSigningModule.Callback, CoreGameServer.Callback {
 
     private CoreGameServer server = CoreGameServer.getInstance();
-    private EditText editText;
-    private CheckBox checkBox;
+    private EditText nameEd;
+    private CheckBox autoSignInCheckbox;
     private TextView serverStatusTxt;
     private String name;
-    private RandomNameCreator randomNameCreator = new RandomNameCreator();  // 這是她媽的依賴具體嗎?
+    private NameCreator nameCreator = new RandomNameCreator();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,30 +37,23 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         server.getInformation(this);
     }
 
+
     private void findViews() {
-        editText = (EditText) findViewById(R.id.inputName);
-        checkBox = (CheckBox) findViewById(R.id.checkbox);
+        nameEd = (EditText) findViewById(R.id.inputName);
+        autoSignInCheckbox = (CheckBox) findViewById(R.id.checkbox);
         serverStatusTxt = (TextView) findViewById(R.id.serverStatus);
     }
 
     public void loginButtonOnClick(View view) {
-        name = editText.getText().toString();
+        name = nameEd.getText().toString();
         server.startEngine(MainActivity.this);
         UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
         signingModule.signIn(name, this);
-        //todo if (checkBox.isChecked());
-    }
-
-    public void errorMessage(String exceptionMessage){
-        new AlertDialog.Builder(MainActivity.this)
-                .setTitle(R.string.errorMessage)
-                .setMessage(exceptionMessage)
-                .setPositiveButton(R.string.confirm, null)
-                .show();
+        //todo if (autoSignInCheckbox.isChecked());
     }
 
     public void randomNameButtonOnClick(View view) {
-        editText.setText(randomNameCreator.createRandomName());
+        nameEd.setText(nameCreator.createRandomName());
     }
 
     @Override
@@ -72,7 +66,15 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     @Override
     public void onSignInFailed(@NonNull Exception err) {
         if (err instanceof UserNameFormatException)
-            errorMessage(getString(R.string.signInFailedMessage));
+            createAndShowErrorDialog(getString(R.string.signInFailedMessage));
+    }
+
+    public void createAndShowErrorDialog(String exceptionMessage){
+        new AlertDialog.Builder(MainActivity.this)
+                .setTitle(R.string.errorMessage)
+                .setMessage(exceptionMessage)
+                .setPositiveButton(R.string.confirm, null)
+                .show();
     }
 
     @SuppressLint("StringFormatInvalid")

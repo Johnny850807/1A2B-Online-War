@@ -15,15 +15,7 @@ public class GameServerInformation {
         return onlineAmount;
     }
 
-    public void setOnlineAmount(int onlineAmount) {
-        this.onlineAmount = onlineAmount;
-    }
-
     public int getRoomAmount() {
         return roomAmount;
-    }
-
-    public void setRoomAmount(int roomAmount) {
-        this.roomAmount = roomAmount;
     }
 }
