@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
 
     private CoreGameServer server = CoreGameServer.getInstance();
     private EditText nameEd;
-    private CheckBox autoLogin;
+    private CheckBox autoSignInCheckbox;
     private TextView serverStatusTxt;
     private String name;
     private NameCreator nameCreator = new RandomNameCreator();
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
 
     private void findViews() {
         nameEd = (EditText) findViewById(R.id.inputName);
-        autoLogin = (CheckBox) findViewById(R.id.checkbox);
+        autoSignInCheckbox = (CheckBox) findViewById(R.id.checkbox);
         serverStatusTxt = (TextView) findViewById(R.id.serverStatus);
     }
 
@@ -50,15 +50,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         server.startEngine(MainActivity.this);
         UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
         signingModule.signIn(name, this);
-        //todo if (autoLogin.isChecked());
-    }
-
-    public void createAndShowErrorMessage(String exceptionMessage){
-        new AlertDialog.Builder(MainActivity.this)
-                .setTitle(R.string.errorMessage)
-                .setMessage(exceptionMessage)
-                .setPositiveButton(R.string.confirm, null)
-                .show();
+        //todo if (autoSignInCheckbox.isChecked());
     }
 
     public void randomNameButtonOnClick(View view) {
@@ -80,6 +72,14 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
             createAndShowErrorMessage(getString(R.string.signInFailedMessage));
         else if (err instanceof UserNameFormatException)
             createAndShowErrorMessage(getString(R.string.signInFailed_playerNameIsInvalid));
+    }
+
+    public void createAndShowErrorMessage(String exceptionMessage) {
+        new AlertDialog.Builder(MainActivity.this)
+                .setTitle(R.string.errorMessage)
+                .setMessage(exceptionMessage)
+                .setPositiveButton(R.string.confirm, null)
+                .show();
     }
 
     @SuppressLint("StringFormatInvalid")
