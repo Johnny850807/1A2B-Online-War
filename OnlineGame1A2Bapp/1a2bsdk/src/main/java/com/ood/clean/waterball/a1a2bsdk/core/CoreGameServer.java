@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
+import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.GameModuleCastException;
 import com.ood.clean.waterball.a1a2bsdk.core.factory.moduleinflater.MockGameModuleInflater;
 import com.ood.clean.waterball.a1a2bsdk.core.model.GameServerInformation;
 import com.ood.clean.waterball.a1a2bsdk.service.GameService;
@@ -50,10 +51,18 @@ public final class CoreGameServer {
      * @param name module's name enum
      * @return matching name module
      */
-    public GameModule getModule(ModuleName name){
+    public <T extends GameModule> T getModule(ModuleName name){
+        T module;
+
         if (!moduleMap.containsKey(name))
             throw new IllegalArgumentException(name.toString() + " module is not prepared.");
-        return moduleMap.get(name);
+        try{
+             module = (T) moduleMap.get(name);
+        }catch (ClassCastException err){
+            throw new GameModuleCastException(err);
+        }
+
+        return module;
     }
 
 

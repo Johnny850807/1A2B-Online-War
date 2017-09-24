@@ -25,5 +25,5 @@ public enum ModuleName {
     /**
      * the 1a2b game
      */
-    GAME1A2B
+    GAME1A2B;
 }
