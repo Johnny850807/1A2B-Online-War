@@ -7,16 +7,18 @@ import java.io.IOException;
 import java.net.Socket;
 
 import communication.message.Message;
+import communication.protocol.ProtocolFactory;
 import gamecore.entity.Entity;
-import userservice.ServiceIO;
 import userservice.UserService;
 
 import static com.ood.clean.waterball.a1a2bsdk.core.service.SocketService.Constant.PORT;
 import static com.ood.clean.waterball.a1a2bsdk.core.service.SocketService.Constant.SERVER_ADDRESS;
 
 public class SocketService implements UserService{
-    private static SocketService instance;
-    private ServiceIO io;
+    private static SocketService instance = new SocketService();
+    private ProtocolFactory protocolFactory;
+    private SocketInputListener socketInputListener;
+    private SocketServiceIO io;
     private String address;
     private int port;
 
@@ -25,9 +27,13 @@ public class SocketService implements UserService{
         this.port = PORT;
     }
 
+    public static void inject(ProtocolFactory protocolFactory){
+        instance.protocolFactory = protocolFactory;
+    }
+
     public static SocketService getInstance(){
-        if (instance == null)
-            instance = new SocketService();
+        if (instance.protocolFactory == null)
+            throw new IllegalStateException("The protocol factory of the socketservice should be injected before started.");
         return instance;
     }
 
@@ -35,9 +41,12 @@ public class SocketService implements UserService{
     public void run() {
         try {
             io = new SocketServiceIO(new Socket("35.194.206.10",5278));
-
+            socketInputListener = new SocketInputListener(io, protocolFactory);
+            new Thread(socketInputListener).start();
         } catch (IOException e) {
             throw new ConnectionTimedOutException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -52,7 +61,7 @@ public class SocketService implements UserService{
 
     @Override
     public void disconnect() throws Exception {
-
+        socketInputListener.close();
     }
 
 
