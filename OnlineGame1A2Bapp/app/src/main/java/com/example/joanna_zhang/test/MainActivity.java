@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     public void loginButtonOnClick(View view) {
         name = nameEd.getText().toString();
         server.startEngine(MainActivity.this);
-        UserSigningModule signingModule = server.getModule(ModuleName.SIGNING);
+        UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
         signingModule.signIn(name, this);
         //todo if (autoSignInCheckbox.isChecked());
     }
