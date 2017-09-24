@@ -17,10 +17,10 @@ public class RoomListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room_list);
         CoreGameServer server = CoreGameServer.getInstance();
         UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
-        welcomeMessage();
+        createAndShowWelcomeMessage();
     }
 
-    public void welcomeMessage(){
+    public void createAndShowWelcomeMessage(){
         new AlertDialog.Builder(RoomListActivity.this)
                 .setTitle(R.string.SignInMessage)
                 .setMessage(welcomeUserMessage())

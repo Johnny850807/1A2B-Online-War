@@ -10,4 +10,6 @@
     <string name="errorMessage">Error Message</string>
     <string name="SignInMessage">Sign In Message</string>
     <string name="confirm">Confirm</string>
+    <string name="signInFailed_pleaseCheckYourNetwork">Sign in failed: Please check your Internet</string>
+    <string name="signInFailed_playerNameIsInvalid">Sign in failed: Player name is invalid</string>
 </resources>
