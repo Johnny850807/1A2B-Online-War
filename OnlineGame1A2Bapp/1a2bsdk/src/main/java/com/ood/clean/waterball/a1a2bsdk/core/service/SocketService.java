@@ -1,12 +1,15 @@
 package com.ood.clean.waterball.a1a2bsdk.core.service;
 
 
+import com.google.gson.Gson;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutException;
+import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.GameIOException;
 
 import java.io.IOException;
 import java.net.Socket;
 
 import communication.message.Message;
+import communication.protocol.Protocol;
 import communication.protocol.ProtocolFactory;
 import gamecore.entity.Entity;
 import userservice.UserService;
@@ -56,7 +59,16 @@ public class SocketService implements UserService{
      */
     @Override
     public void respond(Message<? extends Entity> message) {
-
+        try{
+            String dataJson = new Gson().toJson(message.getData());
+            Protocol protocol = protocolFactory.createProtocol(message.getEvent().toString(), message.getStatus().toString(),
+                    dataJson);
+            io.getOutputStream().writeUTF(protocol.toString());
+        }catch (IOException err){
+            throw new GameIOException(err);
+        }catch (Exception err){
+            err.printStackTrace();
+        }
     }
 
     @Override

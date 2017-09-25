@@ -1,4 +1,4 @@
-package com.ood.clean.waterball.a1a2bsdk.mock;
+package com.ood.clean.waterball.a1a2bsdk.core.modules.mock;
 
 import android.support.annotation.NonNull;
 
