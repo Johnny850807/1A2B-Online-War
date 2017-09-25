@@ -2,6 +2,7 @@ package com.ood.clean.waterball.a1a2bsdk.core.commandparser.factory;
 
 
 import com.ood.clean.waterball.a1a2bsdk.core.commandparser.CommandParser;
+import com.ood.clean.waterball.a1a2bsdk.core.commandparser.ExceptionCommandParser;
 import com.ood.clean.waterball.a1a2bsdk.core.commandparser.UserCommandParser;
 
 import utils.Singleton;
@@ -17,7 +18,7 @@ public class CommandParserFactory {
     }
 
     public CommandParser createCommandParserLinkedList(){
-        return new UserCommandParser(null);
+        return new ExceptionCommandParser(new UserCommandParser(null));
     }
 
 }

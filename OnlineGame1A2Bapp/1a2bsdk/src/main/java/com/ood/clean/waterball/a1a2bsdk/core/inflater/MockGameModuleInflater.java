@@ -1,4 +1,4 @@
-package com.ood.clean.waterball.a1a2bsdk.core.factory.moduleinflater;
+package com.ood.clean.waterball.a1a2bsdk.core.inflater;
 
 
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;

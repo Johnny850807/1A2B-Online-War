@@ -16,27 +16,34 @@ import communication.protocol.ProtocolFactory;
 public class SocketInputListener implements Runnable, Closeable{
     private DataInputStream dataInputStream;
     private ProtocolFactory protocolFactory;
+    private CommandParser parserLinkedList;
     private boolean running = true;
 
     public SocketInputListener(SocketServiceIO socketServiceIO, ProtocolFactory protocolFactory) throws Exception {
         this.dataInputStream = socketServiceIO.getInputStream();
         this.protocolFactory = protocolFactory;
+        this.parserLinkedList = CommandParserFactory.getInstance().createCommandParserLinkedList();
     }
 
     @Override
     public void run() {
         while(running)
-        {
-            try {
-                String input = dataInputStream.readUTF();
-                Protocol protocol = protocolFactory.createProtocol(input);
-                CommandParser parserLinkedList = CommandParserFactory.getInstance().createCommandParserLinkedList();
-                Command command = parserLinkedList.parse(protocol);
-                command.execute();
-            } catch (IOException e) {
-                throw new GameIOException(e);
-            }
+            listenToTheNextInput();
+    }
+
+    private void listenToTheNextInput(){
+        try {
+            String input = dataInputStream.readUTF();
+            parseCommandAndExecute(input);
+        } catch (IOException e) {
+            throw new GameIOException(e);
         }
+    }
+
+    private void parseCommandAndExecute(String input){
+        Protocol protocol = protocolFactory.createProtocol(input);
+        Command command = parserLinkedList.parse(protocol);
+        command.execute();
     }
 
     @Override

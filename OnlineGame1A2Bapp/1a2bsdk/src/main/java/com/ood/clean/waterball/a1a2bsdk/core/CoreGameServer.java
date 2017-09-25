@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
-import com.ood.clean.waterball.a1a2bsdk.core.factory.moduleinflater.MockGameModuleInflater;
+import com.ood.clean.waterball.a1a2bsdk.core.inflater.MockGameModuleInflater;
 import com.ood.clean.waterball.a1a2bsdk.core.model.GameServerInformation;
 import com.ood.clean.waterball.a1a2bsdk.service.GameService;
 

@@ -30,11 +30,5 @@ public interface UserSigningModule extends GameModule{
          * @param user the user returned includes the sign in info
          */
         void onSignInSuccessfully(@NonNull User user);
-
-
-        /**
-         * @param err signed failed
-         */
-        void onSignInFailed(@NonNull Exception err);
     }
 }

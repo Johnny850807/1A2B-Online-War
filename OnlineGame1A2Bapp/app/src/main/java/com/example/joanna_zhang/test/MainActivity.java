@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     }
 
     @Override
-    public void onSignInFailed(@NonNull Exception err) {
+    public void onError(@NonNull Throwable err) {
         if (err instanceof UserNameFormatException)
             createAndShowErrorDialog(getString(R.string.signInFailedMessage));
     }
