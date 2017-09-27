@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <TextView android:id="@+id/roomNameTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="roomname"
+        android:textSize="22sp"/>
+
+    <TextView android:id="@+id/roomModeTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/roomNameTxt"
+        android:text="roommode"
+        android:textSize="22sp"/>
+
+    <TextView android:id="@+id/roomCreatorNameTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:text="roomcreator"
+        android:textSize="22sp" />
+
+    <TextView android:id="@+id/peopleAmountTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/roomCreatorNameTxt"
+        android:text="2/6"
+        android:textSize="22sp"/>
+
+</RelativeLayout>

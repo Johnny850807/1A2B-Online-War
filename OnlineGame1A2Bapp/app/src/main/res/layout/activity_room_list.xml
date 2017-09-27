@@ -4,14 +4,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
     tools:context="com.example.joanna_zhang.test.RoomListActivity">
 
-    <TextView
-        android:id="@+id/test"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="RoomList"
-        android:gravity="center"
-        android:layout_gravity="center"/>
+        android:paddingTop="10dp">
+
+        <EditText android:id="@+id/searchEdt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <ImageButton android:id="@+id/searchImgBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button android:id="@+id/joinRoomBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="快速加入"
+            android:textSize="18sp"/>
+
+        <Button android:id="@+id/createRoomBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create"
+            android:textSize="18sp"/>
+
+        <Spinner android:id="@+id/modeSpn"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
+
 
 </LinearLayout>

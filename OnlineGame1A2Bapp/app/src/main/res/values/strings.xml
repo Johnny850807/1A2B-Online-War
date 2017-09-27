@@ -11,4 +11,11 @@
     <string name="confirm">確認</string>
     <string name="signInFailed_pleaseCheckYourNetwork">登入失敗: 請檢查你的網路</string>
     <string name="signInFailed_playerNameIsInvalid">登入失敗: 玩家名稱無效</string>
+    <string name="create">創建</string>
+    <string name="mode">模式</string>
+    <array name="roomMode">
+        <item>模式</item>
+        <item>爭奪戰</item>
+        <item>對決戰</item>
+    </array>
 </resources>
