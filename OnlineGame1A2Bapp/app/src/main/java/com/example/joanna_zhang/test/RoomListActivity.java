@@ -10,18 +10,24 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.joanna_zhang.test.Abstract.Mode;
 import com.example.joanna_zhang.test.Abstract.RoomListItemData;
+import com.example.joanna_zhang.test.Mock.MockRoomListItemData;
+import com.example.joanna_zhang.test.Mock.MockUser;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RoomListActivity extends AppCompatActivity {
 
-    private List<RoomListItemData> roomListItemDatas;
+    private List<RoomListItemData> roomListItemDatas = new ArrayList<>();
+    private ListView roomLst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,18 @@ public class RoomListActivity extends AppCompatActivity {
         CoreGameServer server = CoreGameServer.getInstance();
         UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
         createAndShowWelcomeMessage();
+
+        roomLst = (ListView) findViewById(R.id.roomLst);
+
+        roomListItemDatas.add(new MockRoomListItemData("來玩啊", Mode.DUEL, new MockUser()));
+        roomListItemDatas.add(new MockRoomListItemData("來玩啊啊啊啊", Mode.FIGHT, new MockUser()));
+        updateRoomList();
+
+    }
+
+    public void updateRoomList() {
+        MyAdapter myAdapter = new MyAdapter();
+        roomLst.setAdapter(myAdapter);
     }
 
     public void createAndShowWelcomeMessage(){
@@ -54,7 +72,7 @@ public class RoomListActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 0;
+            return roomListItemDatas.size();
         }
 
         @Override
@@ -77,10 +95,20 @@ public class RoomListActivity extends AppCompatActivity {
             TextView roomCreator = view.findViewById(R.id.roomListItemCreatorNameTxt);
             TextView roomPeopleAmount = view.findViewById(R.id.roomListItemPeopleAmountTxt);
 
+            String mode, totalPeopleAmount;
+            if (roomListItemDatas.get(i).getMode() == Mode.DUEL) {
+                mode = "1A2B 對決戰";
+                totalPeopleAmount = "2";
+            }
+            else {
+                mode = "1A2B 爭奪戰";
+                totalPeopleAmount = "6";
+            }
+
             roomName.setText(roomListItemDatas.get(i).getRoomName());
-            roomMode.setText(roomListItemDatas.get(i).getMode().toString());
+            roomMode.setText(mode);
             roomCreator.setText(roomListItemDatas.get(i).getRoomCreatorName());
-            roomPeopleAmount.setText(roomListItemDatas.get(i).getPeopleAmount());
+            roomPeopleAmount.setText(String.valueOf(roomListItemDatas.get(i).getPeopleAmount() + "/" + totalPeopleAmount));
 
             return view;
         }
