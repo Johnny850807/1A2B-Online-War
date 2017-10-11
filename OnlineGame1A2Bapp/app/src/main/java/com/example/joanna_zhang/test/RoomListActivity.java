@@ -1,5 +1,6 @@
 package com.example.joanna_zhang.test;
 
+import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +34,12 @@ public class RoomListActivity extends AppCompatActivity {
         return message;
     }
 
-    public void joinRoomBtnOnClick(View view) {
+    public void createRoomBtnOnClick(View view) {
+
+        new AlertDialog.Builder(this)
+                .setView(R.layout.create_room_dialog)
+                .setPositiveButton(R.string.confirm, null)
+                .setNegativeButton(R.string.cancel, null)
+                .create();
     }
 }
