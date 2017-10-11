@@ -18,6 +18,7 @@
     <string name="Confirm">確認</string>
     <string name="room_name">房名:</string>
     <string name="game_mode">遊玩模式:</string>
+    <string name="joinQuickly">快速加入</string>
     <array name="roomMode">
         <item>模式</item>
         <item>爭奪戰</item>
