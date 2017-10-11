@@ -5,13 +5,16 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
-import com.ood.clean.waterball.a1a2bsdk.core.inflater.MockGameModuleInflater;
+import com.ood.clean.waterball.a1a2bsdk.core.inflater.ReleaseGameModuleInflater;
 import com.ood.clean.waterball.a1a2bsdk.core.model.GameServerInformation;
+import com.ood.clean.waterball.a1a2bsdk.core.service.SocketService;
 import com.ood.clean.waterball.a1a2bsdk.service.GameService;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import communication.protocol.XOXOXDelimiterFactory;
 
 /**
     Facade pattern of the 1A2B sdk, contains all modules supporting your 1A2B app.
@@ -24,8 +27,8 @@ public final class CoreGameServer {
     private CoreGameServer(){
         moduleMap = Collections.checkedMap(new HashMap<ModuleName, GameModule>(),ModuleName.class, GameModule.class);
 
-        //TODO Mocked
-        new MockGameModuleInflater().onPrepareModules(moduleMap);
+        SocketService.inject(new XOXOXDelimiterFactory()); // init protocol factory
+        new ReleaseGameModuleInflater().onPrepareModules(moduleMap);
     }
 
     public static CoreGameServer getInstance(){

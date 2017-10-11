@@ -13,7 +13,7 @@ public class MockUserSigningModule implements UserSigningModule {
     @Override
     public void signIn(@NonNull String name, @NonNull Callback callback) {
         if (name.length() < 2 || name.length() > 6)
-            callback.onSignInFailed(new UserNameFormatException("name invalid"));
+            callback.onError(new UserNameFormatException("name invalid"));
         else
             callback.onSignInSuccessfully(currentUser = new User(name));
     }

@@ -24,7 +24,7 @@ public class UserSigningModuleImp implements UserSigningModule {
             eventBus.registerCallback(UserSigningModule.Callback.class, callback);
             socketService.respond(new Message<Entity>(Event.signIn, Status.request, userData));
         }catch (Exception err){
-            callback.onSignInFailed(err);
+            callback.onError(err);
         }
     }
 
