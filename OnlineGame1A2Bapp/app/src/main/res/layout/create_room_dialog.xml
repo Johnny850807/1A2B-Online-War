@@ -5,6 +5,17 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/roomNameTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/room_name" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="230dp"
@@ -23,22 +34,34 @@
                 android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/game_mode" />
 
         <Spinner
-            android:id="@+id/create_room_mode_btn"
-            android:layout_width="100dp"
+            android:id="@+id/createRoomModeSpn"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
-
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="15dp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="6dp"
-        android:paddingRight="6dp"
-        android:paddingLeft="6dp">
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp">
 
         <Button
             android:layout_width="wrap_content"
