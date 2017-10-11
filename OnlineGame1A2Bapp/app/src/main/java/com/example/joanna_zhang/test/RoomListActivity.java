@@ -1,9 +1,8 @@
 package com.example.joanna_zhang.test;
 
-import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
@@ -11,7 +10,6 @@ import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 public class RoomListActivity extends AppCompatActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +22,7 @@ public class RoomListActivity extends AppCompatActivity {
 
     public void createAndShowWelcomeMessage(){
         new AlertDialog.Builder(RoomListActivity.this)
-                .setTitle(R.string.SignInMessage)
+                .setTitle(R.string.signInMessage)
                 .setMessage(welcomeUserMessage())
                 .show();
     }
@@ -35,10 +33,8 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     public void createRoomBtnOnClick(View view) {
-
         new AlertDialog.Builder(this)
                 .setView(R.layout.create_room_dialog)
-                .create()
                 .show();
     }
 }
