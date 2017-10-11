@@ -1,6 +1,6 @@
 package com.example.joanna_zhang.test;
 
-import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,7 +34,7 @@ public class RoomListActivity extends AppCompatActivity {
 
     public void createAndShowWelcomeMessage(){
         new AlertDialog.Builder(RoomListActivity.this)
-                .setTitle(R.string.SignInMessage)
+                .setTitle(R.string.signInMessage)
                 .setMessage(welcomeUserMessage())
                 .show();
     }
@@ -45,10 +45,8 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     public void createRoomBtnOnClick(View view) {
-
         new AlertDialog.Builder(this)
                 .setView(R.layout.create_room_dialog)
-                .create()
                 .show();
     }
 
