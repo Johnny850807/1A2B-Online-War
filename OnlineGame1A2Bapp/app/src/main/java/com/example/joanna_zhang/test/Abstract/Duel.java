@@ -1,4 +1,5 @@
-package com.example.joanna_zhang.test;
+package com.example.joanna_zhang.test.Abstract;
+
 
 public class Duel extends Mode {
     @Override

@@ -48,7 +48,6 @@
             android:id="@+id/joinRoomBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
             android:background="@drawable/roomlist_corner"
             android:text="@string/joinQuickly"
             android:textSize="14sp"
