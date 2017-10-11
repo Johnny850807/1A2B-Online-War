@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="30dp"
-    android:paddingRight="30dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
     tools:context="com.example.joanna_zhang.test.RoomListActivity">
 
     <LinearLayout
@@ -48,9 +48,10 @@
             android:id="@+id/joinRoomBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:background="@drawable/roomlist_corner"
             android:text="@string/joinQuickly"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:onClick="joinRoomBtnOnClick"/>
 
         <Button
@@ -60,7 +61,7 @@
             android:layout_marginLeft="8dp"
             android:background="@drawable/roomlist_corner"
             android:text="@string/create"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:onClick="createRoomBtnOnClick"/>
 
         <Spinner
@@ -69,7 +70,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="8dp"
             android:background="@drawable/roomlist_corner"
-            android:textSize="20sp" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 
