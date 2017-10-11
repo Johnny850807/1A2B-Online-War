@@ -6,20 +6,20 @@
     android:padding="8dp"
     android:background="@drawable/corner">
 
-    <TextView android:id="@+id/roomListNameTxt"
+    <TextView android:id="@+id/roomListItemNameTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="roomname"
         android:textSize="22sp"/>
 
-    <TextView android:id="@+id/roomListModeTxt"
+    <TextView android:id="@+id/roomListItemModeTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/roomListNameTxt"
+        android:layout_below="@id/roomListItemNameTxt"
         android:text="roommode"
         android:textSize="22sp"/>
 
-    <TextView android:id="@+id/roomListCreatorNameTxt"
+    <TextView android:id="@+id/roomListItemCreatorNameTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -28,11 +28,11 @@
         android:text="roomcreator"
         android:textSize="22sp" />
 
-    <TextView android:id="@+id/roomListPeopleAmountTxt"
+    <TextView android:id="@+id/roomListItemPeopleAmountTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/roomListCreatorNameTxt"
+        android:layout_below="@id/roomListItemCreatorNameTxt"
         android:text="2/6"
         android:textSize="22sp"/>
 
