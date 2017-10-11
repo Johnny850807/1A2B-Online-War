@@ -38,8 +38,7 @@ public class RoomListActivity extends AppCompatActivity {
 
         new AlertDialog.Builder(this)
                 .setView(R.layout.create_room_dialog)
-                .setPositiveButton(R.string.confirm, null)
-                .setNegativeButton(R.string.cancel, null)
-                .create();
+                .create()
+                .show();
     }
 }
