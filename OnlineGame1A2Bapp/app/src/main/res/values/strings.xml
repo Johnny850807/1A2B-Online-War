@@ -16,6 +16,7 @@
     <string name="mode">模式</string>
     <string name="Cancel">取消</string>
     <string name="Confirm">確認</string>
+    <string name="joinQuickly">快速加入</string>
     <array name="roomMode">
         <item>模式</item>
         <item>爭奪戰</item>

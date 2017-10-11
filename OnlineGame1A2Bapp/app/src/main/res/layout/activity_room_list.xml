@@ -12,16 +12,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp">
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:padding="4dp"
+        android:background="@drawable/corner">
 
-        <EditText android:id="@+id/searchEdt"
+        <EditText
+            android:id="@+id/searchEdt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:paddingLeft="6dp"
+            android:textSize="20sp"
+            android:hint="搜尋房名或暱稱"
+            android:background="@null" />
 
-        <ImageButton android:id="@+id/searchImgBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
+        <ImageButton
+            android:id="@+id/searchImgBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/magnifier" />
 
     </LinearLayout>
 
@@ -29,28 +41,38 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="6dp"
         android:gravity="center">
 
-        <Button android:id="@+id/joinRoomBtn"
+        <Button
+            android:id="@+id/joinRoomBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="快速加入"
-            android:textSize="18sp"/>
-
-        <Button android:id="@+id/createRoomBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/create"
-            android:textSize="18sp"/>
-
-        <Spinner android:id="@+id/modeSpn"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:background="@drawable/roomlist_corner"
+            android:text="@string/joinQuickly"
             android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/createRoomBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/roomlist_corner"
+            android:text="@string/create"
+            android:textSize="18sp" />
+
+        <Spinner
+            android:id="@+id/modeSpn"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/roomlist_corner"
+            android:textSize="20sp" />
 
     </LinearLayout>
 
     <ListView
+        android:id="@+id/roomLst"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
 
