@@ -1,7 +1,6 @@
 package com.example.joanna_zhang.test;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -15,7 +14,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.example.joanna_zhang.test.Abstract.Mode;
+
+import com.example.joanna_zhang.test.Abstract.GameMode;
 import com.example.joanna_zhang.test.Abstract.RoomListItemData;
 import com.example.joanna_zhang.test.Mock.MockRoomListItemData;
 import com.example.joanna_zhang.test.Mock.MockUser;
@@ -25,6 +25,8 @@ import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.joanna_zhang.test.R.array.roomMode;
 
 public class RoomListActivity extends AppCompatActivity {
 
@@ -46,17 +48,16 @@ public class RoomListActivity extends AppCompatActivity {
         roomLst = (ListView) findViewById(R.id.roomLst);
         roomModeSpn = (Spinner) findViewById(R.id.modeSpn);
 
-
-
-        roomListItemDatas.add(new MockRoomListItemData("對決", Mode.DUEL, new MockUser()));
-        roomListItemDatas.add(new MockRoomListItemData("來玩啊啊啊啊", Mode.FIGHT, new MockUser()));
+        roomListItemDatas.add(new MockRoomListItemData("對決", GameMode.DUEL, new MockUser()));
+        roomListItemDatas.add(new MockRoomListItemData("來玩啊啊啊啊", GameMode.FIGHT, new MockUser()));
 
         updateRoomList(roomListItemDatas);
+        setUpSpinner();
 
     }
 
     public void setUpSpinner() {
-        ArrayAdapter<CharSequence> adapterRoomMode = ArrayAdapter.createFromResource(this, R.array.roomMode, android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adapterRoomMode = ArrayAdapter.createFromResource(this, roomMode, android.R.layout.simple_spinner_dropdown_item);
         adapterRoomMode.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roomModeSpn.setAdapter(adapterRoomMode);
     }
@@ -88,20 +89,23 @@ public class RoomListActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.confirm, null)
                 .setNegativeButton(R.string.cancel, null)
                 .show();
+    }
+
+    public void joinRoomBtnOnClick(View view) {
 
     }
 
     public class MyAdapter extends BaseAdapter {
 
-        private List<RoomListItemData> list;
+        private List<RoomListItemData> roomlist;
 
-        public  MyAdapter(List<RoomListItemData> list) {
-            this.list = list;
+        public  MyAdapter(List<RoomListItemData> roomlist) {
+            this.roomlist = roomlist;
         }
 
         @Override
         public int getCount() {
-            return list.size();
+            return roomlist.size();
         }
 
         @Override
@@ -115,34 +119,47 @@ public class RoomListActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            view = LayoutInflater.from(RoomListActivity.this).inflate(R.layout.room_list_item, viewGroup, false);
+        public View getView(int position, View view, ViewGroup viewGroup) {
+            ViewHolder viewHolder;
+            if (view == null)  // if the view has not existed in view, init and bind the viewholder
+            {
+                view = LayoutInflater.from(RoomListActivity.this).inflate(R.layout.room_list_item, viewGroup, false);
 
-
-            TextView roomName = view.findViewById(R.id.roomListItemNameTxt);
-            TextView roomMode = view.findViewById(R.id.roomListItemModeTxt);
-            TextView roomCreator = view.findViewById(R.id.roomListItemCreatorNameTxt);
-            TextView roomPeopleAmount = view.findViewById(R.id.roomListItemPeopleAmountTxt);
-
-            String mode, totalPeopleAmount;
-            if (list.get(i).getMode() == Mode.DUEL) {
-                mode = "1A2B 對決戰";
-                totalPeopleAmount = "2";
-            } else {
-                mode = "1A2B 爭奪戰";
-                totalPeopleAmount = "6";
+                viewHolder = new ViewHolder();
+                viewHolder.roomNameTxt = view.findViewById(R.id.roomListItemNameTxt);
+                viewHolder.roomModeTxt = view.findViewById(R.id.roomListItemModeTxt);
+                viewHolder.roomCreatorName = view.findViewById(R.id.roomListItemCreatorNameTxt);
+                viewHolder.roomPeopleAmountTxt = view.findViewById(R.id.roomListItemPeopleAmountTxt);
+                view.setTag(viewHolder);
             }
+            else  // if the view exists, get the viewholder
+                viewHolder = (ViewHolder) view.getTag();
 
-            roomName.setText(list.get(i).getRoomName());
-            roomMode.setText(mode);
-            roomCreator.setText(list.get(i).getRoomCreatorName());
-            roomPeopleAmount.setText(String.valueOf(list.get(i).getPeopleAmount() + "/" + totalPeopleAmount));
+            RoomListItemData gameroom = roomlist.get(position);
+
+            String modeName;
+            if (gameroom.getGameMode() == GameMode.DUEL)
+                modeName = "1A2B 對決戰";
+            else
+                modeName = "1A2B 爭奪戰";
+
+            viewHolder.roomNameTxt.setText(gameroom.getRoomName());
+            viewHolder.roomModeTxt.setText(modeName);
+            viewHolder.roomCreatorName.setText(gameroom.getRoomCreatorName());
+            viewHolder.roomPeopleAmountTxt.setText(gameroom.getRoomName() + "/" + gameroom.getGameMode().getPlayerAmount());
 
             return view;
         }
+
+        private class ViewHolder {
+            TextView roomNameTxt;
+            TextView roomModeTxt;
+            TextView roomCreatorName;
+            TextView roomPeopleAmountTxt;
+        }
     }
 
-    class SearchEditTextWatcher implements TextWatcher {
+    private class SearchEditTextWatcher implements TextWatcher {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
