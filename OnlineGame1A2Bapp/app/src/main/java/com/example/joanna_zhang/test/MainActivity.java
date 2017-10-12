@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         new AlertDialog.Builder(MainActivity.this)
                 .setTitle(R.string.errorMessage)
                 .setMessage(exceptionMessage)
+                .setIcon(R.drawable.logo)
                 .setPositiveButton(R.string.confirm, null)
                 .show();
     }

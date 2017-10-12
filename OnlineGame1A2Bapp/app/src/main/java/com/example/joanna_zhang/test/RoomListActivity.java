@@ -38,26 +38,38 @@ public class RoomListActivity extends AppCompatActivity {
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
     private EditText searchEdt;
-    private ListView roomLst;
+    private ListView roomListView;
     private Spinner roomModeSpn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_list);
+
+        init();
+        setupViews();
+        createAndShowWelcomeMessage();
+        updateRoomList(roomList);
+    }
+
+    private void init(){
         CoreGameServer server = CoreGameServer.getInstance();
         UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
-        createAndShowWelcomeMessage();
+        roomList = gameRoomListFactory.createRoomList();
+    }
 
+    private void setupViews(){
+        findViews();
+        setUpSpinner();
+        updateRoomList(roomList);
+        roomListView.setDivider(getResources().getDrawable(R.drawable.transperent_color));
+    }
+
+    private void findViews(){
         searchEdt = (EditText) findViewById(R.id.searchEdt);
         searchEdt.addTextChangedListener(new SearchEditTextWatcher());
-        roomLst = (ListView) findViewById(R.id.roomLst);
+        roomListView = (ListView) findViewById(R.id.roomLst);
         roomModeSpn = (Spinner) findViewById(R.id.modeSpn);
-
-        roomList = gameRoomListFactory.createRoomList();
-
-        updateRoomList(roomList);
-        setUpSpinner();
     }
 
     public void setUpSpinner() {
@@ -68,7 +80,7 @@ public class RoomListActivity extends AppCompatActivity {
 
     public void updateRoomList(List<GameRoom> list) {
         MyAdapter myAdapter = new MyAdapter(list);
-        roomLst.setAdapter(myAdapter);
+        roomListView.setAdapter(myAdapter);
     }
 
     public void createAndShowWelcomeMessage() {
