@@ -153,7 +153,7 @@ public class RoomListActivity extends AppCompatActivity {
             viewHolder.roomNameTxt.setText(gameroom.getRoomName());
             viewHolder.roomModeTxt.setText(modeName);
             viewHolder.roomCreatorName.setText(gameroom.getRoomCreatorName());
-            viewHolder.roomPeopleAmountTxt.setText(gameroom.getRoomName() + "/" + gameroom.getGameMode().getPlayerAmount());
+            viewHolder.roomPeopleAmountTxt.setText(gameroom.getPeopleAmount() + "/" + gameroom.getGameMode().getPlayerAmount());
 
             return view;
         }
