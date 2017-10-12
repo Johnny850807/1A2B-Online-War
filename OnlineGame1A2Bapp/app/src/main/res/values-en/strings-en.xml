@@ -20,10 +20,11 @@
     <string name="game_mode">Game mode:</string>
     <string name="joinQuickly">Join quickly</string>
     <string name="create_room">Create Room</string>
+    <string name="duel">Duel</string>
+    <string name="fight">Fight</string>
     <array name="roomMode">
         <item>Mode</item>
         <item>Fight</item>
         <item>Duel</item>
     </array>
-
 </resources>
