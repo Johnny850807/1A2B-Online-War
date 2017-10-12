@@ -86,6 +86,9 @@ public class RoomListActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.confirm, null)
                 .setNegativeButton(R.string.cancel, null)
                 .show();
+    }
+
+    public void joinRoomBtnOnClick(View view) {
 
     }
 
