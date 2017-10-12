@@ -1,4 +1,4 @@
-package com.example.joanna_zhang.test.Abstract;
+package com.example.joanna_zhang.test.Domain;
 
 public enum GameMode {
     FIGHT(2), DUEL(6);

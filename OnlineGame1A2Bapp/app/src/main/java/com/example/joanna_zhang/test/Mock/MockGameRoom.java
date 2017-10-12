@@ -1,22 +1,22 @@
 package com.example.joanna_zhang.test.Mock;
 
 
-import com.example.joanna_zhang.test.Abstract.GameMode;
-import com.example.joanna_zhang.test.Abstract.RoomListItemData;
-import com.example.joanna_zhang.test.Abstract.User;
+import com.example.joanna_zhang.test.Domain.GameMode;
+import com.example.joanna_zhang.test.Domain.GameRoom;
+import com.example.joanna_zhang.test.Domain.User;
 
-public class MockRoomListItemData extends RoomListItemData {
+public class MockGameRoom implements GameRoom {
 
     private String roomName;
     private User roomCreator;
     private GameMode gameMode;
-    private int peopleAmount;
+    private int playerAmount;
 
-    public MockRoomListItemData(String roomName, GameMode gameMode, User roomCreator) {
+    public MockGameRoom(String roomName, GameMode gameMode, User roomCreator) {
         this.roomName = roomName;
         this.gameMode = gameMode;
         this.roomCreator = roomCreator;
-        peopleAmount = 1;
+        playerAmount = 1;
     }
 
     @Override
@@ -33,8 +33,7 @@ public class MockRoomListItemData extends RoomListItemData {
         return gameMode;
     }
 
-    @Override
-    public int getPeopleAmount() {
-        return peopleAmount;
+    public int getPlayerAmount() {
+        return playerAmount;
     }
 }
