@@ -4,7 +4,7 @@ public abstract class RoomListItemData {
 
     public abstract String getRoomName();
     public abstract String getRoomCreatorName();
-    public abstract Mode getMode();
+    public abstract GameMode getGameMode();
     public abstract int getPeopleAmount();
 
 }

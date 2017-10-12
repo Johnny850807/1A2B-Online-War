@@ -12,7 +12,7 @@
     <string name="signInFailed_playerNameIsInvalid">登入失敗: 玩家名稱無效</string>
     <string name="default_room_name">來玩噢!!</string>
     <string name="create">創建</string>
-    <string name="mode">模式</string>
+    <string name="gameMode">模式</string>
     <string name="cancel">取消</string>
     <string name="confirm">確認</string>
     <string name="room_name">房名:</string>

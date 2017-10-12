@@ -1,7 +1,7 @@
 package com.example.joanna_zhang.test.Mock;
 
 
-import com.example.joanna_zhang.test.Abstract.Mode;
+import com.example.joanna_zhang.test.Abstract.GameMode;
 import com.example.joanna_zhang.test.Abstract.RoomListItemData;
 import com.example.joanna_zhang.test.Abstract.User;
 
@@ -9,12 +9,12 @@ public class MockRoomListItemData extends RoomListItemData {
 
     private String roomName;
     private User roomCreator;
-    private Mode mode;
+    private GameMode gameMode;
     private int peopleAmount;
 
-    public MockRoomListItemData(String roomName, Mode mode, User roomCreator) {
+    public MockRoomListItemData(String roomName, GameMode gameMode, User roomCreator) {
         this.roomName = roomName;
-        this.mode = mode;
+        this.gameMode = gameMode;
         this.roomCreator = roomCreator;
         peopleAmount = 1;
     }
@@ -29,9 +29,8 @@ public class MockRoomListItemData extends RoomListItemData {
         return roomCreator.getName();
     }
 
-    @Override
-    public Mode getMode() {
-        return mode;
+    public GameMode getGameMode() {
+        return gameMode;
     }
 
     @Override

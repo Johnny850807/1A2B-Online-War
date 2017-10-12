@@ -11,24 +11,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginTop="10dp"
-        android:padding="4dp"
-        android:background="@drawable/corner">
+        android:background="@drawable/corner"
+        android:gravity="center"
+        android:padding="4dp">
 
         <EditText
             android:id="@+id/searchEdt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingLeft="6dp"
-            android:textSize="20sp"
-            android:lines="1"
-            android:inputType="text"
-            android:maxLength="8"
-            android:hint="搜尋房名或暱稱"
             android:background="@null"
-            android:onClick="searchEdtOnClick"/>
+            android:hint="搜尋房名或暱稱"
+            android:inputType="text"
+            android:lines="1"
+            android:maxLength="8"
+            android:paddingLeft="6dp"
+            android:textSize="20sp" />
 
         <ImageButton
             android:id="@+id/searchImgBtn"
@@ -36,8 +35,7 @@
             android:layout_height="30dp"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
-            android:src="@drawable/magnifier"
-            android:onClick="searchImgBtnOnClick"/>
+            android:src="@drawable/magnifier" />
 
     </LinearLayout>
 
