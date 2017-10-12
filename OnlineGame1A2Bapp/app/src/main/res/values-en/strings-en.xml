@@ -16,12 +16,14 @@
     <string name="gameMode">Mode</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="room_name">Room name:</string>
+    <string name="game_mode">Game mode:</string>
+    <string name="joinQuickly">Join quickly</string>
     <string name="create_room">Create Room</string>
-
     <array name="roomMode">
         <item>Mode</item>
-        <item>爭奪戰</item>
-        <item>Battle</item>
+        <item>Fight</item>
+        <item>Duel</item>
     </array>
 
 </resources>
