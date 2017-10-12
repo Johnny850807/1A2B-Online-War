@@ -8,6 +8,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -116,11 +121,13 @@ public class RoomListActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View view, ViewGroup viewGroup) {
+        public View getView(int position, View view, ViewGroup parent) {
             ViewHolder viewHolder;
+            setRoomListAdapterViewUpdatedAnimation(parent);
+
             if (view == null)  // if the view has not existed in view, init and bind the viewholder
             {
-                view = LayoutInflater.from(RoomListActivity.this).inflate(R.layout.room_list_item, viewGroup, false);
+                view = LayoutInflater.from(RoomListActivity.this).inflate(R.layout.room_list_item, parent, false);
 
                 viewHolder = new ViewHolder();
                 viewHolder.roomNameTxt = view.findViewById(R.id.roomListItemNameTxt);
@@ -154,6 +161,25 @@ public class RoomListActivity extends AppCompatActivity {
             TextView roomCreatorName;
             TextView roomPeopleAmountTxt;
         }
+    }
+
+    private void setRoomListAdapterViewUpdatedAnimation(ViewGroup parent){
+        AnimationSet set = new AnimationSet(true);
+
+        Animation animation = new AlphaAnimation(0.0f, 1.0f);
+        animation.setDuration(400);
+        set.addAnimation(animation);
+
+        animation = new TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, -1.0f, Animation.RELATIVE_TO_SELF, 0.0f
+        );
+        animation.setDuration(400);
+        set.addAnimation(animation);
+
+        LayoutAnimationController controller =
+                new LayoutAnimationController(set, 0.25f);
+        parent.setLayoutAnimation(controller);
     }
 
     private class SearchEditTextWatcher implements TextWatcher {
