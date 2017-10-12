@@ -86,6 +86,7 @@ public class RoomListActivity extends AppCompatActivity {
     public void createAndShowWelcomeMessage() {
         new AlertDialog.Builder(RoomListActivity.this)
                 .setTitle(R.string.signInMessage)
+                .setIcon(R.drawable.logo)
                 .setMessage(welcomeUserMessage())
                 .show();
     }
