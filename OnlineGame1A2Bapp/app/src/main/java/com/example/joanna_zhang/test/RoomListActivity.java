@@ -82,6 +82,7 @@ public class RoomListActivity extends AppCompatActivity {
 
         new AlertDialog.Builder(RoomListActivity.this)
                 .setView(R.layout.create_room_dialog)
+                .setView(roomModeSpn)
                 .setTitle(R.string.create_room)
                 .setIcon(R.drawable.logo)
                 .setPositiveButton(R.string.confirm, null)
