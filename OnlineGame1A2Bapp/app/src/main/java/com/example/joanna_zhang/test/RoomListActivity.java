@@ -150,7 +150,7 @@ public class RoomListActivity extends AppCompatActivity {
                 viewHolder.roomNameTxt = view.findViewById(R.id.roomNameTxt);
                 viewHolder.roomModeTxt = view.findViewById(R.id.roomModeTxt);
                 viewHolder.roomCreatorName = view.findViewById(R.id.roomCreatorNameTxt);
-                viewHolder.roomPeopleAmountTxt = view.findViewById(R.id.roomPlayerAmountTxt);
+                viewHolder.roomPlayerAmountTxt = view.findViewById(R.id.roomPlayerAmountTxt);
                 view.setTag(viewHolder);
             }
             else  // if the view exists, get the viewholder
@@ -164,7 +164,7 @@ public class RoomListActivity extends AppCompatActivity {
             viewHolder.roomNameTxt.setText(gameroom.getRoomName());
             viewHolder.roomModeTxt.setText(modeName);
             viewHolder.roomCreatorName.setText(gameroom.getRoomCreatorName());
-            viewHolder.roomPeopleAmountTxt.setText(gameroom.getPlayerAmount() + "/" + gameroom.getGameMode().getPlayerAmount());
+            viewHolder.roomPlayerAmountTxt.setText(gameroom.getPlayerAmount() + "/" + gameroom.getGameMode().getPlayerAmount());
 
             return view;
         }
@@ -173,7 +173,7 @@ public class RoomListActivity extends AppCompatActivity {
             TextView roomNameTxt;
             TextView roomModeTxt;
             TextView roomCreatorName;
-            TextView roomPeopleAmountTxt;
+            TextView roomPlayerAmountTxt;
         }
     }
 
