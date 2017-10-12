@@ -133,10 +133,10 @@ public class RoomListActivity extends AppCompatActivity {
                 view = LayoutInflater.from(RoomListActivity.this).inflate(R.layout.room_list_item, parent, false);
 
                 viewHolder = new ViewHolder();
-                viewHolder.roomNameTxt = view.findViewById(R.id.roomListItemNameTxt);
-                viewHolder.roomModeTxt = view.findViewById(R.id.roomListItemModeTxt);
-                viewHolder.roomCreatorName = view.findViewById(R.id.roomListItemCreatorNameTxt);
-                viewHolder.roomPeopleAmountTxt = view.findViewById(R.id.roomListItemPeopleAmountTxt);
+                viewHolder.roomNameTxt = view.findViewById(R.id.roomNameTxt);
+                viewHolder.roomModeTxt = view.findViewById(R.id.roomModeTxt);
+                viewHolder.roomCreatorName = view.findViewById(R.id.roomCreatorNameTxt);
+                viewHolder.roomPeopleAmountTxt = view.findViewById(R.id.roomPlayerAmountTxt);
                 view.setTag(viewHolder);
             }
             else  // if the view exists, get the viewholder
@@ -144,11 +144,8 @@ public class RoomListActivity extends AppCompatActivity {
 
             RoomListItemData gameroom = roomlist.get(position);
 
-            String modeName;
-            if (gameroom.getGameMode() == GameMode.DUEL)
-                modeName = "1A2B 對決戰";
-            else
-                modeName = "1A2B 爭奪戰";
+            String modeName = "1A2B ";
+            modeName += (gameroom.getGameMode() == GameMode.DUEL)? getString(R.string.duel) : getString(R.string.fight);
 
             viewHolder.roomNameTxt.setText(gameroom.getRoomName());
             viewHolder.roomModeTxt.setText(modeName);
