@@ -18,4 +18,11 @@
     <string name="Cancel">Cancel</string>
     <string name="Confirm">Confirm</string>
     <string name="create_room">Create Room</string>
+
+    <array name="roomMode">
+        <item>Mode</item>
+        <item>爭奪戰</item>
+        <item>Battle</item>
+    </array>
+
 </resources>

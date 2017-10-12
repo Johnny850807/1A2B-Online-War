@@ -11,6 +11,7 @@ import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.joanna_zhang.test.Abstract.Mode;
@@ -28,6 +29,7 @@ public class RoomListActivity extends AppCompatActivity {
 
     private List<RoomListItemData> roomListItemDatas = new ArrayList<>();
     private ListView roomLst;
+    private Spinner roomModeSpn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +40,20 @@ public class RoomListActivity extends AppCompatActivity {
         createAndShowWelcomeMessage();
 
         roomLst = (ListView) findViewById(R.id.roomLst);
+        roomModeSpn = (Spinner) findViewById(R.id.createRoomModeSpn);
 
         roomListItemDatas.add(new MockRoomListItemData("來玩啊", Mode.DUEL, new MockUser()));
         roomListItemDatas.add(new MockRoomListItemData("來玩啊啊啊啊", Mode.FIGHT, new MockUser()));
         updateRoomList();
 
+
+
+    }
+
+    public void setUpSpinner() {
+        ArrayAdapter<CharSequence> adapterRoomMode = ArrayAdapter.createFromResource(this, R.array.roomMode, android.R.layout.simple_spinner_dropdown_item);
+        adapterRoomMode.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        roomModeSpn.setAdapter(adapterRoomMode);
     }
 
     public void updateRoomList() {
@@ -63,6 +74,7 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     public void createRoomBtnOnClick(View view) {
+        setUpSpinner();
         new AlertDialog.Builder(RoomListActivity.this)
                 .setView(R.layout.create_room_dialog)
                 .setTitle(R.string.create_room)
