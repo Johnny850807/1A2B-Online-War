@@ -50,7 +50,7 @@ public class RoomListActivity extends AppCompatActivity {
         roomLst.setAdapter(myAdapter);
     }
 
-    public void createAndShowWelcomeMessage(){
+    public void createAndShowWelcomeMessage() {
         new AlertDialog.Builder(RoomListActivity.this)
                 .setTitle(R.string.signInMessage)
                 .setMessage(welcomeUserMessage())
@@ -63,8 +63,12 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     public void createRoomBtnOnClick(View view) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(RoomListActivity.this)
                 .setView(R.layout.create_room_dialog)
+                .setTitle(R.string.create_room)
+                .setIcon(R.drawable.logo)
+                .setPositiveButton(R.string.confirm, null)
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 
@@ -99,8 +103,7 @@ public class RoomListActivity extends AppCompatActivity {
             if (roomListItemDatas.get(i).getMode() == Mode.DUEL) {
                 mode = "1A2B 對決戰";
                 totalPeopleAmount = "2";
-            }
-            else {
+            } else {
                 mode = "1A2B 爭奪戰";
                 totalPeopleAmount = "6";
             }
