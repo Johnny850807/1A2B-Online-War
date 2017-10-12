@@ -167,6 +167,7 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     private void setRoomListAdapterViewUpdatedAnimation(ViewGroup parent){
+        // the animation retrieve from : https://stackoverflow.com/questions/4349803/android-listview-refresh-animation
         AnimationSet set = new AnimationSet(true);
 
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
