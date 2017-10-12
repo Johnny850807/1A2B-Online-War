@@ -52,7 +52,7 @@ public class RoomListActivity extends AppCompatActivity {
         roomListItemDatas.add(new MockRoomListItemData("來玩啊啊啊啊", Mode.FIGHT, new MockUser()));
 
         updateRoomList(roomListItemDatas);
-
+        setUpSpinner();
     }
 
     public void setUpSpinner() {
