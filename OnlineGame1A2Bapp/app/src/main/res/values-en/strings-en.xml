@@ -9,14 +9,13 @@
     <string name="signInWelcomeMessage">Welcome Back!!</string>
     <string name="errorMessage">Error Message</string>
     <string name="signInMessage">Sign In Message</string>
-    <string name="confirm">Confirm</string>
     <string name="signInFailed_pleaseCheckYourNetwork">Sign in failed: Please check your Internet</string>
     <string name="signInFailed_playerNameIsInvalid">Sign in failed: Player name is invalid</string>
     <string name="default_room_name">Join us!</string>
     <string name="create">Create</string>
     <string name="mode">Mode</string>
-    <string name="Cancel">Cancel</string>
-    <string name="Confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
     <string name="create_room">Create Room</string>
 
     <array name="roomMode">

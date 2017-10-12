@@ -1,6 +1,7 @@
 package com.example.joanna_zhang.test;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -20,6 +22,7 @@ import com.example.joanna_zhang.test.Mock.MockRoomListItemData;
 import com.example.joanna_zhang.test.Mock.MockUser;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
+import com.ood.clean.waterball.a1a2bsdk.core.model.Room;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.ArrayList;
@@ -40,12 +43,14 @@ public class RoomListActivity extends AppCompatActivity {
         createAndShowWelcomeMessage();
 
         roomLst = (ListView) findViewById(R.id.roomLst);
-        roomModeSpn = (Spinner) findViewById(R.id.createRoomModeSpn);
+        roomModeSpn = (Spinner) findViewById(R.id.modeSpn);
+
+
 
         roomListItemDatas.add(new MockRoomListItemData("來玩啊", Mode.DUEL, new MockUser()));
         roomListItemDatas.add(new MockRoomListItemData("來玩啊啊啊啊", Mode.FIGHT, new MockUser()));
         updateRoomList();
-
+        setUpSpinner();
 
 
     }
@@ -74,7 +79,10 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     public void createRoomBtnOnClick(View view) {
-        setUpSpinner();
+        AlertDialog.Builder createRoomDialog = new AlertDialog.Builder(RoomListActivity.this);
+
+
+
         new AlertDialog.Builder(RoomListActivity.this)
                 .setView(R.layout.create_room_dialog)
                 .setTitle(R.string.create_room)
@@ -82,6 +90,7 @@ public class RoomListActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.confirm, null)
                 .setNegativeButton(R.string.cancel, null)
                 .show();
+
     }
 
     public class MyAdapter extends BaseAdapter {
