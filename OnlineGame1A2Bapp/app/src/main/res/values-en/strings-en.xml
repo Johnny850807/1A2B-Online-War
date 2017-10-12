@@ -13,7 +13,7 @@
     <string name="signInFailed_playerNameIsInvalid">Sign in failed: Player name is invalid</string>
     <string name="default_room_name">Join us!</string>
     <string name="create">Create</string>
-    <string name="mode">Mode</string>
+    <string name="gameMode">Mode</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="create_room">Create Room</string>
