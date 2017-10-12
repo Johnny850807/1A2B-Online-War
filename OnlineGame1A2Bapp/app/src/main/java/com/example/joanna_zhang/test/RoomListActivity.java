@@ -150,7 +150,10 @@ public class RoomListActivity extends AppCompatActivity {
 
     class SearchEditTextWatcher implements TextWatcher {
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             List<RoomListItemData> searchResultRoomList = new ArrayList<>();
             String searchTxt = searchEdt.getText().toString();
             for (RoomListItemData roomListItemData : roomListItemDatas)
@@ -158,9 +161,6 @@ public class RoomListActivity extends AppCompatActivity {
                     searchResultRoomList.add(roomListItemData);
             updateRoomList(searchResultRoomList);
         }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
         @Override
         public void afterTextChanged(Editable editable) {}
