@@ -89,15 +89,6 @@ public class RoomListActivity extends AppCompatActivity {
 
     }
 
-    public void searchImgBtnOnClick(View view) {
-        List<RoomListItemData> searchResultRoomList = new ArrayList<>();
-        String searchTxt = searchEdt.getText().toString();
-        for (RoomListItemData roomListItemData : roomListItemDatas)
-            if (roomListItemData.getRoomName().contains(searchTxt) || roomListItemData.getRoomCreatorName().contains(searchTxt))
-                searchResultRoomList.add(roomListItemData);
-        updateRoomList(searchResultRoomList);
-    }
-
     public class MyAdapter extends BaseAdapter {
 
         private List<RoomListItemData> roomlist;
