@@ -3,13 +3,14 @@ package com.example.joanna_zhang.test;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import java.util.List;
 public class RoomListActivity extends AppCompatActivity {
 
     private List<RoomListItemData> roomListItemDatas = new ArrayList<>();
+    private EditText searchEdt;
     private ListView roomLst;
     private Spinner roomModeSpn;
 
@@ -39,12 +41,14 @@ public class RoomListActivity extends AppCompatActivity {
         UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
         createAndShowWelcomeMessage();
 
+        searchEdt = (EditText) findViewById(R.id.searchEdt);
+        searchEdt.addTextChangedListener(new SearchEditTextWatcher());
         roomLst = (ListView) findViewById(R.id.roomLst);
         roomModeSpn = (Spinner) findViewById(R.id.createRoomModeSpn);
 
-        roomListItemDatas.add(new MockRoomListItemData("來玩啊", Mode.DUEL, new MockUser()));
+        roomListItemDatas.add(new MockRoomListItemData("對決", Mode.DUEL, new MockUser()));
         roomListItemDatas.add(new MockRoomListItemData("來玩啊啊啊啊", Mode.FIGHT, new MockUser()));
-        updateRoomList();
+        updateRoomList(roomListItemDatas);
 
 
 
@@ -56,8 +60,8 @@ public class RoomListActivity extends AppCompatActivity {
         roomModeSpn.setAdapter(adapterRoomMode);
     }
 
-    public void updateRoomList() {
-        MyAdapter myAdapter = new MyAdapter();
+    public void updateRoomList(List<RoomListItemData> list) {
+        MyAdapter myAdapter = new MyAdapter(list);
         roomLst.setAdapter(myAdapter);
     }
 
@@ -74,7 +78,7 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     public void createRoomBtnOnClick(View view) {
-        setUpSpinner();
+        //setUpSpinner();
         new AlertDialog.Builder(RoomListActivity.this)
                 .setView(R.layout.create_room_dialog)
                 .setTitle(R.string.create_room)
@@ -84,11 +88,26 @@ public class RoomListActivity extends AppCompatActivity {
                 .show();
     }
 
+    public void searchImgBtnOnClick(View view) {
+        List<RoomListItemData> searchResultRoomList = new ArrayList<>();
+        String searchTxt = searchEdt.getText().toString();
+        for (RoomListItemData roomListItemData : roomListItemDatas)
+            if (roomListItemData.getRoomName().contains(searchTxt) || roomListItemData.getRoomCreatorName().contains(searchTxt))
+                searchResultRoomList.add(roomListItemData);
+        updateRoomList(searchResultRoomList);
+    }
+
     public class MyAdapter extends BaseAdapter {
+
+        private List<RoomListItemData> list;
+
+        public  MyAdapter(List<RoomListItemData> list) {
+            this.list = list;
+        }
 
         @Override
         public int getCount() {
-            return roomListItemDatas.size();
+            return list.size();
         }
 
         @Override
@@ -112,7 +131,7 @@ public class RoomListActivity extends AppCompatActivity {
             TextView roomPeopleAmount = view.findViewById(R.id.roomListItemPeopleAmountTxt);
 
             String mode, totalPeopleAmount;
-            if (roomListItemDatas.get(i).getMode() == Mode.DUEL) {
+            if (list.get(i).getMode() == Mode.DUEL) {
                 mode = "1A2B 對決戰";
                 totalPeopleAmount = "2";
             } else {
@@ -120,12 +139,30 @@ public class RoomListActivity extends AppCompatActivity {
                 totalPeopleAmount = "6";
             }
 
-            roomName.setText(roomListItemDatas.get(i).getRoomName());
+            roomName.setText(list.get(i).getRoomName());
             roomMode.setText(mode);
-            roomCreator.setText(roomListItemDatas.get(i).getRoomCreatorName());
-            roomPeopleAmount.setText(String.valueOf(roomListItemDatas.get(i).getPeopleAmount() + "/" + totalPeopleAmount));
+            roomCreator.setText(list.get(i).getRoomCreatorName());
+            roomPeopleAmount.setText(String.valueOf(list.get(i).getPeopleAmount() + "/" + totalPeopleAmount));
 
             return view;
         }
+    }
+
+    class SearchEditTextWatcher implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            List<RoomListItemData> searchResultRoomList = new ArrayList<>();
+            String searchTxt = searchEdt.getText().toString();
+            for (RoomListItemData roomListItemData : roomListItemDatas)
+                if (roomListItemData.getRoomName().contains(searchTxt) || roomListItemData.getRoomCreatorName().contains(searchTxt))
+                    searchResultRoomList.add(roomListItemData);
+            updateRoomList(searchResultRoomList);
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+        @Override
+        public void afterTextChanged(Editable editable) {}
     }
 }
