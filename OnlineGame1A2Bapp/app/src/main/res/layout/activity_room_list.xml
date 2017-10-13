@@ -61,9 +61,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:background="@drawable/roomlist_corner"
+            android:onClick="createRoomBtnOnClick"
             android:text="@string/create"
-            android:textSize="14sp"
-            android:onClick="createRoomBtnOnClick"/>
+            android:textSize="14sp" />
 
         <Spinner
             android:id="@+id/modeSpn"
