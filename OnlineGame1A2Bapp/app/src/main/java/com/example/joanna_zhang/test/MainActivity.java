@@ -11,8 +11,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.joanna_zhang.test.Game.RandomNameCreator;
-import com.example.joanna_zhang.test.NameCreator.NameCreator;
+import com.example.joanna_zhang.test.Domain.NameCreator.RandomNameCreator;
+import com.example.joanna_zhang.test.Domain.NameCreator.NameCreator;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutException;
