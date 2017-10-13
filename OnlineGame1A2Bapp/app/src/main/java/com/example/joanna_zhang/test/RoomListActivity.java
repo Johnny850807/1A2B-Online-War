@@ -145,7 +145,11 @@ public class RoomListActivity extends AppCompatActivity {
         public View getView(int position, View view, ViewGroup parent) {
             ViewHolder viewHolder;
             if (enableLoadingRoomListAnimation)
+            {
                 setRoomListAdapterViewUpdatedAnimation(parent);
+                enableLoadingRoomListAnimation = false; // only the first time will enable the animation until the new room added.
+            }
+
 
             if (view == null)  // if the view has not existed in view, init and bind the viewholder
             {
@@ -200,8 +204,6 @@ public class RoomListActivity extends AppCompatActivity {
         LayoutAnimationController controller =
                 new LayoutAnimationController(set, 0.25f);
         parent.setLayoutAnimation(controller);
-
-        enableLoadingRoomListAnimation = false; // only the first time will enable the animation until the new room added.
     }
 
     private class SearchEditTextWatcher implements TextWatcher {
