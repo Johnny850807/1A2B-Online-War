@@ -35,7 +35,8 @@
             android:layout_height="30dp"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
-            android:src="@drawable/magnifier" />
+            android:src="@drawable/magnifier"
+            android:onClick="searchBtnOnClick"/>
 
     </LinearLayout>
 

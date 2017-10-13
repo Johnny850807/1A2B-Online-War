@@ -110,7 +110,12 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     public void joinRoomBtnOnClick(View view) {
+        //todo join room
+    }
 
+    public void searchBtnOnClick(View view) {
+        enableLoadingRoomListAnimation = true;
+        searchAndUpdateRoomList();
     }
 
     public class MyAdapter extends BaseAdapter {
@@ -205,15 +210,23 @@ public class RoomListActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            List<GameRoom> searchResultRoomList = new ArrayList<>();
-            String searchTxt = searchEdt.getText().toString();
-            for (GameRoom gameRoom : roomList)
-                if (gameRoom.getRoomName().contains(searchTxt) || gameRoom.getRoomCreatorName().contains(searchTxt))
-                    searchResultRoomList.add(gameRoom);
-            updateRoomList(searchResultRoomList);
+            searchAndUpdateRoomList();
         }
 
         @Override
         public void afterTextChanged(Editable editable) {}
+    }
+
+    private void searchAndUpdateRoomList(){
+        String searchTxt = searchEdt.getText().toString();
+        updateRoomList(getRoomsByKeyName(searchTxt));
+    }
+
+    private List<GameRoom> getRoomsByKeyName(String keyName){
+        List<GameRoom> results = new ArrayList<>();
+        for (GameRoom gameRoom : roomList)
+            if (gameRoom.getRoomName().contains(keyName) || gameRoom.getRoomCreatorName().contains(keyName))
+                results.add(gameRoom);
+        return results;
     }
 }
