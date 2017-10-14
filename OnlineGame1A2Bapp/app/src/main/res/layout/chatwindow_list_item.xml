@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView android:id="@+id/contentTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="context"
+        android:textSize="16sp"/>
+
+    <TextView android:id="@+id/timeTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@id/contentTxt"
+        android:layout_alignBottom="@id/contentTxt"
+        android:text="time"
+        android:textSize="12sp"/>
+
+</RelativeLayout>
