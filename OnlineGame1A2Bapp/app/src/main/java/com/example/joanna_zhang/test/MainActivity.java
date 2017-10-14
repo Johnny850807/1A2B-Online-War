@@ -11,12 +11,14 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.joanna_zhang.test.Game.RandomNameCreator;
-import com.example.joanna_zhang.test.NameCreator.NameCreator;
+import com.example.joanna_zhang.test.Domain.NameCreator.RandomNameCreator;
+import com.example.joanna_zhang.test.Domain.NameCreator.NameCreator;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
+import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutException;
+import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.GameIOException;
 import com.ood.clean.waterball.a1a2bsdk.core.model.GameServerInformation;
-import com.ood.clean.waterball.a1a2bsdk.core.model.User;
+import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.exceptions.UserNameFormatException;
 
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
 
     private CoreGameServer server = CoreGameServer.getInstance();
     private EditText nameEd;
-    private CheckBox autoSignInCheckbox;
+    private CheckBox autoSignInCheckbox;  // TODO
     private TextView serverStatusTxt;
     private String name;
     private NameCreator nameCreator = new RandomNameCreator();
@@ -36,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         findViews();
         server.getInformation(this);
     }
-
 
     private void findViews() {
         nameEd = (EditText) findViewById(R.id.inputName);
@@ -57,22 +58,33 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     }
 
     @Override
-    public void onSignInSuccessfully(@NonNull User user) {
+    public void onSignInSuccessfully(@NonNull Player player) {
         Intent intent = new Intent(this, RoomListActivity.class);
-        intent.putExtra("user", user); // send the user data to the next activity
+        intent.putExtra("player", player); // send the player data to the next activity
         startActivity(intent);
     }
 
     @Override
+<<<<<<< HEAD
     public void onError(@NonNull Throwable err) {
         if (err instanceof UserNameFormatException)
             createAndShowErrorDialog(getString(R.string.signInFailedMessage));
+=======
+    public void onSignInFailed(@NonNull Exception err) {
+        if (err instanceof ConnectionTimedOutException)
+            createAndShowErrorMessage(getString(R.string.signInFailed_pleaseCheckYourNetwork));
+        else if (err instanceof GameIOException)
+            createAndShowErrorMessage(getString(R.string.signInFailedMessage));
+        else if (err instanceof UserNameFormatException)
+            createAndShowErrorMessage(getString(R.string.signInFailed_playerNameIsInvalid));
+>>>>>>> master
     }
 
-    public void createAndShowErrorDialog(String exceptionMessage){
+    public void createAndShowErrorMessage(String exceptionMessage) {
         new AlertDialog.Builder(MainActivity.this)
                 .setTitle(R.string.errorMessage)
                 .setMessage(exceptionMessage)
+                .setIcon(R.drawable.logo)
                 .setPositiveButton(R.string.confirm, null)
                 .show();
     }

@@ -54,8 +54,10 @@ public final class CoreGameServer {
      * @return matching name module
      */
     public GameModule getModule(ModuleName name){
+
         if (!moduleMap.containsKey(name))
             throw new IllegalArgumentException(name.toString() + " module is not prepared.");
+
         return moduleMap.get(name);
     }
 

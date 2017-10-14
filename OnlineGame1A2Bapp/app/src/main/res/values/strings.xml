@@ -7,6 +7,27 @@
     <string name="signInFailedMessage">登入失敗</string>
     <string name="signInWelcomeMessage">歡迎回來!!</string>
     <string name="errorMessage">錯誤訊息</string>
-    <string name="SignInMessage">登入訊息</string>
+    <string name="signInMessage">登入訊息</string>
+    <string name="signInFailed_pleaseCheckYourNetwork">登入失敗: 請檢查你的網路</string>
+    <string name="signInFailed_playerNameIsInvalid">登入失敗: 玩家名稱無效</string>
+    <string name="default_room_name">來玩噢!!</string>
+    <string name="create">創建</string>
+    <string name="gameMode">模式</string>
+    <string name="cancel">取消</string>
     <string name="confirm">確認</string>
+    <string name="room_name">房名:</string>
+    <string name="game_mode">遊玩模式:</string>
+    <string name="joinQuickly">快速加入</string>
+    <string name="create_room">創建房間</string>
+    <string name="duel">對決戰</string>
+    <string name="fight">爭奪戰</string>
+    <string name="inputNumber">輸入數字</string>
+    <string name="inputMessage">輸入訊息</string>
+    <string name="inputAnswer">輸入答案</string>
+    <array name="roomMode">
+        <item>模式選擇</item>
+        <item>爭奪戰</item>
+        <item>對決戰</item>
+    </array>
+
 </resources>

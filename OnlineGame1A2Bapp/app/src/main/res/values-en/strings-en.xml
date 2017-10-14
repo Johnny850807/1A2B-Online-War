@@ -8,6 +8,23 @@
     <string name="signInFailedMessage">Sign In Failed.</string>
     <string name="signInWelcomeMessage">Welcome Back!!</string>
     <string name="errorMessage">Error Message</string>
-    <string name="SignInMessage">Sign In Message</string>
+    <string name="signInMessage">Sign In Message</string>
+    <string name="signInFailed_pleaseCheckYourNetwork">Sign in failed: Please check your Internet</string>
+    <string name="signInFailed_playerNameIsInvalid">Sign in failed: Player name is invalid</string>
+    <string name="default_room_name">Join us!</string>
+    <string name="create">Create</string>
+    <string name="gameMode">Mode</string>
+    <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="room_name">Room name:</string>
+    <string name="game_mode">Game mode:</string>
+    <string name="joinQuickly">Join quickly</string>
+    <string name="create_room">Create Room</string>
+    <string name="duel">Duel</string>
+    <string name="fight">Fight</string>
+    <array name="roomMode">
+        <item>Mode Selection</item>
+        <item>Fight</item>
+        <item>Duel</item>
+    </array>
 </resources>
