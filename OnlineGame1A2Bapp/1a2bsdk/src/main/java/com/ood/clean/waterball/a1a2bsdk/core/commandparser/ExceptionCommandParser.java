@@ -5,8 +5,8 @@ import android.support.annotation.Nullable;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.GameCoreException;
 import com.ood.clean.waterball.a1a2bsdk.core.command.ExceptionHandlingCommand;
-import com.ood.clean.waterball.a1a2bsdk.core.commandparser.factory.ExceptionFactory;
-import com.ood.clean.waterball.a1a2bsdk.core.commandparser.factory.ReleaseExceptionFactory;
+import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.factory.ExceptionFactory;
+import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.factory.ReleaseExceptionFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.model.ErrorMessage;
 
 import command.base.Command;

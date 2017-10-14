@@ -64,21 +64,6 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         startActivity(intent);
     }
 
-    @Override
-<<<<<<< HEAD
-    public void onError(@NonNull Throwable err) {
-        if (err instanceof UserNameFormatException)
-            createAndShowErrorDialog(getString(R.string.signInFailedMessage));
-=======
-    public void onSignInFailed(@NonNull Exception err) {
-        if (err instanceof ConnectionTimedOutException)
-            createAndShowErrorMessage(getString(R.string.signInFailed_pleaseCheckYourNetwork));
-        else if (err instanceof GameIOException)
-            createAndShowErrorMessage(getString(R.string.signInFailedMessage));
-        else if (err instanceof UserNameFormatException)
-            createAndShowErrorMessage(getString(R.string.signInFailed_playerNameIsInvalid));
->>>>>>> master
-    }
 
     public void createAndShowErrorMessage(String exceptionMessage) {
         new AlertDialog.Builder(MainActivity.this)
@@ -96,5 +81,15 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         int onlineAmount = gameServerInformation.getOnlineAmount();
         String statusFormat = getString(R.string.serverStatus);
         serverStatusTxt.setText(String.format(statusFormat, roomAmount, onlineAmount));
+    }
+
+    @Override
+    public void onError(@NonNull Throwable err) {
+        if (err instanceof ConnectionTimedOutException)
+            createAndShowErrorMessage(getString(R.string.signInFailed_pleaseCheckYourNetwork));
+        else if (err instanceof GameIOException)
+            createAndShowErrorMessage(getString(R.string.signInFailedMessage));
+        else if (err instanceof UserNameFormatException)
+            createAndShowErrorMessage(getString(R.string.signInFailed_playerNameIsInvalid));
     }
 }

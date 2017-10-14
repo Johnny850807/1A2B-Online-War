@@ -3,7 +3,7 @@ package com.ood.clean.waterball.a1a2bsdk.core.service;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.GameIOException;
 import com.ood.clean.waterball.a1a2bsdk.core.commandparser.CommandParser;
-import com.ood.clean.waterball.a1a2bsdk.core.commandparser.factory.CommandParserFactory;
+import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.factory.CommandParserFactory;
 
 import java.io.Closeable;
 import java.io.DataInputStream;

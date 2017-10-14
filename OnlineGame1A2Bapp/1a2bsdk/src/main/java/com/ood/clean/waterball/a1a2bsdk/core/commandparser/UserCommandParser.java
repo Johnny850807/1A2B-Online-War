@@ -4,6 +4,8 @@ package com.ood.clean.waterball.a1a2bsdk.core.commandparser;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.GameCoreException;
+import com.ood.clean.waterball.a1a2bsdk.core.command.ExceptionHandlingCommand;
 import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
 
 import java.util.regex.Pattern;
@@ -28,6 +30,6 @@ public class UserCommandParser extends CommandParser{
 
             Log.d(CommandParser.TAG, "User Command Parser parsing ...");
         }
-        return null;
+        return new ExceptionHandlingCommand(new GameCoreException("No command found."));
     }
 }
