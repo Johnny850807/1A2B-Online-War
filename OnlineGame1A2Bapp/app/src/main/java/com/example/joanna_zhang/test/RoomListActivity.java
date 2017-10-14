@@ -1,5 +1,7 @@
 package com.example.joanna_zhang.test;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
 import com.example.joanna_zhang.test.Domain.GameMode;
@@ -48,24 +51,23 @@ public class RoomListActivity extends AppCompatActivity {
 
         init();
         setupViews();
-        createAndShowWelcomeMessage();
         updateRoomList(roomList);
     }
 
-    private void init(){
+    private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
         UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
         roomList = gameRoomListFactory.createRoomList();
     }
 
-    private void setupViews(){
+    private void setupViews() {
         findViews();
         setUpSpinner();
         updateRoomList(roomList);
         roomListView.setDivider(getResources().getDrawable(R.drawable.transperent_color));
     }
 
-    private void findViews(){
+    private void findViews() {
         searchEdt = (EditText) findViewById(R.id.searchEdt);
         searchEdt.addTextChangedListener(new SearchEditTextWatcher());
         roomListView = (ListView) findViewById(R.id.roomLst);
@@ -83,30 +85,18 @@ public class RoomListActivity extends AppCompatActivity {
         roomListView.setAdapter(myAdapter);
     }
 
-    public void createAndShowWelcomeMessage() {
-        new AlertDialog.Builder(RoomListActivity.this)
-                .setTitle(R.string.signInMessage)
-                .setIcon(R.drawable.logo)
-                .setMessage(welcomeUserMessage())
-                .show();
-    }
-
-    // 這個垃圾再不刪掉試試看
-    private String welcomeUserMessage() {
-        String message = getString(R.string.signInWelcomeMessage);
-        return message;
-    }
-
     public void createRoomBtnOnClick(View view) {
-
-        new AlertDialog.Builder(RoomListActivity.this)
-                .setView(R.layout.create_room_dialog)
-                .setView(roomModeSpn)
-                .setTitle(R.string.create_room)
-                .setIcon(R.drawable.logo)
-                .setPositiveButton(R.string.confirm, null)
-                .setNegativeButton(R.string.cancel, null)
-                .show();
+        AlertDialog.Builder createRoomDialogBuilder = new AlertDialog.Builder(RoomListActivity.this);
+        View mView = LayoutInflater.from(RoomListActivity.this).inflate(R.layout.create_room_dialog, null);
+        createRoomDialogBuilder.setTitle(R.string.create_room);
+        Spinner gameModeSpn = mView.findViewById(R.id.createRoomModeSpn);
+        ArrayAdapter<CharSequence> gameModeAdapter = new ArrayAdapter<CharSequence>(RoomListActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.roomMode));
+        gameModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        gameModeSpn.setAdapter(gameModeAdapter);
+        createRoomDialogBuilder.setPositiveButton(R.string.confirm, null);
+        createRoomDialogBuilder.setNegativeButton(R.string.cancel, null);
+        createRoomDialogBuilder.setView(mView);
+        createRoomDialogBuilder.show();
     }
 
     public void joinRoomBtnOnClick(View view) {
@@ -117,7 +107,7 @@ public class RoomListActivity extends AppCompatActivity {
 
         private List<GameRoom> roomlist;
 
-        public  MyAdapter(List<GameRoom> roomlist) {
+        public MyAdapter(List<GameRoom> roomlist) {
             this.roomlist = roomlist;
         }
 
@@ -152,14 +142,13 @@ public class RoomListActivity extends AppCompatActivity {
                 viewHolder.roomCreatorName = view.findViewById(R.id.roomCreatorNameTxt);
                 viewHolder.roomPlayerAmountTxt = view.findViewById(R.id.roomPlayerAmountTxt);
                 view.setTag(viewHolder);
-            }
-            else  // if the view exists, get the viewholder
+            } else  // if the view exists, get the viewholder
                 viewHolder = (ViewHolder) view.getTag();
 
             GameRoom gameroom = roomlist.get(position);
 
             String modeName = "1A2B ";
-            modeName += (gameroom.getGameMode() == GameMode.DUEL)? getString(R.string.duel) : getString(R.string.fight);
+            modeName += (gameroom.getGameMode() == GameMode.DUEL) ? getString(R.string.duel) : getString(R.string.fight);
 
             viewHolder.roomNameTxt.setText(gameroom.getRoomName());
             viewHolder.roomModeTxt.setText(modeName);
@@ -177,7 +166,7 @@ public class RoomListActivity extends AppCompatActivity {
         }
     }
 
-    private void setRoomListAdapterViewUpdatedAnimation(ViewGroup parent){
+    private void setRoomListAdapterViewUpdatedAnimation(ViewGroup parent) {
         // the animation retrieved from : https://stackoverflow.com/questions/4349803/android-listview-refresh-animation
         AnimationSet set = new AnimationSet(true);
 
@@ -201,7 +190,8 @@ public class RoomListActivity extends AppCompatActivity {
 
     private class SearchEditTextWatcher implements TextWatcher {
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -214,6 +204,7 @@ public class RoomListActivity extends AppCompatActivity {
         }
 
         @Override
-        public void afterTextChanged(Editable editable) {}
+        public void afterTextChanged(Editable editable) {
+        }
     }
 }
