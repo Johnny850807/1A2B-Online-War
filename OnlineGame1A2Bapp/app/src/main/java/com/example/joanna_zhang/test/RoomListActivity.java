@@ -21,11 +21,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
-import com.example.joanna_zhang.test.Domain.GameMode;
-import com.example.joanna_zhang.test.Domain.GameRoom;
 import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
+import com.ood.clean.waterball.a1a2bsdk.core.model.GameRoom;
+import com.ood.clean.waterball.a1a2bsdk.core.model.gamemode.GameMode;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.ArrayList;
@@ -154,12 +154,12 @@ public class RoomListActivity extends AppCompatActivity {
             GameRoom gameroom = roomlist.get(position);
 
             String modeName = "1A2B ";
-            modeName += (gameroom.getGameMode() == GameMode.DUEL) ? getString(R.string.duel) : getString(R.string.fight);
+            modeName += (gameroom.getGameMode() == GameMode.DUEL1A2B) ? getString(R.string.duel) : getString(R.string.fight);  //todo not only two mode
 
-            viewHolder.roomNameTxt.setText(gameroom.getRoomName());
+            viewHolder.roomNameTxt.setText(gameroom.getName());
             viewHolder.roomModeTxt.setText(modeName);
-            viewHolder.roomCreatorName.setText(gameroom.getRoomCreatorName());
-            viewHolder.roomPlayerAmountTxt.setText(gameroom.getPlayerAmount() + "/" + gameroom.getGameMode().getPlayerAmount());
+            viewHolder.roomCreatorName.setText(gameroom.getRoomHost().getName());
+            viewHolder.roomPlayerAmountTxt.setText(gameroom.getPlayerList().size() + "/" + gameroom.getGameMode().getMaxPlayerAmount());
 
             return view;
         }
@@ -215,7 +215,7 @@ public class RoomListActivity extends AppCompatActivity {
     private List<GameRoom> getRoomsByKeyName(String keyName){
         List<GameRoom> results = new ArrayList<>();
         for (GameRoom gameRoom : roomList)
-            if (gameRoom.getRoomName().contains(keyName) || gameRoom.getRoomCreatorName().contains(keyName))
+            if (gameRoom.getName().contains(keyName) || gameRoom.getRoomHost().getName().contains(keyName))
                 results.add(gameRoom);
         return results;
     }

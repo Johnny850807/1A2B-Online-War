@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
 
     private CoreGameServer server = CoreGameServer.getInstance();
     private EditText nameEd;
-    private CheckBox autoSignInCheckbox;
+    private CheckBox autoSignInCheckbox;  // TODO
     private TextView serverStatusTxt;
     private String name;
     private NameCreator nameCreator = new RandomNameCreator();
