@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
-import com.ood.clean.waterball.a1a2bsdk.core.model.User;
+import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
 
 public interface UserSigningModule extends GameModule{
     String TAG = "Signing module";
@@ -19,7 +19,7 @@ public interface UserSigningModule extends GameModule{
     /**
      * @return the user who has signed in to the roomlist
      */
-    User getCurrentUser();
+    Player getCurrentPlayer();
 
     /**
      * used to listen to the sign event
@@ -27,9 +27,9 @@ public interface UserSigningModule extends GameModule{
     public interface Callback extends GameCallBack{
 
         /**
-         * @param user the user returned includes the sign in info
+         * @param player the player returned includes the sign in info
          */
-        void onSignInSuccessfully(@NonNull User user);
+        void onSignInSuccessfully(@NonNull Player player);
 
 
         /**

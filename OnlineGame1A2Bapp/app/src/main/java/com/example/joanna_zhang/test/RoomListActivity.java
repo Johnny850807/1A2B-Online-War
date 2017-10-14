@@ -1,7 +1,5 @@
 package com.example.joanna_zhang.test;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,15 +20,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
-import com.example.joanna_zhang.test.Domain.GameMode;
-import com.example.joanna_zhang.test.Domain.GameRoom;
-import com.example.joanna_zhang.test.Mock.Factory.MockGameRoomListFactory;
+import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
-import com.ood.clean.waterball.a1a2bsdk.core.model.Room;
+import com.ood.clean.waterball.a1a2bsdk.core.model.GameRoom;
+import com.ood.clean.waterball.a1a2bsdk.core.model.gamemode.GameMode;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.ArrayList;
@@ -159,7 +155,7 @@ public class RoomListActivity extends AppCompatActivity {
             ViewHolder viewHolder;
             if (enableLoadingRoomListAnimation) {
                 setRoomListAdapterViewUpdatedAnimation(parent);
-                enableLoadingRoomListAnimation = false; // only the first time will enable the animation until the new room added.
+                enableLoadingRoomListAnimation = false; // whenever the animation enabled, the animation will be only executed once.
             }
 
 
@@ -179,12 +175,12 @@ public class RoomListActivity extends AppCompatActivity {
             GameRoom gameroom = roomlist.get(position);
 
             String modeName = "1A2B ";
-            modeName += (gameroom.getGameMode() == GameMode.DUEL) ? getString(R.string.duel) : getString(R.string.fight);
+            modeName += (gameroom.getGameMode() == GameMode.DUEL1A2B) ? getString(R.string.duel) : getString(R.string.fight);  //todo not only two mode
 
-            viewHolder.roomNameTxt.setText(gameroom.getRoomName());
+            viewHolder.roomNameTxt.setText(gameroom.getName());
             viewHolder.roomModeTxt.setText(modeName);
-            viewHolder.roomCreatorName.setText(gameroom.getRoomCreatorName());
-            viewHolder.roomPlayerAmountTxt.setText(gameroom.getPlayerAmount() + "/" + gameroom.getGameMode().getPlayerAmount());
+            viewHolder.roomCreatorName.setText(gameroom.getRoomHost().getName());
+            viewHolder.roomPlayerAmountTxt.setText(gameroom.getPlayerList().size() + "/" + gameroom.getGameMode().getMaxPlayerAmount());
 
             return view;
         }
@@ -240,7 +236,7 @@ public class RoomListActivity extends AppCompatActivity {
     private List<GameRoom> getRoomsByKeyName(String keyName) {
         List<GameRoom> results = new ArrayList<>();
         for (GameRoom gameRoom : roomList)
-            if (gameRoom.getRoomName().contains(keyName) || gameRoom.getRoomCreatorName().contains(keyName))
+            if (gameRoom.getName().contains(keyName) || gameRoom.getRoomHost().getName().contains(keyName))
                 results.add(gameRoom);
         return results;
     }
