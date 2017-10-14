@@ -1,11 +1,9 @@
-package com.example.joanna_zhang.test.Mock.Factory;
+package com.example.joanna_zhang.test.Mock;
 
 
 import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
 import com.example.joanna_zhang.test.Domain.GameMode;
 import com.example.joanna_zhang.test.Domain.GameRoom;
-import com.example.joanna_zhang.test.Mock.MockGameRoom;
-import com.example.joanna_zhang.test.Mock.MockUser;
 
 import java.util.ArrayList;
 import java.util.List;

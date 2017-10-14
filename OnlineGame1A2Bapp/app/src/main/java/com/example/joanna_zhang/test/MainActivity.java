@@ -18,7 +18,7 @@ import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutException;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.GameIOException;
 import com.ood.clean.waterball.a1a2bsdk.core.model.GameServerInformation;
-import com.ood.clean.waterball.a1a2bsdk.core.model.User;
+import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.exceptions.UserNameFormatException;
 
@@ -58,9 +58,9 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     }
 
     @Override
-    public void onSignInSuccessfully(@NonNull User user) {
+    public void onSignInSuccessfully(@NonNull Player player) {
         Intent intent = new Intent(this, RoomListActivity.class);
-        intent.putExtra("user", user); // send the user data to the next activity
+        intent.putExtra("player", player); // send the player data to the next activity
         startActivity(intent);
     }
 

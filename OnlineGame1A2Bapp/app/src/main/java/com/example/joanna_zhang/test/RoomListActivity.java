@@ -1,7 +1,5 @@
 package com.example.joanna_zhang.test;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -21,12 +19,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
 import com.example.joanna_zhang.test.Domain.GameMode;
 import com.example.joanna_zhang.test.Domain.GameRoom;
-import com.example.joanna_zhang.test.Mock.Factory.MockGameRoomListFactory;
+import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;

@@ -3,10 +3,10 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules.signIn;
 
 import android.support.annotation.NonNull;
 
-import com.ood.clean.waterball.a1a2bsdk.core.model.User;
+import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
 
 public class UserSigningModuleImp implements UserSigningModule {
-    private User currentUser;
+    private Player currentPlayer;
 
     @Override
     public void signIn(@NonNull String name, @NonNull Callback callback) {
@@ -17,10 +17,9 @@ public class UserSigningModuleImp implements UserSigningModule {
         }
     }
 
-    @Override
-    public User getCurrentUser() {
-        if (currentUser == null)
+    public Player getCurrentPlayer() {
+        if (currentPlayer == null)
             throw new IllegalStateException("There is no signed in user.");
-        return currentUser;
+        return currentPlayer;
     }
 }

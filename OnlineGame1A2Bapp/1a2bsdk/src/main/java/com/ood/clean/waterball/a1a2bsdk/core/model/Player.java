@@ -1,11 +1,11 @@
 package com.ood.clean.waterball.a1a2bsdk.core.model;
 
 
-public class User extends SerializableEntity{
+public class Player extends SerializableEntity{
 
     private String name;
 
-    public User(String name) {
+    public Player(String name) {
         this.name = name;
     }
 
