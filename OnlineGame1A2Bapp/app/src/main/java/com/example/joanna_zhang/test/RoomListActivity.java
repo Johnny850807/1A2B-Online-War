@@ -134,7 +134,7 @@ public class RoomListActivity extends AppCompatActivity {
             if (enableLoadingRoomListAnimation)
             {
                 setRoomListAdapterViewUpdatedAnimation(parent);
-                enableLoadingRoomListAnimation = false; // only the first time will enable the animation until the new room added.
+                enableLoadingRoomListAnimation = false; // whenever the animation enabled, the animation will be only executed once.
             }
 
 
