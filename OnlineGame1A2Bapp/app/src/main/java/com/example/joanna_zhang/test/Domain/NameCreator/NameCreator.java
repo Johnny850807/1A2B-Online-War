@@ -1,4 +1,4 @@
-package com.example.joanna_zhang.test.NameCreator;
+package com.example.joanna_zhang.test.Domain.NameCreator;
 
 
 

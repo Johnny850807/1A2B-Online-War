@@ -100,7 +100,12 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     public void joinRoomBtnOnClick(View view) {
+        //todo join room
+    }
 
+    public void searchBtnOnClick(View view) {
+        enableLoadingRoomListAnimation = true;
+        searchAndUpdateRoomList();
     }
 
     public class MyAdapter extends BaseAdapter {
@@ -130,7 +135,11 @@ public class RoomListActivity extends AppCompatActivity {
         public View getView(int position, View view, ViewGroup parent) {
             ViewHolder viewHolder;
             if (enableLoadingRoomListAnimation)
+            {
                 setRoomListAdapterViewUpdatedAnimation(parent);
+                enableLoadingRoomListAnimation = false; // only the first time will enable the animation until the new room added.
+            }
+
 
             if (view == null)  // if the view has not existed in view, init and bind the viewholder
             {
@@ -184,8 +193,6 @@ public class RoomListActivity extends AppCompatActivity {
         LayoutAnimationController controller =
                 new LayoutAnimationController(set, 0.25f);
         parent.setLayoutAnimation(controller);
-
-        enableLoadingRoomListAnimation = false; // only the first time will enable the animation until the new room added.
     }
 
     private class SearchEditTextWatcher implements TextWatcher {
@@ -195,16 +202,24 @@ public class RoomListActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            List<GameRoom> searchResultRoomList = new ArrayList<>();
-            String searchTxt = searchEdt.getText().toString();
-            for (GameRoom gameRoom : roomList)
-                if (gameRoom.getRoomName().contains(searchTxt) || gameRoom.getRoomCreatorName().contains(searchTxt))
-                    searchResultRoomList.add(gameRoom);
-            updateRoomList(searchResultRoomList);
+            searchAndUpdateRoomList();
         }
 
         @Override
         public void afterTextChanged(Editable editable) {
         }
+    }
+
+    private void searchAndUpdateRoomList(){
+        String searchTxt = searchEdt.getText().toString();
+        updateRoomList(getRoomsByKeyName(searchTxt));
+    }
+
+    private List<GameRoom> getRoomsByKeyName(String keyName){
+        List<GameRoom> results = new ArrayList<>();
+        for (GameRoom gameRoom : roomList)
+            if (gameRoom.getRoomName().contains(keyName) || gameRoom.getRoomCreatorName().contains(keyName))
+                results.add(gameRoom);
+        return results;
     }
 }
