@@ -2,6 +2,7 @@ package com.ood.clean.waterball.a1a2bsdk.core.model.gamemode;
 
 
 public enum GameMode implements IGameMode {
+    DEFAULT1A2B(0,0),
     DUEL1A2B(2,2),
     GROUP1A2B(2,6),
     DIXIT(3,6);

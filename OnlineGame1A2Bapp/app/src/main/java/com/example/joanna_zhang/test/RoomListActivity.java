@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
 import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
@@ -38,6 +39,7 @@ public class RoomListActivity extends AppCompatActivity {
     private GameRoomListFactory gameRoomListFactory = new MockGameRoomListFactory();
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
+    private List<GameRoom> oneModeRoomList = new ArrayList<>();
     private EditText searchEdt;
     private ListView roomListView;
     private Spinner roomModeSpn;
@@ -79,16 +81,7 @@ public class RoomListActivity extends AppCompatActivity {
         roomModeSpn.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                ArrayList<GameRoom> results = new ArrayList<GameRoom>();
-                String keyWord = String.valueOf(adapterView.getSelectedItem().toString().charAt(0));
-                for (GameRoom gameRoom : roomList)
-                    if (gameRoom.getGameMode().toString().contains(keyWord))
-                        results.add(gameRoom);
-
-                if (results.isEmpty()) {
-                    searchAndUpdateRoomList();
-                } else
-                    updateRoomList(results);
+                showAllRoomsOfOneMode(adapterView);
             }
 
             @Override
@@ -98,12 +91,41 @@ public class RoomListActivity extends AppCompatActivity {
         });
     }
 
+    public void showAllRoomsOfOneMode(AdapterView adapterView) {
+        List<GameRoom> results = new ArrayList<GameRoom>();
+        String mode = adapterView.getSelectedItem().toString();
+        for (GameRoom gameRoom : roomList)
+            if (gameRoom.getGameMode() == whichModeHasBeenSelected(mode))
+                results.add(gameRoom);
+            else if (whichModeHasBeenSelected(mode) == GameMode.DEFAULT1A2B)
+                results = roomList;
+
+        oneModeRoomList = results;
+        updateRoomList(oneModeRoomList);
+
+    }
+
+    public GameMode whichModeHasBeenSelected(String mode) {
+        GameMode gameMode;
+        if (mode.equals(getString(R.string.duel)))
+            gameMode = GameMode.DUEL1A2B;
+        else if (mode.equals(getString(R.string.fight)))
+            gameMode = GameMode.GROUP1A2B;
+        else
+            gameMode = GameMode.DEFAULT1A2B;
+        return gameMode;
+    }
+
     public void updateRoomList(List<GameRoom> list) {
         MyAdapter myAdapter = new MyAdapter(list);
         roomListView.setAdapter(myAdapter);
     }
 
     public void createRoomBtnOnClick(View view) {
+        dialogOfCreateRoom(view);
+    }
+
+    public void dialogOfCreateRoom(View view) {
         AlertDialog.Builder createRoomDialogBuilder = new AlertDialog.Builder(RoomListActivity.this);
         view = LayoutInflater.from(RoomListActivity.this).inflate(R.layout.create_room_dialog, null);
         Spinner gameModeSpn = view.findViewById(R.id.createRoomModeSpn);
@@ -124,6 +146,7 @@ public class RoomListActivity extends AppCompatActivity {
 
     public void searchBtnOnClick(View view) {
         enableLoadingRoomListAnimation = true;
+
         searchAndUpdateRoomList();
     }
 
@@ -235,7 +258,7 @@ public class RoomListActivity extends AppCompatActivity {
 
     private List<GameRoom> getRoomsByKeyName(String keyName) {
         List<GameRoom> results = new ArrayList<>();
-        for (GameRoom gameRoom : roomList)
+        for (GameRoom gameRoom : oneModeRoomList)
             if (gameRoom.getName().contains(keyName) || gameRoom.getRoomHost().getName().contains(keyName))
                 results.add(gameRoom);
         return results;
