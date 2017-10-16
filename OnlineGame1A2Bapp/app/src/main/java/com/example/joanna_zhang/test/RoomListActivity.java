@@ -85,7 +85,7 @@ public class RoomListActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                searchAndUpdateRoomList();
+                updateRoomList(roomList);
             }
         });
     }
@@ -93,26 +93,24 @@ public class RoomListActivity extends AppCompatActivity {
     public void showAllRoomsOfOneMode(AdapterView adapterView) {
         List<GameRoom> results = new ArrayList<GameRoom>();
         String mode = adapterView.getSelectedItem().toString();
-        for (GameRoom gameRoom : roomList)
-            if (gameRoom.getGameMode() == whichModeHasBeenSelected(mode))
-                results.add(gameRoom);
-            else if (whichModeHasBeenSelected(mode) == GameMode.DEFAULT1A2B)
-                results = roomList;
-
+        if (whichModeHasBeenSelected(mode) == GameMode.DEFAULT1A2B)
+            results = roomList;
+        else {
+            for (GameRoom gameRoom : roomList)
+                if (gameRoom.getGameMode() == whichModeHasBeenSelected(mode))
+                    results.add(gameRoom);
+        }
         roomListOfOneMode = results;
         updateRoomList(roomListOfOneMode);
-
     }
 
     public GameMode whichModeHasBeenSelected(String mode) {
-        GameMode gameMode;
         if (mode.equals(getString(R.string.duel)))
-            gameMode = GameMode.DUEL1A2B;
+            return GameMode.DUEL1A2B;
         else if (mode.equals(getString(R.string.fight)))
-            gameMode = GameMode.GROUP1A2B;
+            return GameMode.GROUP1A2B;
         else
-            gameMode = GameMode.DEFAULT1A2B;
-        return gameMode;
+            return GameMode.DEFAULT1A2B;
     }
 
     public void updateRoomList(List<GameRoom> list) {
@@ -131,12 +129,12 @@ public class RoomListActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> gameModeAdapter = new ArrayAdapter<CharSequence>(RoomListActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.roomMode));
         gameModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         gameModeSpn.setAdapter(gameModeAdapter);
-        createRoomDialogBuilder.setTitle(R.string.create_room);
-        createRoomDialogBuilder.setIcon(R.drawable.logo);
-        createRoomDialogBuilder.setPositiveButton(R.string.confirm, null);
-        createRoomDialogBuilder.setNegativeButton(R.string.cancel, null);
-        createRoomDialogBuilder.setView(view);
-        createRoomDialogBuilder.show();
+        createRoomDialogBuilder.setTitle(R.string.create_room)
+                .setIcon(R.drawable.logo)
+                .setPositiveButton(R.string.confirm, null)
+                .setNegativeButton(R.string.cancel, null)
+                .setView(view)
+                .show();
     }
 
     public void joinRoomBtnOnClick(View view) {
