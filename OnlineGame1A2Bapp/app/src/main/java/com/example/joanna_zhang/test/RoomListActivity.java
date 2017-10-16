@@ -20,7 +20,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
 import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
@@ -39,7 +38,7 @@ public class RoomListActivity extends AppCompatActivity {
     private GameRoomListFactory gameRoomListFactory = new MockGameRoomListFactory();
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
-    private List<GameRoom> oneModeRoomList = new ArrayList<>();
+    private List<GameRoom> roomListOfOneMode = new ArrayList<>();
     private EditText searchEdt;
     private ListView roomListView;
     private Spinner roomModeSpn;
@@ -100,8 +99,8 @@ public class RoomListActivity extends AppCompatActivity {
             else if (whichModeHasBeenSelected(mode) == GameMode.DEFAULT1A2B)
                 results = roomList;
 
-        oneModeRoomList = results;
-        updateRoomList(oneModeRoomList);
+        roomListOfOneMode = results;
+        updateRoomList(roomListOfOneMode);
 
     }
 
@@ -258,7 +257,7 @@ public class RoomListActivity extends AppCompatActivity {
 
     private List<GameRoom> getRoomsByKeyName(String keyName) {
         List<GameRoom> results = new ArrayList<>();
-        for (GameRoom gameRoom : oneModeRoomList)
+        for (GameRoom gameRoom : roomListOfOneMode)
             if (gameRoom.getName().contains(keyName) || gameRoom.getRoomHost().getName().contains(keyName))
                 results.add(gameRoom);
         return results;
