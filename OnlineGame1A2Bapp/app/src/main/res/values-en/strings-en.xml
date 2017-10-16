@@ -22,6 +22,8 @@
     <string name="create_room">Create Room</string>
     <string name="duel">Duel</string>
     <string name="fight">Fight</string>
+    <string name="back">Back</string>
+    <string name="enter">Enter</string>
     <array name="roomMode">
         <item>Mode Selection</item>
         <item>Fight</item>
