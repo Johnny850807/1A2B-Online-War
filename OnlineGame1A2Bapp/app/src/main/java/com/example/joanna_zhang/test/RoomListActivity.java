@@ -34,11 +34,12 @@ import java.util.List;
 
 import static com.example.joanna_zhang.test.R.array.roomMode;
 
-public class RoomListActivity extends AppCompatActivity {
+public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener {
     private GameRoomListFactory gameRoomListFactory = new MockGameRoomListFactory();
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
-    private List<GameRoom> roomListOfOneMode = new ArrayList<>();
+    private GameMode[] gameModes = {null, GameMode.GROUP1A2B, GameMode.DUEL1A2B};
+    private List<GameRoom> roomListOfGameMode = new ArrayList<>();
     private EditText searchEdt;
     private ListView roomListView;
     private Spinner roomModeSpn;
@@ -77,40 +78,28 @@ public class RoomListActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapterRoomMode = ArrayAdapter.createFromResource(this, roomMode, android.R.layout.simple_spinner_dropdown_item);
         adapterRoomMode.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roomModeSpn.setAdapter(adapterRoomMode);
-        roomModeSpn.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                showAllRoomsOfOneMode(adapterView);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                updateRoomList(roomList);
-            }
-        });
+        roomModeSpn.setOnItemSelectedListener(this);
     }
 
-    public void showAllRoomsOfOneMode(AdapterView adapterView) {
-        List<GameRoom> results = new ArrayList<GameRoom>();
-        String mode = adapterView.getSelectedItem().toString();
-        if (whichModeHasBeenSelected(mode) == GameMode.DEFAULT1A2B)
-            results = roomList;
-        else {
-            for (GameRoom gameRoom : roomList)
-                if (gameRoom.getGameMode() == whichModeHasBeenSelected(mode))
-                    results.add(gameRoom);
-        }
-        roomListOfOneMode = results;
-        updateRoomList(roomListOfOneMode);
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+        GameMode selectedMode = gameModes[position];
+        List<GameRoom> results = getRoomsByGameMode(selectedMode);
+        roomListOfGameMode = results.isEmpty() ? roomList : results;
+        updateRoomList(roomListOfGameMode);
     }
 
-    public GameMode whichModeHasBeenSelected(String mode) {
-        if (mode.equals(getString(R.string.duel)))
-            return GameMode.DUEL1A2B;
-        else if (mode.equals(getString(R.string.fight)))
-            return GameMode.GROUP1A2B;
-        else
-            return GameMode.DEFAULT1A2B;
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        updateRoomList(roomList);
+    }
+
+    public List<GameRoom> getRoomsByGameMode(GameMode gameMode) {
+        List<GameRoom> results = new ArrayList<>();
+        for (GameRoom gameRoom : roomList)
+            if (gameRoom.getGameMode() == gameMode)
+                results.add(gameRoom);
+        return results;
     }
 
     public void updateRoomList(List<GameRoom> list) {
@@ -119,10 +108,6 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     public void createRoomBtnOnClick(View view) {
-        dialogOfCreateRoom(view);
-    }
-
-    public void dialogOfCreateRoom(View view) {
         AlertDialog.Builder createRoomDialogBuilder = new AlertDialog.Builder(RoomListActivity.this);
         view = LayoutInflater.from(RoomListActivity.this).inflate(R.layout.create_room_dialog, null);
         Spinner gameModeSpn = view.findViewById(R.id.createRoomModeSpn);
@@ -143,7 +128,6 @@ public class RoomListActivity extends AppCompatActivity {
 
     public void searchBtnOnClick(View view) {
         enableLoadingRoomListAnimation = true;
-
         searchAndUpdateRoomList();
     }
 
@@ -255,7 +239,7 @@ public class RoomListActivity extends AppCompatActivity {
 
     private List<GameRoom> getRoomsByKeyName(String keyName) {
         List<GameRoom> results = new ArrayList<>();
-        for (GameRoom gameRoom : roomListOfOneMode)
+        for (GameRoom gameRoom : roomListOfGameMode)
             if (gameRoom.getName().contains(keyName) || gameRoom.getRoomHost().getName().contains(keyName))
                 results.add(gameRoom);
         return results;
