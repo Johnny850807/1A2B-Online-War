@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
 import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
@@ -27,6 +28,7 @@ import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.model.GameRoom;
 import com.ood.clean.waterball.a1a2bsdk.core.model.gamemode.GameMode;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ import java.util.List;
 
 import static com.example.joanna_zhang.test.R.array.roomMode;
 
-public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener {
+public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener, RoomListModule.Callback {
     private GameRoomListFactory gameRoomListFactory = new MockGameRoomListFactory();
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
@@ -129,6 +131,48 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     public void searchBtnOnClick(View view) {
         enableLoadingRoomListAnimation = true;
         searchAndUpdateRoomList();
+    }
+
+    @Override
+    public void onGetRoomList(List<GameRoom> gameRooms) {
+        this.roomList = gameRooms;
+        MyAdapter myAdapter = new MyAdapter(roomList);
+        roomListView.setAdapter(myAdapter);
+    }
+
+    @Override
+    public void onNewRoom(GameRoom gameRoom) {
+        //
+    }
+
+    @Override
+    public void onRoomClosed(GameRoom gameRoom) {
+        //
+    }
+
+    @Override
+    public void onRoomUpdated(GameRoom gameRoom) {
+        //
+    }
+
+    @Override
+    public void onRoomStartedPlaying(GameRoom gameRoom) {
+        //
+    }
+
+    @Override
+    public void onCreatedRoomSuccessfully(GameRoom gameRoom) {
+        //進入房間聊天室
+    }
+
+    @Override
+    public void onJoinRoomSuccessfully(GameRoom gameRoom) {
+        //進入房間聊天室
+    }
+
+    @Override
+    public void onFailed(Exception err) {
+        Toast.makeText(RoomListActivity.this, err.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     public class MyAdapter extends BaseAdapter {
