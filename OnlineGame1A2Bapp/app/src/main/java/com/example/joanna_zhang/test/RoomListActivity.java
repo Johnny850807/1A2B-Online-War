@@ -34,10 +34,12 @@ import java.util.List;
 
 import static com.example.joanna_zhang.test.R.array.roomMode;
 
-public class RoomListActivity extends AppCompatActivity {
+public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener {
     private GameRoomListFactory gameRoomListFactory = new MockGameRoomListFactory();
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
+    private GameMode[] gameModes = {null, GameMode.GROUP1A2B, GameMode.DUEL1A2B};
+    private List<GameRoom> roomListOfGameMode = new ArrayList<>();
     private EditText searchEdt;
     private ListView roomListView;
     private Spinner roomModeSpn;
@@ -76,26 +78,28 @@ public class RoomListActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapterRoomMode = ArrayAdapter.createFromResource(this, roomMode, android.R.layout.simple_spinner_dropdown_item);
         adapterRoomMode.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roomModeSpn.setAdapter(adapterRoomMode);
-        roomModeSpn.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                ArrayList<GameRoom> results = new ArrayList<GameRoom>();
-                String keyWord = String.valueOf(adapterView.getSelectedItem().toString().charAt(0));
-                for (GameRoom gameRoom : roomList)
-                    if (gameRoom.getGameMode().toString().contains(keyWord))
-                        results.add(gameRoom);
+        roomModeSpn.setOnItemSelectedListener(this);
+    }
 
-                if (results.isEmpty()) {
-                    searchAndUpdateRoomList();
-                } else
-                    updateRoomList(results);
-            }
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+        GameMode selectedMode = gameModes[position];
+        List<GameRoom> results = getRoomsByGameMode(selectedMode);
+        roomListOfGameMode = results.isEmpty() ? roomList : results;
+        updateRoomList(roomListOfGameMode);
+    }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                searchAndUpdateRoomList();
-            }
-        });
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        updateRoomList(roomList);
+    }
+
+    public List<GameRoom> getRoomsByGameMode(GameMode gameMode) {
+        List<GameRoom> results = new ArrayList<>();
+        for (GameRoom gameRoom : roomList)
+            if (gameRoom.getGameMode() == gameMode)
+                results.add(gameRoom);
+        return results;
     }
 
     public void updateRoomList(List<GameRoom> list) {
@@ -110,12 +114,12 @@ public class RoomListActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> gameModeAdapter = new ArrayAdapter<CharSequence>(RoomListActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.roomMode));
         gameModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         gameModeSpn.setAdapter(gameModeAdapter);
-        createRoomDialogBuilder.setTitle(R.string.create_room);
-        createRoomDialogBuilder.setIcon(R.drawable.logo);
-        createRoomDialogBuilder.setPositiveButton(R.string.confirm, null);
-        createRoomDialogBuilder.setNegativeButton(R.string.cancel, null);
-        createRoomDialogBuilder.setView(view);
-        createRoomDialogBuilder.show();
+        createRoomDialogBuilder.setTitle(R.string.create_room)
+                .setIcon(R.drawable.logo)
+                .setPositiveButton(R.string.confirm, null)
+                .setNegativeButton(R.string.cancel, null)
+                .setView(view)
+                .show();
     }
 
     public void joinRoomBtnOnClick(View view) {
@@ -235,7 +239,7 @@ public class RoomListActivity extends AppCompatActivity {
 
     private List<GameRoom> getRoomsByKeyName(String keyName) {
         List<GameRoom> results = new ArrayList<>();
-        for (GameRoom gameRoom : roomList)
+        for (GameRoom gameRoom : roomListOfGameMode)
             if (gameRoom.getName().contains(keyName) || gameRoom.getRoomHost().getName().contains(keyName))
                 results.add(gameRoom);
         return results;
