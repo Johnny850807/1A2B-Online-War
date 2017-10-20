@@ -22,7 +22,7 @@
     <string name="create_room">Create Room</string>
     <string name="duel">Duel</string>
     <string name="fight">Fight</string>
-    <array name="roomMode">
+    <array name="roomModes">
         <item>Mode Selection</item>
         <item>Fight</item>
         <item>Duel</item>

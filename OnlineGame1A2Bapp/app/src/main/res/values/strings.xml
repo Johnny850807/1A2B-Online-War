@@ -24,7 +24,7 @@
     <string name="inputNumber">輸入數字</string>
     <string name="inputMessage">輸入訊息</string>
     <string name="inputAnswer">輸入答案</string>
-    <array name="roomMode">
+    <array name="roomModes">
         <item>模式選擇</item>
         <item>爭奪戰</item>
         <item>對決戰</item>

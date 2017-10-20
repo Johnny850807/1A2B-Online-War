@@ -32,11 +32,12 @@ import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.joanna_zhang.test.R.array.roomMode;
+import static com.example.joanna_zhang.test.R.array.roomModes;
 
-public class RoomListActivity extends AppCompatActivity {
+public class RoomListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private GameRoomListFactory gameRoomListFactory = new MockGameRoomListFactory();
     private boolean enableLoadingRoomListAnimation = true;
+    private GameMode[] gameModes = {null, GameMode.GROUP1A2B, GameMode.DUEL1A2B};
     private List<GameRoom> roomList = new ArrayList<>();
     private EditText searchEdt;
     private ListView roomListView;
@@ -73,30 +74,37 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     public void setUpSpinner() {
-        ArrayAdapter<CharSequence> adapterRoomMode = ArrayAdapter.createFromResource(this, roomMode, android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adapterRoomMode = ArrayAdapter.createFromResource(this, roomModes, android.R.layout.simple_spinner_dropdown_item);
         adapterRoomMode.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roomModeSpn.setAdapter(adapterRoomMode);
-        roomModeSpn.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                ArrayList<GameRoom> results = new ArrayList<GameRoom>();
-                String keyWord = String.valueOf(adapterView.getSelectedItem().toString().charAt(0));
-                for (GameRoom gameRoom : roomList)
-                    if (gameRoom.getGameMode().toString().contains(keyWord))
-                        results.add(gameRoom);
-
-                if (results.isEmpty()) {
-                    searchAndUpdateRoomList();
-                } else
-                    updateRoomList(results);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                searchAndUpdateRoomList();
-            }
-        });
+        roomModeSpn.setOnItemSelectedListener(this);
     }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+        GameMode selectedMode = gameModes[position];
+        List<GameRoom> results = getRoomsByGameMode(selectedMode);
+
+        if (results.isEmpty()) {
+            searchAndUpdateRoomList();
+        } else
+            updateRoomList(results);
+    }
+
+
+    private List<GameRoom> getRoomsByGameMode(GameMode gameMode){
+        List<GameRoom> results = new ArrayList<GameRoom>();
+        for (GameRoom gameRoom : roomList)
+            if (gameRoom.getGameMode() == gameMode)
+                results.add(gameRoom);
+        return results;
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        searchAndUpdateRoomList();
+    }
+
 
     public void updateRoomList(List<GameRoom> list) {
         MyAdapter myAdapter = new MyAdapter(list);
@@ -107,7 +115,7 @@ public class RoomListActivity extends AppCompatActivity {
         AlertDialog.Builder createRoomDialogBuilder = new AlertDialog.Builder(RoomListActivity.this);
         view = LayoutInflater.from(RoomListActivity.this).inflate(R.layout.create_room_dialog, null);
         Spinner gameModeSpn = view.findViewById(R.id.createRoomModeSpn);
-        ArrayAdapter<CharSequence> gameModeAdapter = new ArrayAdapter<CharSequence>(RoomListActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.roomMode));
+        ArrayAdapter<CharSequence> gameModeAdapter = new ArrayAdapter<CharSequence>(RoomListActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.roomModes));
         gameModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         gameModeSpn.setAdapter(gameModeAdapter);
         createRoomDialogBuilder.setTitle(R.string.create_room);
@@ -232,6 +240,7 @@ public class RoomListActivity extends AppCompatActivity {
         String searchTxt = searchEdt.getText().toString();
         updateRoomList(getRoomsByKeyName(searchTxt));
     }
+
 
     private List<GameRoom> getRoomsByKeyName(String keyName) {
         List<GameRoom> results = new ArrayList<>();
