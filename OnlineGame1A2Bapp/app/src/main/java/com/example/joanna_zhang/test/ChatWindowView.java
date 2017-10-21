@@ -41,12 +41,12 @@ public class ChatWindowView implements View.OnClickListener{
 
     private void update(ChatMessage chatMessage) {
         for (OnClickListener onClickListener : onClickListeners)
-            onClickListener.onClick();
+            onClickListener.onClick(chatMessage);
 
         chatMessages.add(chatMessage);
-        scrollMyListViewToBottom();
         ChatWindowAdapter adapter = new ChatWindowAdapter();
         chatWindowLst.setAdapter(adapter);
+        chatWindowLst.setSelection(chatWindowLst.getCount() - 1);
     }
 
     private void sendMessage(Player poster, String content) {
@@ -57,26 +57,19 @@ public class ChatWindowView implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         String content = inputMessageEdt.getText().toString();
-        if (! content.equals("")) {
-            CoreGameServer server = CoreGameServer.getInstance();
-            UserSigningModule signingModule = (MockUserSigningModule) server.getModule(ModuleName.SIGNING);
-            Player currentPlayer = signingModule.getCurrentPlayer();
-            sendMessage(currentPlayer, content);
+        if (!content.isEmpty()) {
+            sendMessage(getCurrentPlayer(), content);
             inputMessageEdt.setText("");
         }
     }
 
-    private void scrollMyListViewToBottom() {
-        chatWindowLst.post(new Runnable() {
-            @Override
-            public void run() {
-                // Select the last row so it will scroll into view...
-                chatWindowLst.setSelection(chatWindowLst.getCount() - 1);
-            }
-        });
+    private Player getCurrentPlayer() {
+        CoreGameServer server = CoreGameServer.getInstance();
+        UserSigningModule signingModule = (MockUserSigningModule) server.getModule(ModuleName.SIGNING);
+        return signingModule.getCurrentPlayer();
     }
 
-    static class Builder {
+    public static class Builder {
 
         private ChatWindowView chatWindowView;
 
@@ -101,8 +94,8 @@ public class ChatWindowView implements View.OnClickListener{
 
     }
 
-    interface OnClickListener {
-        void onClick();
+    public interface OnClickListener {
+        void onClick(ChatMessage chatMessage);
     }
 
     private class ChatWindowAdapter extends BaseAdapter {
