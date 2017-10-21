@@ -25,11 +25,13 @@
                 android:layout_gravity="center"
                 android:text="name" />
 
-            <EditText android:id="@+id/p1AnswerEdt"
+            <TextView android:id="@+id/p1AnswerEdt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:hint="@string/inputAnswer" />
+                android:padding="4dp"
+                android:background="@drawable/guessnumber_textview_border"
+                android:hint="@string/inputAnswer"/>
 
             <ListView
                 android:id="@+id/p1ResultLst"
@@ -50,11 +52,13 @@
                 android:layout_gravity="center"
                 android:text="name" />
 
-            <EditText android:id="@+id/p2AnswerEdt"
+            <TextView android:id="@+id/p2AnswerEdt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:hint="@string/inputAnswer" />
+                android:padding="4dp"
+                android:background="@drawable/guessnumber_textview_border"
+                android:hint="@string/inputAnswer"/>
 
             <ListView android:id="@+id/p2ResultLst"
                 android:layout_width="match_parent"
@@ -73,7 +77,8 @@
         android:padding="6dp"
         android:textSize="20sp" />
 
-    <include android:id="@+id/chatwindowLst"
+    <include
+        android:id="@+id/chatwindowLst"
         layout="@layout/chatwindow" />
 
 </LinearLayout>

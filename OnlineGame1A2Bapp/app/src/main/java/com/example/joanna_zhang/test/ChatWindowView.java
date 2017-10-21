@@ -5,41 +5,75 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
+import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.model.ChatMessage;
+import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
+import com.ood.clean.waterball.a1a2bsdk.mock.MockUserSigningModule;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ChatWindowView {
+public class ChatWindowView implements View.OnClickListener{
 
     private Activity activity;
-    private EditText messageEdt;
+    private EditText inputMessageEdt;
     private ListView chatWindowLst;
     private ImageButton sendMessageImgBtn;
-    private List<ChatMessage> chatMessages;
-    private List<OnClickListener> onClickListeners;
+    private List<ChatMessage> chatMessages = new ArrayList<>();
+    private List<OnClickListener> onClickListeners = new ArrayList<>();
 
-    public ChatWindowView(Activity activity) {
+    private ChatWindowView(Activity activity) {
         this.activity = activity;
-        messageEdt = activity.findViewById(R.id.inputChattingTxt);
+        inputMessageEdt = activity.findViewById(R.id.inputChattingTxt);
         chatWindowLst = activity.findViewById(R.id.chatwindowLst);
         sendMessageImgBtn = activity.findViewById(R.id.sendMessageBtn);
+        sendMessageImgBtn.setOnClickListener(this);
     }
 
-    public void update(ChatMessage chatMessage) {
+    private void update(ChatMessage chatMessage) {
         for (OnClickListener onClickListener : onClickListeners)
             onClickListener.onClick();
 
         chatMessages.add(chatMessage);
+        scrollMyListViewToBottom();
         ChatWindowAdapter adapter = new ChatWindowAdapter();
         chatWindowLst.setAdapter(adapter);
+    }
+
+    private void sendMessage(Player poster, String content) {
+        ChatMessage chatMessage = new ChatMessage(poster, content);
+        update(chatMessage);
+    }
+
+    @Override
+    public void onClick(View view) {
+        String content = inputMessageEdt.getText().toString();
+        if (! content.equals("")) {
+            CoreGameServer server = CoreGameServer.getInstance();
+            UserSigningModule signingModule = (MockUserSigningModule) server.getModule(ModuleName.SIGNING);
+            Player currentPlayer = signingModule.getCurrentPlayer();
+            sendMessage(currentPlayer, content);
+            inputMessageEdt.setText("");
+        }
+    }
+
+    private void scrollMyListViewToBottom() {
+        chatWindowLst.post(new Runnable() {
+            @Override
+            public void run() {
+                // Select the last row so it will scroll into view...
+                chatWindowLst.setSelection(chatWindowLst.getCount() - 1);
+            }
+        });
     }
 
     static class Builder {
@@ -47,7 +81,7 @@ public class ChatWindowView {
         private ChatWindowView chatWindowView;
 
         public Builder(Activity activity) {
-            chatWindowView.activity = activity;
+            chatWindowView = new ChatWindowView(activity);
         }
 
         public Builder setBackgroundColor(int id) {
@@ -63,6 +97,7 @@ public class ChatWindowView {
         public ChatWindowView build() {
             return chatWindowView;
         }
+
 
     }
 
