@@ -6,7 +6,7 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 import com.ood.clean.waterball.a1a2bsdk.core.model.ChatMessage;
 import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.game.game1a2b.duel.model.Game1A2BDuelStatus;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.game.model.Guess1A2BResult;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.game.model.GuessRecord;
 
 
 public interface Duel1A2BGameModule extends ChatRoomModule, GameModule{
@@ -30,10 +30,9 @@ public interface Duel1A2BGameModule extends ChatRoomModule, GameModule{
 
         /**
          * @param player the player who guessed.
-         * @param guess the guess appended to the record.
-         * @param result the result from the guess.
+         * @param guessRecord the guess with the result appended to the record.
          */
-        void onNewGuessAppended(Player player, String guess, Guess1A2BResult result);
+        void onNewGuessAppended(Player player, GuessRecord guessRecord);
 
         /**
          * @param winner the winner who wins the game with the correct result 4A.
