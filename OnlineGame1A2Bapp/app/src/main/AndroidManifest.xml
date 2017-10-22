@@ -16,7 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RoomListActivity"></activity>
+        <activity android:name=".RoomListActivity" />
+        <activity android:name=".DuelActivity" />
+        <activity android:name=".GroupFightActivity"></activity>
     </application>
 
 </manifest>
