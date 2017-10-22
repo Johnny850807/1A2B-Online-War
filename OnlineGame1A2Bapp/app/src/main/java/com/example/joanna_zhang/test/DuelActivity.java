@@ -11,12 +11,20 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
+import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.model.ChatMessage;
+import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.game.game1a2b.duel.Duel1A2BGameModule;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.game.game1a2b.duel.model.Game1A2BDuelStatus;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.game.model.Guess1A2BResult;
 
 import java.util.List;
 
-public class DuelActivity extends AppCompatActivity implements ChatWindowView.OnClickListener{
+public class DuelActivity extends AppCompatActivity implements ChatWindowView.OnClickListener, Duel1A2BGameModule.Callback{
 
+
+    private Duel1A2BGameModule duel1A2BGameModule;
     private ChatWindowView chatWindowView;
     private TextView p1NameTxt, p2NameTxt, p1AnswerTxt, p2AnswerTxt;
     private ListView p1ResultLst, p2ResultLst;
@@ -26,6 +34,10 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_duel);
+
+        CoreGameServer server = CoreGameServer.getInstance();
+        duel1A2BGameModule = (Duel1A2BGameModule) server.getModule(ModuleName.SIGNING);
+        duel1A2BGameModule.guess();
 
         setupChatWindow();
         findViews();
@@ -54,6 +66,31 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
 
     @Override
     public void onClick(ChatMessage chatMessage) {
+
+    }
+
+    @Override
+    public void onMessageReceived(ChatMessage message) {
+
+    }
+
+    @Override
+    public void onPlayerAnswerSetCompleted(Player player) {
+
+    }
+
+    @Override
+    public void onDuelStart() {
+
+    }
+
+    @Override
+    public void onPlayerWin(Player winner, String opponentAnswer) {
+
+    }
+
+    @Override
+    public void onGameStatusLoaded(Game1A2BDuelStatus game1A2BDuelStatus) {
 
     }
 
