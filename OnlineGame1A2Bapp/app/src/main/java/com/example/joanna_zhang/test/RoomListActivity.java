@@ -54,6 +54,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         init();
         setupViews();
         updateRoomList(roomList);
+
     }
 
     private void init() {
@@ -67,6 +68,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         setUpSpinner();
         updateRoomList(roomList);
         roomListView.setDivider(getResources().getDrawable(R.drawable.transperent_color));
+
     }
 
     private void findViews() {
@@ -81,6 +83,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         adapterRoomMode.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roomModeSpn.setAdapter(adapterRoomMode);
         roomModeSpn.setOnItemSelectedListener(this);
+
     }
 
     @Override
@@ -124,8 +127,10 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
                 .show();
     }
 
+    private InputNumberWindowView inputNumberWindowView;
+
     public void joinRoomBtnOnClick(View view) {
-        //todo join room
+
     }
 
     public void searchBtnOnClick(View view) {
@@ -142,32 +147,32 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onNewRoom(GameRoom gameRoom) {
-        //
+        //Todo
     }
 
     @Override
     public void onRoomClosed(GameRoom gameRoom) {
-        //
+        //Todo
     }
 
     @Override
     public void onRoomUpdated(GameRoom gameRoom) {
-        //
+        //Todo
     }
 
     @Override
     public void onRoomStartedPlaying(GameRoom gameRoom) {
-        //
+        // Todo
     }
 
     @Override
     public void onCreatedRoomSuccessfully(GameRoom gameRoom) {
-        //進入房間聊天室
+        //進入房間聊天室 Todo
     }
 
     @Override
     public void onJoinRoomSuccessfully(GameRoom gameRoom) {
-        //進入房間聊天室
+        //進入房間聊天室 Todo
     }
 
     @Override
@@ -205,7 +210,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
                 setRoomListAdapterViewUpdatedAnimation(parent);
                 enableLoadingRoomListAnimation = false; // whenever the animation enabled, the animation will be only executed once.
             }
-
 
             if (view == null)  // if the view has not existed in view, init and bind the viewholder
             {
