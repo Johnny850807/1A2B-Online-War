@@ -1,5 +1,6 @@
 package com.example.joanna_zhang.test;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -26,9 +27,9 @@ import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
 import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
-import com.ood.clean.waterball.a1a2bsdk.core.model.GameRoom;
-import com.ood.clean.waterball.a1a2bsdk.core.model.gamemode.GameMode;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameMode;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameRoom;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.ArrayList;
@@ -260,15 +261,13 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         animation.setDuration(400);
         set.addAnimation(animation);
 
-        LayoutAnimationController controller =
-                new LayoutAnimationController(set, 0.25f);
+        LayoutAnimationController controller = new LayoutAnimationController(set, 0.25f);
         parent.setLayoutAnimation(controller);
     }
 
     private class SearchEditTextWatcher implements TextWatcher {
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -276,8 +275,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         }
 
         @Override
-        public void afterTextChanged(Editable editable) {
-        }
+        public void afterTextChanged(Editable editable) {}
     }
 
     private void searchAndUpdateRoomList() {

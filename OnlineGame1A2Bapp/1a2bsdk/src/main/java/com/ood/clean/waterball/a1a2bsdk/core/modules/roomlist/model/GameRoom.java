@@ -1,6 +1,7 @@
-package com.ood.clean.waterball.a1a2bsdk.core.model;
+package com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model;
 
-import com.ood.clean.waterball.a1a2bsdk.core.model.gamemode.GameMode;
+import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
+import com.ood.clean.waterball.a1a2bsdk.core.model.SerializableEntity;
 
 import java.util.ArrayList;
 import java.util.Collections;

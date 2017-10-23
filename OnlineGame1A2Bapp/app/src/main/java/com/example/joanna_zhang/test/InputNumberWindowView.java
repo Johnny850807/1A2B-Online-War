@@ -64,7 +64,7 @@ public class InputNumberWindowView extends Dialog implements View.OnClickListene
         confirmBtn.setOnClickListener(this);
     }
 
-    public void update(String guessNumber){
+    public void update(String guessNumber) {
         for (OnClickListener onClickListener : onClickListeners)
             onClickListener.onEnterClick(guessNumber);
     }
@@ -72,19 +72,6 @@ public class InputNumberWindowView extends Dialog implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.button1:
-            case R.id.button2:
-            case R.id.button3:
-            case R.id.button4:
-            case R.id.button5:
-            case R.id.button6:
-            case R.id.button7:
-            case R.id.button8:
-            case R.id.button9:
-            case R.id.button0:
-                Button button = (Button) v;
-                display((String) button.getText());
-                break;
             case R.id.cancelBtn:
                 String str = answerEd.getText().toString();
                 if (str.length() > 0)
@@ -95,28 +82,17 @@ public class InputNumberWindowView extends Dialog implements View.OnClickListene
                 update(answerEd.getText().toString());
                 dialogBuilder.dismiss();
                 break;
+            default:
+                Button button = (Button) v;
+                display(button.getText().toString());
+                break;
         }
     }
 
     private void display(String number) {
         String str = answerEd.getText().toString();
-        if (str.equals(""))
+        if (!str.contains(number))
             answerEd.setText(str + number);
-        else {
-            if (checkNumberDuplicatedOrNot(str, number))
-                answerEd.setText(str);
-            else
-                answerEd.setText(str + number);
-        }
-    }
-
-    private boolean checkNumberDuplicatedOrNot(String str, String number) {
-        for (int i = 0; i < str.length(); i++) {
-            String s = Character.toString(str.charAt(i));
-            if (s.equals(number))
-                return true;
-        }
-        return false;
     }
 
     public static class Builder {
@@ -126,7 +102,7 @@ public class InputNumberWindowView extends Dialog implements View.OnClickListene
             inputNumberWindowView = new InputNumberWindowView(activity);
         }
 
-        public Builder addOnEnterClickListener(OnClickListener onClickListener){
+        public Builder addOnEnterClickListener(OnClickListener onClickListener) {
             inputNumberWindowView.onClickListeners.add(onClickListener);
             return this;
         }

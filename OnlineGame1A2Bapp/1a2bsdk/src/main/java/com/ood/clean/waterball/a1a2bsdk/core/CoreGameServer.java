@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 import com.ood.clean.waterball.a1a2bsdk.core.factory.moduleinflater.MockGameModuleInflater;
-import com.ood.clean.waterball.a1a2bsdk.core.model.GameServerInformation;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.model.GameServerInformation;
 import com.ood.clean.waterball.a1a2bsdk.service.GameService;
 
 import java.util.Collections;

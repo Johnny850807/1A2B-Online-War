@@ -3,10 +3,10 @@ package com.ood.clean.waterball.a1a2bsdk.core.model;
 
 import java.util.Date;
 
-public class ChatMessage extends SerializableEntity{
+public class ChatMessage extends SerializableEntity {
     private Player poster;
     private String content;
-    private Date postDate  = new Date();
+    private Date postDate = new Date();
 
     public ChatMessage(Player poster, String content) {
         this.poster = poster;

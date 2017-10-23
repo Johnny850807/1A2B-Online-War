@@ -1,4 +1,4 @@
-package com.ood.clean.waterball.a1a2bsdk.core.model;
+package com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.model;
 
 
 
