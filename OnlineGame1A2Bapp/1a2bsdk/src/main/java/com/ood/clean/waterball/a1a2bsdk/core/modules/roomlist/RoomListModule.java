@@ -56,9 +56,5 @@ public interface RoomListModule extends GameModule{
          */
         void onJoinRoomSuccessfully(GameRoom gameRoom);
 
-        /**
-         * The operation failed.
-         */
-        void onFailed(Exception err);
     }
 }

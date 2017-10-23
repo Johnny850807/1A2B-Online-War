@@ -12,6 +12,7 @@ import com.ood.clean.waterball.a1a2bsdk.core.modules.game.model.GuessRecord;
 public interface Duel1A2BGameModule extends ChatRoomModule, GameModule{
     void registerCallback(Callback callback);
     void unregisterCallBack(Callback callback);
+    void startGame();
     void sendChatMessage(ChatMessage message);
     void setPlayerAnswer(Player player, String answer);
     void loadGameStatus();
@@ -24,9 +25,14 @@ public interface Duel1A2BGameModule extends ChatRoomModule, GameModule{
         void onPlayerAnswerSetCompleted(Player player);
 
         /**
+         * the method will be invoked when the game begin.
+         */
+        void onGameStarted();
+
+        /**
          * the method will be invoked when the duel game started, both players can start guessing each other's answer.
          */
-        void onDuelStart();
+        void onDuelStarting();
 
         /**
          * @param player the player who guessed.

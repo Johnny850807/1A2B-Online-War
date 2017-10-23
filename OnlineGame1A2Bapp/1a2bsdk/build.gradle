@@ -29,4 +29,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.+'
     testCompile 'junit:junit:4.12'
     compile files('libs/1A2B SDK.jar')
+    compile files('libs/Joanna1A2B.jar')
 }
