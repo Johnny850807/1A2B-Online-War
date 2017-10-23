@@ -21,13 +21,15 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
 import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameRoom;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameMode;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameRoom;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.ArrayList;
@@ -35,7 +37,7 @@ import java.util.List;
 
 import static com.example.joanna_zhang.test.R.array.roomMode;
 
-public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener {
+public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener, RoomListModule.Callback {
     private GameRoomListFactory gameRoomListFactory = new MockGameRoomListFactory();
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
@@ -53,6 +55,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         init();
         setupViews();
         updateRoomList(roomList);
+
     }
 
     private void init() {
@@ -66,6 +69,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         setUpSpinner();
         updateRoomList(roomList);
         roomListView.setDivider(getResources().getDrawable(R.drawable.transperent_color));
+
     }
 
     private void findViews() {
@@ -80,6 +84,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         adapterRoomMode.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roomModeSpn.setAdapter(adapterRoomMode);
         roomModeSpn.setOnItemSelectedListener(this);
+
     }
 
     @Override
@@ -123,13 +128,57 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
                 .show();
     }
 
+    private InputNumberWindowView inputNumberWindowView;
+
     public void joinRoomBtnOnClick(View view) {
-        //todo join room
+
     }
 
     public void searchBtnOnClick(View view) {
         enableLoadingRoomListAnimation = true;
         searchAndUpdateRoomList();
+    }
+
+    @Override
+    public void onGetRoomList(List<GameRoom> gameRooms) {
+        this.roomList = gameRooms;
+        MyAdapter myAdapter = new MyAdapter(roomList);
+        roomListView.setAdapter(myAdapter);
+    }
+
+    @Override
+    public void onNewRoom(GameRoom gameRoom) {
+        //Todo
+    }
+
+    @Override
+    public void onRoomClosed(GameRoom gameRoom) {
+        //Todo
+    }
+
+    @Override
+    public void onRoomUpdated(GameRoom gameRoom) {
+        //Todo
+    }
+
+    @Override
+    public void onRoomStartedPlaying(GameRoom gameRoom) {
+        // Todo
+    }
+
+    @Override
+    public void onCreatedRoomSuccessfully(GameRoom gameRoom) {
+        //進入房間聊天室 Todo
+    }
+
+    @Override
+    public void onJoinRoomSuccessfully(GameRoom gameRoom) {
+        //進入房間聊天室 Todo
+    }
+
+    @Override
+    public void onFailed(Exception err) {
+        Toast.makeText(RoomListActivity.this, err.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     public class MyAdapter extends BaseAdapter {
@@ -162,7 +211,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
                 setRoomListAdapterViewUpdatedAnimation(parent);
                 enableLoadingRoomListAnimation = false; // whenever the animation enabled, the animation will be only executed once.
             }
-
 
             if (view == null)  // if the view has not existed in view, init and bind the viewholder
             {
