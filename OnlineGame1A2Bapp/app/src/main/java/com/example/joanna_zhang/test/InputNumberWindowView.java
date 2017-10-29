@@ -3,20 +3,18 @@ package com.example.joanna_zhang.test;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class InputNumberWindowView extends Dialog implements View.OnClickListener {
+public class InputNumberWindowView extends AlertDialog.Builder implements View.OnClickListener {
     private Context context;
     private Button button1, button2, button3, button4, button5, button6, button7, button8, button9, button0, cancelBtn, confirmBtn;
     private EditText answerEd;
-    private Dialog dialogBuilder;
-    private List<OnClickListener> onClickListeners = new ArrayList<>();
+    private Dialog dialog;
+    private OnClickListener OnClickListener;
 
     public InputNumberWindowView(Context context) {
         super(context);
@@ -25,10 +23,10 @@ public class InputNumberWindowView extends Dialog implements View.OnClickListene
     }
 
     public void setUpView() {
-        dialogBuilder = new Dialog(context);
+        dialog = new Dialog(context);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.input_number_window, null);
-        dialogBuilder.setContentView(dialogView);
-        dialogBuilder.show();
+        dialog.setContentView(dialogView);
+        dialog.show();
         findAllViewById(dialogView);
         whenButtonOnClick();
     }
@@ -65,8 +63,7 @@ public class InputNumberWindowView extends Dialog implements View.OnClickListene
     }
 
     public void update(String guessNumber) {
-        for (OnClickListener onClickListener : onClickListeners)
-            onClickListener.onEnterClick(guessNumber);
+            OnClickListener.onEnterClick(guessNumber);
     }
 
     @Override
@@ -80,7 +77,7 @@ public class InputNumberWindowView extends Dialog implements View.OnClickListene
                 break;
             case R.id.confirmBtn:
                 update(answerEd.getText().toString());
-                dialogBuilder.dismiss();
+                dialog.dismiss();
                 break;
             default:
                 Button button = (Button) v;
@@ -95,6 +92,7 @@ public class InputNumberWindowView extends Dialog implements View.OnClickListene
             answerEd.setText(str + number);
     }
 
+
     public static class Builder {
         private InputNumberWindowView inputNumberWindowView;
 
@@ -102,9 +100,14 @@ public class InputNumberWindowView extends Dialog implements View.OnClickListene
             inputNumberWindowView = new InputNumberWindowView(activity);
         }
 
-        public Builder addOnEnterClickListener(OnClickListener onClickListener) {
-            inputNumberWindowView.onClickListeners.add(onClickListener);
+        public Builder setOnEnterClickListener(OnClickListener onClickListener) {
+            inputNumberWindowView.OnClickListener = onClickListener;
             return this;
+        }
+
+        public InputNumberWindowView show(){
+            final InputNumberWindowView dialog = new InputNumberWindowView(inputNumberWindowView.getContext());
+            return dialog;
         }
 
         public InputNumberWindowView build() {

@@ -37,7 +37,7 @@ import java.util.List;
 
 import static com.example.joanna_zhang.test.R.array.roomMode;
 
-public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener, RoomListModule.Callback {
+public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener, RoomListModule.Callback, ListView.OnItemClickListener {
     private GameRoomListFactory gameRoomListFactory = new MockGameRoomListFactory();
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
@@ -55,7 +55,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         init();
         setupViews();
         updateRoomList(roomList);
-
+        roomListView.setOnItemClickListener(this);
     }
 
     private void init() {
@@ -128,10 +128,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
                 .show();
     }
 
-    private InputNumberWindowView inputNumberWindowView;
-
     public void joinRoomBtnOnClick(View view) {
-
     }
 
     public void searchBtnOnClick(View view) {
@@ -179,6 +176,16 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onFailed(Exception err) {
         Toast.makeText(RoomListActivity.this, err.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        GameMode gameMode = roomListOfGameMode.get(position).getGameMode();
+        Intent enterToGameRoom = new Intent();
+        enterToGameRoom.setClass(RoomListActivity.this, ChatInRoomActivity.class);
+        enterToGameRoom.putExtra("roomGameMode", gameMode.toString());
+        startActivity(enterToGameRoom);
+        finish();
     }
 
     public class MyAdapter extends BaseAdapter {

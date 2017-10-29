@@ -20,7 +20,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
     private ChatWindowView chatWindowView;
     private TextView p1NameTxt, p2NameTxt, p1AnswerTxt, p2AnswerTxt;
     private ListView p1ResultLst, p2ResultLst;
-    private List<> p1ResultList, p2ResultList;
+    private List<String> p1ResultList, p2ResultList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
                 .build();
     }
 
-    public void updateResultList(List<> resultList, ListView resultListView) {
+    public void updateResultList(List<String> resultList, ListView resultListView) {
         ResultListAdapter adapter = new ResultListAdapter(resultList);
         resultListView.setAdapter(adapter);
         resultListView.setSelection(resultListView.getCount() - 1);
@@ -59,9 +59,9 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
 
     private class ResultListAdapter extends BaseAdapter {
 
-        private List<> resultLsit;
+        private List<String> resultLsit;
 
-        public ResultListAdapter(List<> resultLsit) {
+        public ResultListAdapter(List<String> resultLsit) {
             this.resultLsit = resultLsit;
         }
 
@@ -86,9 +86,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
 
             TextView result = (TextView) findViewById(android.R.id.text1);
 
-            String guessNumber = resultLsit
 
-            result.setText();
 
             return null;
         }

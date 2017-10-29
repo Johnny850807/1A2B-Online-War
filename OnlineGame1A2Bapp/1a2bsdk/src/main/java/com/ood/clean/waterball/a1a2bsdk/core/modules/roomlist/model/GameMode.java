@@ -1,6 +1,8 @@
 package com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model;
 
 
+import java.io.Serializable;
+
 public enum GameMode implements IGameMode {
     DUEL1A2B(2,2),
     GROUP1A2B(2,6),

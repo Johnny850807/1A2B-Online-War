@@ -32,5 +32,6 @@
         <item>對決戰</item>
     </array>
     <string name="title_activity_chat_window_test">ChatWindowTest</string>
+    <string name="game_start">開始遊戲</string>
 
 </resources>
