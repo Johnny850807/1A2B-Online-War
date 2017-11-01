@@ -30,6 +30,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
     private TextView p1NameTxt, p2NameTxt, p1AnswerTxt, p2AnswerTxt;
     private ListView p1ResultListView, p2ResultListView;
     private List<GuessRecord> p1ResultList, p2ResultList;
+    private ListView p1ResultLst, p2ResultLst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

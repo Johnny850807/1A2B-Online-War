@@ -18,7 +18,8 @@
         </activity>
         <activity android:name=".RoomListActivity" />
         <activity android:name=".DuelActivity" />
-        <activity android:name=".GroupFightActivity"></activity>
+        <activity android:name=".GroupFightActivity"/>
+        <activity android:name=".ChatInRoomActivity"/>
     </application>
 
 </manifest>

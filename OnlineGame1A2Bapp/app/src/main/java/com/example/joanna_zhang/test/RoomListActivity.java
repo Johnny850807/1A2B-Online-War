@@ -27,6 +27,7 @@ import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
 import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
+import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameMode;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameRoom;
@@ -37,7 +38,7 @@ import java.util.List;
 
 import static com.example.joanna_zhang.test.R.array.roomMode;
 
-public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener, RoomListModule.Callback {
+public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener, RoomListModule.Callback, ListView.OnItemClickListener {
     private GameRoomListFactory gameRoomListFactory = new MockGameRoomListFactory();
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
@@ -55,7 +56,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         init();
         setupViews();
         updateRoomList(roomList);
-
+        roomListView.setOnItemClickListener(this);
     }
 
     private void init() {
@@ -128,10 +129,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
                 .show();
     }
 
-    private InputNumberWindowView inputNumberWindowView;
-
     public void joinRoomBtnOnClick(View view) {
-
     }
 
     public void searchBtnOnClick(View view) {
@@ -179,6 +177,17 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onFailed(Exception err) {
         Toast.makeText(RoomListActivity.this, err.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        GameMode gameMode = roomListOfGameMode.get(position).getGameMode();
+        Player player = roomListOfGameMode.get(position).getRoomHost();
+        Intent enterToGameRoom = new Intent(this, ChatInRoomActivity.class);
+        enterToGameRoom.putExtra("roomGameMode", gameMode);
+        enterToGameRoom.putExtra("roomHost", player);
+        startActivity(enterToGameRoom);
+
     }
 
     public class MyAdapter extends BaseAdapter {
