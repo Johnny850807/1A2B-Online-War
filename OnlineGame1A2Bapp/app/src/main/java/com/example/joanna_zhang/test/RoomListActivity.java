@@ -27,6 +27,7 @@ import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
 import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
+import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameMode;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameRoom;
@@ -181,11 +182,12 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         GameMode gameMode = roomListOfGameMode.get(position).getGameMode();
-        Intent enterToGameRoom = new Intent();
-        enterToGameRoom.setClass(RoomListActivity.this, ChatInRoomActivity.class);
-        enterToGameRoom.putExtra("roomGameMode", gameMode.toString());
+        Player player = roomListOfGameMode.get(position).getRoomHost();
+        Intent enterToGameRoom = new Intent(this, ChatInRoomActivity.class);
+        enterToGameRoom.putExtra("roomGameMode", gameMode);
+        enterToGameRoom.putExtra("roomHost", player);
         startActivity(enterToGameRoom);
-        finish();
+
     }
 
     public class MyAdapter extends BaseAdapter {

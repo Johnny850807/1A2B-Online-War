@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Mock.MockPlayerListFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.model.ChatMessage;
@@ -27,7 +26,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
     private Button gameStartBtn;
     private TextView gameModeTxt;
     private ListView chatRoomPlayerLst;
-    private GameMode gameMode ;
+    private GameMode gameMode;
+    private Player roomHost;
     private List<Player> playerList;
 
     @Override
@@ -37,7 +37,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
 
         setupChatWindow();
         findViews();
-        setUpThisRoomMode();
+        setUpThisRoomInfo();
         setUpGameModeTxt();
         init();
         setUpPlayerListView();
@@ -54,9 +54,9 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
 
     }
 
-    private void setUpThisRoomMode() {
-        String modeName = getIntent().getStringExtra("roomGameMode");
-        gameMode = modeName.contains("GROUP") ? GameMode.GROUP1A2B : GameMode.DUEL1A2B;
+    private void setUpThisRoomInfo() {
+        gameMode = (GameMode) getIntent().getSerializableExtra("roomGameMode");
+        roomHost = (Player) getIntent().getSerializableExtra("roomHost");
     }
 
     private void setUpGameModeTxt() {
