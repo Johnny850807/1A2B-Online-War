@@ -1,6 +1,8 @@
 package com.example.joanna_zhang.test;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -25,20 +27,23 @@ import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
 import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
-import com.ood.clean.waterball.a1a2bsdk.core.model.GameRoom;
-import com.ood.clean.waterball.a1a2bsdk.core.model.gamemode.GameMode;
+import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameMode;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameRoom;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.joanna_zhang.test.R.array.roomModes;
+import static com.example.joanna_zhang.test.R.array.roomMode;
 
-public class RoomListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener, RoomListModule.Callback, ListView.OnItemClickListener {
     private GameRoomListFactory gameRoomListFactory = new MockGameRoomListFactory();
     private boolean enableLoadingRoomListAnimation = true;
-    private GameMode[] gameModes = {null, GameMode.GROUP1A2B, GameMode.DUEL1A2B};
     private List<GameRoom> roomList = new ArrayList<>();
+    private GameMode[] gameModes = {null, GameMode.GROUP1A2B, GameMode.DUEL1A2B};
+    private List<GameRoom> roomListOfGameMode = new ArrayList<>();
     private EditText searchEdt;
     private ListView roomListView;
     private Spinner roomModeSpn;
@@ -51,6 +56,7 @@ public class RoomListActivity extends AppCompatActivity implements AdapterView.O
         init();
         setupViews();
         updateRoomList(roomList);
+        roomListView.setOnItemClickListener(this);
     }
 
     private void init() {
@@ -64,6 +70,7 @@ public class RoomListActivity extends AppCompatActivity implements AdapterView.O
         setUpSpinner();
         updateRoomList(roomList);
         roomListView.setDivider(getResources().getDrawable(R.drawable.transperent_color));
+
     }
 
     private void findViews() {
@@ -74,37 +81,33 @@ public class RoomListActivity extends AppCompatActivity implements AdapterView.O
     }
 
     public void setUpSpinner() {
-        ArrayAdapter<CharSequence> adapterRoomMode = ArrayAdapter.createFromResource(this, roomModes, android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adapterRoomMode = ArrayAdapter.createFromResource(this, roomMode, android.R.layout.simple_spinner_dropdown_item);
         adapterRoomMode.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roomModeSpn.setAdapter(adapterRoomMode);
         roomModeSpn.setOnItemSelectedListener(this);
+
     }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
         GameMode selectedMode = gameModes[position];
         List<GameRoom> results = getRoomsByGameMode(selectedMode);
-
-        if (results.isEmpty()) {
-            searchAndUpdateRoomList();
-        } else
-            updateRoomList(results);
+        roomListOfGameMode = results.isEmpty() ? roomList : results;
+        updateRoomList(roomListOfGameMode);
     }
 
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        updateRoomList(roomList);
+    }
 
-    private List<GameRoom> getRoomsByGameMode(GameMode gameMode){
-        List<GameRoom> results = new ArrayList<GameRoom>();
+    public List<GameRoom> getRoomsByGameMode(GameMode gameMode) {
+        List<GameRoom> results = new ArrayList<>();
         for (GameRoom gameRoom : roomList)
             if (gameRoom.getGameMode() == gameMode)
                 results.add(gameRoom);
         return results;
     }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-        searchAndUpdateRoomList();
-    }
-
 
     public void updateRoomList(List<GameRoom> list) {
         MyAdapter myAdapter = new MyAdapter(list);
@@ -115,24 +118,77 @@ public class RoomListActivity extends AppCompatActivity implements AdapterView.O
         AlertDialog.Builder createRoomDialogBuilder = new AlertDialog.Builder(RoomListActivity.this);
         view = LayoutInflater.from(RoomListActivity.this).inflate(R.layout.create_room_dialog, null);
         Spinner gameModeSpn = view.findViewById(R.id.createRoomModeSpn);
-        ArrayAdapter<CharSequence> gameModeAdapter = new ArrayAdapter<CharSequence>(RoomListActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.roomModes));
+        ArrayAdapter<CharSequence> gameModeAdapter = new ArrayAdapter<CharSequence>(RoomListActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.roomMode));
         gameModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         gameModeSpn.setAdapter(gameModeAdapter);
-        createRoomDialogBuilder.setTitle(R.string.create_room);
-        createRoomDialogBuilder.setIcon(R.drawable.logo);
-        createRoomDialogBuilder.setPositiveButton(R.string.confirm, null);
-        createRoomDialogBuilder.setNegativeButton(R.string.cancel, null);
-        createRoomDialogBuilder.setView(view);
-        createRoomDialogBuilder.show();
+        createRoomDialogBuilder.setTitle(R.string.create_room)
+                .setIcon(R.drawable.logo)
+                .setPositiveButton(R.string.confirm, null)
+                .setNegativeButton(R.string.cancel, null)
+                .setView(view)
+                .show();
     }
 
     public void joinRoomBtnOnClick(View view) {
-        //todo join room
     }
 
     public void searchBtnOnClick(View view) {
         enableLoadingRoomListAnimation = true;
         searchAndUpdateRoomList();
+    }
+
+    @Override
+    public void onGetRoomList(List<GameRoom> gameRooms) {
+        this.roomList = gameRooms;
+        MyAdapter myAdapter = new MyAdapter(roomList);
+        roomListView.setAdapter(myAdapter);
+    }
+
+    @Override
+    public void onNewRoom(GameRoom gameRoom) {
+        //Todo
+    }
+
+    @Override
+    public void onRoomClosed(GameRoom gameRoom) {
+        //Todo
+    }
+
+    @Override
+    public void onRoomUpdated(GameRoom gameRoom) {
+        //Todo
+    }
+
+    @Override
+    public void onRoomStartedPlaying(GameRoom gameRoom) {
+        // Todo
+    }
+
+    @Override
+    public void onCreatedRoomSuccessfully(GameRoom gameRoom) {
+        //進入房間聊天室 Todo
+    }
+
+    @Override
+    public void onJoinRoomSuccessfully(GameRoom gameRoom) {
+        //進入房間聊天室 Todo
+    }
+
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        GameMode gameMode = roomListOfGameMode.get(position).getGameMode();
+        Player player = roomListOfGameMode.get(position).getRoomHost();
+        Intent enterToGameRoom = new Intent(this, ChatInRoomActivity.class);
+        enterToGameRoom.putExtra("roomGameMode", gameMode);
+        enterToGameRoom.putExtra("roomHost", player);
+        startActivity(enterToGameRoom);
+
+    }
+
+    @Override
+    public void onError(@NonNull Throwable err) {
+        //todo handle the error
     }
 
     public class MyAdapter extends BaseAdapter {
@@ -165,7 +221,6 @@ public class RoomListActivity extends AppCompatActivity implements AdapterView.O
                 setRoomListAdapterViewUpdatedAnimation(parent);
                 enableLoadingRoomListAnimation = false; // whenever the animation enabled, the animation will be only executed once.
             }
-
 
             if (view == null)  // if the view has not existed in view, init and bind the viewholder
             {
@@ -216,15 +271,13 @@ public class RoomListActivity extends AppCompatActivity implements AdapterView.O
         animation.setDuration(400);
         set.addAnimation(animation);
 
-        LayoutAnimationController controller =
-                new LayoutAnimationController(set, 0.25f);
+        LayoutAnimationController controller = new LayoutAnimationController(set, 0.25f);
         parent.setLayoutAnimation(controller);
     }
 
     private class SearchEditTextWatcher implements TextWatcher {
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -232,8 +285,7 @@ public class RoomListActivity extends AppCompatActivity implements AdapterView.O
         }
 
         @Override
-        public void afterTextChanged(Editable editable) {
-        }
+        public void afterTextChanged(Editable editable) {}
     }
 
     private void searchAndUpdateRoomList() {
@@ -241,10 +293,9 @@ public class RoomListActivity extends AppCompatActivity implements AdapterView.O
         updateRoomList(getRoomsByKeyName(searchTxt));
     }
 
-
     private List<GameRoom> getRoomsByKeyName(String keyName) {
         List<GameRoom> results = new ArrayList<>();
-        for (GameRoom gameRoom : roomList)
+        for (GameRoom gameRoom : roomListOfGameMode)
             if (gameRoom.getName().contains(keyName) || gameRoom.getRoomHost().getName().contains(keyName))
                 results.add(gameRoom);
         return results;

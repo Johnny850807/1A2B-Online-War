@@ -4,8 +4,8 @@ import android.support.annotation.Nullable;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
-import com.ood.clean.waterball.a1a2bsdk.core.model.GameRoom;
-import com.ood.clean.waterball.a1a2bsdk.core.model.gamemode.GameMode;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameRoom;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameMode;
 
 import java.util.List;
 
@@ -13,6 +13,7 @@ import java.util.List;
 public interface RoomListModule extends GameModule{
     void registerCallback(RoomListModule.Callback callback);
     void unregisterCallBack(RoomListModule.Callback callback);
+
     void createRoom(String roomName, GameMode gameMode);
     void searchRoom(String keyName, @Nullable GameMode gameMode);
     void joinRoom(GameRoom gameRoom);
@@ -55,9 +56,5 @@ public interface RoomListModule extends GameModule{
          */
         void onJoinRoomSuccessfully(GameRoom gameRoom);
 
-        /**
-         * The operation failed.
-         */
-        void onFailed(Exception err);
     }
 }

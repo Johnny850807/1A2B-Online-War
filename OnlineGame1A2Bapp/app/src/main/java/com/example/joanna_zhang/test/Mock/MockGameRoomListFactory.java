@@ -2,9 +2,9 @@ package com.example.joanna_zhang.test.Mock;
 
 
 import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
-import com.ood.clean.waterball.a1a2bsdk.core.model.GameRoom;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameRoom;
 import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
-import com.ood.clean.waterball.a1a2bsdk.core.model.gamemode.GameMode;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameMode;
 
 import java.util.ArrayList;
 import java.util.List;

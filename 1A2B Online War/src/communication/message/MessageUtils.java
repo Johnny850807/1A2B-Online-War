@@ -1,5 +1,7 @@
 package communication.message;
 
+import com.google.gson.Gson;
+
 import communication.protocol.Protocol;
 import utils.JsonConverter;
 
@@ -17,4 +19,5 @@ public class MessageUtils {
 		T data = JsonConverter.jsonToObject(protocol.getData(), clazz);
 		return new Message<>(event, status, data);
 	}
+	
 }

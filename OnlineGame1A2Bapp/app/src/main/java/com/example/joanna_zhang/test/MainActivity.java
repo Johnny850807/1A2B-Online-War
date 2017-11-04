@@ -17,7 +17,7 @@ import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutException;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.GameIOException;
-import com.ood.clean.waterball.a1a2bsdk.core.model.GameServerInformation;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.model.GameServerInformation;
 import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.exceptions.UserNameFormatException;

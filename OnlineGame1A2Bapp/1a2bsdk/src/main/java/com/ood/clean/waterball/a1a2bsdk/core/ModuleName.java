@@ -23,7 +23,8 @@ public enum ModuleName {
     ROOM,
 
     /**
-     * the 1a2b game
+     * the 1a2b game in duel mode
      */
-    GAME1A2B;
+    GAME1A2BDUEL;
+
 }
