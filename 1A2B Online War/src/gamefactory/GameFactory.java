@@ -1,20 +1,12 @@
 package gamefactory;
 
-import communication.commandparser.base.CommandParser;
-import communication.commandparser.base.CommandParserFactory;
-import communication.protocol.ProtocolFactory;
+import container.ServiceIO;
+import container.UserService;
+import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
-import gamecore.entity.room.Room;
-import gamecore.entity.user.User;
-import userservice.ServiceIO;
-import userservice.UserService;
 
 public interface GameFactory {
 	GameCore getGameCore();
 	UserService createService(ServiceIO io);
-	User createUser(UserService userService, String name);
-	CommandParserFactory getCommandParserFactory();
-	CommandParser createCommandParser(UserService userService);
-	Room createRoom(String name);
 	ProtocolFactory getProtocolFactory();
 }

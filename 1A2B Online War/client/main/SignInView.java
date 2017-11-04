@@ -5,8 +5,8 @@ import com.google.gson.Gson;
 import Util.Input;
 import communication.message.Message;
 import communication.message.MessageUtils;
-import communication.protocol.Protocol;
-import communication.protocol.ProtocolFactory;
+import container.protocol.Protocol;
+import container.protocol.ProtocolFactory;
 import gamecore.entity.user.UserImp;
 import module.FactoryModule;
 import module.SocketConnector;
@@ -23,7 +23,7 @@ public class SignInView extends View implements SocketConnector.Callback{
 	@Override
 	public void onRecycleActions() {
 		String name = Input.next("Input your name: ");
-		UserImp user = new UserImp(name);
+		User user = new User(name);
 		
 		Gson gson = new Gson();
 		String json = gson.toJson(user);

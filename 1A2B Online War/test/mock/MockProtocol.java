@@ -1,6 +1,6 @@
 package mock;
 
-import communication.protocol.Protocol;
+import container.protocol.Protocol;
 
 public class MockProtocol implements Protocol{
 	private String event;

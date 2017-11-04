@@ -2,10 +2,10 @@ package mock;
 
 import communication.message.Event;
 import communication.message.Message;
-import communication.message.Status;
+import container.UserService;
+import gamecore.RequestStatus;
 import gamecore.entity.Entity;
 import gamecore.entity.user.UserImp;
-import userservice.UserService;
 
 public class MockService implements UserService{
 
@@ -23,7 +23,7 @@ public class MockService implements UserService{
 	}
 	
 	public Message<? extends Entity> getMessage() {
-		return new Message<UserImp>(Event.signIn, Status.success, new UserImp("Test"));
+		return new Message<UserImp>(Event.signIn, RequestStatus.success, new UserImp("Test"));
 	}
 
 	@Override
