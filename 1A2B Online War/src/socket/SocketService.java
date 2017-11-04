@@ -49,22 +49,27 @@ public class SocketService implements UserService{
 				String content = dataInput.readUTF();
 				Protocol protocol = protocolFactory.createProtocol(content);
 				CommandParser parser = commandParserFactory.createCommandParser(this);
+				System.out.println(protocol);
 				Command command = parser.parse(protocol);
 				gameCore.executeCommand(command);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			// TODO means this socket close out
 		}
 	}
 	
 	@Override
 	public void respond(Message<? extends Entity> message) {
-		// TODO 回應訊息給 client
-		String event = message.getEvent().toString();
-		String status = message.getStatus().toString();
-		String jsonData = new Gson().toJson(message.getData());
-		Protocol protocol = protocolFactory.createProtocol(event,status,jsonData);
-		System.out.println("Success : " + protocol);
+		try {
+			String event = message.getEvent().toString();
+			String status = message.getStatus().toString();
+			String jsonData = new Gson().toJson(message.getData());
+			Protocol protocol = protocolFactory.createProtocol(event,status,jsonData);
+			dataOutput.writeUTF(protocol.toString());
+			dataOutput.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 

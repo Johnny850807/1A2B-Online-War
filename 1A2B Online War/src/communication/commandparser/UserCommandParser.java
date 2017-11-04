@@ -31,7 +31,7 @@ public class UserCommandParser extends CommandParser{
 		{
 			Message<User> message = MessageUtils.protocolToMessage(protocol, UserImp.class);
 			
-			if (Pattern.matches(".*(in)$", event))
+			if (Pattern.matches(".*(In)$", event))
 				return new SignInCommand(gameCore, userService, message);
 			
 			//TODO signOut
