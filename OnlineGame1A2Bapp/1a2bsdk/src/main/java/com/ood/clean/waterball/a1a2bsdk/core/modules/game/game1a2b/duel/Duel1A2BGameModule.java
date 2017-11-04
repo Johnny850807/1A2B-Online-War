@@ -20,7 +20,7 @@ public interface Duel1A2BGameModule extends ChatRoomModule, GameModule{
 
     public interface Callback extends ChatRoomModule.Callback, GameCallBack{
         /**
-         * @param player the player whose answer has beed set successfully.
+         * @param player the player whose answer has been set successfully.
          */
         void onPlayerAnswerSetCompleted(Player player);
 
