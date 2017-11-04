@@ -3,11 +3,9 @@ package main;
 import com.google.gson.Gson;
 
 import Util.Input;
-import communication.message.Message;
-import communication.message.MessageUtils;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
-import gamecore.entity.user.UserImp;
+import gamecore.entity.User;
 import module.FactoryModule;
 import module.SocketConnector;
 
@@ -23,11 +21,11 @@ public class SignInView extends View implements SocketConnector.Callback{
 	@Override
 	public void onRecycleActions() {
 		String name = Input.next("Input your name: ");
-		User user = new User(name);
+		User user = new User(name); 
 		
 		Gson gson = new Gson();
 		String json = gson.toJson(user);
-		Protocol protocol = protocolfactory.createProtocol("signIn","request",json);
+		Protocol protocol = protocolfactory.createProtocol("SignIn", "request", json);
 		
 		SocketConnector.getInstance().send(protocol.toString(), this);
 	}
@@ -40,9 +38,8 @@ public class SignInView extends View implements SocketConnector.Callback{
 	@Override
 	public void onReceive(String message) {
 		Protocol receiveProrocol = protocolfactory.createProtocol(message);
-		Message<UserImp> result = MessageUtils.protocolToMessage(receiveProrocol, UserImp.class);
-		UserImp signedInUser = result.getData();
-		System.out.println("Sign In successfully ! -> User : " + signedInUser);
+
+		System.out.println("Sign In successfully ! -> User : " + receiveProrocol);
 	}
 	
 	

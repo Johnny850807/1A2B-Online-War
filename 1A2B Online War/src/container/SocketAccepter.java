@@ -44,7 +44,7 @@ public class SocketAccepter implements Runnable
 			if(clientSocket.isConnected()) 
 			{
 				ServiceIO io = new SocketIO(clientSocket);
-				UserService userService = gameFactory.createService(io);
+				Client userService = gameFactory.createService(io);
 				new Thread(userService).start();
 			}
 		}

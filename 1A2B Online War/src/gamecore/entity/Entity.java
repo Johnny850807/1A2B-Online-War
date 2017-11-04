@@ -6,9 +6,10 @@ import javax.naming.directory.InitialDirContext;
 
 public class Entity {
 	protected String id;
-
-	public Entity(){
+	
+	public Entity initId(){
 		this.id = UUID.randomUUID().toString();
+		return this;
 	}
 	
 	@Override

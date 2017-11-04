@@ -1,12 +1,14 @@
 package gamefactory;
 
 import container.ServiceIO;
-import container.UserService;
+import container.eventhandler.GameEventHandlerFactory;
+import container.Client;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 
 public interface GameFactory {
 	GameCore getGameCore();
-	UserService createService(ServiceIO io);
+	Client createService(ServiceIO io);
 	ProtocolFactory getProtocolFactory();
+	GameEventHandlerFactory getGameEventHandlerFactory();
 }

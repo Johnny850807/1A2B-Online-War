@@ -6,20 +6,23 @@ import java.io.IOException;
 
 import com.google.gson.Gson;
 
+import container.eventhandler.EventHandler;
+import container.eventhandler.GameEventHandlerFactory;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamefactory.GameFactory;
 
-public class SocketService implements UserService{
+public class SocketClient implements Client{
 	private GameFactory gameFactory;
+	private GameEventHandlerFactory gameEventHandlerFactory;
 	private ProtocolFactory protocolFactory;
 	private GameCore gameCore;
 	
 	private DataInputStream dataInput;
 	private DataOutputStream dataOutput;
 
-	public SocketService(GameFactory factory, ServiceIO io) {
+	public SocketClient(GameFactory factory, ServiceIO io) {
 		try {
 			initProperties(factory, io);
 		} catch (IOException e) {
@@ -31,6 +34,7 @@ public class SocketService implements UserService{
 	
 	private void initProperties(GameFactory factory, ServiceIO io) throws Exception{
 		this.gameFactory = factory;
+		this.gameEventHandlerFactory = factory.getGameEventHandlerFactory();
 		this.protocolFactory = gameFactory.getProtocolFactory();
 		this.gameCore = gameFactory.getGameCore();
 		this.dataOutput =  new DataOutputStream(io.getOutputStream());
@@ -53,7 +57,8 @@ public class SocketService implements UserService{
 			String content = dataInput.readUTF();
 			Protocol protocol = protocolFactory.createProtocol(content);
 			System.out.println("===== Request ===== \n" + protocol);
-			//TODO send the protocol to the event handler
+			EventHandler handler = gameEventHandlerFactory.createGameEventHandler(this, protocol);
+			handler.handle();
 		}
 	}
 	
@@ -76,7 +81,6 @@ public class SocketService implements UserService{
 	}
 	
 	private void askGamecoreToUnregisterTheClient(){
-		
 	}
 
 }
