@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,8 +26,9 @@ import gamecore.model.ServerInformation;
 public class MainActivity extends AppCompatActivity implements UserSigningModule.Callback {
     private CoreGameServer gameServer = CoreGameServer.getInstance();
     private UserSigningModule signingModule;
+    private Button loginBtn;
     private EditText nameEd;
-    private CheckBox autoSignInCheckbox;  // TODO
+    private CheckBox autoSignInCheckbox;
     private TextView serverStatusTxt;
     private SharedPreferences sharedPreferences;
     private NameCreator nameCreator = new RandomNameCreator();
@@ -44,7 +46,11 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     private void readPlayerNameFromSharedPreferences() {
         String playerName = sharedPreferences.getString("name", "");
         if (!playerName.isEmpty())
-            signingModule.signIn(playerName);
+        {
+            signIn(playerName);
+            nameEd.setText(playerName);
+            autoSignInCheckbox.setChecked(true);
+        }
     }
 
     @Override
@@ -56,17 +62,19 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
 
     private void findViews() {
         nameEd = (EditText) findViewById(R.id.inputName);
+        loginBtn = (Button) findViewById(R.id.loginButton);
         autoSignInCheckbox = (CheckBox) findViewById(R.id.checkbox);
         serverStatusTxt = (TextView) findViewById(R.id.serverStatus);
     }
 
     public void loginButtonOnClick(View view) {
         String playerName = nameEd.getText().toString();
-        if (autoSignInCheckbox.isChecked())
-            savePlayerName(playerName);
-        else
-            savePlayerName("");
+        signIn(playerName);
+    }
+
+    private void signIn(String playerName){
         signingModule.signIn(playerName);
+        loginBtn.setEnabled(false);
     }
 
     public void randomNameButtonOnClick(View view) {
@@ -75,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
 
     @Override
     public void onSignInSuccessfully(@NonNull Player player) {
+        loginBtn.setEnabled(true);
+        savePlayerNameToSharedPreferences(autoSignInCheckbox.isChecked() ? nameEd.getText().toString() : "");
         Intent intent = new Intent(this, RoomListActivity.class);
         intent.putExtra("player", player); // send the player data to the next activity
         startActivity(intent);
@@ -106,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
 
     @Override
     public void onError(@NonNull Throwable err) {
+        loginBtn.setEnabled(true);
         if (err instanceof ConnectionTimedOutException)
             createAndShowErrorMessage(getString(R.string.signInFailed_pleaseCheckYourNetwork));
     }
@@ -117,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     }
 
 
-    private void savePlayerName(String name) {
+    private void savePlayerNameToSharedPreferences(String name) {
         sharedPreferences.edit()
                 .putString("name", name)
                 .apply();

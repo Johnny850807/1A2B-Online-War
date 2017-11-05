@@ -1,6 +1,8 @@
 package com.ood.clean.waterball.a1a2bsdk.core.client;
 
 
+import android.os.Handler;
+
 import com.ood.clean.waterball.a1a2bsdk.core.Component;
 import com.ood.clean.waterball.a1a2bsdk.core.EventBus;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutException;
@@ -24,6 +26,7 @@ import static com.ood.clean.waterball.a1a2bsdk.core.Secret.SERVER_ADDRESS;
 public class ClientSocket implements Client{
     private @Inject ProtocolFactory protocolFactory;
     private @Inject EventBus eventBus;
+    private Handler handler = new Handler();
     private DataOutputStream outputStream;
     private DataInputStream inputStream;
     private String address;
@@ -56,15 +59,20 @@ public class ClientSocket implements Client{
         {
             String response = inputStream.readUTF();
 
-            Protocol protocol = protocolFactory.createProtocol(response);
-            eventBus.invoke(protocol);
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Protocol protocol = protocolFactory.createProtocol(response);
+                    eventBus.invoke(protocol);
+                }
+            });
         }
     }
 
 
     @Override
     public void respond(Protocol protocol) {
-        new Thread(new Runnable() {
+        handler.post(new Runnable() {
             @Override
             public void run() {
                 try{
@@ -77,7 +85,7 @@ public class ClientSocket implements Client{
                     eventBus.error(new GameCoreException(new ConnectionTimedOutException(err)));
                 }
             }
-        }).start();
+        });
     }
 
     @Override
