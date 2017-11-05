@@ -91,7 +91,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         adapterRoomMode.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         roomModeSpn.setAdapter(adapterRoomMode);
         roomModeSpn.setOnItemSelectedListener(this);
-
     }
 
     @Override
@@ -274,7 +273,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
                 Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
                 Animation.RELATIVE_TO_SELF, -1.0f, Animation.RELATIVE_TO_SELF, 0.0f
         );
-        animation.setDuration(400);
         set.addAnimation(animation);
 
         LayoutAnimationController controller = new LayoutAnimationController(set, 0.25f);

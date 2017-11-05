@@ -64,15 +64,20 @@ public class ClientSocket implements Client{
 
     @Override
     public void respond(Protocol protocol) {
-        try{
-            outputStream.writeUTF(protocol.toString());
-        }catch (IOException err){
-            err.printStackTrace();
-            eventBus.error(new ConnectionTimedOutException(err));
-        }catch (Exception err){
-            err.printStackTrace();
-            eventBus.error(new GameCoreException(new ConnectionTimedOutException(err)));
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    outputStream.writeUTF(protocol.toString());
+                }catch (IOException err){
+                    err.printStackTrace();
+                    eventBus.error(new ConnectionTimedOutException(err));
+                }catch (Exception err){
+                    err.printStackTrace();
+                    eventBus.error(new GameCoreException(new ConnectionTimedOutException(err)));
+                }
+            }
+        }).start();
     }
 
     @Override
