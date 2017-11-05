@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
-import com.ood.clean.waterball.a1a2bsdk.core.factory.moduleinflater.MockGameModuleInflater;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.model.GameServerInformation;
-import com.ood.clean.waterball.a1a2bsdk.service.GameService;
+import com.ood.clean.waterball.a1a2bsdk.core.client.GameHostingService;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,12 +19,7 @@ public final class CoreGameServer {
 
     private Map<ModuleName,GameModule> moduleMap;
 
-    private CoreGameServer(){
-        moduleMap = Collections.checkedMap(new HashMap<ModuleName, GameModule>(),ModuleName.class, GameModule.class);
-
-        //TODO Mocked
-        new MockGameModuleInflater().onPrepareModules(moduleMap);
-    }
+    private CoreGameServer(){}
 
     public static CoreGameServer getInstance(){
         if (instance == null)
@@ -42,8 +35,9 @@ public final class CoreGameServer {
      * @param context MainActivity
      */
     public void startEngine(@NonNull Context context){
-        //todo run all modules and start the service of socket
-        context.startService(new Intent(context, GameService.class));
+        moduleMap = Collections.checkedMap(new HashMap<ModuleName, GameModule>(),ModuleName.class, GameModule.class);
+        new ReleaseGameModuleInflater().onPrepareModules(moduleMap);
+        context.startService(new Intent(context, GameHostingService.class));
     }
 
     /**
@@ -57,15 +51,5 @@ public final class CoreGameServer {
 
         return moduleMap.get(name);
     }
-
-
-    public void getInformation(@NonNull CoreGameServer.Callback callback){
-        callback.onGetInformation(new GameServerInformation(5,2));
-    }
-
-    public interface Callback{
-        void onGetInformation(GameServerInformation gameServerInformation);
-    }
-
 
 }

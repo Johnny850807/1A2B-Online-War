@@ -4,10 +4,11 @@ import android.support.annotation.Nullable;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameRoom;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameMode;
 
 import java.util.List;
+
+import gamecore.entity.GameRoom;
+import gamecore.model.GameMode;
 
 
 public interface RoomListModule extends GameModule{
@@ -56,9 +57,5 @@ public interface RoomListModule extends GameModule{
          */
         void onJoinRoomSuccessfully(GameRoom gameRoom);
 
-        /**
-         * The operation failed.
-         */
-        void onFailed(Exception err);
     }
 }

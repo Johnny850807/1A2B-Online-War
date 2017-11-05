@@ -2,10 +2,12 @@ package com.example.joanna_zhang.test;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,24 +23,26 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
 import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
-import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameMode;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameRoom;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
+import gamecore.model.GameMode;
+
 import static com.example.joanna_zhang.test.R.array.roomMode;
 
 public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener, RoomListModule.Callback, ListView.OnItemClickListener {
+    private final static String TAG = "RoomListActivity";
+    private Player player;
     private GameRoomListFactory gameRoomListFactory = new MockGameRoomListFactory();
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
@@ -62,6 +66,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
         UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
+        player = signingModule.getCurrentPlayer();
+        Log.d(TAG, "Signed In Player: " + player);
         roomList = gameRoomListFactory.createRoomList();
     }
 
@@ -174,20 +180,21 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         //進入房間聊天室 Todo
     }
 
-    @Override
-    public void onFailed(Exception err) {
-        Toast.makeText(RoomListActivity.this, err.getMessage(), Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         GameMode gameMode = roomListOfGameMode.get(position).getGameMode();
-        Player player = roomListOfGameMode.get(position).getRoomHost();
+        Player player = roomListOfGameMode.get(position).getHost();
         Intent enterToGameRoom = new Intent(this, ChatInRoomActivity.class);
         enterToGameRoom.putExtra("roomGameMode", gameMode);
         enterToGameRoom.putExtra("roomHost", player);
         startActivity(enterToGameRoom);
 
+    }
+
+    @Override
+    public void onError(@NonNull Throwable err) {
+        //todo handle the error
     }
 
     public class MyAdapter extends BaseAdapter {
@@ -241,8 +248,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
             viewHolder.roomNameTxt.setText(gameroom.getName());
             viewHolder.roomModeTxt.setText(modeName);
-            viewHolder.roomCreatorName.setText(gameroom.getRoomHost().getName());
-            viewHolder.roomPlayerAmountTxt.setText(gameroom.getPlayerList().size() + "/" + gameroom.getGameMode().getMaxPlayerAmount());
+            viewHolder.roomCreatorName.setText(gameroom.getHost().getName());
+            viewHolder.roomPlayerAmountTxt.setText(gameroom.getPlayers().size() + "/" + gameroom.getGameMode().getMaxPlayerAmount());
 
             return view;
         }
@@ -295,7 +302,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private List<GameRoom> getRoomsByKeyName(String keyName) {
         List<GameRoom> results = new ArrayList<>();
         for (GameRoom gameRoom : roomListOfGameMode)
-            if (gameRoom.getName().contains(keyName) || gameRoom.getRoomHost().getName().contains(keyName))
+            if (gameRoom.getName().contains(keyName) || gameRoom.getHost().getName().contains(keyName))
                 results.add(gameRoom);
         return results;
     }

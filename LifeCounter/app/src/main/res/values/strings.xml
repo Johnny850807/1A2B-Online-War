@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">LifeCounter</string>
+    <string name="nowAge">目前年齡</string>
+    <string name="targetAge">目標年齡</string>
+</resources>

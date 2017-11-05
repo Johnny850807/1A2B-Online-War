@@ -12,15 +12,16 @@ import android.widget.TextView;
 
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
-import com.ood.clean.waterball.a1a2bsdk.core.model.ChatMessage;
-import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.MockUserSigningModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
-import com.ood.clean.waterball.a1a2bsdk.mock.MockUserSigningModule;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import gamecore.entity.ChatMessage;
+import gamecore.entity.Player;
 
 public class ChatWindowView implements View.OnClickListener{
 
