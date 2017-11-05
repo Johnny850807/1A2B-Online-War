@@ -5,16 +5,11 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
-import com.ood.clean.waterball.a1a2bsdk.core.inflater.ReleaseGameModuleInflater;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.model.GameServerInformation;
-import com.ood.clean.waterball.a1a2bsdk.core.service.SocketService;
-import com.ood.clean.waterball.a1a2bsdk.service.GameService;
+import com.ood.clean.waterball.a1a2bsdk.core.client.GameHostingService;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import communication.protocol.XOXOXDelimiterFactory;
 
 /**
     Facade pattern of the 1A2B sdk, contains all modules supporting your 1A2B app.
@@ -26,8 +21,6 @@ public final class CoreGameServer {
 
     private CoreGameServer(){
         moduleMap = Collections.checkedMap(new HashMap<ModuleName, GameModule>(),ModuleName.class, GameModule.class);
-
-        SocketService.inject(new XOXOXDelimiterFactory()); // init protocol factory
         new ReleaseGameModuleInflater().onPrepareModules(moduleMap);
     }
 
@@ -46,7 +39,7 @@ public final class CoreGameServer {
      */
     public void startEngine(@NonNull Context context){
         //todo run all modules and start the service of socket
-        context.startService(new Intent(context, GameService.class));
+        context.startService(new Intent(context, GameHostingService.class));
     }
 
     /**
@@ -60,15 +53,5 @@ public final class CoreGameServer {
 
         return moduleMap.get(name);
     }
-
-
-    public void getInformation(@NonNull CoreGameServer.Callback callback){
-        callback.onGetInformation(new GameServerInformation(5,2));
-    }
-
-    public interface Callback{
-        void onGetInformation(GameServerInformation gameServerInformation);
-    }
-
 
 }

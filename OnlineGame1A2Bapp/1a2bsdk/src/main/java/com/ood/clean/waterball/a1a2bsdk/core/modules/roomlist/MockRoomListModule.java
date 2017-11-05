@@ -1,17 +1,17 @@
-package com.ood.clean.waterball.a1a2bsdk.mock;
+package com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist;
 
 import android.support.annotation.Nullable;
 
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameRoom;
-import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameMode;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
+import gamecore.model.GameMode;
 
 
 public class MockRoomListModule implements RoomListModule {
@@ -19,14 +19,14 @@ public class MockRoomListModule implements RoomListModule {
     private List<GameRoom> gameRooms = new ArrayList<>();
 
     public MockRoomListModule() {
-        gameRooms.add(new GameRoom("對決", GameMode.DUEL1A2B, new Player("林宗億")));
-        gameRooms.add(new GameRoom("來玩啊啊啊啊", GameMode.GROUP1A2B, new Player("曾韋傑")));
-        gameRooms.add(new GameRoom("宗億小咖", GameMode.DUEL1A2B, new Player("我是大天才哈")));
-        gameRooms.add(new GameRoom("一場10元", GameMode.GROUP1A2B, new Player("名子好難取喔")));
-        gameRooms.add(new GameRoom("來玩啊啊啊啊", GameMode.GROUP1A2B, new Player("= =")));
-        gameRooms.add(new GameRoom("來玩啊啊啊啊", GameMode.GROUP1A2B, new Player("水球王")));
-        gameRooms.add(new GameRoom("徵婆喔...", GameMode.GROUP1A2B, new Player("張叔叔")));
-        gameRooms.add(new GameRoom("哈哈", GameMode.GROUP1A2B, new Player("豐緒  A帥")));
+        gameRooms.add(new GameRoom( GameMode.DUEL1A2B, "對決", new Player("林宗億")));
+        gameRooms.add(new GameRoom(GameMode.GROUP1A2B, "來玩啊啊啊啊", new Player("曾韋傑")));
+        gameRooms.add(new GameRoom(GameMode.DUEL1A2B, "宗億小咖", new Player("我是大天才哈")));
+        gameRooms.add(new GameRoom(GameMode.GROUP1A2B, "一場10元", new Player("名子好難取喔")));
+        gameRooms.add(new GameRoom( GameMode.GROUP1A2B, "來玩啊啊啊啊",new Player("= =")));
+        gameRooms.add(new GameRoom(GameMode.GROUP1A2B, "來玩啊啊啊啊", new Player("水球王")));
+        gameRooms.add(new GameRoom(GameMode.GROUP1A2B, "徵婆喔...", new Player("張叔叔")));
+        gameRooms.add(new GameRoom(GameMode.GROUP1A2B, "哈哈", new Player("豐緒  A帥")));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class MockRoomListModule implements RoomListModule {
     @Override
     public void createRoom(String roomName, GameMode gameMode) {
         UserSigningModule userSigningModule = (UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING);
-        callback.onCreatedRoomSuccessfully(new GameRoom(roomName, gameMode, userSigningModule.getCurrentPlayer()));
+        callback.onCreatedRoomSuccessfully(new GameRoom(gameMode, roomName, userSigningModule.getCurrentPlayer()));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class MockRoomListModule implements RoomListModule {
             if (gameMode != null)
                 if (room.getGameMode() != gameMode)
                     continue;
-            if (room.getName().contains(keyName) || room.getRoomHost().getName().contains(keyName))
+            if (room.getName().contains(keyName) || room.getHost().getName().contains(keyName))
                 results.add(room);
         }
         callback.onGetRoomList(results);

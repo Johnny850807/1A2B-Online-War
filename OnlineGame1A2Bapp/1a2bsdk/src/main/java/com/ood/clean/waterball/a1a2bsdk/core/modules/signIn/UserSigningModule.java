@@ -5,7 +5,8 @@ import android.support.annotation.NonNull;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
-import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
+
+import gamecore.entity.Player;
 
 public interface UserSigningModule extends GameModule{
     String TAG = "Signing module";

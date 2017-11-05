@@ -3,31 +3,36 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules.signIn;
 
 import android.support.annotation.NonNull;
 
-import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
-import com.ood.clean.waterball.a1a2bsdk.core.service.SocketService;
-import com.ood.clean.waterball.a1a2bsdk.eventbus.EventBus;
+import com.google.gson.Gson;
+import com.ood.clean.waterball.a1a2bsdk.core.Component;
+import com.ood.clean.waterball.a1a2bsdk.core.EventBus;
 
-import communication.message.Event;
-import communication.message.Message;
-import communication.message.Status;
-import gamecore.entity.Entity;
+import javax.inject.Inject;
+
+import container.base.Client;
+import container.protocol.Protocol;
+import container.protocol.ProtocolFactory;
+import gamecore.entity.Player;
+import gamecore.model.RequestStatus;
 
 
 public class UserSigningModuleImp implements UserSigningModule {
-    private SocketService socketService = SocketService.getInstance();
-    private EventBus eventBus = EventBus.getInstance();
+    private @Inject EventBus eventBus;
+    private @Inject Client client;
+    private @Inject ProtocolFactory protocolFactory;
     private Player currentPlayer;
 
+    public UserSigningModuleImp(){
+        Component.inject(this);
+    }
 
     @Override
     public void signIn(@NonNull String name, @NonNull UserSigningModule.Callback callback) {
-        try{
-            Player userData = new Player(name);
-            eventBus.registerCallback(UserSigningModule.Callback.class, callback);
-            socketService.respond(new Message<Entity>(Event.signIn, Status.request, userData));
-        }catch (Exception err){
-            callback.onError(err);
-        }
+        Player player = new Player(name);
+        String json = new Gson().toJson(player);
+        Protocol protocol = protocolFactory.createProtocol("SignIn", RequestStatus.request.toString(), json);
+        eventBus.registerCallback(callback);
+        client.respond(protocol);
     }
 
     public Player getCurrentPlayer() {

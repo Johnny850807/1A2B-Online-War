@@ -1,4 +1,4 @@
-package com.ood.clean.waterball.a1a2bsdk.eventbus;
+package com.ood.clean.waterball.a1a2bsdk.core;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 
@@ -6,20 +6,20 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import utils.Singleton;
+import container.protocol.Protocol;
 
-@Singleton
-public final class EventBus {
-    private static EventBus instance;
+
+public final class ReflectionEventBus implements EventBus{
+    private static ReflectionEventBus instance;
     private Map<Class<? extends GameCallBack>,GameCallBack> callBackMap; // <type of listener, registered listener>
 
-    EventBus(){
+    ReflectionEventBus(){
         callBackMap = new HashMap<>();
     }
 
-    public static EventBus getInstance(){
+    public static ReflectionEventBus getInstance(){
         if (instance == null)
-            instance = new EventBus();
+            instance = new ReflectionEventBus();
         return instance;
     }
 
@@ -35,5 +35,20 @@ public final class EventBus {
 
     public Collection<GameCallBack> getCallbacks(){
         return callBackMap.values();
+    }
+
+    @Override
+    public void registerCallback(GameCallBack gameCallBack) {
+
+    }
+
+    @Override
+    public void error(Exception err) {
+
+    }
+
+    @Override
+    public void invoke(Protocol protocol) {
+
     }
 }

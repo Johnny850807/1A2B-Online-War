@@ -15,7 +15,7 @@ import com.ood.clean.waterball.a1a2bsdk.core.model.ChatMessage;
 import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.game.game1a2b.duel.Duel1A2BGameModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.game.model.GuessRecord;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.mock.MockUserSigningModule;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.MockUserSigningModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.List;
