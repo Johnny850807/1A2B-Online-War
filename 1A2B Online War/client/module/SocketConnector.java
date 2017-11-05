@@ -14,6 +14,7 @@ public class SocketConnector {
 	private DataOutputStream dataOutputStream;
 	private DataInputStream dataInputStream;
 	private Callback callback;
+	private int requestCode;
 	
 	public static SocketConnector getInstance(){
 		return instance;
@@ -40,7 +41,7 @@ public class SocketConnector {
 					try {
 						String message = dataInputStream.readUTF();
 						System.out.println("Receive : " + message);
-						callback.onReceive(message);
+						callback.onReceive(message, requestCode);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -49,9 +50,10 @@ public class SocketConnector {
 		}.start();
 	}
 	
-	public void send(String message, Callback callback){
+	public void send(String message, Callback callback, int requestCode){
 		try {
 			this.callback = callback;
+			this.requestCode = requestCode;
 			dataOutputStream.writeUTF(message);
 			dataOutputStream.flush();
 		} catch (IOException e) {
@@ -61,6 +63,6 @@ public class SocketConnector {
 	
 	
 	public interface Callback{
-		void onReceive(String message);
+		void onReceive(String message, int requestCode);
 	}
 }

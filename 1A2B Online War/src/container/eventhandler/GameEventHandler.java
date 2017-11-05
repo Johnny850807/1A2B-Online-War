@@ -17,7 +17,7 @@ public abstract class GameEventHandler<T> implements EventHandler{
 	/**
 	 * The handler deals with each specific request from the client socket.
 	 * @param client the client socket the request from.
-	 * @param request the request with (event, status, data) message comply with the certain protocol sent by the client.
+	 * @param request the request with (event, status, data) message complying with the certain protocol sent by the client.
 	 * @param gameCore the online game core where to handle all the logics with the games.
 	 * @param protocolFactory the factory which help you create a certain protocol with the specific messages.
 	 */

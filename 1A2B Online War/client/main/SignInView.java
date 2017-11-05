@@ -1,5 +1,7 @@
 package main;
 
+import java.awt.datatransfer.StringSelection;
+
 import com.google.gson.Gson;
 
 import Util.Input;
@@ -10,6 +12,8 @@ import module.FactoryModule;
 import module.SocketConnector;
 
 public class SignInView extends View implements SocketConnector.Callback{
+	private final int SIGNIN = 1;
+	private final int GETINFO = 2;
 	private ProtocolFactory protocolfactory;
 	
 	@Override
@@ -20,26 +24,46 @@ public class SignInView extends View implements SocketConnector.Callback{
 
 	@Override
 	public void onRecycleActions() {
+		int action = Input.nextInt("(1) Sign In (2) Get Server Info : ", 1, 2);
+		switch (action) {
+		case SIGNIN:
+			signIn();
+			break;
+		case GETINFO:
+			getServerInfo();
+			break;
+		}
+		
+	}
+	
+	private void signIn(){
 		String name = Input.next("Input your name: ");
-		User user = new User(name); 
-		
-		Gson gson = new Gson();
-		String json = gson.toJson(user);
+		String json = new Gson().toJson(new User(name));
 		Protocol protocol = protocolfactory.createProtocol("SignIn", "request", json);
-		
-		SocketConnector.getInstance().send(protocol.toString(), this);
+		SocketConnector.getInstance().send(protocol.toString(), this, SIGNIN);
 	}
 
+	private void getServerInfo(){
+		Protocol protocol = protocolfactory.createProtocol("GetServerInformation", "request", null);
+		SocketConnector.getInstance().send(protocol.toString(), this, GETINFO);
+	}
+	
 	@Override
 	public String getViewName() {
 		return "Sign-In View";
 	}
 
 	@Override
-	public void onReceive(String message) {
-		Protocol receiveProrocol = protocolfactory.createProtocol(message);
+	public void onReceive(String message, int requestCode) {
+		switch (requestCode) {
+		case SIGNIN:
+			Protocol receiveProrocol = protocolfactory.createProtocol(message);
 
-		System.out.println("Sign In successfully ! -> User : " + receiveProrocol);
+			System.out.println("Sign In successfully ! -> User : " + receiveProrocol);
+			break;
+		case GETINFO:
+			break;
+		}
 	}
 	
 	
