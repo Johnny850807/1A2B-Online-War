@@ -3,6 +3,7 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules.room.model;
 import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
 
 public enum PlayerStatus implements IPlayerStatus{
+    NONE,
     READY,
     UNREADY;
 
@@ -20,6 +21,7 @@ public enum PlayerStatus implements IPlayerStatus{
     public boolean isReady() {
         return ready;
     }
+
 
     public void setReady(boolean ready) {
         this.ready = ready;

@@ -2,6 +2,7 @@ package com.example.joanna_zhang.test;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -24,11 +25,13 @@ import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.exceptions.UserNameF
 
 public class MainActivity extends AppCompatActivity implements UserSigningModule.Callback, CoreGameServer.Callback {
 
+    private final String NAME = "playerName";
     private CoreGameServer server = CoreGameServer.getInstance();
     private EditText nameEd;
     private CheckBox autoSignInCheckbox;  // TODO
     private TextView serverStatusTxt;
     private String name;
+    private SharedPreferences recordName;
     private NameCreator nameCreator = new RandomNameCreator();
 
     @Override
@@ -37,6 +40,12 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         setContentView(R.layout.activity_main);
         findViews();
         server.getInformation(this);
+        readPlayerName();
+    }
+
+    private void readPlayerName() {
+        recordName = getSharedPreferences(NAME, MODE_PRIVATE);
+        nameEd.setText(recordName.getString("name", ""));
     }
 
     private void findViews() {
@@ -50,7 +59,10 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         server.startEngine(MainActivity.this);
         UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
         signingModule.signIn(name, this);
-        //todo if (autoSignInCheckbox.isChecked());
+        if (autoSignInCheckbox.isChecked())
+            recordPlayerName(name);
+        else
+            recordPlayerName("");
     }
 
     public void randomNameButtonOnClick(View view) {
@@ -90,5 +102,11 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         int onlineAmount = gameServerInformation.getOnlineAmount();
         String statusFormat = getString(R.string.serverStatus);
         serverStatusTxt.setText(String.format(statusFormat, roomAmount, onlineAmount));
+    }
+
+    private void recordPlayerName(String name) {
+        recordName.edit()
+                .putString("name", name)
+                .apply();
     }
 }
