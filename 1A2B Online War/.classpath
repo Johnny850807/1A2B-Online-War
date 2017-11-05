@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="commons-io-2.5-javadoc.jar"/>
 	<classpathentry kind="lib" path="commons-io-2.5.jar"/>
 	<classpathentry kind="lib" path="Input.jar"/>
+	<classpathentry kind="lib" path="LinqToJava.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,7 +1,7 @@
 package com.ood.clean.waterball.a1a2bsdk.core.base;
 
 
-import com.ood.clean.waterball.a1a2bsdk.core.model.ChatMessage;
+import gamecore.entity.ChatMessage;
 
 public interface ChatRoomModule{
 

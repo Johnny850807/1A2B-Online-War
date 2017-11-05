@@ -1,10 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-
     package="com.ood.clean.waterball.a1a2bsdk">
 
-    <application android:allowBackup="true"
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <application
+        android:allowBackup="true"
         android:supportsRtl="true">
-
+        <service android:name=".core.client.GameHostingService"/>
     </application>
 
 </manifest>

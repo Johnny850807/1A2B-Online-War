@@ -1,10 +1,11 @@
 package com.example.joanna_zhang.test.Mock;
 
 import com.example.joanna_zhang.test.Domain.Factory.PlayerListFactory;
-import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import gamecore.entity.Player;
 
 public class MockPlayerListFactory implements PlayerListFactory{
     @Override
