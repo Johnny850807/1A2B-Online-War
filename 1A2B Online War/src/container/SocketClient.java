@@ -6,11 +6,14 @@ import java.io.IOException;
 
 import com.google.gson.Gson;
 
+import container.base.Client;
+import container.base.IO;
 import container.eventhandler.EventHandler;
 import container.eventhandler.GameEventHandlerFactory;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
+import gamecore.entity.Player;
 import gamefactory.GameFactory;
 
 public class SocketClient implements Client{
@@ -22,7 +25,7 @@ public class SocketClient implements Client{
 	private DataInputStream dataInput;
 	private DataOutputStream dataOutput;
 
-	public SocketClient(GameFactory factory, ServiceIO io) {
+	public SocketClient(GameFactory factory, IO io) {
 		try {
 			initProperties(factory, io);
 		} catch (IOException e) {
@@ -32,7 +35,7 @@ public class SocketClient implements Client{
 		}
 	}
 	
-	private void initProperties(GameFactory factory, ServiceIO io) throws Exception{
+	private void initProperties(GameFactory factory, IO io) throws Exception{
 		this.gameFactory = factory;
 		this.gameEventHandlerFactory = factory.getGameEventHandlerFactory();
 		this.protocolFactory = gameFactory.getProtocolFactory();
@@ -81,6 +84,7 @@ public class SocketClient implements Client{
 	}
 	
 	private void askGamecoreToUnregisterTheClient(){
+		gameCore.removeClient(this);
 	}
 
 }

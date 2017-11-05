@@ -1,7 +1,5 @@
 package gamecore.model;
 
-import gamecore.entity.Entity;
-
 public class ServerInformation implements Comparable<ServerInformation>{
 	private int onlineUserAmount;
 	private int onlineRoomAmount;

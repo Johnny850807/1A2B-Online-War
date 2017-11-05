@@ -1,4 +1,4 @@
-package gamecore;
+package gamecore.model;
 
 public enum RoomStatus {
 	waiting, gamestarted

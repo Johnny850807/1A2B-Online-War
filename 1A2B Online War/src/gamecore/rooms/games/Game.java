@@ -1,4 +1,4 @@
-package gamecore.entity;
+package gamecore.rooms.games;
 
 public abstract class Game {
 	

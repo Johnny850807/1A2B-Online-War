@@ -1,11 +1,11 @@
 package container.eventhandler;
 
-import container.Client;
+import container.base.Client;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
-import gamecore.RequestStatus;
 import gamecore.model.ErrorMessage;
+import gamecore.model.RequestStatus;
 
 public abstract class GameEventHandler<T> implements EventHandler{
 	private OnRespondingListener onRespondingListener;

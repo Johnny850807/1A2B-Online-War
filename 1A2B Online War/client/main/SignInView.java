@@ -1,13 +1,11 @@
 package main;
 
-import java.awt.datatransfer.StringSelection;
-
 import com.google.gson.Gson;
 
 import Util.Input;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
-import gamecore.entity.User;
+import gamecore.entity.Player;
 import module.FactoryModule;
 import module.SocketConnector;
 
@@ -38,7 +36,7 @@ public class SignInView extends View implements SocketConnector.Callback{
 	
 	private void signIn(){
 		String name = Input.next("Input your name: ");
-		String json = new Gson().toJson(new User(name));
+		String json = new Gson().toJson(new Player(name));
 		Protocol protocol = protocolfactory.createProtocol("SignIn", "request", json);
 		SocketConnector.getInstance().send(protocol.toString(), this, SIGNIN);
 	}

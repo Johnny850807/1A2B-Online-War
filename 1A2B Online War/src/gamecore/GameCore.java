@@ -1,21 +1,26 @@
 package gamecore;
 
 import java.util.List;
+import java.util.Map;
 
-import container.Client;
+import container.base.Client;
 import container.protocol.Protocol;
-import gamecore.entity.Room;
-import gamecore.entity.User;
+import gamecore.entity.Player;
+import gamecore.model.RoomStatus;
+import gamecore.model.UserStatus;
+import gamecore.rooms.RoomCore;
 
 public interface GameCore {
 	void notifyRoom(String roomId, Protocol response);
 	void notifyUser(String userId, Protocol response);
 	void notifyUsers(UserStatus userStatus, Protocol response);
-	List<User> getUserContainer();
-	List<Room> getRoomContainer();
-	List<User> getUsers(UserStatus status);
-	List<Room> getRooms(String name);
-	List<Room> getRooms(RoomStatus status);
-	User getUser(String id);
-	Room getRoom(String id);
+	Map<Player, Client> getClientsMap();
+	List<RoomCore> getRoomContainer();
+	List<Player> getUsers(UserStatus status);
+	List<RoomCore> getRooms(String name);
+	List<RoomCore> getRooms(RoomStatus status);
+	Player getUser(String id);
+	RoomCore getRoom(String id);
+	void removeUser(Player user);
+	void removeClient(Client client);
 }

@@ -1,10 +1,11 @@
 package gamecore.entity;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.naming.directory.InitialDirContext;
 
-public class Entity {
+public class Entity implements Serializable{
 	protected String id;
 	
 	public Entity initId(){

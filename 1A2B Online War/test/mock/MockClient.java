@@ -1,6 +1,6 @@
 package mock;
 
-import container.Client;
+import container.base.Client;
 import container.protocol.Protocol;
 
 public class MockClient implements Client{

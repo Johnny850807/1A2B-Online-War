@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import container.base.Client;
+import container.base.IO;
 import container.protocol.ProtocolFactory;
 import gamefactory.GameFactory;
 
@@ -43,7 +45,7 @@ public class SocketAccepter implements Runnable
 			Socket clientSocket = server.accept();
 			if(clientSocket.isConnected()) 
 			{
-				ServiceIO io = new SocketIO(clientSocket);
+				IO io = new SocketIO(clientSocket);
 				Client userService = gameFactory.createService(io);
 				new Thread(userService).start();
 			}

@@ -11,7 +11,7 @@ import container.eventhandler.EventHandler;
 import container.eventhandler.GameEventHandlerFactory;
 import container.eventhandler.EventHandler.OnRespondingListener;
 import container.protocol.Protocol;
-import gamecore.RequestStatus;
+import gamecore.model.RequestStatus;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
 import mock.MockClient;

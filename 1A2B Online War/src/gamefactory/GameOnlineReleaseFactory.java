@@ -1,10 +1,10 @@
 package gamefactory;
 
-import container.ServiceIO;
 import container.SocketClient;
+import container.base.Client;
+import container.base.IO;
 import container.eventhandler.ConfigBasedGameEventHandlerFactory;
 import container.eventhandler.GameEventHandlerFactory;
-import container.Client;
 import container.protocol.ProtocolFactory;
 import container.protocol.XOXOXDelimiterFactory;
 import gamecore.GameCore;
@@ -22,7 +22,7 @@ public class GameOnlineReleaseFactory implements GameFactory{
 	}
 	
 	@Override
-	public Client createService(ServiceIO io) {
+	public Client createService(IO io) {
 		return new SocketClient(this, io);
 	}
 

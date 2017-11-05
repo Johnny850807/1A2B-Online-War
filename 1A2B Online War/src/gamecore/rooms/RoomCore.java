@@ -1,19 +1,24 @@
-package gamecore.entity;
+package gamecore.rooms;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import gamecore.RoomStatus;
+import gamecore.entity.Entity;
+import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
+import gamecore.model.RoomStatus;
+import gamecore.rooms.games.Game;
 
-public abstract class Room extends Entity{
-	private List<User> users = new ArrayList<>();
+public abstract class RoomCore{
+	private GameRoom roomInfo;
+	private List<Player> users = new ArrayList<>();
 	private RoomStatus roomStatus;
 	private Game game;
-	private User host;
+	private Player host;
 	private String name;
 
 	
-	public Room(String name) {
+	public RoomCore(String name) {
 		this.name = name;
 	}
 	
@@ -28,6 +33,10 @@ public abstract class Room extends Entity{
 	
 	public abstract Game createGame();
 
+	public String getId(){
+		return roomInfo.getId();
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -36,11 +45,11 @@ public abstract class Room extends Entity{
 		this.name = name;
 	}
 
-	public List<User> getUsers() {
+	public List<Player> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<User> users) {
+	public void setUsers(List<Player> users) {
 		this.users = users;
 	}
 
@@ -60,11 +69,11 @@ public abstract class Room extends Entity{
 		this.game = game;
 	}
 
-	public User getHost() {
+	public Player getHost() {
 		return host;
 	}
 
-	public void setHost(User host) {
+	public void setHost(Player host) {
 		this.host = host;
 	}
 	

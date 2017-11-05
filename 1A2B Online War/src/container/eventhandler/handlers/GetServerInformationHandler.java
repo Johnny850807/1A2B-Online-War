@@ -1,14 +1,15 @@
 package container.eventhandler.handlers;
 
 import java.util.List;
+import java.util.Set;
 
-import container.Client;
+import container.base.Client;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
-import gamecore.entity.Room;
-import gamecore.entity.User;
+import gamecore.entity.Player;
 import gamecore.model.ServerInformation;
+import gamecore.rooms.RoomCore;
 
 public class GetServerInformationHandler extends GsonEventHandler<ServerInformation>{
 
@@ -24,8 +25,8 @@ public class GetServerInformationHandler extends GsonEventHandler<ServerInformat
 
 	@Override
 	protected Response onHandling(ServerInformation data) {
-		List<Room> rooms = gameCore().getRoomContainer();
-		List<User> users = gameCore().getUserContainer();
+		List<RoomCore> rooms = gameCore().getRoomContainer();
+		Set<Player> users = gameCore().getClientsMap().keySet();
 		ServerInformation information = new ServerInformation(users.size(), rooms.size());
 		return success(information);
 	}

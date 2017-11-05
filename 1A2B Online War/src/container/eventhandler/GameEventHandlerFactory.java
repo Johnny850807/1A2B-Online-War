@@ -1,6 +1,6 @@
 package container.eventhandler;
 
-import container.Client;
+import container.base.Client;
 import container.protocol.Protocol;
 
 public interface GameEventHandlerFactory {

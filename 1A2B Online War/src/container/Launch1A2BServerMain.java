@@ -3,7 +3,7 @@ package container;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
 
-public class Main {
+public class Launch1A2BServerMain {
 
 	public static void main(String[] args) {
 		GameFactory factory = new GameOnlineReleaseFactory();

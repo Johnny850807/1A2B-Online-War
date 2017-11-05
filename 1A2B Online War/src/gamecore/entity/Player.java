@@ -1,19 +1,18 @@
 package gamecore.entity;
 
-import gamecore.UserStatus;
+import gamecore.model.UserStatus;
 
-public class User extends Entity{
+public class Player extends Entity{
 	private UserStatus userStatus = null;
 	private String name;
 	
-	public User(String name) {
+	public Player(String name) {
 		this.name = name;
 	}
 	
 	public String getName() {
 		return name;
 	}
-
 
 	public void setName(String name) {
 		this.name = name;
