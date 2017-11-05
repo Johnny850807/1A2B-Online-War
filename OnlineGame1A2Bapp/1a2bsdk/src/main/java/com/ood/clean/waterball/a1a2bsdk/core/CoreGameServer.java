@@ -19,10 +19,7 @@ public final class CoreGameServer {
 
     private Map<ModuleName,GameModule> moduleMap;
 
-    private CoreGameServer(){
-        moduleMap = Collections.checkedMap(new HashMap<ModuleName, GameModule>(),ModuleName.class, GameModule.class);
-        new ReleaseGameModuleInflater().onPrepareModules(moduleMap);
-    }
+    private CoreGameServer(){}
 
     public static CoreGameServer getInstance(){
         if (instance == null)
@@ -38,7 +35,8 @@ public final class CoreGameServer {
      * @param context MainActivity
      */
     public void startEngine(@NonNull Context context){
-        //todo run all modules and start the service of socket
+        moduleMap = Collections.checkedMap(new HashMap<ModuleName, GameModule>(),ModuleName.class, GameModule.class);
+        new ReleaseGameModuleInflater().onPrepareModules(moduleMap);
         context.startService(new Intent(context, GameHostingService.class));
     }
 

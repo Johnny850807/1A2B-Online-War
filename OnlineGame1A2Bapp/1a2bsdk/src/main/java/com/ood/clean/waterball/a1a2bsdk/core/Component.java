@@ -3,7 +3,6 @@ package com.ood.clean.waterball.a1a2bsdk.core;
 
 import com.ood.clean.waterball.a1a2bsdk.core.client.ClientSocket;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 import javax.inject.Inject;
@@ -28,18 +27,12 @@ public class Component {
         Field[] fields = clazz.getDeclaredFields();
 
         // Trace all annotations of each field of the obj. if the field has an Inject annotation, inject the value to the field.
-        for (Field field : fields)
-        {
-            Annotation[] annotations = field.getDeclaredAnnotations();
-            for (Annotation annotation : annotations)
-                if(annotation.annotationType().equals(Inject.class))
-                {
-                    try {
-                        inject(obj, field);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                    break;
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(Inject.class))
+                try {
+                    inject(obj, field);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
                 }
         }
     }
@@ -53,7 +46,7 @@ public class Component {
         {
             if (f.getType().equals(field.getType()))
             {
-                f.setAccessible(true);
+
                 boolean accessible = field.isAccessible();
                 field.setAccessible(true);
                 field.set(obj, f.get(null));  // injecting

@@ -7,17 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.joanna_zhang.test.Mock.MockPlayerListFactory;
-import com.ood.clean.waterball.a1a2bsdk.core.model.ChatMessage;
-import com.ood.clean.waterball.a1a2bsdk.core.model.Player;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.room.model.PlayerStatus;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.model.GameMode;
 
 import java.util.List;
+
+import gamecore.entity.ChatMessage;
+import gamecore.entity.Player;
+import gamecore.model.GameMode;
 
 
 public class ChatInRoomActivity extends AppCompatActivity implements View.OnClickListener, ChatWindowView.OnClickListener {
@@ -106,7 +105,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
         @Override
         public View getView(int position, View view, ViewGroup viewGroup) {
             view = LayoutInflater.from(ChatInRoomActivity.this).inflate(R.layout.chat_room_player_list_item, viewGroup, false);
-            Player player = playerList.get(position);
+            /*Player player = playerList.get(position);
             PlayerStatus.UNREADY.setPlayer(player);
 
             TextView playerName = view.findViewById(R.id.playerNameTxt);
@@ -114,7 +113,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
 
             playerName.setText(player.getName());
             int imageId = PlayerStatus.UNREADY.getPlayer().getName().equals(player.getName()) ? R.drawable.unready : R.drawable.ready;
-            playerReadyOrNot.setImageResource(imageId);
+            playerReadyOrNot.setImageResource(imageId);*/
             return view;
         }
     }

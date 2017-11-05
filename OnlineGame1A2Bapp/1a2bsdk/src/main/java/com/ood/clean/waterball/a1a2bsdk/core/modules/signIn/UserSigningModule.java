@@ -7,20 +7,25 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 
 import gamecore.entity.Player;
+import gamecore.model.ServerInformation;
 
 public interface UserSigningModule extends GameModule{
-    String TAG = "Signing module";
+    String TAG = "Signing";
+    void registerCallback(UserSigningModule.Callback callback);
+    void unregisterCallBack(UserSigningModule.Callback callback);
 
     /**
      * @param name - user's name to be signed
-     * @param callback - the call back interface listening to the feedback of the signing event
      */
-    void signIn(@NonNull String name, @NonNull UserSigningModule.Callback callback);
+    void signIn(@NonNull String name);
+
 
     /**
      * @return the user who has signed in to the roomlist
      */
     Player getCurrentPlayer();
+
+    void getServerInformation();
 
     /**
      * used to listen to the sign event
@@ -32,5 +37,12 @@ public interface UserSigningModule extends GameModule{
          */
         void onSignInSuccessfully(@NonNull Player player);
 
+        /**
+         * invoked while the user signed failed.
+         */
+        void onSignInFailed();
+
+
+        void onLoadServerInformation(ServerInformation serverInformation);
     }
 }
