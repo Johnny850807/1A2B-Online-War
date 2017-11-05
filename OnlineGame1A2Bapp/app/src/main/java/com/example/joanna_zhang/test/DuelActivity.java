@@ -38,10 +38,10 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
         setContentView(R.layout.activity_room_duel);
 
         CoreGameServer server = CoreGameServer.getInstance();
-        duel1A2BGameModule = (Duel1A2BGameModule) server.getModule(ModuleName.SIGNING);
+        //duel1A2BGameModule = (Duel1A2BGameModule) server.getModule(ModuleName.SIGNING);
 
         setupChatWindow();
-        setupInputNumberWindowView();
+        //setupInputNumberWindowView();
         findViews();
     }
 
@@ -61,7 +61,9 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
     }
 
     private void setupInputNumberWindowView() {
-        inputNumberWindowView = new InputNumberWindowView(this);
+        inputNumberWindowView = new InputNumberWindowView.Builder(this)
+                .setOnEnterClickListener(this)
+                .build();
     }
 
     public void updateResultList(List<GuessRecord> resultList, ListView resultListView) {
@@ -86,6 +88,9 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
         p1AnswerTxt.setText(guessName);
     }
 
+    public void inputNumberOnClick(View view) {
+        setupInputNumberWindowView();
+    }
 
     private class ResultListAdapter extends BaseAdapter {
 

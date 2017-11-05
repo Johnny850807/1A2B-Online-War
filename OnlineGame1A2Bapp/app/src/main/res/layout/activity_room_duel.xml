@@ -75,14 +75,16 @@
 
     </LinearLayout>
 
-    <EditText
+    <Button
+        android:id="@+id/inputNumberEd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
-        android:enabled="false"
+        android:background="@android:color/transparent"
         android:hint="@string/inputNumber"
         android:padding="6dp"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:gravity="left"
+        android:onClick="inputNumberOnClick"/>
 
     <include
         android:id="@+id/chatwindowLst"
