@@ -1,6 +1,7 @@
 package com.example.joanna_zhang.test;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -20,13 +21,14 @@ import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 import gamecore.entity.Player;
 import gamecore.model.ServerInformation;
 
+
 public class MainActivity extends AppCompatActivity implements UserSigningModule.Callback {
     private CoreGameServer gameServer = CoreGameServer.getInstance();
     private UserSigningModule signingModule;
     private EditText nameEd;
     private CheckBox autoSignInCheckbox;  // TODO
     private TextView serverStatusTxt;
-    private String name;
+    private SharedPreferences sharedPreferences;
     private NameCreator nameCreator = new RandomNameCreator();
 
     @Override
@@ -35,6 +37,14 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         setContentView(R.layout.activity_main);
         findViews();
         signingModule = (UserSigningModule) gameServer.getModule(ModuleName.SIGNING);
+        sharedPreferences = getSharedPreferences("1A2B", MODE_PRIVATE);
+        readPlayerNameFromSharedPreferences();
+    }
+
+    private void readPlayerNameFromSharedPreferences() {
+        String playerName = sharedPreferences.getString("name", "");
+        if (!playerName.isEmpty())
+            signingModule.signIn(playerName);
     }
 
     @Override
@@ -51,9 +61,12 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     }
 
     public void loginButtonOnClick(View view) {
-        name = nameEd.getText().toString();
-        signingModule.signIn(name);
-        //todo if (autoSignInCheckbox.isChecked());
+        String playerName = nameEd.getText().toString();
+        if (autoSignInCheckbox.isChecked())
+            savePlayerName(playerName);
+        else
+            savePlayerName("");
+        signingModule.signIn(playerName);
     }
 
     public void randomNameButtonOnClick(View view) {
@@ -70,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
 
     @Override
     public void onSignInFailed() {
-        createAndShowErrorMessage(getString(R.string.signInFailed_playerNameIsInvalid));
+        createAndShowErrorMessage(getString(R.string.signInFailedPlayerNameIsInvalid));
     }
 
     @Override
@@ -103,5 +116,11 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         signingModule.unregisterCallBack(this);
     }
 
+
+    private void savePlayerName(String name) {
+        sharedPreferences.edit()
+                .putString("name", name)
+                .apply();
+    }
 
 }
