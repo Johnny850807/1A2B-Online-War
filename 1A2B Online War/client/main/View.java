@@ -1,9 +1,12 @@
 package main;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 public abstract class View {
 	private static Stack<View> viewStack = new Stack<>();
+	private Map<String, Object> bundle = new HashMap<>();
 	private String name;
 	
 	public void start() {
@@ -43,5 +46,18 @@ public abstract class View {
 	
 	public boolean isAlive() {
 		return viewStack.lastElement() == this;
+	}
+	
+	public void startView(View view, Map<String, Object> bundle){
+		view.bundle = bundle;
+		view.start();
+	}
+	
+	public void startView(View view){
+		view.start();
+	}
+	
+	public Map<String, Object> getBundle() {
+		return bundle;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import container.base.Client;
 import container.protocol.Protocol;
+import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.RoomStatus;
 import gamecore.model.UserStatus;
@@ -15,12 +16,12 @@ public interface GameCore {
 	void notifyUser(String userId, Protocol response);
 	void notifyUsers(UserStatus userStatus, Protocol response);
 	Map<Player, Client> getClientsMap();
-	List<RoomCore> getRoomContainer();
+	List<GameRoom> getRoomContainer();
 	List<Player> getUsers(UserStatus status);
-	List<RoomCore> getRooms(String name);
-	List<RoomCore> getRooms(RoomStatus status);
+	List<GameRoom> getRooms(String name);
+	List<GameRoom> getRooms(RoomStatus status);
 	Player getUser(String id);
-	RoomCore getRoom(String id);
+	GameRoom getRoom(String id);
 	void removeUser(Player user);
 	void removeClient(Client client);
 }

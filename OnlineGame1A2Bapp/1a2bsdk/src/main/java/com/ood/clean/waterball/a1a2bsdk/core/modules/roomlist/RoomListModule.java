@@ -1,7 +1,5 @@
 package com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist;
 
-import android.support.annotation.Nullable;
-
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 
@@ -14,9 +12,7 @@ import gamecore.model.GameMode;
 public interface RoomListModule extends GameModule{
     void registerCallback(RoomListModule.Callback callback);
     void unregisterCallBack(RoomListModule.Callback callback);
-
     void createRoom(String roomName, GameMode gameMode);
-    void searchRoom(String keyName, @Nullable GameMode gameMode);
     void joinRoom(GameRoom gameRoom);
     void getGameRoomList();
 
@@ -28,7 +24,7 @@ public interface RoomListModule extends GameModule{
         void onGetRoomList(List<GameRoom> gameRooms);
 
         /**
-         * This method will be called if any of the room created a new room by the online player.
+         * This method will be called if any of the room created by the online player.
          */
         void onNewRoom(GameRoom gameRoom);
 
@@ -41,16 +37,6 @@ public interface RoomListModule extends GameModule{
          * This method will be called if any of the room's info updated.
          */
         void onRoomUpdated(GameRoom gameRoom);
-
-        /**
-         * This method will be called if any of the room started playing by the room host.
-         */
-        void onRoomStartedPlaying(GameRoom gameRoom);
-
-        /**
-         * This method will be called when the room created successfully on your own.
-         */
-        void onCreatedRoomSuccessfully(GameRoom gameRoom);
 
         /**
          * This method will be called when you join to the room successfully.

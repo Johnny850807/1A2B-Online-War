@@ -7,7 +7,7 @@ import gamecore.GameCore;
 import gamecore.model.ErrorMessage;
 import gamecore.model.RequestStatus;
 
-public abstract class GameEventHandler<T> implements EventHandler{
+public abstract class GameEventHandler<In, Out> implements EventHandler{
 	private OnRespondingListener onRespondingListener;
 	private ProtocolFactory protocolFactory;
 	private Client client;
@@ -34,13 +34,13 @@ public abstract class GameEventHandler<T> implements EventHandler{
 	}
 	@Override
 	public void handle() {
-		T data = parseData(request.getData());
+		In data = parseData(request.getData());
 		Response response = onHandling(data);
 		response.handleTheResponse();
 	}
 	
 	protected abstract String dataToString(Object data);
-	protected abstract T parseData(String data);
+	protected abstract In parseData(String data);
 	
 	
 	/**
@@ -49,7 +49,7 @@ public abstract class GameEventHandler<T> implements EventHandler{
 	 * The exception will be binded to the method where has an annotation @
 	 * @return the response contains a successful message or a failed message complying with the certain protocol 
 	 */
-	protected abstract Response onHandling(T data);
+	protected abstract Response onHandling(In data);
 	protected abstract void onRespondSuccessfulProtocol(Protocol responseProtocol);
 	
 	
@@ -70,7 +70,7 @@ public abstract class GameEventHandler<T> implements EventHandler{
 		return gameCore;
 	}
 	
-	protected Response success(T data){
+	protected Response success(Out data){
 		Protocol response = protocolFactory().createProtocol(request().getEvent(), RequestStatus.success.toString(),
 				dataToString(data));
 		return new SuccessResponse(response);

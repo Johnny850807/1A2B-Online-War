@@ -8,7 +8,7 @@ import gamecore.entity.Player;
 import gamecore.model.RequestStatus;
 import gamecore.model.UserStatus;
 
-public class SignInHandler extends GsonEventHandler<Player>{
+public class SignInHandler extends GsonEventHandler<Player, Player>{
 
 	public SignInHandler(Client client, Protocol request, GameCore gameCore, ProtocolFactory protocolFactory) {
 		super(client, request, gameCore, protocolFactory);
@@ -22,7 +22,7 @@ public class SignInHandler extends GsonEventHandler<Player>{
 	@Override
 	protected Response onHandling(Player data) {
 		String name = data.getName();
-		if (name.length() == 0 || name.length() > 6)
+		if (name == null || name.length() == 0 || name.length() > 6)
 			return error(100, new IllegalArgumentException("The user name's length cannot be out of the range (1~6)."));
 		data.initId();
 		data.setUserStatus(UserStatus.SignedIn);

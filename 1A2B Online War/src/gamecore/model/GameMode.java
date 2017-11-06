@@ -12,35 +12,18 @@ import gamecore.rooms.games.MockGame;
  * uses a Factory Method for creating the specific Game.
  */
 public enum GameMode implements IGameMode , Serializable{
-    DUEL1A2B(2,2, new GameCreator(){
-		@Override
-		public Game createGame() {
-			return new GameDuel1A2B();
-		}
-    }),
+    DUEL1A2B(2,2),
     
-    GROUP1A2B(2,6, new GameCreator(){
-		@Override
-		public Game createGame() {
-			return new GameGroup1A2B();
-		}
-    }),
+    GROUP1A2B(2,6),
     
-    DIXIT(3,6, new GameCreator(){
-		@Override
-		public Game createGame() {
-			return new MockGame();  //TODO DIXIT
-		}
-    });
+    DIXIT(3,6);
 
     private int minPlayerAmount;
     private int maxPlayerAmount;
-    private GameCreator gameCreator;
 
-    GameMode(int minPlayerAmount, int maxPlayerAmount, GameCreator gameCreator) {
+    GameMode(int minPlayerAmount, int maxPlayerAmount) {
         this.minPlayerAmount = minPlayerAmount;
         this.maxPlayerAmount = maxPlayerAmount;
-        this.gameCreator = gameCreator;
     }
 
     @Override
@@ -52,12 +35,4 @@ public enum GameMode implements IGameMode , Serializable{
         return maxPlayerAmount;
     }
     
-    public Game createGame(){
-    	return this.gameCreator.createGame();
-    }
-
-    
-    public interface GameCreator{
-    	Game createGame();
-    }
 }
