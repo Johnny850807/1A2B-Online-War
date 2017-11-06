@@ -16,6 +16,11 @@ import gamecore.model.UserStatus;
 import gamecore.rooms.RoomCore;
 import gamefactory.GameFactory;
 
+/**
+ * @author AndroidWork
+ * ReleaseGameCore manages all the users, rooms and the client sockets binding to the users. All 
+ * methods with the name 'notify' used for sending a response to certain clients.
+ */
 public class ReleaseGameCore implements GameCore{
 	private GameFactory factory;
 	private List<RoomCore> roomContainer = Collections.checkedList(new ArrayList<>(), RoomCore.class);

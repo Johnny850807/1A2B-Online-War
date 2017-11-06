@@ -1,5 +1,8 @@
 package gamecore.model;
 
+/**
+ * ErrorMessage stands for a certain Exception by its code number.
+ */
 public class ErrorMessage {
 	private int code;
 	private String message;

@@ -9,6 +9,10 @@ import gamecore.model.GameMode;
 import gamecore.model.PlayerStatus;
 import gamecore.model.RoomStatus;
 
+/**
+ * GameRoom contains only the info and the status the room should present. The game of the room will be
+ * created by a GameMode.
+ */
 public class GameRoom extends Entity{
 	private Player host;
 	private RoomStatus roomStatus = RoomStatus.waiting;

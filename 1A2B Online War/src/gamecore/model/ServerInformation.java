@@ -1,5 +1,8 @@
 package gamecore.model;
 
+/**
+ * The basic server information contains the amount of the online players or the rooms.
+ */
 public class ServerInformation implements Comparable<ServerInformation>{
 	private int onlineUserAmount;
 	private int onlineRoomAmount;

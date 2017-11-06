@@ -3,6 +3,10 @@ package gamecore.entity;
 
 import java.util.Date;
 
+/**
+ * @author AndroidWork
+ * ChatMessages in the chat.
+ */
 public class ChatMessage extends Entity {
     private Player poster;
     private String content;

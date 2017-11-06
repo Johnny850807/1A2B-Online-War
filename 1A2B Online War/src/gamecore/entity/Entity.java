@@ -5,6 +5,11 @@ import java.util.UUID;
 
 import javax.naming.directory.InitialDirContext;
 
+/**
+ * @author AndroidWork
+ * A Serializable Entity must have a 'id' property. You should invoke 'initId()' to make sure that 
+ * a new UUID assigned to the entity.
+ */
 public class Entity implements Serializable{
 	protected String id;
 	

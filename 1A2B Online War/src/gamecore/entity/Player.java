@@ -2,6 +2,10 @@ package gamecore.entity;
 
 import gamecore.model.UserStatus;
 
+/**
+ * @author AndroidWork
+ * Each Player a Online User contains a status and a name.
+ */
 public class Player extends Entity{
 	private UserStatus userStatus = null;
 	private String name;
