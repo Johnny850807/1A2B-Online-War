@@ -17,7 +17,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -31,7 +30,6 @@ import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModuleImp;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.ArrayList;
@@ -305,7 +303,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onNewRoom(GameRoom gameRoom) {
         roomList.add(gameRoom);
-        updateRoomList(roomList);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
