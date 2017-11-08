@@ -306,7 +306,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onJoinRoomSuccessfully(GameRoom gameRoom) {
-        //進入房間聊天室 Todo
+        //Todo 進入房間聊天室
     }
 
 }

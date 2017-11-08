@@ -5,7 +5,6 @@ import com.ood.clean.waterball.a1a2bsdk.core.Component;
 import com.ood.clean.waterball.a1a2bsdk.core.EventBus;
 import com.ood.clean.waterball.a1a2bsdk.core.ThreadExecutor;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutException;
-import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.GameCoreException;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -46,11 +45,9 @@ public class ClientSocket implements Client{
             this.inputStream = new DataInputStream(io.getInputStream());
 
             listeningInput();
-        } catch (IOException err) {
+        } catch (Exception err) {
             err.printStackTrace();
-            eventBus.error(new ConnectionTimedOutException(err));
-        } catch (Exception e) {
-            e.printStackTrace();
+            threadExecutor.postMain(new PostErrorToEventBusTask(new ConnectionTimedOutException(err)));
         }
     }
 
@@ -63,7 +60,7 @@ public class ClientSocket implements Client{
                 @Override
                 public void run() {
                     Protocol protocol = protocolFactory.createProtocol(response);
-                    eventBus.invoke(protocol);
+                    threadExecutor.postMain(new InvokeEventBusTask(protocol));
                 }
             });
         }
@@ -77,22 +74,41 @@ public class ClientSocket implements Client{
             public void run() {
                 try{
                     outputStream.writeUTF(protocol.toString());
-                }catch (IOException err){
-                    err.printStackTrace();
-                    eventBus.error(new ConnectionTimedOutException(err));
                 }catch (Exception err){
                     err.printStackTrace();
-                    eventBus.error(new GameCoreException(new ConnectionTimedOutException(err)));
+                    threadExecutor.postMain(new PostErrorToEventBusTask(new ConnectionTimedOutException(err)));
                 }
             }
         });
     }
+
 
     @Override
     public void disconnect() throws Exception {
         // TODO
     }
 
+    private class InvokeEventBusTask implements Runnable{
+        Protocol protocol;
+        private InvokeEventBusTask(Protocol protocol) {
+            this.protocol = protocol;
+        }
+        @Override
+        public void run() {
+            eventBus.invoke(protocol);
+        }
+    }
+
+    private class PostErrorToEventBusTask implements Runnable{
+        private Exception err;
+        private PostErrorToEventBusTask(Exception err) {
+            this.err = err;
+        }
+        @Override
+        public void run() {
+            eventBus.error(err);
+        }
+    }
 
     public String getAddress() {
         return address;

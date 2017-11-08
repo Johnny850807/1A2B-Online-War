@@ -8,11 +8,11 @@ public class HandlerExecutor implements ThreadExecutor {
 
     @Override
     public void post(Runnable runnable) {
-        handler.post(runnable);
+        new Thread(runnable).start();
     }
 
     @Override
-    public void postDelayed(Runnable runnable, long delay) {
-        handler.postDelayed(runnable, delay);
+    public void postMain(Runnable runnable) {
+        handler.post(runnable);
     }
 }
