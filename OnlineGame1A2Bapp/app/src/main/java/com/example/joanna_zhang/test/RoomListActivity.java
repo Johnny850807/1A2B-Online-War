@@ -170,7 +170,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     @Override
-    public void onCreatedRoomSuccessfully(GameRoom gameRoom) {
+    public void onCreateRoomSuccessfully(GameRoom gameRoom) {
         //進入房間聊天室 Todo
     }
 

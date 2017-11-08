@@ -35,9 +35,14 @@ public final class CoreGameServer {
      * @param context MainActivity
      */
     public void startEngine(@NonNull Context context){
+        if (moduleMap == null)
+            prepareModules();
+        context.startService(new Intent(context, GameHostingService.class));
+    }
+
+    public void prepareModules(){
         moduleMap = Collections.checkedMap(new HashMap<ModuleName, GameModule>(),ModuleName.class, GameModule.class);
         new ReleaseGameModuleInflater().onPrepareModules(moduleMap);
-        context.startService(new Intent(context, GameHostingService.class));
     }
 
     /**

@@ -10,15 +10,21 @@ import java.util.Set;
 import Linq.Linq;
 import container.base.Client;
 import container.protocol.Protocol;
+import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.RoomStatus;
 import gamecore.model.UserStatus;
 import gamecore.rooms.RoomCore;
 import gamefactory.GameFactory;
 
+/**
+ * @author AndroidWork
+ * ReleaseGameCore manages all the users, rooms and the client sockets binding to the users. All 
+ * methods with the name 'notify' used for sending a response to certain clients.
+ */
 public class ReleaseGameCore implements GameCore{
 	private GameFactory factory;
-	private List<RoomCore> roomContainer = Collections.checkedList(new ArrayList<>(), RoomCore.class);
+	private List<GameRoom> roomContainer = Collections.checkedList(new ArrayList<>(), GameRoom.class);
 	private Map<Player, Client> clientsMap = Collections.checkedMap(new HashMap<>(), Player.class, Client.class);
 	
 	public ReleaseGameCore(GameFactory factory) {
@@ -27,8 +33,8 @@ public class ReleaseGameCore implements GameCore{
 
 	@Override
 	public void notifyRoom(String roomId, Protocol response) {
-		RoomCore room = getRoom(roomId);
-		List<Player> users = room.getUsers();
+		GameRoom room = getRoom(roomId);
+		List<Player> users = room.getPlayers();
 		respondToServices(getUserServicesByUserList(users), response);
 	}
 
@@ -53,6 +59,7 @@ public class ReleaseGameCore implements GameCore{
 		List<Client> userServices = new ArrayList<>();
 		for (Player user : users)
 			userServices.add(clientsMap.get(user));
+		assert userServices.size() == users.size() : "The user amount should be equal to the service amount";
 		return userServices;
 	}
 
@@ -62,12 +69,12 @@ public class ReleaseGameCore implements GameCore{
 	}
 
 	@Override
-	public List<RoomCore> getRooms(String name) {
+	public List<GameRoom> getRooms(String name) {
 		return Linq.From(roomContainer).where(r->r.getName().equals(name)).toList();
 	}
 
 	@Override
-	public List<RoomCore> getRooms(RoomStatus status) {
+	public List<GameRoom> getRooms(RoomStatus status) {
 		return Linq.From(roomContainer).where(r->r.getRoomStatus() == status).toList();
 	}
 
@@ -77,7 +84,7 @@ public class ReleaseGameCore implements GameCore{
 	}
 
 	@Override
-	public RoomCore getRoom(String id) {
+	public GameRoom getRoom(String id) {
 		return Linq.From(roomContainer).single(u->u.getId().equals(id));
 	}
 	
@@ -87,7 +94,7 @@ public class ReleaseGameCore implements GameCore{
 	}
 
 	@Override
-	public List<RoomCore> getRoomContainer() {
+	public List<GameRoom> getRoomContainer() {
 		return roomContainer;
 	}
 
@@ -103,9 +110,11 @@ public class ReleaseGameCore implements GameCore{
 		for (Player user : users)
 			if (clientsMap.get(user) == client)
 			{
+				System.out.println("Id:" + user.getId() + ", Name: " + user.getName() + " leave.");
 				clientsMap.remove(user);
-				break;
+				return;
 			}
+		throw new IllegalArgumentException("The removed client is not contained in the clientsMap.");
 	}
 
 }

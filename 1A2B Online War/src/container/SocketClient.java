@@ -49,7 +49,6 @@ public class SocketClient implements Client{
 		try {
 			listeningToClientInput();
 		} catch (IOException e) {
-			e.printStackTrace();
 			askGamecoreToUnregisterTheClient();
 		}
 	}
@@ -72,7 +71,6 @@ public class SocketClient implements Client{
 			dataOutput.writeUTF(protocol.toString());
 			dataOutput.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
 			askGamecoreToUnregisterTheClient();
 		}
 	}

@@ -1,7 +1,5 @@
 package com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist;
 
-import android.support.annotation.Nullable;
-
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
@@ -42,21 +40,7 @@ public class MockRoomListModule implements RoomListModule {
     @Override
     public void createRoom(String roomName, GameMode gameMode) {
         UserSigningModule userSigningModule = (UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING);
-        callback.onCreatedRoomSuccessfully(new GameRoom(gameMode, roomName, userSigningModule.getCurrentPlayer()));
-    }
-
-    @Override
-    public void searchRoom(String keyName, @Nullable GameMode gameMode) {
-        List<GameRoom> results = new ArrayList<>();
-        for (GameRoom room : gameRooms)
-        {
-            if (gameMode != null)
-                if (room.getGameMode() != gameMode)
-                    continue;
-            if (room.getName().contains(keyName) || room.getHost().getName().contains(keyName))
-                results.add(room);
-        }
-        callback.onGetRoomList(results);
+        //callback.onCreateRoomSuccessfully(new GameRoom(gameMode, roomName, userSigningModule.getCurrentPlayer()));
     }
 
     @Override
