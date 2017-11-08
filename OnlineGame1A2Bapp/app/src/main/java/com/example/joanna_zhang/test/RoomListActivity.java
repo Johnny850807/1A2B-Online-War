@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -49,11 +50,12 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
     private GameMode[] gameModes = {null, GameMode.GROUP1A2B, GameMode.DUEL1A2B};
-    private List<GameRoom> roomListOfGameMode = new ArrayList<>();
+    private List<GameRoom> roomListOfQuery = new ArrayList<>();
     private EditText searchEdt;
     private ListView roomListView;
     private Spinner roomModeSpn;
     private RoomListModule roomListModule = new RoomListModuleImp();
+    private BaseAdapter adapter = new MyAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,16 +73,14 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
         player = signingModule.getCurrentPlayer();
         Log.d(TAG, "Signed In Player: " + player);
-        roomList = gameRoomListFactory.createRoomList();
-
     }
 
     private void setupViews() {
         findViews();
         setUpSpinner();
+        roomListView.setAdapter(adapter);
         updateRoomList(roomList);
         roomListView.setDivider(getResources().getDrawable(R.drawable.transperent_color));
-
     }
 
     private void findViews() {
@@ -101,8 +101,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
         GameMode selectedMode = gameModes[position];
         List<GameRoom> results = getRoomsByGameMode(selectedMode);
-        roomListOfGameMode = results.isEmpty() ? roomList : results;
-        updateRoomList(roomListOfGameMode);
+        roomListOfQuery = results.isEmpty() ? roomList : results;
+        updateRoomList(roomListOfQuery);
     }
 
     @Override
@@ -119,8 +119,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     public void updateRoomList(List<GameRoom> list) {
-        MyAdapter myAdapter = new MyAdapter(list);
-        roomListView.setAdapter(myAdapter);
+        roomList = list;
+        adapter.notifyDataSetChanged();
     }
 
     public void createRoomBtnOnClick(View view) {
@@ -158,8 +158,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        GameMode gameMode = roomListOfGameMode.get(position).getGameMode();
-        Player player = roomListOfGameMode.get(position).getHost();
+        GameMode gameMode = roomListOfQuery.get(position).getGameMode();
+        Player player = roomListOfQuery.get(position).getHost();
         Intent enterToGameRoom = new Intent(this, ChatInRoomActivity.class);
         enterToGameRoom.putExtra("roomGameMode", gameMode);
         enterToGameRoom.putExtra("roomHost", player);
@@ -173,15 +173,9 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     public class MyAdapter extends BaseAdapter {
 
-        private List<GameRoom> roomlist;
-
-        public MyAdapter(List<GameRoom> roomlist) {
-            this.roomlist = roomlist;
-        }
-
         @Override
         public int getCount() {
-            return roomlist.size();
+            return roomList.size();
         }
 
         @Override
@@ -215,7 +209,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
             } else  // if the view exists, get the viewholder
                 viewHolder = (ViewHolder) view.getTag();
 
-            GameRoom gameroom = roomlist.get(position);
+            GameRoom gameroom = roomList.get(position);
 
             String modeName = "1A2B ";
             modeName += (gameroom.getGameMode() == GameMode.DUEL1A2B) ? getString(R.string.duel) : getString(R.string.fight);  //todo not only two mode
@@ -276,7 +270,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     private List<GameRoom> getRoomsByKeyName(String keyName) {
         List<GameRoom> results = new ArrayList<>();
-        for (GameRoom gameRoom : roomListOfGameMode)
+        for (GameRoom gameRoom : roomListOfQuery)
             if (gameRoom.getName().contains(keyName) || gameRoom.getHost().getName().contains(keyName))
                 results.add(gameRoom);
         return results;
@@ -284,14 +278,13 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onGetRoomList(List<GameRoom> gameRooms) {
-        this.roomList = gameRooms;
-        MyAdapter myAdapter = new MyAdapter(roomList);
-        roomListView.setAdapter(myAdapter);
+        updateRoomList(gameRooms);
     }
 
     @Override
     public void onNewRoom(GameRoom gameRoom) {
-        //Todo 新的房間產生
+        roomList.add(gameRoom);
+        updateRoomList(roomList);
     }
 
     @Override
