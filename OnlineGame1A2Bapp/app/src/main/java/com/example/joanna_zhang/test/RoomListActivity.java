@@ -1,5 +1,6 @@
 package com.example.joanna_zhang.test;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,6 +30,7 @@ import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModuleImp;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.ArrayList;
@@ -51,6 +53,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private EditText searchEdt;
     private ListView roomListView;
     private Spinner roomModeSpn;
+    private RoomListModule roomListModule = new RoomListModuleImp();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         player = signingModule.getCurrentPlayer();
         Log.d(TAG, "Signed In Player: " + player);
         roomList = gameRoomListFactory.createRoomList();
+
     }
 
     private void setupViews() {
@@ -122,63 +126,35 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     public void createRoomBtnOnClick(View view) {
         AlertDialog.Builder createRoomDialogBuilder = new AlertDialog.Builder(RoomListActivity.this);
         view = LayoutInflater.from(RoomListActivity.this).inflate(R.layout.create_room_dialog, null);
+        EditText roomNameEd = view.findViewById(R.id.roomNameEd);
         Spinner gameModeSpn = view.findViewById(R.id.createRoomModeSpn);
         ArrayAdapter<CharSequence> gameModeAdapter = new ArrayAdapter<CharSequence>(RoomListActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.roomMode));
         gameModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         gameModeSpn.setAdapter(gameModeAdapter);
+        String modeName = gameModeSpn.getSelectedItem().toString();
+        GameMode gameModeToCreateRoom = modeName.equals(R.string.duel) ? GameMode.DUEL1A2B : GameMode.GROUP1A2B;
+
         createRoomDialogBuilder.setTitle(R.string.create_room)
                 .setIcon(R.drawable.logo)
-                .setPositiveButton(R.string.confirm, null)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        roomListModule.createRoom(roomNameEd.getText().toString(), gameModeToCreateRoom);
+                    }
+                })
                 .setNegativeButton(R.string.cancel, null)
                 .setView(view)
                 .show();
     }
 
-    public void joinRoomBtnOnClick(View view) {
+    public void fastJoinRoomBtnOnClick(View view) {
+        // Todo
     }
 
     public void searchBtnOnClick(View view) {
         enableLoadingRoomListAnimation = true;
         searchAndUpdateRoomList();
     }
-
-    @Override
-    public void onGetRoomList(List<GameRoom> gameRooms) {
-        this.roomList = gameRooms;
-        MyAdapter myAdapter = new MyAdapter(roomList);
-        roomListView.setAdapter(myAdapter);
-    }
-
-    @Override
-    public void onNewRoom(GameRoom gameRoom) {
-        //Todo
-    }
-
-    @Override
-    public void onRoomClosed(GameRoom gameRoom) {
-        //Todo
-    }
-
-    @Override
-    public void onRoomUpdated(GameRoom gameRoom) {
-        //Todo
-    }
-
-    @Override
-    public void onRoomStartedPlaying(GameRoom gameRoom) {
-        // Todo
-    }
-
-    @Override
-    public void onCreateRoomSuccessfully(GameRoom gameRoom) {
-        //進入房間聊天室 Todo
-    }
-
-    @Override
-    public void onJoinRoomSuccessfully(GameRoom gameRoom) {
-        //進入房間聊天室 Todo
-    }
-
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -188,7 +164,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         enterToGameRoom.putExtra("roomGameMode", gameMode);
         enterToGameRoom.putExtra("roomHost", player);
         startActivity(enterToGameRoom);
-
     }
 
     @Override
@@ -281,7 +256,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     private class SearchEditTextWatcher implements TextWatcher {
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -289,7 +265,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         }
 
         @Override
-        public void afterTextChanged(Editable editable) {}
+        public void afterTextChanged(Editable editable) {
+        }
     }
 
     private void searchAndUpdateRoomList() {
@@ -304,4 +281,32 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
                 results.add(gameRoom);
         return results;
     }
+
+    @Override
+    public void onGetRoomList(List<GameRoom> gameRooms) {
+        this.roomList = gameRooms;
+        MyAdapter myAdapter = new MyAdapter(roomList);
+        roomListView.setAdapter(myAdapter);
+    }
+
+    @Override
+    public void onNewRoom(GameRoom gameRoom) {
+        //Todo 新的房間產生
+    }
+
+    @Override
+    public void onRoomClosed(GameRoom gameRoom) {
+        //Todo
+    }
+
+    @Override
+    public void onRoomUpdated(GameRoom gameRoom) {
+        //Todo 房間狀態變更
+    }
+
+    @Override
+    public void onJoinRoomSuccessfully(GameRoom gameRoom) {
+        //進入房間聊天室 Todo
+    }
+
 }

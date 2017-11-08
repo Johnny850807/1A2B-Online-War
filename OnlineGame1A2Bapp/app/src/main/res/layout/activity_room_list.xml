@@ -54,7 +54,7 @@
             android:background="@drawable/roomlist_corner"
             android:text="@string/joinQuickly"
             android:textSize="14sp"
-            android:onClick="joinRoomBtnOnClick"/>
+            android:onClick="fastJoinRoomBtnOnClick"/>
 
         <Button
             android:id="@+id/createRoomBtn"
