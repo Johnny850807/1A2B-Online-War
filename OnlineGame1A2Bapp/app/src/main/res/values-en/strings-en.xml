@@ -29,4 +29,7 @@
         <item>Fight</item>
         <item>Duel</item>
     </array>
+    <string name="title_activity_chat_window_test">ChatWindowTest</string>
+    <string name="game_start">Game Start</string>
+    <string name="setAnswerFrist">Please input the answer frist.</string>
 </resources>
