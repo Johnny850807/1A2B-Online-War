@@ -293,6 +293,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onGetRoomList(List<GameRoom> gameRooms) {
+
         updateRoomList(gameRooms);
     }
 
@@ -304,7 +305,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onRoomClosed(GameRoom gameRoom) {
-        //Todo
+        roomList.remove(gameRoom);
+        updateRoomList(roomList);
     }
 
     @Override
