@@ -25,8 +25,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.joanna_zhang.test.Domain.Factory.GameRoomListFactory;
-import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
@@ -44,7 +42,6 @@ import static com.example.joanna_zhang.test.R.array.roomMode;
 public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener, RoomListModule.Callback, ListView.OnItemClickListener {
     private final static String TAG = "RoomListActivity";
     private Player player;
-    private GameRoomListFactory gameRoomListFactory = new MockGameRoomListFactory();
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
     private GameMode[] gameModes = {null, GameMode.GROUP1A2B, GameMode.DUEL1A2B};

@@ -98,6 +98,7 @@ public final class ReflectionEventBus implements EventBus{
     }
 
     private Type parseGenericTypeByTheEvent(String event){
+        //TODO need a better algorithm to solve generic problem, not to parse it by an event name.
         if (event.toUpperCase().contains("ROOM"))
             return new TypeToken<List<GameRoom>>(){}.getType();
         return null;
