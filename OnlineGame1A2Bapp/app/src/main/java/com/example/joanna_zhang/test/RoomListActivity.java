@@ -153,7 +153,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String modeName = gameModeSpn.getSelectedItem().toString();
-                        GameMode gameModeToCreateRoom = modeName.equals(R.string.duel) ? GameMode.DUEL1A2B : GameMode.GROUP1A2B;
+                        GameMode gameModeToCreateRoom = modeName.equals(getString(R.string.duel)) ? GameMode.DUEL1A2B : GameMode.GROUP1A2B;
                         roomListModule.createRoom(roomNameEd.getText().toString(), gameModeToCreateRoom);
                     }
                 })
