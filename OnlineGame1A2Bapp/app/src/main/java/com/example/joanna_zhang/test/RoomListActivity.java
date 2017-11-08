@@ -53,8 +53,9 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private EditText searchEdt;
     private ListView roomListView;
     private Spinner roomModeSpn;
-    private RoomListModule roomListModule = new RoomListModuleImp();
+    private RoomListModule roomListModule;
     private BaseAdapter adapter = new MyAdapter();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +68,22 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         roomListView.setOnItemClickListener(this);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        roomListModule.registerCallback(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        roomListModule.unregisterCallBack(this);
+    }
+
     private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
         UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
+        roomListModule = (RoomListModule) server.getModule(ModuleName.ROOMLIST);
         player = signingModule.getCurrentPlayer();
         Log.d(TAG, "Signed In Player: " + player);
     }
