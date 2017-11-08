@@ -9,7 +9,6 @@ import com.ood.clean.waterball.a1a2bsdk.core.EventBus;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.ReflectionEventBus;
 import com.ood.clean.waterball.a1a2bsdk.core.client.ClientSocket;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.ThreadExecutorImp;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
@@ -45,7 +44,7 @@ public class TestUserSigningAPI implements UserSigningModule.Callback, RoomListM
     public void setup(){
         CoreGameServer coreGameServer = CoreGameServer.getInstance();
         eventBus = new ReflectionEventBus();
-        client = new ClientSocket(new ThreadExecutorImp());
+        client = new ClientSocket(new MockThreadExecutor());
         protocolFactory = new XOXOXDelimiterFactory();
         coreGameServer.prepareModules(); // make sure the modules prepared.
         userSigningModule = (UserSigningModule) coreGameServer.getModule(ModuleName.SIGNING);
