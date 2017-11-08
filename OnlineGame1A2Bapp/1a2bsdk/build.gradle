@@ -33,6 +33,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.2'
     testCompile 'junit:junit:4.12'
     compile files('libs/1A2B SDK.jar')
-    compile files('libs/Joanna1A2B.jar')
     compile 'javax.inject:javax.inject:1'
 }

@@ -164,15 +164,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         //Todo
     }
 
-    @Override
-    public void onRoomStartedPlaying(GameRoom gameRoom) {
-        // Todo
-    }
-
-    @Override
-    public void onCreateRoomSuccessfully(GameRoom gameRoom) {
-        //進入房間聊天室 Todo
-    }
 
     @Override
     public void onJoinRoomSuccessfully(GameRoom gameRoom) {
