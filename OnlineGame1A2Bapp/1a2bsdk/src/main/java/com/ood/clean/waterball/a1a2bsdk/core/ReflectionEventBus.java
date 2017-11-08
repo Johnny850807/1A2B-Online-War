@@ -4,15 +4,19 @@ import android.annotation.TargetApi;
 import android.os.Build;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.ood.clean.waterball.a1a2bsdk.core.base.BindCallback;
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import container.protocol.Protocol;
+import gamecore.entity.GameRoom;
 import gamecore.model.RequestStatus;
 
 
@@ -83,11 +87,19 @@ public final class ReflectionEventBus implements EventBus{
         if (parameters.length == 1)
         {
             Object data = gson.fromJson(protocol.getData(), parameters[0]);
+            if (data instanceof List)
+                data = gson.fromJson(protocol.getData(), parseGenericTypeByTheEvent(protocol.getEvent()));
             method.invoke(callBack, data);
         }
         else if (parameters.length == 0)
             method.invoke(callBack);
         else
             throw new IllegalStateException("The binding methods can only go with one parameter or none.");
+    }
+
+    private Type parseGenericTypeByTheEvent(String event){
+        if (event.toUpperCase().contains("ROOM"))
+            return new TypeToken<List<GameRoom>>(){}.getType();
+        return null;
     }
 }

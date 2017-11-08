@@ -30,7 +30,6 @@ import com.example.joanna_zhang.test.Mock.MockGameRoomListFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModuleImp;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.ArrayList;
@@ -66,6 +65,12 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         setupViews();
         updateRoomList(roomList);
         roomListView.setOnItemClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        roomListModule.getGameRoomList();
     }
 
     @Override
@@ -297,7 +302,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onNewRoom(GameRoom gameRoom) {
         roomList.add(gameRoom);
-        updateRoomList(roomList);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
