@@ -146,14 +146,14 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         ArrayAdapter<CharSequence> gameModeAdapter = new ArrayAdapter<CharSequence>(RoomListActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.roomMode));
         gameModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         gameModeSpn.setAdapter(gameModeAdapter);
-        String modeName = gameModeSpn.getSelectedItem().toString();
-        GameMode gameModeToCreateRoom = modeName.equals(R.string.duel) ? GameMode.DUEL1A2B : GameMode.GROUP1A2B;
 
         createRoomDialogBuilder.setTitle(R.string.create_room)
                 .setIcon(R.drawable.logo)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        String modeName = gameModeSpn.getSelectedItem().toString();
+                        GameMode gameModeToCreateRoom = modeName.equals(R.string.duel) ? GameMode.DUEL1A2B : GameMode.GROUP1A2B;
                         roomListModule.createRoom(roomNameEd.getText().toString(), gameModeToCreateRoom);
                     }
                 })
