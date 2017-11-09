@@ -15,6 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="roomname"
+            android:textColor="#38761D"
             android:textSize="22sp"/>
 
         <TextView android:id="@+id/roomModeTxt"
@@ -22,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/roomNameTxt"
             android:text="roommode"
+            android:textColor="#892074"
             android:textSize="22sp"/>
 
         <TextView android:id="@+id/roomCreatorNameTxt"
@@ -31,12 +33,14 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:text="roomcreator"
+            android:textColor="#1235FF"
             android:textSize="22sp" />
 
         <TextView android:id="@+id/roomPlayerAmountTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:textColor="#757F8A"
             android:layout_below="@id/roomCreatorNameTxt"
             android:text="2/6"
             android:textSize="22sp"/>
