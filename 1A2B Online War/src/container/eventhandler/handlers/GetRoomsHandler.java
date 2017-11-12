@@ -7,7 +7,7 @@ import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
-import gamecore.model.UserStatus;
+import gamecore.model.ClientStatus;
 
 public class GetRoomsHandler extends GsonEventHandler<Void, List<GameRoom>>{
 
@@ -22,12 +22,12 @@ public class GetRoomsHandler extends GsonEventHandler<Void, List<GameRoom>>{
 
 	@Override
 	protected Response onHandling(Void data) {
-		return success(gameCore().getRoomContainer());
+		return success(gameCore().getGameRooms());
 	}
 
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
-		gameCore().notifyUsers(UserStatus.SignedIn, responseProtocol);
+		client().respond(responseProtocol);
 	}
 
 }

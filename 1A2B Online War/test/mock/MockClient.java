@@ -2,10 +2,15 @@ package mock;
 
 import container.base.Client;
 import container.protocol.Protocol;
+import gamecore.entity.Entity;
 
-public class MockClient implements Client{
+public class MockClient extends Entity implements Client{
 	private Protocol response = null;
 
+	public MockClient() {
+		initId();
+	}
+	
 	@Override
 	public void run() {}
 
@@ -21,6 +26,11 @@ public class MockClient implements Client{
 	@Override
 	public void respond(Protocol protocol) {
 		this.response = protocol;
+	}
+
+	@Override
+	public String getAddress() {
+		return "test client";
 	}
 
 

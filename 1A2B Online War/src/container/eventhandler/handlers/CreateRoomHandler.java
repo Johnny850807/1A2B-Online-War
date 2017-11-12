@@ -5,7 +5,7 @@ import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
-import gamecore.model.UserStatus;
+import gamecore.model.ClientStatus;
 import gamecore.rooms.RoomCore;
 import gamecore.rooms.RoomFactory;
 
@@ -21,22 +21,22 @@ public class CreateRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 	}
 
 	@Override
-	protected Response onHandling(GameRoom data) {
-		if (data.getName() == null || data.getName().isEmpty() || data.getName().length() > 9)
+	protected Response onHandling(GameRoom room) {
+		if (room.getName() == null || room.getName().isEmpty() || room.getName().length() > 9)
 			return error(101, new IllegalArgumentException("The room's name should be in the range(1~9)"));
-		if (data.getHost() == null)
+		if (room.getHost() == null)
 			return error(102, new IllegalArgumentException("The room should be hosted by a player."));
-		if (data.getGameMode() == null)
+		if (room.getGameMode() == null)
 			return error(103, new IllegalArgumentException("The room should be given a game mode."));
 		
-		data.initId();
-		gameCore().getRoomContainer().add(data);
-		return success(data);
+		room.initId();
+		gameCore().addGameRoom(room);
+		return success(room);
 	}
 
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
-		gameCore().notifyUsers(UserStatus.SignedIn, responseProtocol);
+		gameCore().notifyClientPlayers(ClientStatus.SignedIn, responseProtocol);
 	}
 
 }

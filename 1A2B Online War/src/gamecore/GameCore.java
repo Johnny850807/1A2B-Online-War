@@ -8,20 +8,24 @@ import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.RoomStatus;
-import gamecore.model.UserStatus;
+import gamecore.model.ClientStatus;
 import gamecore.rooms.RoomCore;
 
 public interface GameCore {
-	void notifyRoom(String roomId, Protocol response);
-	void notifyUser(String userId, Protocol response);
-	void notifyUsers(UserStatus userStatus, Protocol response);
-	Map<Player, Client> getClientsMap();
-	List<GameRoom> getRoomContainer();
-	List<Player> getUsers(UserStatus status);
-	List<GameRoom> getRooms(String name);
-	List<GameRoom> getRooms(RoomStatus status);
-	Player getUser(String id);
-	GameRoom getRoom(String id);
-	void removeUser(Player user);
-	void removeClient(Client client);
+	void notifyAllClientPlayersInRoom(String roomId, Protocol response);
+	void notifyClientPlayer(String userId, Protocol response);
+	void notifyClientPlayers(ClientStatus userStatus, Protocol response);
+	
+	List<ClientPlayer> getClientPlayers(ClientStatus status);
+	List<ClientPlayer> getClientPlayers();
+	List<GameRoom> getGameRooms(RoomStatus status);
+	List<GameRoom> getGameRooms();
+	
+	ClientPlayer getClientPlayer(String id);
+	GameRoom getGameRoom(String id);
+	
+	void addBindedClientPlayer(Client client, Player player);
+	void removeClientPlayer(String id);
+	void addGameRoom(GameRoom room);
+	void closeGameRoom(GameRoom room);
 }

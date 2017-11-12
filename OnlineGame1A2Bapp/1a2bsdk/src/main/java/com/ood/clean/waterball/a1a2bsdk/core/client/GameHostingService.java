@@ -13,7 +13,6 @@ import com.ood.clean.waterball.a1a2bsdk.core.EventBus;
 import javax.inject.Inject;
 
 import container.base.Client;
-import container.protocol.Protocol;
 
 import static com.ood.clean.waterball.a1a2bsdk.core.Secret.PORT;
 import static com.ood.clean.waterball.a1a2bsdk.core.Secret.SERVER_ADDRESS;
@@ -35,12 +34,6 @@ public class GameHostingService extends Service {
         Component.inject(this);
         new Thread(client).start();
         return START_STICKY;
-    }
-
-    public void send(Protocol protocol){
-        Log.d(TAG, "Sending protocol : " + protocol);
-        client.respond(protocol);
-        Log.d(TAG, "Sending completed.");
     }
 
     @Nullable

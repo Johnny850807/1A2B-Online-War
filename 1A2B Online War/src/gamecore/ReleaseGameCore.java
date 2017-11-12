@@ -3,6 +3,7 @@ package gamecore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,8 +14,9 @@ import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.RoomStatus;
-import gamecore.model.UserStatus;
+import gamecore.model.ClientStatus;
 import gamecore.rooms.RoomCore;
+import gamecore.rooms.games.Game;
 import gamefactory.GameFactory;
 
 /**
@@ -24,97 +26,98 @@ import gamefactory.GameFactory;
  */
 public class ReleaseGameCore implements GameCore{
 	private GameFactory factory;
-	private List<GameRoom> roomContainer = Collections.checkedList(new ArrayList<>(), GameRoom.class);
-	private Map<Player, Client> clientsMap = Collections.checkedMap(new HashMap<>(), Player.class, Client.class);
+	private Map<String, GameRoom> roomContainer = Collections.checkedMap(new LinkedHashMap<>(), String.class, GameRoom.class); // <id, GameRoom>
+	private Map<String, ClientPlayer> clientsMap = Collections.checkedMap(new HashMap<>(), String.class, ClientPlayer.class); // <id, ClientPlayer>
 	
 	public ReleaseGameCore(GameFactory factory) {
 		this.factory = factory;
 	}
 
 	@Override
-	public void notifyRoom(String roomId, Protocol response) {
-		GameRoom room = getRoom(roomId);
-		List<Player> users = room.getPlayers();
-		respondToServices(getUserServicesByUserList(users), response);
+	public void notifyAllClientPlayersInRoom(String roomId, Protocol response) {
+		GameRoom room = getGameRoom(roomId);
+		List<Player> players = room.getPlayers();
+		respondToClients(getClientsByUserList(players), response);
+	}
+
+	private List<ClientPlayer> getClientsByUserList(List<Player> players) {
+		return Linq.From(clientsMap.values()).where(c -> players.contains(c)).toList();
 	}
 
 	@Override
-	public void notifyUser(String userId, Protocol response) {
-		Player user = getUser(userId);
-		clientsMap.get(user).respond(response);
+	public void notifyClientPlayer(String userId, Protocol response) {
+		ClientPlayer clientPlayer = getClientPlayer(userId);
+		clientPlayer.respondToClient(response);
 	}
 
 	@Override
-	public void notifyUsers(UserStatus status, Protocol response) {
-		List<Player> users = getUsers(status);
-		respondToServices(getUserServicesByUserList(users), response);
+	public void notifyClientPlayers(ClientStatus status, Protocol response) {
+		List<ClientPlayer> clientPlayers = getClientPlayers(status);
+		respondToClients(clientPlayers, response);
 	}
 	
-	private void respondToServices(List<Client> userServices, Protocol response){
-		for (Client service : userServices)
-			service.respond(response);
-	}
-	
-	private List<Client> getUserServicesByUserList(List<Player> users){
-		List<Client> userServices = new ArrayList<>();
-		for (Player user : users)
-			userServices.add(clientsMap.get(user));
-		assert userServices.size() == users.size() : "The user amount should be equal to the service amount";
-		return userServices;
+	private void respondToClients(List<ClientPlayer> clientPlayers, Protocol response){
+		for (ClientPlayer clientPlayer : clientPlayers)
+			clientPlayer.respondToClient(response);
 	}
 
 	@Override
-	public List<Player> getUsers(UserStatus status) {
-		return Linq.From(clientsMap.keySet()).where(u->u.getUserStatus() == status).toList();
-	}
-
-	@Override
-	public List<GameRoom> getRooms(String name) {
-		return Linq.From(roomContainer).where(r->r.getName().equals(name)).toList();
-	}
-
-	@Override
-	public List<GameRoom> getRooms(RoomStatus status) {
-		return Linq.From(roomContainer).where(r->r.getRoomStatus() == status).toList();
-	}
-
-	@Override
-	public Player getUser(String id) {
-		return Linq.From(clientsMap.keySet()).single(u->u.getId().equals(id));
-	}
-
-	@Override
-	public GameRoom getRoom(String id) {
-		return Linq.From(roomContainer).single(u->u.getId().equals(id));
+	public List<ClientPlayer> getClientPlayers(ClientStatus status){
+		return Linq.From(clientsMap.values()).where(c->c.getPlayerStatus() == status).toList();
 	}
 	
 	@Override
-	public Map<Player, Client> getClientsMap() {
-		return clientsMap;
+	public List<ClientPlayer> getClientPlayers(){
+		return new ArrayList<>(clientsMap.values());
+	}
+	
+	@Override
+	public List<GameRoom> getGameRooms(RoomStatus status) {
+		return Linq.From(roomContainer.values()).where(r->r.getRoomStatus() == status).toList();
+	}
+	
+	@Override
+	public List<GameRoom> getGameRooms(){
+		return new ArrayList<>(roomContainer.values());
+	}
+	
+	@Override
+	public ClientPlayer getClientPlayer(String id){
+		return clientsMap.get(id);
 	}
 
 	@Override
-	public List<GameRoom> getRoomContainer() {
-		return roomContainer;
+	public GameRoom getGameRoom(String id) {
+		return roomContainer.get(id);
+	}
+	
+	@Override
+	public void addGameRoom(GameRoom room){
+		roomContainer.put(room.getId(), room);
+	}
+	
+	@Override
+	public void closeGameRoom(GameRoom room){
+		roomContainer.remove(room.getId());
+	}
+	
+	@Override
+	public void addBindedClientPlayer(Client client, Player player){
+		ClientPlayer clientPlayer = new ClientPlayer(client, player);
+		assert !clientsMap.containsKey(clientPlayer.getId()) : "The id is duplicated from the new binded clientplayer !";
+		clientsMap.put(clientPlayer.getId(), clientPlayer);
+		System.out.println("== Client added ==\n" + clientPlayer +"====================");
 	}
 
 	@Override
-	public void removeUser(Player user) {
-		clientsMap.remove(user);
-	}
-
-	@Override
-	public void removeClient(Client client) {
-		Set<Player> users = clientsMap.keySet();
-		
-		for (Player user : users)
-			if (clientsMap.get(user) == client)
-			{
-				System.out.println("Id:" + user.getId() + ", Name: " + user.getName() + " leave.");
-				clientsMap.remove(user);
-				return;
-			}
-		throw new IllegalArgumentException("The removed client is not contained in the clientsMap.");
+	public void removeClientPlayer(String id) {
+		if (clientsMap.containsKey(id))
+		{
+			ClientPlayer clientPlayer = clientsMap.remove(id);
+			System.out.println("== Client removed ==\n" + clientPlayer +"====================");
+		}
+		else
+			throw new IllegalStateException("The client wasn't signed.");
 	}
 
 }

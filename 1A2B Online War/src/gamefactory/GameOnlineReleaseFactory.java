@@ -22,8 +22,8 @@ public class GameOnlineReleaseFactory implements GameFactory{
 	}
 	
 	@Override
-	public Client createService(IO io) {
-		return new SocketClient(this, io);
+	public Client createService(IO io, String address) {
+		return new SocketClient(this, io, address);
 	}
 
 	@Override

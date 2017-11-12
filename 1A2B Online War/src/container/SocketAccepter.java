@@ -43,10 +43,11 @@ public class SocketAccepter implements Runnable
 		while(true)	
 		{
 			Socket clientSocket = server.accept();
+			System.out.println("Client connected: " + clientSocket.getLocalAddress().toString());
 			if(clientSocket.isConnected()) 
 			{
 				IO io = new SocketIO(clientSocket);
-				Client userService = gameFactory.createService(io);
+				Client userService = gameFactory.createService(io, clientSocket.getInetAddress().toString());
 				new Thread(userService).start();
 			}
 		}

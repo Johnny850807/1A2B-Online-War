@@ -8,7 +8,7 @@ import gamecore.GameCore;
 
 public interface GameFactory {
 	GameCore getGameCore();
-	Client createService(IO io);
+	Client createService(IO io, String address);
 	ProtocolFactory getProtocolFactory();
 	GameEventHandlerFactory getGameEventHandlerFactory();
 }

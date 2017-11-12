@@ -9,7 +9,7 @@ import java.net.UnknownHostException;
 public class SocketConnector {
 	private static final String LOCAL_IP = "127.0.0.1";
 	private static final String SERVER_IP = "35.194.206.10";
-	private static final String SELECTED_IP = SERVER_IP;
+	private static final String SELECTED_IP = LOCAL_IP;
 	private static SocketConnector instance = new SocketConnector();
 	private DataOutputStream dataOutputStream;
 	private DataInputStream dataInputStream;
