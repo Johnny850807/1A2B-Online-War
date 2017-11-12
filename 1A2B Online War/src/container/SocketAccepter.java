@@ -6,7 +6,6 @@ import java.net.Socket;
 
 import container.base.Client;
 import container.base.IO;
-import container.protocol.ProtocolFactory;
 import gamefactory.GameFactory;
 
 public class SocketAccepter implements Runnable 

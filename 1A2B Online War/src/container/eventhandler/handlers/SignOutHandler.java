@@ -6,9 +6,9 @@ import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.Player;
 
-public class SignOutEventHandler extends GsonEventHandler<Player, Player>{
+public class SignOutHandler extends GsonEventHandler<Player, Player>{
 
-	public SignOutEventHandler(Client client, Protocol request, GameCore gameCore, ProtocolFactory protocolFactory) {
+	public SignOutHandler(Client client, Protocol request, GameCore gameCore, ProtocolFactory protocolFactory) {
 		super(client, request, gameCore, protocolFactory);
 	}
 

@@ -37,11 +37,11 @@ public class ReleaseGameCore implements GameCore{
 	public void notifyAllClientPlayersInRoom(String roomId, Protocol response) {
 		GameRoom room = getGameRoom(roomId);
 		List<Player> players = room.getPlayers();
-		respondToClients(getClientsByUserList(players), response);
+		respondToClients(getClientsByPlayerList(players), response);
 	}
 
-	private List<ClientPlayer> getClientsByUserList(List<Player> players) {
-		return Linq.From(clientsMap.values()).where(c -> players.contains(c)).toList();
+	private List<ClientPlayer> getClientsByPlayerList(List<Player> players) {
+		return Linq.From(clientsMap.values()).where(c -> players.contains(c.getPlayer())).toList();
 	}
 
 	@Override

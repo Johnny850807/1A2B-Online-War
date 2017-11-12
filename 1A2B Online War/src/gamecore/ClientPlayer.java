@@ -52,6 +52,16 @@ public class ClientPlayer {
 	}
 	
 	@Override
+	public boolean equals(Object obj) {
+		return getId().equals(((ClientPlayer)obj).getId());
+	}
+	
+	@Override
+	public int hashCode() {
+		return player.hashCode();
+	}
+	
+	@Override
 	public String toString() {
 		return String.format("Client player info: id: %s, address:%s, player name:%s, player status:%s%n", 
 				getId(), getClientAddress(), getPlayerName(), getPlayerStatus().toString());

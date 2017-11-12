@@ -34,5 +34,13 @@ public class PlayerStatus {
 		this.ready = ready;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		return player.equals(((PlayerStatus)obj).getPlayer());
+	}
 	
+	@Override
+	public int hashCode() {
+		return player.hashCode();
+	}
 }

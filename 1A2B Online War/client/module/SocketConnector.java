@@ -42,6 +42,7 @@ public class SocketConnector {
 						String message = dataInputStream.readUTF();
 						System.out.println("Receive : " + message);
 						callback.onReceive(message, requestCode);
+						requestCode = 1000; //reset
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

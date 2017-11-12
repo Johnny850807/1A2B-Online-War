@@ -32,6 +32,6 @@ public class Player extends Entity{
 	
 	@Override
 	public String toString() {
-		return "User: " + name + ", Status: " + userStatus;
+		return "Player: " + name + ", Status: " + userStatus;
 	}
 }
