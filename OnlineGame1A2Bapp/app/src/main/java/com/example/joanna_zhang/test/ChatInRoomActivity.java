@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.joanna_zhang.test.Mock.MockPlayerListFactory;
 
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void init() {
-        playerList = new MockPlayerListFactory().createPlayerList();
+        //playerList = new MockPlayerListFactory().createPlayerList();
     }
 
     private void setUpPlayerListView() {

@@ -33,5 +33,5 @@
     </array>
     <string name="title_activity_chat_window_test">ChatWindowTest</string>
     <string name="game_start">開始遊戲</string>
-
+    <string name="setAnswerFrist">請先設定答案Please input the answer frist.</string>
 </resources>
