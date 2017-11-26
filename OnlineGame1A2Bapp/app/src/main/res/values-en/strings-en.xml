@@ -4,7 +4,7 @@
     <string name="login">Login</string>
     <string name="autoLogin">AutoLogin</string>
     <string name="inputName">Input your name</string>
-    <string name="serverStatus">Status</string>
+    <string name="serverStatus" formatted="false">Server status: % room, % people online</string>
     <string name="signInFailedMessage">Sign In Failed.</string>
     <string name="signInWelcomeMessage">Welcome Back!!</string>
     <string name="errorMessage">Error Message</string>
@@ -22,6 +22,9 @@
     <string name="create_room">Create Room</string>
     <string name="duel">Duel</string>
     <string name="fight">Fight</string>
+    <string name="inputNumber">Input Number</string>
+    <string name="inputMessage">Input Message</string>
+    <string name="inputAnswer">Input Answer</string>
     <string name="back">Back</string>
     <string name="enter">Enter</string>
     <array name="roomMode">
@@ -29,4 +32,7 @@
         <item>Fight</item>
         <item>Duel</item>
     </array>
+    <string name="title_activity_chat_window_test">ChatWindowTest</string>
+    <string name="game_start">Game Start</string>
+    <string name="setAnswerFrist">Please input the answer frist.</string>
 </resources>

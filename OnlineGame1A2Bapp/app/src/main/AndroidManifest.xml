@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.joanna_zhang.test">
 
-    <uses-permission android:name="android.permission.BLUETOOTH" />
     <application
         android:name=".MyApplication"
         android:allowBackup="true"

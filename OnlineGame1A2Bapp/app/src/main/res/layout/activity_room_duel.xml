@@ -26,16 +26,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="name" />
+                android:layout_margin="4dp"
+                android:textSize="18sp"/>
 
             <TextView
                 android:id="@+id/p1AnswerTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100sp"
+                android:layout_height="26sp"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:background="@drawable/guessnumber_textview_border"
                 android:hint="@string/inputAnswer"
-                android:padding="4dp" />
+                android:textSize="16sp"
+                android:padding="4dp"/>
 
             <ListView
                 android:id="@+id/p1ResultLst"
@@ -55,15 +58,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="name" />
+                android:layout_margin="4dp"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/p2AnswerTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100sp"
+                android:layout_height="26sp"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:background="@drawable/guessnumber_textview_border"
-                android:hint="@string/inputAnswer"
+                android:hint="****"
                 android:padding="4dp" />
 
             <ListView
@@ -75,14 +80,16 @@
 
     </LinearLayout>
 
-    <EditText
+    <Button
+        android:id="@+id/inputNumberEd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
-        android:enabled="false"
+        android:gravity="fill"
+        android:background="@android:color/transparent"
         android:hint="@string/inputNumber"
-        android:padding="6dp"
-        android:textSize="20sp" />
+        android:padding="4dp"
+        android:textSize="16sp"
+        android:onClick="inputNumberOnClick"/>
 
     <include
         android:id="@+id/chatwindowLst"

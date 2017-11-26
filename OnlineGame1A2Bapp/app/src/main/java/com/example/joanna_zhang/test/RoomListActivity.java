@@ -163,8 +163,20 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     public void fastJoinRoomBtnOnClick(View view) {
-        // Todo
+        int roomAmount = roomList.size();
+        int randomNumber = (int) (Math.random() * roomAmount);
+        enterGameRoom(randomNumber);
     }
+
+    private void enterGameRoom(int position) {
+        GameMode gameMode = roomListOfQuery.get(position).getGameMode();
+        Player player = roomListOfQuery.get(position).getHost();
+        Intent enterToGameRoom = new Intent(this, ChatInRoomActivity.class);
+        enterToGameRoom.putExtra("roomGameMode", gameMode);
+        enterToGameRoom.putExtra("roomHost", player);
+        startActivity(enterToGameRoom);
+    }
+
 
     public void searchBtnOnClick(View view) {
         enableLoadingRoomListAnimation = true;
@@ -173,12 +185,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        GameMode gameMode = roomListOfQuery.get(position).getGameMode();
-        Player player = roomListOfQuery.get(position).getHost();
-        Intent enterToGameRoom = new Intent(this, ChatInRoomActivity.class);
-        enterToGameRoom.putExtra("roomGameMode", gameMode);
-        enterToGameRoom.putExtra("roomHost", player);
-        startActivity(enterToGameRoom);
+        enterGameRoom(position);
     }
 
     @Override
@@ -293,7 +300,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onGetRoomList(List<GameRoom> gameRooms) {
-
         updateRoomList(gameRooms);
     }
 
