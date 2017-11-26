@@ -6,16 +6,17 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
+import com.google.gson.Gson;
 
 import Linq.Linq;
 import container.base.Client;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
-import gamecore.model.RoomStatus;
 import gamecore.model.ClientStatus;
-import gamecore.rooms.RoomCore;
+import gamecore.model.RequestStatus;
+import gamecore.model.RoomStatus;
 import gamecore.rooms.games.Game;
 import gamefactory.GameFactory;
 
@@ -26,11 +27,14 @@ import gamefactory.GameFactory;
  */
 public class ReleaseGameCore implements GameCore{
 	private GameFactory factory;
+	private GameBinder gameBinder;
+	private Gson gson = new Gson();
 	private Map<String, GameRoom> roomContainer = Collections.checkedMap(new LinkedHashMap<>(), String.class, GameRoom.class); // <id, GameRoom>
 	private Map<String, ClientPlayer> clientsMap = Collections.checkedMap(new HashMap<>(), String.class, ClientPlayer.class); // <id, ClientPlayer>
 	
 	public ReleaseGameCore(GameFactory factory) {
 		this.factory = factory;
+		this.gameBinder = factory.getGameBinder();
 	}
 
 	@Override
@@ -115,9 +119,30 @@ public class ReleaseGameCore implements GameCore{
 		{
 			ClientPlayer clientPlayer = clientsMap.remove(id);
 			System.out.println("== Client removed ==\n" + clientPlayer +"====================");
+			notifyEveryoneThePlayerLeft(clientPlayer.getPlayer());
 		}
 		else
 			throw new IllegalStateException("The client wasn't signed.");
+	}
+	
+	private void notifyEveryoneThePlayerLeft(Player player){
+		Protocol protocol = factory.getProtocolFactory().createProtocol("PlayerLeft", RequestStatus.success.toString(), gson.toJson(player));
+		for (GameRoom gameRoom : roomContainer.values())
+			if (gameRoom.containsPlayer(player))
+				notifyAllClientPlayersInRoom(gameRoom.getId(), protocol);
+	}
+
+	@Override
+	public Game getGame(String gameRoomId) {
+		return gameBinder.getBindedGame(gameRoomId);
+	}
+
+
+	@Override
+	public Game luanchGame(GameRoom gameRoom) {
+		Game game = gameBinder.bindGame(gameRoom);
+		gameRoom.setRoomStatus(RoomStatus.gamestarted);
+		return game;
 	}
 
 }

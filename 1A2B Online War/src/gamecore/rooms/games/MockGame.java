@@ -1,11 +1,12 @@
 package gamecore.rooms.games;
 
+import gamecore.model.GameMode;
+
 public class MockGame extends Game{
 
-	@Override
-	public String getData() {
-		// TODO Auto-generated method stub
-		return null;
+	public MockGame(GameMode gameMode) {
+		super(gameMode);
 	}
+
 
 }

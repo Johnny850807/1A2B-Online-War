@@ -1,11 +1,13 @@
 package gamecore.rooms.games;
 
+import gamecore.model.GameMode;
+
 public class GameGroup1A2B extends Game{
 
-	@Override
-	public String getData() {
-		// TODO Auto-generated method stub
-		return null;
+	public GameGroup1A2B(GameMode gameMode) {
+		super(gameMode);
 	}
+
+
 
 }

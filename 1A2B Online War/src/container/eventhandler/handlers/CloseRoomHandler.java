@@ -28,7 +28,7 @@ public class CloseRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
-		gameCore().notifyClientPlayers(ClientStatus.SignedIn, responseProtocol);
+		gameCore().notifyClientPlayers(ClientStatus.signedIn, responseProtocol);
 	}
 
 }

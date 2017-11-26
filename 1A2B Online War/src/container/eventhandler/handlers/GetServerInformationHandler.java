@@ -1,7 +1,6 @@
 package container.eventhandler.handlers;
 
 import java.util.List;
-import java.util.Set;
 
 import container.base.Client;
 import container.protocol.Protocol;
@@ -9,9 +8,7 @@ import container.protocol.ProtocolFactory;
 import gamecore.ClientPlayer;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
-import gamecore.entity.Player;
 import gamecore.model.ServerInformation;
-import gamecore.rooms.RoomCore;
 
 public class GetServerInformationHandler extends GsonEventHandler<Void, ServerInformation>{
 
