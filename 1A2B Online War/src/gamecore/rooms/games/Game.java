@@ -3,15 +3,16 @@ package gamecore.rooms.games;
 import gamecore.entity.GameRoom;
 import gamecore.model.GameMode;
 import gamecore.model.IGameMode;
+import gamecore.model.gamemodels.GameModel;
 
 public abstract class Game implements IGameMode{
+	private GameModel gameModel;
 	private GameRoom gameRoom;
 	private GameMode gameMode;
 	
 	public Game(GameMode gameMode) {
 		this.gameMode = gameMode;
 	}
-	
 
 	public GameRoom getGameRoom() {
 		return gameRoom;
