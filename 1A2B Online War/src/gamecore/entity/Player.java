@@ -1,13 +1,13 @@
 package gamecore.entity;
 
-import gamecore.model.UserStatus;
+import gamecore.model.ClientStatus;
 
 /**
  * @author AndroidWork
  * Each Player a Online User contains a status and a name.
  */
 public class Player extends Entity{
-	private UserStatus userStatus = null;
+	private ClientStatus userStatus = null;
 	private String name;
 	
 	public Player(String name) {
@@ -22,16 +22,16 @@ public class Player extends Entity{
 		this.name = name;
 	}
 
-	public UserStatus getUserStatus() {
+	public ClientStatus getUserStatus() {
 		return userStatus;
 	}
 
-	public void setUserStatus(UserStatus userStatus) {
+	public void setUserStatus(ClientStatus userStatus) {
 		this.userStatus = userStatus;
 	}
 	
 	@Override
 	public String toString() {
-		return "User: " + name + ", Status: " + userStatus;
+		return "Player: " + name + ", Status: " + userStatus;
 	}
 }

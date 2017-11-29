@@ -21,18 +21,20 @@ import java.util.Date;
 import java.util.List;
 
 import gamecore.entity.ChatMessage;
+import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 
 public class ChatWindowView implements View.OnClickListener{
 
     private Activity activity;
+    private GameRoom gameRoom;
     private EditText inputMessageEdt;
     private ListView chatWindowLst;
     private ImageButton sendMessageImgBtn;
     private List<ChatMessage> chatMessages = new ArrayList<>();
     private List<OnClickListener> onClickListeners = new ArrayList<>();
 
-    private ChatWindowView(Activity activity) {
+    private ChatWindowView(Activity activity, GameRoom gameRoom) {
         this.activity = activity;
         inputMessageEdt = activity.findViewById(R.id.inputChattingTxt);
         chatWindowLst = activity.findViewById(R.id.chatwindowLst);
@@ -51,7 +53,8 @@ public class ChatWindowView implements View.OnClickListener{
     }
 
     private void sendMessage(Player poster, String content) {
-        ChatMessage chatMessage = new ChatMessage(poster, content);
+        //todo 請修正 chattmessage的建構子多了 gameroom 參數
+        ChatMessage chatMessage = new ChatMessage(gameRoom, poster, content);
         update(chatMessage);
     }
 
@@ -74,8 +77,8 @@ public class ChatWindowView implements View.OnClickListener{
 
         private ChatWindowView chatWindowView;
 
-        public Builder(Activity activity) {
-            chatWindowView = new ChatWindowView(activity);
+        public Builder(Activity activity, GameRoom gameRoom) {
+            chatWindowView = new ChatWindowView(activity, gameRoom);
         }
 
         public Builder setBackgroundColor(int id) {

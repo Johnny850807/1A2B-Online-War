@@ -3,6 +3,7 @@ package container;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 
 import com.google.gson.Gson;
 
@@ -13,20 +14,25 @@ import container.eventhandler.GameEventHandlerFactory;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
+import gamecore.entity.Entity;
 import gamecore.entity.Player;
 import gamefactory.GameFactory;
 
-public class SocketClient implements Client{
+public class SocketClient extends Entity implements Client{
 	private GameFactory gameFactory;
 	private GameEventHandlerFactory gameEventHandlerFactory;
 	private ProtocolFactory protocolFactory;
 	private GameCore gameCore;
 	
+	private String address;
+	private IO io;
 	private DataInputStream dataInput;
 	private DataOutputStream dataOutput;
 
-	public SocketClient(GameFactory factory, IO io) {
+	public SocketClient(GameFactory factory, IO io, String address) {
 		try {
+			this.initId(); 
+			this.address = address;
 			initProperties(factory, io);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -82,7 +88,16 @@ public class SocketClient implements Client{
 	}
 	
 	private void askGamecoreToUnregisterTheClient(){
-		gameCore.removeClient(this);
+		try{
+			gameCore.removeClientPlayer(getId());
+		}catch (IllegalStateException e) {
+			System.out.println("Non-Signed In Client disconnects, id: " + getId() + ", address: " + getAddress());
+		}
+	}
+
+	@Override
+	public String getAddress() {
+		return address;
 	}
 
 }

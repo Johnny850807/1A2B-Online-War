@@ -6,7 +6,7 @@ import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.Player;
 import gamecore.model.RequestStatus;
-import gamecore.model.UserStatus;
+import gamecore.model.ClientStatus;
 
 public class SignInHandler extends GsonEventHandler<Player, Player>{
 
@@ -20,14 +20,14 @@ public class SignInHandler extends GsonEventHandler<Player, Player>{
 	}
 
 	@Override
-	protected Response onHandling(Player data) {
-		String name = data.getName();
+	protected Response onHandling(Player player) {
+		String name = player.getName();
 		if (name == null || name.length() == 0 || name.length() > 6)
 			return error(100, new IllegalArgumentException("The user name's length cannot be out of the range (1~6)."));
-		data.initId();
-		data.setUserStatus(UserStatus.SignedIn);
-		gameCore().getClientsMap().put(data, client());
-		return success(data);
+		player.setId(client().getId()); // set the id of the player's corresponding to the socket's
+		player.setUserStatus(ClientStatus.signedIn);
+		gameCore().addBindedClientPlayer(client(), player);
+		return success(player);
 	}
 
 	@Override

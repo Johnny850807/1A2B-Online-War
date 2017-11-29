@@ -10,6 +10,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -24,6 +25,7 @@ import static com.ood.clean.waterball.a1a2bsdk.core.Secret.SERVER_ADDRESS;
 public class ClientSocket implements Client{
     private @Inject ProtocolFactory protocolFactory;
     private @Inject EventBus eventBus;
+    private String id;
     private ThreadExecutor threadExecutor;
     private DataOutputStream outputStream;
     private DataInputStream inputStream;
@@ -31,6 +33,7 @@ public class ClientSocket implements Client{
     private int port;
 
     public ClientSocket(ThreadExecutor threadExecutor){
+        this.id = UUID.randomUUID().toString();
         this.threadExecutor = threadExecutor;
         this.address = SERVER_ADDRESS;
         this.port = PORT;
@@ -82,6 +85,10 @@ public class ClientSocket implements Client{
         });
     }
 
+    @Override
+    public String getId() {
+        return id;
+    }
 
     @Override
     public void disconnect() throws Exception {

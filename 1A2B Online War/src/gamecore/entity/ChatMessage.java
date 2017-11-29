@@ -3,25 +3,35 @@ package gamecore.entity;
 
 import java.util.Date;
 
+import gamecore.rooms.games.Game;
+
 /**
  * @author AndroidWork
  * ChatMessages in the chat.
  */
 public class ChatMessage extends Entity {
+	private GameRoom gameRoom;
     private Player poster;
     private String content;
     private Date postDate = new Date();
 
-    public ChatMessage(Player poster, String content) {
+    public ChatMessage(GameRoom gameRoom, Player poster, String content) {
+    	this.gameRoom = gameRoom;
         this.poster = poster;
         this.content = content;
     }
-
-    public ChatMessage(Player poster, String content, Date postDate) {
-        this.poster = poster;
-        this.content = content;
-        this.postDate = postDate;
+    
+    public void setGameRoom(GameRoom gameRoom) {
+		this.gameRoom = gameRoom;
+	}
+    
+    public String getGameRoomId(){
+    	return gameRoom.getId();
     }
+    
+    public GameRoom getGameRoom() {
+		return gameRoom;
+	}
 
     public Player getPoster() {
         return poster;
@@ -49,6 +59,6 @@ public class ChatMessage extends Entity {
 
     @Override
     public String toString() {
-        return poster.getName() + ": " + content;
+        return poster.getName() + ": " + content + "   " + postDate.toString();
     }
 }

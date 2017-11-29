@@ -19,13 +19,23 @@ public class GameRoom extends Entity{
 	private RoomStatus roomStatus = RoomStatus.waiting;
 	private GameMode gameMode;
 	private List<ChatMessage> chatMessageList = Collections.checkedList(new ArrayList<>(), ChatMessage.class);
-	private Map<Player, PlayerStatus> playerstatusMap = Collections.checkedMap(new LinkedHashMap<>(), Player.class, PlayerStatus.class);
+	
+	/**
+	 * All the guest player status in the room, the host's is not included.
+	 */
+	private List<PlayerStatus> playerStatusList =  Collections.checkedList(new ArrayList<>(), PlayerStatus.class);
 	private String name;
+	
 	
 	public GameRoom(GameMode gameMode, String name, Player host) {
 		this.gameMode = gameMode;
 		this.name = name;
 		this.host = host;
+	}
+	
+	public void addChatMessage(ChatMessage chatMessage){
+		assert chatMessage.getId() != null : "ChatMessage's id should be initialized.";
+		chatMessageList.add(chatMessage);
 	}
 	
 	public GameMode getGameMode() {
@@ -57,11 +67,18 @@ public class GameRoom extends Entity{
 	}
 
 	public List<PlayerStatus> getPlayerStatus() {
-		return new ArrayList<>(playerstatusMap.values());
+		return playerStatusList;
 	}
 	
+	/**
+	 * @return all the players including the host at the first position.
+	 */
 	public List<Player> getPlayers(){
-		return new ArrayList<>(playerstatusMap.keySet());
+		List<Player> players = new ArrayList<>();
+		players.add(host);
+		for (PlayerStatus status : playerStatusList)
+			players.add(status.getPlayer());
+		return players;
 	}
 	
 	public void sendMessage(ChatMessage chatMessage){
@@ -69,13 +86,17 @@ public class GameRoom extends Entity{
 	}
 
 	public void addPlayer(Player player){
-		if (playerstatusMap.containsKey(player))
+		PlayerStatus playerStatus = new PlayerStatus(player);
+		if (host.equals(player) || playerStatusList.contains(playerStatus))
 			throw new IllegalStateException("Duplicated player added into the status list.");
-		playerstatusMap.put(player, new PlayerStatus(player));
+		playerStatusList.add(playerStatus);
 	}
 	
 	public void removePlayer(Player player){
-		playerstatusMap.remove(player);
+		if (ifPlayerInStatusList(player))
+			playerStatusList.remove(player);
+		else 
+			throw new IllegalArgumentException("The removed player doesn't exist in the room !");
 	}
 
 	public void setName(String name) {
@@ -90,9 +111,20 @@ public class GameRoom extends Entity{
 		return gameMode.getMinPlayerAmount();
 	}
 	
+	public boolean containsPlayer(Player player){
+		return host.equals(player) || ifPlayerInStatusList(player);
+	}
+	
+	public boolean ifPlayerInStatusList(Player player){
+		for (PlayerStatus playerStatus : playerStatusList)
+			if (playerStatus.getPlayer().equals(player))
+				return true;
+		return false;
+	}
+	
 	@Override
 	public String toString() {
-		return String.format("Room name: %s, GameMode: %s, Host: %s, Players: %d/%d, Status: %s", 
-				name, gameMode.toString(), host.getName(), getPlayers().size(), gameMode.getMaxPlayerAmount(), roomStatus.toString());
+		return String.format("Room id: %s, name: %s, GameMode: %s, Host: %s, Players: %d/%d, Status: %s", 
+				id, name, gameMode.toString(), host.getName(), getPlayers().size(), gameMode.getMaxPlayerAmount(), roomStatus.toString());
 	}
 }

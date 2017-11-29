@@ -50,7 +50,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private ListView roomListView;
     private Spinner roomModeSpn;
     private RoomListModule roomListModule;
-    private BaseAdapter adapter = new MyAdapter();
+    private BaseAdapter adapter;
 
 
     @Override
@@ -93,7 +93,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private void setupViews() {
         findViews();
         setUpSpinner();
-        roomListView.setAdapter(adapter);
         updateRoomList(roomList);
         roomListView.setDivider(getResources().getDrawable(R.drawable.transperent_color));
     }
@@ -134,8 +133,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     public void updateRoomList(List<GameRoom> list) {
-        roomList = list;
-        adapter.notifyDataSetChanged();
+        adapter = new MyAdapter(list);
+        roomListView.setAdapter(adapter);
     }
 
     public void createRoomBtnOnClick(View view) {
@@ -165,15 +164,12 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     public void fastJoinRoomBtnOnClick(View view) {
         int roomAmount = roomList.size();
         int randomNumber = (int) (Math.random() * roomAmount);
-        enterGameRoom(randomNumber);
+        roomListModule.joinRoom(roomList.get(randomNumber));
     }
 
-    private void enterGameRoom(int position) {
-        GameMode gameMode = roomListOfQuery.get(position).getGameMode();
-        Player player = roomListOfQuery.get(position).getHost();
+    private void enterGameRoom(GameRoom gameRoom) {
         Intent enterToGameRoom = new Intent(this, ChatInRoomActivity.class);
-        enterToGameRoom.putExtra("roomGameMode", gameMode);
-        enterToGameRoom.putExtra("roomHost", player);
+        enterToGameRoom.putExtra("game room", gameRoom);
         startActivity(enterToGameRoom);
     }
 
@@ -185,7 +181,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        enterGameRoom(position);
+        roomListModule.joinRoom(roomListOfQuery.get(position));
     }
 
     @Override
@@ -194,6 +190,12 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     public class MyAdapter extends BaseAdapter {
+
+        private List<GameRoom> roomList;
+
+        MyAdapter(List<GameRoom> roomList) {
+            this.roomList = roomList;
+        }
 
         @Override
         public int getCount() {
@@ -300,7 +302,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onGetRoomList(List<GameRoom> gameRooms) {
-        updateRoomList(gameRooms);
+        roomList = gameRooms;
+        updateRoomList(roomList);
     }
 
     @Override
@@ -318,11 +321,15 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onRoomUpdated(GameRoom gameRoom) {
         //Todo 房間狀態變更
+        roomList.remove(gameRoom);
+        roomList.add(gameRoom);
+        updateRoomList(roomList);
     }
 
     @Override
     public void onJoinRoomSuccessfully(GameRoom gameRoom) {
         //Todo 進入房間聊天室
+        enterGameRoom(gameRoom);
     }
 
 }

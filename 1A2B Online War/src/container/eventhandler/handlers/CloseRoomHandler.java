@@ -5,7 +5,7 @@ import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
-import gamecore.model.UserStatus;
+import gamecore.model.ClientStatus;
 
 public class CloseRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 
@@ -19,16 +19,16 @@ public class CloseRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 	}
 
 	@Override
-	protected Response onHandling(GameRoom data) {
-		if (data.getId() == null)
+	protected Response onHandling(GameRoom room) {
+		if (room.getId() == null)
 			return error(404, new IllegalArgumentException());
-		gameCore().getRoomContainer().remove(data);
-		return success(data);
+		gameCore().closeGameRoom(room);
+		return success(room);
 	}
 
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
-		gameCore().notifyUsers(UserStatus.SignedIn, responseProtocol);
+		gameCore().notifyClientPlayers(ClientStatus.signedIn, responseProtocol);
 	}
 
 }
