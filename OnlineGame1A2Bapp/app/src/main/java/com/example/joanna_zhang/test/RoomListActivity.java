@@ -289,7 +289,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     private void searchAndUpdateRoomList() {
         String searchTxt = searchEdt.getText().toString();
-        updateRoomList(getRoomsByKeyName(searchTxt));
+        roomListOfQuery = (searchTxt.isEmpty())? roomList : getRoomsByKeyName(searchTxt);
+        updateRoomList(roomListOfQuery);
     }
 
     private List<GameRoom> getRoomsByKeyName(String keyName) {
