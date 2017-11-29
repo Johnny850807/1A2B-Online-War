@@ -50,7 +50,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private ListView roomListView;
     private Spinner roomModeSpn;
     private RoomListModule roomListModule;
-    private BaseAdapter adapter = new MyAdapter();
+    private BaseAdapter adapter;
 
 
     @Override
@@ -93,7 +93,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private void setupViews() {
         findViews();
         setUpSpinner();
-        roomListView.setAdapter(adapter);
         updateRoomList(roomList);
         roomListView.setDivider(getResources().getDrawable(R.drawable.transperent_color));
     }
@@ -134,8 +133,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     public void updateRoomList(List<GameRoom> list) {
-        roomList = list;
-        adapter.notifyDataSetChanged();
+        adapter = new MyAdapter(list);
+        roomListView.setAdapter(adapter);
     }
 
     public void createRoomBtnOnClick(View view) {
@@ -192,6 +191,12 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     public class MyAdapter extends BaseAdapter {
+
+        private List<GameRoom> roomList;
+
+        MyAdapter(List<GameRoom> roomList) {
+            this.roomList = roomList;
+        }
 
         @Override
         public int getCount() {
@@ -298,7 +303,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onGetRoomList(List<GameRoom> gameRooms) {
-        updateRoomList(gameRooms);
+        roomList = gameRooms;
+        updateRoomList(roomList);
     }
 
     @Override
