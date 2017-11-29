@@ -4,8 +4,11 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/1a2bsdk/1a2bsdk.iml" filepath="$PROJECT_DIR$/1a2bsdk/1a2bsdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/1a2bsdk/1a2bsdk.iml" filepath="$PROJECT_DIR$/1a2bsdk/1a2bsdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/1a2bsdk/1a2bsdk.iml" filepath="$PROJECT_DIR$/1a2bsdk/1a2bsdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/OnlineGame1A2Bapp.iml" filepath="$PROJECT_DIR$/OnlineGame1A2Bapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/OnlineGame1A2Bapp.iml" filepath="$PROJECT_DIR$/OnlineGame1A2Bapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/OnlineGame1A2Bapp.iml" filepath="$PROJECT_DIR$/OnlineGame1A2Bapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

@@ -15,12 +15,14 @@ import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import java.util.List;
 
 import gamecore.entity.ChatMessage;
+import gamecore.entity.GameRoom;
 
 public class DuelActivity extends AppCompatActivity implements ChatWindowView.OnClickListener, InputNumberWindowView.OnClickListener{
 
 
     //private Duel1A2BGameModule duel1A2BGameModule;
     //private List<GuessRecord> p1ResultList, p2ResultList;
+    private GameRoom gameRoom;
     private ChatWindowView chatWindowView;
     private InputNumberWindowView inputNumberWindowView;
     private TextView p1NameTxt, p2NameTxt, p1AnswerTxt, p2AnswerTxt;
@@ -55,14 +57,14 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
                 .setPositiveButton("OK", null)
                 .show();
         new InputNumberWindowView.Builder(this)
-            .setOnEnterClickListener((number)->{
+            .setOnEnterClickListener((number)-> {
                 p1AnswerTxt.setText(number);
             })
             .build();
     }
 
     public void setupChatWindow() {
-        chatWindowView = new ChatWindowView.Builder(this)
+        chatWindowView = new ChatWindowView.Builder(this, gameRoom)
             .addOnSendMessageOnClickListener(this)
             .build();
     }

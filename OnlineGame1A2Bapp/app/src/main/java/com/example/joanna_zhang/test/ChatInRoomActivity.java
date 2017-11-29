@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import gamecore.entity.ChatMessage;
+import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.GameMode;
 
@@ -24,6 +25,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
     private Button gameStartBtn;
     private TextView gameModeTxt;
     private ListView chatRoomPlayerLst;
+    private GameRoom gameRoom;
     private GameMode gameMode;
     private Player roomHost;
     private List<Player> playerList;
@@ -53,8 +55,9 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setUpThisRoomInfo() {
-        gameMode = (GameMode) getIntent().getSerializableExtra("roomGameMode");
-        roomHost = (Player) getIntent().getSerializableExtra("roomHost");
+        gameRoom = (GameRoom) getIntent().getSerializableExtra("game room");
+        gameMode = gameRoom.getGameMode();
+        roomHost = gameRoom.getHost();
     }
 
     private void setUpGameModeTxt() {
@@ -63,7 +66,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setupChatWindow() {
-        chatWindowView = new ChatWindowView.Builder(this)
+        chatWindowView = new ChatWindowView.Builder(this, gameRoom)
                 .addOnSendMessageOnClickListener(this)
                 .build();
     }

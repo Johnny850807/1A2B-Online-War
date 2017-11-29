@@ -169,11 +169,9 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     private void enterGameRoom(int position) {
-        GameMode gameMode = roomListOfQuery.get(position).getGameMode();
-        Player player = roomListOfQuery.get(position).getHost();
+        GameRoom gameRoom = roomListOfQuery.get(position);
         Intent enterToGameRoom = new Intent(this, ChatInRoomActivity.class);
-        enterToGameRoom.putExtra("roomGameMode", gameMode);
-        enterToGameRoom.putExtra("roomHost", player);
+        enterToGameRoom.putExtra("game room", gameRoom);
         startActivity(enterToGameRoom);
     }
 
