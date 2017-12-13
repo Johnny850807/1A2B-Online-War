@@ -1,5 +1,7 @@
 package com.example.joanna_zhang.test;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -88,7 +90,9 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void gameStartonClick(View view) {
-
+        Intent intent = new Intent(this, gameMode == GameMode.GROUP1A2B ? GroupFightActivity.class : DuelActivity.class);
+        intent.putExtra("GameRoom", gameRoom);
+        startActivity(intent);
     }
 
     private class RoomPlayerList extends BaseAdapter {
