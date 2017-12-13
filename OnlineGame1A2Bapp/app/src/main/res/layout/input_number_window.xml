@@ -5,13 +5,22 @@
     android:background="#FFF"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/titleTxt"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/colorAccent"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:padding="4dp"/>
+
     <EditText
         android:id="@+id/inputNumberEd"
-        android:layout_width="159dp"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:enabled="false"
         android:gravity="center"
-        android:inputType="text"
+        android:inputType="number"
         android:maxLength="4"
         android:maxLines="1" />
 

@@ -17,7 +17,7 @@ import java.util.List;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 
-public class DuelActivity extends AppCompatActivity implements ChatWindowView.OnClickListener, InputNumberWindowView.OnClickListener{
+public class DuelActivity extends AppCompatActivity implements ChatWindowView.OnClickListener, InputNumberWindowView.OnClickListener {
 
 
     //private Duel1A2BGameModule duel1A2BGameModule;
@@ -52,27 +52,31 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
     }
 
     private void setupAnswer() {
+        new InputNumberWindowView.Builder(this)
+                .setOnEnterClickListener((number) -> {
+                    p1AnswerTxt.setText(number);
+                })
+                .setCanceledOnTouchOutside(false)
+                .setCancelable(false)
+                .setTitle("請設置答案")
+                .build();
         new AlertDialog.Builder(this)
                 .setMessage(R.string.setAnswerFrist)
                 .setPositiveButton("OK", null)
                 .show();
-        new InputNumberWindowView.Builder(this)
-            .setOnEnterClickListener((number)-> {
-                p1AnswerTxt.setText(number);
-            })
-            .build();
     }
 
     public void setupChatWindow() {
         chatWindowView = new ChatWindowView.Builder(this, gameRoom)
-            .addOnSendMessageOnClickListener(this)
-            .build();
+                .addOnSendMessageOnClickListener(this)
+                .build();
     }
 
     private void setupInputNumberWindowView() {
         inputNumberWindowView = new InputNumberWindowView.Builder(this)
-            .setOnEnterClickListener(this)
-            .build();
+                .setOnEnterClickListener(this)
+                .setTitle("請輸入答案")
+                .build();
     }
 /*
     public void updateResultList(List<GuessRecord> resultList, ListView resultListView) {

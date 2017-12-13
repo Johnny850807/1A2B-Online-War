@@ -61,7 +61,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setUpGameModeTxt() {
-        String gameModeName = gameMode.toString().contains("GROUP") ? getString(R.string.fight) : getString(R.string.duel);
+        String gameModeName = gameRoom.getGameMode().toString().contains("GROUP") ? getString(R.string.fight) : getString(R.string.duel);
         gameModeTxt.setText(gameModeName);
     }
 
@@ -84,6 +84,10 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(ChatMessage chatMessage) {
+
+    }
+
+    public void gameStartonClick(View view) {
 
     }
 

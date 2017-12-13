@@ -3,18 +3,23 @@ package com.example.joanna_zhang.test;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
+import android.support.v4.media.RatingCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
-public class InputNumberWindowView extends AlertDialog.Builder implements View.OnClickListener {
+public class InputNumberWindowView extends AlertDialog implements View.OnClickListener {
     private Context context;
+    private TextView titleTxt;
     private Button button1, button2, button3, button4, button5, button6, button7, button8, button9, button0, cancelBtn, confirmBtn;
     private EditText answerEd;
     private Dialog dialog;
     private OnClickListener OnClickListener;
+
 
     public InputNumberWindowView(Context context) {
         super(context);
@@ -26,9 +31,9 @@ public class InputNumberWindowView extends AlertDialog.Builder implements View.O
         dialog = new Dialog(context);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.input_number_window, null);
         dialog.setContentView(dialogView);
-        dialog.show();
         findAllViewById(dialogView);
         whenButtonOnClick();
+        dialog.show();
     }
 
     public void findAllViewById(View view) {
@@ -45,6 +50,7 @@ public class InputNumberWindowView extends AlertDialog.Builder implements View.O
         button0 = view.findViewById(R.id.button0);
         confirmBtn = view.findViewById(R.id.confirmBtn);
         answerEd = view.findViewById(R.id.inputNumberEd);
+        titleTxt = view.findViewById(R.id.titleTxt);
     }
 
     public void whenButtonOnClick() {
@@ -105,9 +111,19 @@ public class InputNumberWindowView extends AlertDialog.Builder implements View.O
             return this;
         }
 
-        public InputNumberWindowView show(){
-            final InputNumberWindowView dialog = new InputNumberWindowView(inputNumberWindowView.getContext());
-            return dialog;
+        public Builder setTitle(String title){
+            inputNumberWindowView.titleTxt.setText(title);
+            return this;
+        }
+
+        public Builder setCanceledOnTouchOutside(Boolean b){
+            inputNumberWindowView.setCanceledOnTouchOutside(b);
+            return this;
+        }
+
+        public Builder setCancelable(Boolean b){
+            inputNumberWindowView.setCancelable(b);
+            return this;
         }
 
         public InputNumberWindowView build() {
