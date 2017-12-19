@@ -53,7 +53,6 @@ public class ChatWindowView implements View.OnClickListener{
     }
 
     private void sendMessage(Player poster, String content) {
-        //todo 請修正 chattmessage的建構子多了 gameroom 參數
         ChatMessage chatMessage = new ChatMessage(gameRoom, poster, content);
         update(chatMessage);
     }

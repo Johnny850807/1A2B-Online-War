@@ -310,7 +310,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onNewRoom(GameRoom gameRoom) {
         roomList.add(gameRoom);
-        adapter.notifyDataSetChanged();
+        updateRoomList(roomList);
     }
 
     @Override
@@ -321,7 +321,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onRoomUpdated(GameRoom gameRoom) {
-        //Todo 房間狀態變更
         roomList.remove(gameRoom);
         roomList.add(gameRoom);
         updateRoomList(roomList);
@@ -329,7 +328,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onJoinRoomSuccessfully(GameRoom gameRoom) {
-        //Todo 進入房間聊天室
         enterGameRoom(gameRoom);
     }
 

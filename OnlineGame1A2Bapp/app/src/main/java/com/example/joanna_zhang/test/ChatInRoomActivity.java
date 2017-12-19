@@ -1,5 +1,7 @@
 package com.example.joanna_zhang.test;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -61,7 +63,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setUpGameModeTxt() {
-        String gameModeName = gameMode.toString().contains("GROUP") ? getString(R.string.fight) : getString(R.string.duel);
+        String gameModeName = gameRoom.getGameMode().toString().contains("GROUP") ? getString(R.string.fight) : getString(R.string.duel);
         gameModeTxt.setText(gameModeName);
     }
 
@@ -85,6 +87,12 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(ChatMessage chatMessage) {
 
+    }
+
+    public void gameStartonClick(View view) {
+        Intent intent = new Intent(this, gameMode == GameMode.GROUP1A2B ? GroupFightActivity.class : DuelActivity.class);
+        intent.putExtra("GameRoom", gameRoom);
+        startActivity(intent);
     }
 
     private class RoomPlayerList extends BaseAdapter {
