@@ -1,6 +1,5 @@
 package container.eventhandler;
 
-import container.eventhandler.GameEventHandler.Response;
 import container.protocol.Protocol;
 
 public interface EventHandler {

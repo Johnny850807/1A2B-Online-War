@@ -4,7 +4,7 @@ public final class A1B2NumberValidator {
 	private static final char UNASSIGNED = '-';
 	
 	/**
-	 * validate the number fit to the 1A2B guess or answer. 
+	 * validate the number if it's fit to the 1A2B guess or answer. 
 	 * @param number the number to be validated.
 	 * @throws NumberNotValidException if the number is not in 4 length, any number is not a digit or duplicated digit.
 	 */

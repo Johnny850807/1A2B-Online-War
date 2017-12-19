@@ -3,17 +3,22 @@ package gamecore.model.gamemodels.a1b2;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Duel1A2BPlayerBarModel {
 	private String name;
 	private String answer;
 	private List<GuessRecord> guessRecords = new ArrayList<>();
 	
+	public Duel1A2BPlayerBarModel(String playerName) {
+		this.name = playerName;
+	}
+
 	public String getName() {
 		return name;
 	}
 	
-	public void setName(String name) {
-		this.name = name;
+	public void setName(String playerName) {
+		this.name = playerName;
 	}
 	
 	public String getAnswer() {
@@ -27,9 +32,7 @@ public class Duel1A2BPlayerBarModel {
 	
 	public GuessResult guess(String guess) throws NumberNotValidException{
 		A1B2NumberValidator.validateNumber(guess);
-		GuessResult result = A1B2NumberValidator.getGuessResult(answer, guess);
-		addRecord(new GuessRecord(guess, result));
-		return result;
+		return A1B2NumberValidator.getGuessResult(answer, guess);
 	}
 	
 	public void addRecord(GuessRecord guessRecord) throws NumberNotValidException{
@@ -41,4 +44,7 @@ public class Duel1A2BPlayerBarModel {
 		return guessRecords.get(position);
 	}
 	
+	public List<GuessRecord> getGuessRecords() {
+		return guessRecords;
+	}
 }

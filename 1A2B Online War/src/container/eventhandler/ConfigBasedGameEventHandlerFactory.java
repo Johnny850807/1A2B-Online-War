@@ -29,7 +29,7 @@ import gamefactory.GameFactory;
 
 /**
  * @author Johnny85007
- * The factory which bind the request from the client to the correct handler by its name
+ * The factory which binds the request from the client to the correct handler by its name
  * written in the /config/eventhandler.config file.
  */
 public class ConfigBasedGameEventHandlerFactory implements GameEventHandlerFactory{
