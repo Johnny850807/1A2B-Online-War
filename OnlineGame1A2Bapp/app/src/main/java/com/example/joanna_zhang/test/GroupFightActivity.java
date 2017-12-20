@@ -2,6 +2,10 @@ package com.example.joanna_zhang.test;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -53,5 +57,31 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public void onEnterClick(String guessName) {
 
+    }
+
+    private class GuessResultAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return results.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            view = LayoutInflater.from(GroupFightActivity.this).inflate(android.R.layout.simple_list_item_1, viewGroup, false);
+
+            // TODO
+            return null;
+        }
     }
 }

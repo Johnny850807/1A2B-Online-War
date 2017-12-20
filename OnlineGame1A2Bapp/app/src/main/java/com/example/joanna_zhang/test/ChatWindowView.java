@@ -42,6 +42,14 @@ public class ChatWindowView implements View.OnClickListener{
         sendMessageImgBtn.setOnClickListener(this);
     }
 
+    public void onResume() {
+        // TODO 註冊
+    }
+
+    public void onStop() {
+        // TODO 註冊
+    }
+
     private void update(ChatMessage chatMessage) {
         for (OnClickListener onClickListener : onClickListeners)
             onClickListener.onClick(chatMessage);
