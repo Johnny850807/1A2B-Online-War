@@ -43,7 +43,18 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
         setUpGameModeTxt();
         init();
         setUpPlayerListView();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Todo 註冊chatWindow
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //Todo 取消註冊chatWindow
     }
 
     private void init() {
