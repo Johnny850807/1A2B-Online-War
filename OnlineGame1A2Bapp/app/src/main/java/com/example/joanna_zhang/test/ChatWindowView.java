@@ -43,16 +43,16 @@ public class ChatWindowView implements View.OnClickListener{
     }
 
     public void onResume() {
-        // TODO 註冊
+        // TODO 跟伺服器註冊
     }
 
     public void onStop() {
-        // TODO 註冊
+        // TODO 取消註冊
     }
 
     private void update(ChatMessage chatMessage) {
         for (OnClickListener onClickListener : onClickListeners)
-            onClickListener.onClick(chatMessage);
+            onClickListener.onChatMessageUpdate(chatMessage);
 
         chatMessages.add(chatMessage);
         ChatWindowAdapter adapter = new ChatWindowAdapter();
@@ -106,7 +106,7 @@ public class ChatWindowView implements View.OnClickListener{
     }
 
     public interface OnClickListener {
-        void onClick(ChatMessage chatMessage);
+        void onChatMessageUpdate(ChatMessage chatMessage);
     }
 
     private class ChatWindowAdapter extends BaseAdapter {

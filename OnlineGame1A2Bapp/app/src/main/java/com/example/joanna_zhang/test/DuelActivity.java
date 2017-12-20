@@ -88,7 +88,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
     }*/
 
     @Override
-    public void onClick(ChatMessage chatMessage) {
+    public void onChatMessageUpdate(ChatMessage chatMessage) {
 
     }
 

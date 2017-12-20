@@ -19,21 +19,21 @@
             android:layout_weight="0.25"
             android:orientation="vertical">
 
-            <TextView
+            <TextView android:id="@+id/p1NameTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:hint="123" />
 
-            <TextView
+            <TextView android:id="@+id/p2NameTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:hint="123" />
 
-            <TextView
+            <TextView android:id="@+id/p3NameTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -44,7 +44,7 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:orientation="vertical">
 
@@ -52,18 +52,19 @@
                 android:id="@+id/resultLst"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_weight="1.02" />
 
-            <EditText android:id="@+id/inputNumberEd"
+            <EditText
+                android:id="@+id/inputNumberEd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:background="#fff"
                 android:enabled="false"
                 android:hint="@string/inputNumber"
+                android:inputType="number"
                 android:padding="6dp"
-                android:textSize="20sp"
-                android:inputType="number" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -72,21 +73,21 @@
             android:layout_weight="0.25"
             android:orientation="vertical">
 
-            <TextView
+            <TextView android:id="@+id/p4NameTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:hint="123" />
 
-            <TextView
+            <TextView android:id="@+id/p5NameTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:hint="123" />
 
-            <TextView
+            <TextView android:id="@+id/p6NameTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

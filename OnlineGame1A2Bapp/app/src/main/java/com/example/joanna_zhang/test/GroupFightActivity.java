@@ -23,7 +23,7 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
     private GameRoom gameRoom;
     private ChatWindowView chatWindowView;
     private InputNumberWindowView inputNumberWindowView;
-    private TextView p1NameTxt, p2NameTxt, p1AnswerTxt, p2AnswerTxt;
+    private TextView p1NameTxt, p2NameTxt, p3NameTxt, p4NameTxt, p5NameTxt, p6NameTxt;
     private ListView p1ResultListView, p2ResultListView;
     private List<String> results;
 
@@ -34,7 +34,11 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
 
         CoreGameServer server = CoreGameServer.getInstance();
         setupChatWindow();
-        setupInputNumberWindowView();
+        findViews();
+    }
+
+    private void findViews() {
+        p1NameTxt = (TextView) findViewById(R.id.p1NameTxt);
     }
 
     public void setupChatWindow() {
@@ -50,7 +54,7 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
     }
 
     @Override
-    public void onClick(ChatMessage chatMessage) {
+    public void onChatMessageUpdate(ChatMessage chatMessage) {
 
     }
 

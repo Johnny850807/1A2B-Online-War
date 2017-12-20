@@ -96,7 +96,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    public void onClick(ChatMessage chatMessage) {
+    public void onChatMessageUpdate(ChatMessage chatMessage) {
 
     }
 
