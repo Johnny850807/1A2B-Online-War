@@ -21,7 +21,7 @@ import gamecore.entity.Player;
 import gamecore.model.GameMode;
 
 
-public class ChatInRoomActivity extends AppCompatActivity implements View.OnClickListener, ChatWindowView.OnClickListener {
+public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowView.OnClickListener {
 
     private ChatWindowView chatWindowView;
     private Button gameStartBtn;
@@ -90,17 +90,13 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
         chatRoomPlayerLst = (ListView) findViewById(R.id.chatRoomPlayersLst);
     }
 
-    @Override
-    public void onClick(View view) {
-
-    }
 
     @Override
     public void onChatMessageUpdate(ChatMessage chatMessage) {
-
+        // 對話窗更新
     }
 
-    public void gameStartonClick(View view) {
+    public void gameStartButtonOnClick(View view) {
         Intent intent = new Intent(this, gameMode == GameMode.GROUP1A2B ? GroupFightActivity.class : DuelActivity.class);
         intent.putExtra("GameRoom", gameRoom);
         startActivity(intent);
