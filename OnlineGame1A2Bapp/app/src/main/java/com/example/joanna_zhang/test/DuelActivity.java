@@ -58,11 +58,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
                 })
                 .setCanceledOnTouchOutside(false)
                 .setCancelable(false)
-                .setTitle("請設置答案")
-                .build();
-        new AlertDialog.Builder(this)
-                .setMessage(R.string.setAnswerFrist)
-                .setPositiveButton("OK", null)
+                .setTitle(getString(R.string.setAnswerFrist))
                 .show();
     }
 
@@ -76,7 +72,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
         inputNumberWindowView = new InputNumberWindowView.Builder(this)
                 .setOnEnterClickListener(this)
                 .setTitle("請輸入答案")
-                .build();
+                .show();
     }
 /*
     public void updateResultList(List<GuessRecord> resultList, ListView resultListView) {
