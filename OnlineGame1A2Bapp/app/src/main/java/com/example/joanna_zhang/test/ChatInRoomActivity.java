@@ -46,15 +46,15 @@ public class ChatInRoomActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        //Todo 註冊chatWindow
+    protected void onStart() {
+        super.onStart();
+        chatWindowView.onResume();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        //Todo 取消註冊chatWindow
+        chatWindowView.onStop();
     }
 
     private void init() {
