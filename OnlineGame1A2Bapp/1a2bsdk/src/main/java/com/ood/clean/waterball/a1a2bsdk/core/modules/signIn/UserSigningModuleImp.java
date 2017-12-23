@@ -13,6 +13,10 @@ import gamecore.entity.Player;
 import gamecore.model.RequestStatus;
 import gamecore.model.ServerInformation;
 
+import static container.Constants.Events.Signing.GETINFO;
+import static container.Constants.Events.Signing.SIGNIN;
+import static container.Constants.Events.Signing.SIGNOUT;
+
 
 public class UserSigningModuleImp extends AbstractGameModule implements UserSigningModule{
     private Gson gson = new Gson();
@@ -38,7 +42,7 @@ public class UserSigningModuleImp extends AbstractGameModule implements UserSign
     @Override
     public void signIn(@NonNull String name) {
         Player player = new Player(name);
-        Protocol protocol = protocolFactory.createProtocol("SignIn", RequestStatus.request.toString(), gson.toJson(player));
+        Protocol protocol = protocolFactory.createProtocol(SIGNIN, RequestStatus.request.toString(), gson.toJson(player));
         client.respond(protocol);
     }
 
@@ -51,7 +55,7 @@ public class UserSigningModuleImp extends AbstractGameModule implements UserSign
 
     @Override
     public void getServerInformation() {
-        Protocol protocol = protocolFactory.createProtocol("GetServerInformation", RequestStatus.request.toString(), null);
+        Protocol protocol = protocolFactory.createProtocol(GETINFO, RequestStatus.request.toString(), null);
         client.respond(protocol);
     }
 
@@ -64,20 +68,20 @@ public class UserSigningModuleImp extends AbstractGameModule implements UserSign
         }
 
         @Override
-        @BindCallback(event = "SignIn", status = RequestStatus.success)
+        @BindCallback(event = SIGNIN, status = RequestStatus.success)
         public void onSignInSuccessfully(@NonNull Player player) {
             currentPlayer = player;
             callback.onSignInSuccessfully(player);
         }
 
         @Override
-        @BindCallback(event = "SignIn", status = RequestStatus.failed)
+        @BindCallback(event = SIGNOUT, status = RequestStatus.failed)
         public void onSignInFailed() {
             callback.onSignInFailed();
         }
 
         @Override
-        @BindCallback(event = "GetServerInformation", status = RequestStatus.success)
+        @BindCallback(event = GETINFO, status = RequestStatus.success)
         public void onLoadServerInformation(ServerInformation serverInformation) {
             callback.onLoadServerInformation(serverInformation);
         }

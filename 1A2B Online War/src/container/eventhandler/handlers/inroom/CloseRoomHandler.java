@@ -32,17 +32,13 @@ public class CloseRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 		roomId = gameRoom.getId();
 		if (roomId == null)
 			return error(404, new IllegalArgumentException());
+		gameCore().closeGameRoom(room);
 		return success(gameRoom);
 	}
 
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
-		gameCore().broadcastClientPlayers(ClientStatus.signedIn, responseProtocol);
-		gameCore().broadcastRoom(roomId, responseProtocol);
-		
-		//we should close the room after the broadcasts, otherwise after the room be removed from the gamecore,
-		//the broadcast will occur NullPointerException.
-		gameCore().closeGameRoom(gameRoom);
+		// the gamecore has handled it.
 	}
 
 }

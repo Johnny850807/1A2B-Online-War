@@ -25,6 +25,7 @@ import gamecore.GameCore;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
+import gamecore.model.ClientStatus;
 import gamecore.model.GameMode;
 import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.PlayerRoomModel;
@@ -47,7 +48,7 @@ public class TestChatting implements EventHandler.OnRespondingListener{
 	protected MockClient hostClient = new MockClient(); 
 	protected MockClient playerClient = new MockClient();
 	protected GameRoom gameRoom;
-	private int signInCount = 0;
+	protected int signInCount = 0;
 	
 	@Test
 	public void test(){
@@ -55,7 +56,8 @@ public class TestChatting implements EventHandler.OnRespondingListener{
 		testCreateRoomAndJoin();
 		testChatting();
 		testPlayerLeft();
-		testCloseRoom();
+		testHostSignOut();  //select one in host sign out or close room
+		//testCloseRoom();
 	}
 	
 	public void testSignIn(){
@@ -113,6 +115,15 @@ public class TestChatting implements EventHandler.OnRespondingListener{
 		assertEquals(player, gson.fromJson(hostClient.getLastedResponse().getData(), PlayerRoomModel.class).getPlayer());
 	}
 	
+	public void testHostSignOut(){
+		assertEquals(1, gamecore.getGameRooms().size());
+		createHandler(hostClient, protocolFactory.createProtocol(SIGNOUT, REQUEST, 
+				gson.toJson(host))).handle();
+		assertTrue(host == null);
+		assertEquals(0, gamecore.getGameRooms().size());
+		assertEquals(CLOSE_ROOM, playerClient.getLastedResponse().getEvent());
+	}
+	
 	public void testCloseRoom(){
 		createHandler(hostClient, protocolFactory.createProtocol(CLOSE_ROOM, REQUEST, 
 				gson.toJson(this.gameRoom))).handle();
@@ -156,6 +167,7 @@ public class TestChatting implements EventHandler.OnRespondingListener{
 		case JOIN_ROOM:
 			Player joinPlayer = gson.fromJson(responseProtocol.getData(), Player.class);
 			assertEquals(this.player, joinPlayer);
+			this.player.setUserStatus(ClientStatus.inRoom);
 			this.gameRoom.addPlayer(joinPlayer);
 			assertTrue(this.gameRoom.getPlayerAmount() == 2);
 			break;
@@ -173,6 +185,9 @@ public class TestChatting implements EventHandler.OnRespondingListener{
 			this.gameRoom.removePlayer(model.getPlayer());
 			assertEquals(this.player, model.getPlayer());
 			assertEquals(this.gameRoom, model.getGameRoom());
+			break;
+		case SIGNOUT:
+			host = null;
 			break;
 		default:
 			System.out.println("No Match: " + responseProtocol);

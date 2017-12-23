@@ -32,7 +32,7 @@ public class LeaveRoomHandler extends GsonEventHandler<PlayerRoomIdModel, Player
 		gameRoom = gameCore().getGameRoom(data.getGameRoomId());
 		int beforeAmount = gameRoom.getPlayerAmount();
 		ClientPlayer clientPlayer = gameCore().getClientPlayer(data.getPlayerId());
-		gameRoom.removePlayer(clientPlayer.getPlayer());
+		gameCore().removePlayerFromRoom(clientPlayer.getPlayer(), gameRoom);
 		int afterPlayerAmount =  gameRoom.getPlayerAmount();
 		assert afterPlayerAmount == beforeAmount - 1 : "Remove failed, before player amount: " + beforeAmount + ", after: " + afterPlayerAmount;
 		return success(new PlayerRoomModel(clientPlayer.getPlayer(), gameRoom));
@@ -40,9 +40,7 @@ public class LeaveRoomHandler extends GsonEventHandler<PlayerRoomIdModel, Player
 
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
-		gameCore().broadcastRoom(gameRoom.getId(), responseProtocol);
-		gameCore().broadcastClientPlayers(ClientStatus.signedIn, responseProtocol);
-		
+		// the gamecore has handled it.
 	}
 
 

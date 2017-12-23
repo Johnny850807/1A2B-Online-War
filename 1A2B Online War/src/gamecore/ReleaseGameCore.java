@@ -1,26 +1,23 @@
 package gamecore;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
-
-import org.omg.PortableInterceptor.SUCCESSFUL;
 
 import com.google.gson.Gson;
 
 import Linq.Linq;
 import container.Constants.Events.InRoom;
+import container.Constants.Events.RoomList;
 import container.base.Client;
-import container.eventhandler.handlers.inroom.CloseRoomHandler;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ClientStatus;
+import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
 import gamecore.model.RoomStatus;
 import gamefactory.GameFactory;
@@ -102,12 +99,20 @@ public class ReleaseGameCore implements GameCore{
 	public void addGameRoom(GameRoom room){
 		if (room.getId() == null)
 			throw new IllegalArgumentException("The room's id has not been initialized.");
+		Protocol protocol = factory.getProtocolFactory().createProtocol(RoomList.CREATE_ROOM,
+				RequestStatus.success.toString(), gson.toJson(room));
+		broadcastClientPlayers(ClientStatus.signedIn, protocol);
 		roomContainer.put(room.getId(), room);
 	}
 	
 	@Override
 	public void closeGameRoom(GameRoom room){
+		Protocol protocol = factory.getProtocolFactory().createProtocol(InRoom.CLOSE_ROOM,
+				RequestStatus.success.toString(), gson.toJson(room));
+		broadcastRoom(room.getId(), protocol);
+		broadcastClientPlayers(ClientStatus.signedIn, protocol);
 		roomContainer.remove(room.getId());
+		System.out.println("== Room removed ==\n" + room + "====================");
 	}
 	
 	@Override
@@ -126,32 +131,32 @@ public class ReleaseGameCore implements GameCore{
 		{
 			ClientPlayer clientPlayer = clientsMap.remove(id);
 			System.out.println("== Client removed ==\n" + clientPlayer +"====================");
-			broadcastAndClosePlayerRoomIfExists(clientPlayer.getPlayer());
 			broadcastThePlayerLeft(clientPlayer.getPlayer());
 		}
 		else
 			throw new IllegalStateException("The client wasn't signed.");
 	}
 	
-	private void broadcastAndClosePlayerRoomIfExists(Player player) {
-		for (GameRoom room : getGameRooms())
-			if (room.getHost().equals(player)) 
-			{
-				Protocol protocol = factory.getProtocolFactory().createProtocol(InRoom.CLOSE_ROOM,
-						RequestStatus.success.toString(), gson.toJson(room));
-				broadcastRoom(room.getId(), protocol);
-				roomContainer.remove(room.getId());
-				System.out.println("== Room removed ==\n" + room + "====================");
-				break;
-			}
-	}
-	
-	private void broadcastThePlayerLeft(Player player){
-		Protocol protocol = factory.getProtocolFactory().createProtocol(InRoom.LEAVE_ROOM, RequestStatus.success.toString(), gson.toJson(player));
+	private boolean broadcastThePlayerLeft(Player player){
 		for (GameRoom gameRoom : getGameRooms())
 			if (gameRoom.containsPlayer(player))
-				broadcastRoom(gameRoom.getId(), protocol);
+			{
+				if (gameRoom.getHost().equals(player))
+					closeGameRoom(gameRoom);
+				else
+					removePlayerFromRoom(player, gameRoom);
+				return true;
+			}
+		return false;
 	}
 
 
+	@Override
+	public void removePlayerFromRoom(Player player, GameRoom gameRoom){
+		Protocol protocol = factory.getProtocolFactory().createProtocol(InRoom.LEAVE_ROOM, 
+				RequestStatus.success.toString(), gson.toJson(new PlayerRoomModel(player, gameRoom)));
+		gameRoom.removePlayer(player);
+		broadcastClientPlayers(ClientStatus.signedIn, protocol);
+		broadcastRoom(gameRoom.getId(), protocol);
+	}
 }
