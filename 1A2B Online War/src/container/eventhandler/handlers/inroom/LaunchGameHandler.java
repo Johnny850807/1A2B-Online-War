@@ -6,6 +6,7 @@ import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
+import gamecore.model.ClientStatus;
 import gamecore.model.GameMode;
 
 /**
@@ -14,7 +15,7 @@ import gamecore.model.GameMode;
  * Output: (InRoom / RoomList) the launched room.
  */
 public class LaunchGameHandler extends GsonEventHandler<GameRoom, GameRoom>{
-
+	private String roomId;
 	public LaunchGameHandler(Client client, Protocol request, GameCore gameCore, ProtocolFactory protocolFactory) {
 		super(client, request, gameCore, protocolFactory);
 	}
@@ -26,7 +27,8 @@ public class LaunchGameHandler extends GsonEventHandler<GameRoom, GameRoom>{
 
 	@Override
 	protected Response onHandling(GameRoom data) {
-		GameRoom gameRoom = gameCore().getGameRoom(data.getId());
+		roomId = data.getId();
+		GameRoom gameRoom = gameCore().getGameRoom(roomId);
 		gameRoom.launchGame();
 		return success(gameRoom);
 	}
@@ -34,8 +36,8 @@ public class LaunchGameHandler extends GsonEventHandler<GameRoom, GameRoom>{
 
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
-		// TODO Auto-generated method stub
-		
+		gameCore().broadcastClientPlayers(ClientStatus.signedIn, responseProtocol);
+		gameCore().broadcastRoom(roomId, responseProtocol);
 	}
 
 }

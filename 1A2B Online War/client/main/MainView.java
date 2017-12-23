@@ -30,6 +30,7 @@ public class MainView extends View implements SocketConnector.Callback{
 	private final int SIGNOUT = 5;
 	private final int JOINROOM = 6;
 	private final int SENDMESSAGE = 7;
+	private final int LAUNCHGAME = 8;
 	private Gson gson = new Gson();
 	private ProtocolFactory protocolfactory;
 	private Scanner scanner = new Scanner(System.in);

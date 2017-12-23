@@ -1,8 +1,5 @@
 package container.protocol;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class XOXOXDelimiterProtocol implements Protocol{
 	static final String DELIMITER = "XOXOX";
 	private String content;

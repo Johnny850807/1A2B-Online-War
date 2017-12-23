@@ -19,7 +19,7 @@ import mock.MockClient;
 public class TestSignInEventHandler implements OnRespondingListener{
 	private GameFactory gameFactory;
 	private GameEventHandlerFactory handlerFactory;
-	
+	private boolean error = true;
 	@Before
 	public void setUp() throws Exception {
 		gameFactory = new GameOnlineReleaseFactory();
@@ -29,13 +29,14 @@ public class TestSignInEventHandler implements OnRespondingListener{
 	@Test
 	public void test() {
 		MockClient client = new MockClient();
-		Protocol protocol = gameFactory.getProtocolFactory().createProtocol("SignIn", RequestStatus.request.toString() , "{\"name\":\"JohnnyJohnnyJohnny\"}");
+		Protocol protocol = gameFactory.getProtocolFactory().createProtocol("SignIn", RequestStatus.request.toString() , "{\"name\":\"Johnny\"}");
 		EventHandler handler = handlerFactory.createGameEventHandler(client, protocol);
 		handler.setOnRespondingListener(this);
 		assertEquals(handler.getClass().getSimpleName(), "SignInHandler");
 
 		handler.handle();
-		assertNotNull(client.getResponse());
+		assertEquals(false, error);
+		assertEquals(1, client.getResponses().size());
 	}
 
 	@Override
@@ -46,6 +47,7 @@ public class TestSignInEventHandler implements OnRespondingListener{
 	@Override
 	public void onSuccessResponding(Protocol responseProtocol) {
 		System.out.println(responseProtocol);
+		error = false;
 	}
 
 }

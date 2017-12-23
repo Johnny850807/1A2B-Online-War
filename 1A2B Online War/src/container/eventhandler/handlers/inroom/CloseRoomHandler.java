@@ -15,7 +15,8 @@ import gamecore.model.ClientStatus;
  * Output: (RoomList / InRoom) the closed room.
  */
 public class CloseRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
-
+	private String roomId;
+	private GameRoom gameRoom;
 	public CloseRoomHandler(Client client, Protocol request, GameCore gameCore, ProtocolFactory protocolFactory) {
 		super(client, request, gameCore, protocolFactory);
 	}
@@ -27,15 +28,21 @@ public class CloseRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 
 	@Override
 	protected Response onHandling(GameRoom room) {
-		if (room.getId() == null)
+		this.gameRoom = room;
+		roomId = gameRoom.getId();
+		if (roomId == null)
 			return error(404, new IllegalArgumentException());
-		gameCore().closeGameRoom(room);
-		return success(room);
+		return success(gameRoom);
 	}
 
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
 		gameCore().broadcastClientPlayers(ClientStatus.signedIn, responseProtocol);
+		gameCore().broadcastRoom(roomId, responseProtocol);
+		
+		//we should close the room after the broadcasts, otherwise after the room be removed from the gamecore,
+		//the broadcast will occur NullPointerException.
+		gameCore().closeGameRoom(gameRoom);
 	}
 
 }

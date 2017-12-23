@@ -1,12 +1,21 @@
 package mock;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.Gson;
+
+import container.Constants.Events.Chat;
 import container.base.Client;
 import container.protocol.Protocol;
+import gamecore.entity.ChatMessage;
 import gamecore.entity.Entity;
 
 public class MockClient extends Entity implements Client{
-	private Protocol response = null;
-
+	private List<Protocol> responses = new ArrayList<>();
+	private Protocol lastedResponse;
+	private Gson gson = new Gson();
+	
 	public MockClient() {
 		initId();
 	}
@@ -14,8 +23,12 @@ public class MockClient extends Entity implements Client{
 	@Override
 	public void run() {}
 
-	public Protocol getResponse() {
-		return response;
+	public List<Protocol> getResponses() {
+		return responses;
+	}
+	
+	public Protocol getLastedResponse() {
+		return lastedResponse;
 	}
 
 	@Override
@@ -25,7 +38,8 @@ public class MockClient extends Entity implements Client{
 
 	@Override
 	public void respond(Protocol protocol) {
-		this.response = protocol;
+		lastedResponse = protocol;
+		responses.add(protocol);
 	}
 
 	@Override
@@ -33,5 +47,11 @@ public class MockClient extends Entity implements Client{
 		return "test client";
 	}
 
-
+	public List<ChatMessage> getReceivedMessages(){
+		List<ChatMessage> messages = new ArrayList<>();
+		for (Protocol protocol : responses)
+			if (protocol.getEvent().equals(Chat.SEND_MSG))
+				messages.add(gson.fromJson(protocol.getData(), ChatMessage.class));
+		return messages;
+	}
 }

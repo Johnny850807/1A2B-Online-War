@@ -7,10 +7,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.omg.PortableInterceptor.SUCCESSFUL;
+
 import com.google.gson.Gson;
 
 import Linq.Linq;
 import container.base.Client;
+import container.eventhandler.handlers.inroom.CloseRoomHandler;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
@@ -120,10 +123,25 @@ public class ReleaseGameCore implements GameCore{
 		{
 			ClientPlayer clientPlayer = clientsMap.remove(id);
 			System.out.println("== Client removed ==\n" + clientPlayer +"====================");
+			broadcastAndRemovePlayerRoomIfExists(clientPlayer.getPlayer());
 			broadcastThePlayerLeft(clientPlayer.getPlayer());
 		}
 		else
 			throw new IllegalStateException("The client wasn't signed.");
+	}
+	
+	private void broadcastAndRemovePlayerRoomIfExists(Player player){
+		synchronized (roomContainer) {
+			for(GameRoom gameRoom : roomContainer.values())
+				if (gameRoom.getHost().equals(player))
+				{
+					Protocol protocol = factory.getProtocolFactory().createProtocol("CloseRoom", 
+							RequestStatus.success.toString(), gson.toJson(gameRoom));
+					broadcastRoom(gameRoom.getId(), protocol);
+					roomContainer.remove(gameRoom.getId());
+					System.out.println("== Room removed ==\n" + gameRoom +"====================");
+				}
+		}
 	}
 	
 	private void broadcastThePlayerLeft(Player player){

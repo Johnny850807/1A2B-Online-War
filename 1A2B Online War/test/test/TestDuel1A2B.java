@@ -1,6 +1,6 @@
-package test;
+package test; 
+import static org.junit.Assert.*;
 
-import java.awt.Frame;
 import java.util.List;
 
 import org.junit.Before;
@@ -11,7 +11,6 @@ import gamecore.model.gamemodels.a1b2.Duel1A2BModel;
 import gamecore.model.gamemodels.a1b2.GuessRecord;
 import gamecore.model.gamemodels.a1b2.GuessResult;
 import gamecore.model.gamemodels.a1b2.NumberNotValidException;
-import static org.junit.Assert.*;
 
 public class TestDuel1A2B {
 	Player host = new Player("Host");  // the host assumed to be the winner

@@ -42,6 +42,14 @@ public class GameRoom extends Entity{
 		chatMessageList.add(chatMessage);
 	}
 	
+	public int getChatMessagesSize(){
+		return getChatMessageList().size();
+	}
+	
+	public List<ChatMessage> getChatMessageList() {
+		return chatMessageList;
+	} 
+	
 	public GameMode getGameMode() {
 		return gameMode;
 	}
@@ -74,6 +82,10 @@ public class GameRoom extends Entity{
 		return playerStatusList;
 	}
 	
+	public int getPlayerAmount(){
+		return getPlayerStatus().size() + 1;  //the players and the host
+	}
+	
 	public void changePlayerStatus(Player player, boolean ready){
 		for (PlayerStatus playerStatus : playerStatusList)
 			if(playerStatus.getPlayer().equals(player))
@@ -102,6 +114,8 @@ public class GameRoom extends Entity{
 		PlayerStatus playerStatus = new PlayerStatus(player);
 		if (host.equals(player) || playerStatusList.contains(playerStatus))
 			throw new IllegalStateException("Duplicated player added into the status list.");
+		if (playerStatusList.size() > getMaxPlayerAmount())
+			throw new IllegalStateException("The Player amount is out of the maximum amount.");
 		playerStatusList.add(playerStatus);
 	}
 	
@@ -136,6 +150,8 @@ public class GameRoom extends Entity{
 	}
 	
 	public void launchGame(){
+		if (playerStatusList.size() < getMinPlayerAmount())
+			throw new IllegalStateException("The Player amount is not enough to launch the game.");
 		switch (getGameMode()) {
 		case DUEL1A2B:
 			gameModel = new Duel1A2BModel(host, playerStatusList.get(0).getPlayer());

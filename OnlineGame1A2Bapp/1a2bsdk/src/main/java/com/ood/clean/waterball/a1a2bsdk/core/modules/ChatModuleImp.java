@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 import com.ood.clean.waterball.a1a2bsdk.core.Component;
 import com.ood.clean.waterball.a1a2bsdk.core.EventBus;
+import com.ood.clean.waterball.a1a2bsdk.core.base.AbstractGameModule;
 import com.ood.clean.waterball.a1a2bsdk.core.base.BindCallback;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.CallbackException;
 
@@ -17,7 +18,7 @@ import container.protocol.ProtocolFactory;
 import gamecore.entity.ChatMessage;
 import gamecore.model.RequestStatus;
 
-public class ChatModuleImp implements ChatModule {
+public class ChatModuleImp extends AbstractGameModule implements ChatModule {
     protected @Inject EventBus eventBus;
     protected @Inject Client client;
     protected @Inject ProtocolFactory protocolFactory;

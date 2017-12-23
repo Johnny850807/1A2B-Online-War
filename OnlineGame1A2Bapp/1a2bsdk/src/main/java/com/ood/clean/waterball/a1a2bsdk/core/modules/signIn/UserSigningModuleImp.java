@@ -4,32 +4,20 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules.signIn;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
-import com.ood.clean.waterball.a1a2bsdk.core.Component;
-import com.ood.clean.waterball.a1a2bsdk.core.EventBus;
+import com.ood.clean.waterball.a1a2bsdk.core.base.AbstractGameModule;
 import com.ood.clean.waterball.a1a2bsdk.core.base.BindCallback;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.CallbackException;
 
-import javax.inject.Inject;
-
-import container.base.Client;
 import container.protocol.Protocol;
-import container.protocol.ProtocolFactory;
 import gamecore.entity.Player;
 import gamecore.model.RequestStatus;
 import gamecore.model.ServerInformation;
 
 
-public class UserSigningModuleImp implements UserSigningModule {
-    private @Inject EventBus eventBus;
-    private @Inject Client client;
-    private @Inject ProtocolFactory protocolFactory;
+public class UserSigningModuleImp extends AbstractGameModule implements UserSigningModule{
     private Gson gson = new Gson();
     private Player currentPlayer;
     private ProxyCallback proxyCallback;
-
-    public UserSigningModuleImp(){
-        Component.inject(this);
-    }
 
     @Override
     public void registerCallback(Callback callback) {
