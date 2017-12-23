@@ -17,31 +17,28 @@ import gamecore.entity.Player;
 import gamecore.model.ClientStatus;
 import gamecore.model.RequestStatus;
 import gamecore.model.RoomStatus;
-import gamecore.rooms.games.Game;
 import gamefactory.GameFactory;
 
 /**
- * @author AndroidWork
+ * @author Waterball
  * ReleaseGameCore manages all the users, rooms and the client sockets binding to the users. All 
  * methods with the name 'notify' used for sending a response to certain clients.
  */
 public class ReleaseGameCore implements GameCore{
 	private GameFactory factory;
-	private GameBinder gameBinder;
 	private Gson gson = new Gson();
 	private Map<String, GameRoom> roomContainer = Collections.checkedMap(new LinkedHashMap<>(), String.class, GameRoom.class); // <id, GameRoom>
 	private Map<String, ClientPlayer> clientsMap = Collections.checkedMap(new HashMap<>(), String.class, ClientPlayer.class); // <id, ClientPlayer>
 	
 	public ReleaseGameCore(GameFactory factory) {
 		this.factory = factory;
-		this.gameBinder = factory.getGameBinder();
 	}
 
 	@Override
-	public void notifyAllClientPlayersInRoom(String roomId, Protocol response) {
+	public void broadcastRoom(String roomId, Protocol response) {
 		GameRoom room = getGameRoom(roomId);
 		List<Player> players = room.getPlayers();
-		respondToClients(getClientsByPlayerList(players), response);
+		broadcastToClients(getClientsByPlayerList(players), response);
 	}
 
 	private List<ClientPlayer> getClientsByPlayerList(List<Player> players) {
@@ -49,18 +46,18 @@ public class ReleaseGameCore implements GameCore{
 	}
 
 	@Override
-	public void notifyClientPlayer(String userId, Protocol response) {
+	public void broadcastClientPlayer(String userId, Protocol response) {
 		ClientPlayer clientPlayer = getClientPlayer(userId);
 		clientPlayer.respondToClient(response);
 	}
 
 	@Override
-	public void notifyClientPlayers(ClientStatus status, Protocol response) {
+	public void broadcastClientPlayers(ClientStatus status, Protocol response) {
 		List<ClientPlayer> clientPlayers = getClientPlayers(status);
-		respondToClients(clientPlayers, response);
+		broadcastToClients(clientPlayers, response);
 	}
 	
-	private void respondToClients(List<ClientPlayer> clientPlayers, Protocol response){
+	private void broadcastToClients(List<ClientPlayer> clientPlayers, Protocol response){
 		for (ClientPlayer clientPlayer : clientPlayers)
 			clientPlayer.respondToClient(response);
 	}
@@ -97,6 +94,8 @@ public class ReleaseGameCore implements GameCore{
 	
 	@Override
 	public void addGameRoom(GameRoom room){
+		if (room.getId() == null)
+			throw new IllegalArgumentException("The room's id has not been initialized.");
 		roomContainer.put(room.getId(), room);
 	}
 	
@@ -107,6 +106,8 @@ public class ReleaseGameCore implements GameCore{
 	
 	@Override
 	public void addBindedClientPlayer(Client client, Player player){
+		if (player.getId() == null)
+			throw new IllegalArgumentException("The player's id has not been initialized.");
 		ClientPlayer clientPlayer = new ClientPlayer(client, player);
 		assert !clientsMap.containsKey(clientPlayer.getId()) : "The id is duplicated from the new binded clientplayer !";
 		clientsMap.put(clientPlayer.getId(), clientPlayer);
@@ -119,30 +120,18 @@ public class ReleaseGameCore implements GameCore{
 		{
 			ClientPlayer clientPlayer = clientsMap.remove(id);
 			System.out.println("== Client removed ==\n" + clientPlayer +"====================");
-			notifyEveryoneThePlayerLeft(clientPlayer.getPlayer());
+			broadcastThePlayerLeft(clientPlayer.getPlayer());
 		}
 		else
 			throw new IllegalStateException("The client wasn't signed.");
 	}
 	
-	private void notifyEveryoneThePlayerLeft(Player player){
+	private void broadcastThePlayerLeft(Player player){
 		Protocol protocol = factory.getProtocolFactory().createProtocol("PlayerLeft", RequestStatus.success.toString(), gson.toJson(player));
 		for (GameRoom gameRoom : roomContainer.values())
 			if (gameRoom.containsPlayer(player))
-				notifyAllClientPlayersInRoom(gameRoom.getId(), protocol);
+				broadcastRoom(gameRoom.getId(), protocol);
 	}
 
-	@Override
-	public Game getGame(String gameRoomId) {
-		return gameBinder.getBindedGame(gameRoomId);
-	}
-
-
-	@Override
-	public Game luanchGame(GameRoom gameRoom) {
-		Game game = gameBinder.bindGame(gameRoom);
-		gameRoom.setRoomStatus(RoomStatus.gamestarted);
-		return game;
-	}
 
 }

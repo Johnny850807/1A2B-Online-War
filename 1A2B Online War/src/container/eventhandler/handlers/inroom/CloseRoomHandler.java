@@ -1,12 +1,19 @@
-package container.eventhandler.handlers;
+package container.eventhandler.handlers.inroom;
 
 import container.base.Client;
+
+import container.eventhandler.handlers.GsonEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
 import gamecore.model.ClientStatus;
 
+/**
+ * @author Johnny850807
+ * Input: the closing room.
+ * Output: (RoomList / InRoom) the closed room.
+ */
 public class CloseRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 
 	public CloseRoomHandler(Client client, Protocol request, GameCore gameCore, ProtocolFactory protocolFactory) {
@@ -28,7 +35,7 @@ public class CloseRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
-		gameCore().notifyClientPlayers(ClientStatus.signedIn, responseProtocol);
+		gameCore().broadcastClientPlayers(ClientStatus.signedIn, responseProtocol);
 	}
 
 }

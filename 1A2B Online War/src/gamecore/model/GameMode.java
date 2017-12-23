@@ -2,10 +2,7 @@ package gamecore.model;
 
 import java.io.Serializable;
 
-import gamecore.rooms.games.Game;
-import gamecore.rooms.games.GameDuel1A2B;
-import gamecore.rooms.games.GameGroup1A2B;
-import gamecore.rooms.games.MockGame;
+import gamecore.entity.GameRoom;
 
 /**
  * GameMode with a minimum/maximum player limit, as well as each GameMode may own its GameCreator which

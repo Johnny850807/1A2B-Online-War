@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import Util.Input;
-import container.eventhandler.handlers.SendChatMessageHandler;
+import container.eventhandler.handlers.chat.SendChatMessageHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.entity.ChatMessage;

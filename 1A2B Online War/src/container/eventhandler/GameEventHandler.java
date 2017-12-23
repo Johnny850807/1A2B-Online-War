@@ -78,7 +78,7 @@ public abstract class GameEventHandler<In, Out> implements EventHandler{
 	
 	/**
 	 * If you invoke this method, first the error will be converted as a protocol message thereby sent to the client as default.
-	 * @param code the code stands for a throwed exception
+	 * @param code the code stands for a thrown exception
 	 * @param exception the exception
 	 */
 	protected Response error(int code, Exception exception){

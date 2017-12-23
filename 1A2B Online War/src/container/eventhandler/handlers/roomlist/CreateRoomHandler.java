@@ -1,12 +1,19 @@
-package container.eventhandler.handlers;
+package container.eventhandler.handlers.roomlist;
 
 import container.base.Client;
+
+import container.eventhandler.handlers.GsonEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
 import gamecore.model.ClientStatus;
 
+/**
+ * @author Johnny850807
+ * Input: the creating room.
+ * Output: (RoomList) the created room.
+ */
 public class CreateRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 
 	public CreateRoomHandler(Client client, Protocol request, GameCore gameCore, ProtocolFactory protocolFactory) {
@@ -34,7 +41,7 @@ public class CreateRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
-		gameCore().notifyClientPlayers(ClientStatus.signedIn, responseProtocol);
+		gameCore().broadcastClientPlayers(ClientStatus.signedIn, responseProtocol);
 	}
 
 }

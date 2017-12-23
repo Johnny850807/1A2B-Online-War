@@ -6,9 +6,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import container.eventhandler.handlers.inroom.LaunchGameHandler;
 import gamecore.model.GameMode;
 import gamecore.model.PlayerStatus;
 import gamecore.model.RoomStatus;
+import gamecore.model.gamemodels.GameModel;
+import gamecore.model.gamemodels.a1b2.Duel1A2BModel;
 
 /**
  * GameRoom contains only the info and the status the room should present. The game of the room will be
@@ -18,10 +21,11 @@ public class GameRoom extends Entity{
 	private Player host;
 	private RoomStatus roomStatus = RoomStatus.waiting;
 	private GameMode gameMode;
+	private GameModel gameModel;
 	private List<ChatMessage> chatMessageList = Collections.checkedList(new ArrayList<>(), ChatMessage.class);
 	
 	/**
-	 * All the guest player status in the room, the host's is not included.
+	 * All the guest player status in the room, except the host.
 	 */
 	private List<PlayerStatus> playerStatusList =  Collections.checkedList(new ArrayList<>(), PlayerStatus.class);
 	private String name;
@@ -68,6 +72,15 @@ public class GameRoom extends Entity{
 
 	public List<PlayerStatus> getPlayerStatus() {
 		return playerStatusList;
+	}
+	
+	public void changePlayerStatus(Player player, boolean ready){
+		for (PlayerStatus playerStatus : playerStatusList)
+			if(playerStatus.getPlayer().equals(player))
+			{
+				playerStatus.setReady(ready);
+				break;
+			}
 	}
 	
 	/**
@@ -120,6 +133,20 @@ public class GameRoom extends Entity{
 			if (playerStatus.getPlayer().equals(player))
 				return true;
 		return false;
+	}
+	
+	public void launchGame(){
+		switch (getGameMode()) {
+		case DUEL1A2B:
+			gameModel = new Duel1A2BModel(host, playerStatusList.get(0).getPlayer());
+			break;
+		case GROUP1A2B:
+			//TODO
+			break;
+		case DIXIT:
+			//TODO
+			break;
+		}
 	}
 	
 	@Override

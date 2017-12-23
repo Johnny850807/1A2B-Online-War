@@ -7,16 +7,13 @@ import container.eventhandler.ConfigBasedGameEventHandlerFactory;
 import container.eventhandler.GameEventHandlerFactory;
 import container.protocol.ProtocolFactory;
 import container.protocol.XOXOXDelimiterFactory;
-import gamecore.GameBinder;
 import gamecore.GameCore;
 import gamecore.ReleaseGameCore;
-import gamecore.ReleasesGameBinder;
 
 public class GameOnlineReleaseFactory implements GameFactory{
 	private GameEventHandlerFactory gameEventHandlerFactory;
 	private ProtocolFactory protocolFactory;
 	private GameCore gameCore;
-	private GameBinder gameBinder;
 
 	
 	@Override
@@ -39,11 +36,6 @@ public class GameOnlineReleaseFactory implements GameFactory{
 	public GameEventHandlerFactory getGameEventHandlerFactory() {
 		return gameEventHandlerFactory == null ? gameEventHandlerFactory = 
 				new ConfigBasedGameEventHandlerFactory(this) : gameEventHandlerFactory;
-	}
-
-	@Override
-	public GameBinder getGameBinder() {
-		return gameBinder == null ? gameBinder = new ReleasesGameBinder() : gameBinder;
 	}
 	
 }

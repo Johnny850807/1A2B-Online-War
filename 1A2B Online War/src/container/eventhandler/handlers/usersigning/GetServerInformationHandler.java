@@ -1,8 +1,9 @@
-package container.eventhandler.handlers;
+package container.eventhandler.handlers.usersigning;
 
 import java.util.List;
 
 import container.base.Client;
+import container.eventhandler.handlers.GsonEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.ClientPlayer;

@@ -3,8 +3,6 @@ package gamecore.entity;
 
 import java.util.Date;
 
-import gamecore.rooms.games.Game;
-
 /**
  * @author AndroidWork
  * ChatMessages in the chat.
