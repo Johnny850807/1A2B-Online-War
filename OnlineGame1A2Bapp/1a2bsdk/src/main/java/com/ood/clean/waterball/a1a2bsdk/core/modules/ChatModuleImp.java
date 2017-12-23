@@ -3,30 +3,25 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules;
 
 import android.support.annotation.NonNull;
 
-import com.google.gson.Gson;
-import com.ood.clean.waterball.a1a2bsdk.core.Component;
-import com.ood.clean.waterball.a1a2bsdk.core.EventBus;
+import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
+import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.base.AbstractGameModule;
 import com.ood.clean.waterball.a1a2bsdk.core.base.BindCallback;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.CallbackException;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
-import javax.inject.Inject;
-
-import container.base.Client;
 import container.protocol.Protocol;
-import container.protocol.ProtocolFactory;
 import gamecore.entity.ChatMessage;
 import gamecore.model.RequestStatus;
 
+import static container.Constants.Events.Chat.SEND_MSG;
+
 public class ChatModuleImp extends AbstractGameModule implements ChatModule {
-    protected @Inject EventBus eventBus;
-    protected @Inject Client client;
-    protected @Inject ProtocolFactory protocolFactory;
-    protected Gson gson = new Gson();
+    protected UserSigningModule signingModule;
     protected ProxyCallback proxyCallback;
 
     public ChatModuleImp() {
-        Component.inject(this);
+        this.signingModule = (UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING);
     }
 
     @Override
@@ -48,7 +43,7 @@ public class ChatModuleImp extends AbstractGameModule implements ChatModule {
     @Override
     public void sendMessage(ChatMessage message) {
         String json = gson.toJson(message);
-        Protocol protocol = protocolFactory.createProtocol("SendChatMessage", RequestStatus.request.toString(), json);
+        Protocol protocol = protocolFactory.createProtocol(SEND_MSG, RequestStatus.request.toString(), json);
         client.respond(protocol);
     }
 
@@ -60,19 +55,21 @@ public class ChatModuleImp extends AbstractGameModule implements ChatModule {
         }
 
         @Override
-        @BindCallback(event = "SendChatMessage", status = RequestStatus.success)
+        @BindCallback(event = SEND_MSG, status = RequestStatus.success)
         public void onMessageReceived(ChatMessage message) {
-            callback.onMessageReceived(message);
+            if(message.getPoster().equals(signingModule.getCurrentPlayer()))
+                this.onMessageSent(message);
+            else
+                callback.onMessageReceived(message);
         }
 
         @Override
-        @BindCallback(event = "SendChatMessage", status = RequestStatus.success)
         public void onMessageSent(ChatMessage message) {
             callback.onMessageSent(message);
         }
 
         @Override
-        @BindCallback(event = "SendChatMessage", status = RequestStatus.success)
+        @BindCallback(event = SEND_MSG, status = RequestStatus.failed)
         public void onMessageSendingFailed(ChatMessage message) {
             callback.onMessageSendingFailed(message);
         }

@@ -16,11 +16,15 @@ public enum ModuleName {
      */
     ROOMLIST,
 
+    /**
+     * the chatting place
+     */
+    CHAT,
 
     /**
      *  room system to do chat or launching a game inside the room
      */
-    ROOM,
+    INROOM,
 
     /**
      * the 1a2b game in duel mode

@@ -42,7 +42,7 @@ public interface InRoomModule extends GameModule{
         /**
          * when any new player accesses the room.
          */
-        public void onNewPlayer(PlayerStatus playerStatus);
+        public void onPlayerJoined(PlayerStatus playerStatus);
 
         /**
          * when any players in the room change his status such as to prepare.

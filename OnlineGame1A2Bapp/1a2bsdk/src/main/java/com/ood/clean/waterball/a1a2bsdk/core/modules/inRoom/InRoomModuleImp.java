@@ -2,25 +2,22 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom;
 
 import android.support.annotation.NonNull;
 
-import com.google.gson.Gson;
-import com.ood.clean.waterball.a1a2bsdk.core.EventBus;
+import com.ood.clean.waterball.a1a2bsdk.core.base.AbstractGameModule;
+import com.ood.clean.waterball.a1a2bsdk.core.base.BindCallback;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.CallbackException;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModuleImp;
 
-import javax.inject.Inject;
-
-import container.base.Client;
-import container.protocol.ProtocolFactory;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.PlayerStatus;
+import gamecore.model.RequestStatus;
+
+import static container.Constants.Events.InRoom.CHANGE_STATUS;
+import static container.Constants.Events.InRoom.LAUNCH_GAME;
+import static container.Constants.Events.InRoom.LEAVE_ROOM;
+import static container.Constants.Events.RoomList.JOIN_ROOM;
 
 
-public class InRoomModuleImp extends ChatModuleImp implements InRoomModule{
-    protected @Inject EventBus eventBus;
-    protected @Inject Client client;
-    protected @Inject ProtocolFactory protocolFactory;
-    protected Gson gson = new Gson();
+public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
     protected ProxyCallback proxyCallback;
 
     @Override
@@ -67,26 +64,31 @@ public class InRoomModuleImp extends ChatModuleImp implements InRoomModule{
         }
 
         @Override
-        public void onNewPlayer(PlayerStatus playerStatus) {
-            callback.onNewPlayer(playerStatus);
+        @BindCallback(event = JOIN_ROOM, status = RequestStatus.success)
+        public void onPlayerJoined(PlayerStatus playerStatus) {
+            callback.onPlayerJoined(playerStatus);
         }
 
         @Override
+        @BindCallback(event = CHANGE_STATUS, status = RequestStatus.success)
         public void onPlayerStatusChanged(PlayerStatus playerStatus) {
             callback.onPlayerStatusChanged(playerStatus);
         }
 
         @Override
+        @BindCallback(event = LEAVE_ROOM, status = RequestStatus.success)
         public void onPlayerLeft(PlayerStatus playerStatus) {
             callback.onPlayerLeft(playerStatus);
         }
 
         @Override
+        @BindCallback(event = LAUNCH_GAME, status = RequestStatus.success)
         public void onGameLaunchedSuccessfully(GameRoom gameRoom) {
             callback.onGameLaunchedSuccessfully(gameRoom);
         }
 
         @Override
+        @BindCallback(event = LAUNCH_GAME, status = RequestStatus.failed)
         public void onGameLaunchedFailed() {
             callback.onGameLaunchedFailed();
         }

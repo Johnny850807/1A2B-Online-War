@@ -42,7 +42,7 @@ public final class CoreGameServer {
 
     public void prepareModules(){
         moduleMap = Collections.checkedMap(new HashMap<ModuleName, GameModule>(),ModuleName.class, GameModule.class);
-        new MockGameModuleInflater().onPrepareModules(moduleMap);
+        new ReleaseGameModuleInflater().onPrepareModules(moduleMap);
     }
 
     /**

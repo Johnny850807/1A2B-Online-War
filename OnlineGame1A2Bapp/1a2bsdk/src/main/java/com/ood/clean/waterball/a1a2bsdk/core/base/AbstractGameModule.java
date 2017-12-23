@@ -1,6 +1,9 @@
 package com.ood.clean.waterball.a1a2bsdk.core.base;
 
 
+import android.util.Log;
+
+import com.google.gson.Gson;
 import com.ood.clean.waterball.a1a2bsdk.core.Component;
 import com.ood.clean.waterball.a1a2bsdk.core.EventBus;
 
@@ -10,12 +13,16 @@ import container.base.Client;
 import container.protocol.ProtocolFactory;
 
 public abstract class AbstractGameModule implements GameModule{
-    protected static @Inject EventBus eventBus;
-    protected static @Inject Client client;
-    protected static @Inject ProtocolFactory protocolFactory;
+    protected static final String TAG = "GameModule";
+    protected @Inject EventBus eventBus;
+    protected @Inject Client client;
+    protected @Inject ProtocolFactory protocolFactory;
+    protected Gson gson = new Gson();
 
     public AbstractGameModule(){
+        Log.d(TAG, "initing " + getClass().getSimpleName() + " ...");
         Component.inject(this);
+        Log.d(TAG, "injection completed.");
     }
 
 }
