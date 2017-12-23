@@ -145,7 +145,7 @@ public class GameRoom extends Entity{
 		try{
 			getPlayerStatusOfPlayer(player);
 			return true;
-		}catch (IllegalStateException e) {
+		}catch (IllegalArgumentException e) {
 			//if the player is not in the list, IllegalStateException thrown.
 			return false;
 		}

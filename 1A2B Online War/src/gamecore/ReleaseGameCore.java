@@ -131,20 +131,24 @@ public class ReleaseGameCore implements GameCore{
 		{
 			ClientPlayer clientPlayer = clientsMap.remove(id);
 			System.out.println("== Client removed ==\n" + clientPlayer +"====================");
-			broadcastThePlayerLeft(clientPlayer.getPlayer());
+			handleThePlayerRemoved(clientPlayer.getPlayer());
 		}
 		else
 			throw new IllegalStateException("The client wasn't signed.");
 	}
 	
-	private boolean broadcastThePlayerLeft(Player player){
+	/**
+	 * @param player removed player
+	 * @return if the player is in any room
+	 */
+	private boolean handleThePlayerRemoved(Player player){
 		for (GameRoom gameRoom : getGameRooms())
 			if (gameRoom.containsPlayer(player))
 			{
 				if (gameRoom.getHost().equals(player))
 					closeGameRoom(gameRoom);
 				else
-					removePlayerFromRoom(player, gameRoom);
+					removePlayerFromRoomAndBroadcast(player, gameRoom);
 				return true;
 			}
 		return false;
@@ -152,7 +156,7 @@ public class ReleaseGameCore implements GameCore{
 
 
 	@Override
-	public void removePlayerFromRoom(Player player, GameRoom gameRoom){
+	public void removePlayerFromRoomAndBroadcast(Player player, GameRoom gameRoom){
 		Protocol protocol = factory.getProtocolFactory().createProtocol(InRoom.LEAVE_ROOM, 
 				RequestStatus.success.toString(), gson.toJson(new PlayerRoomModel(player, gameRoom)));
 		gameRoom.removePlayer(player);

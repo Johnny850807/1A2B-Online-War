@@ -77,11 +77,16 @@ public class TestChatting implements EventHandler.OnRespondingListener{
 		assertNotNull(this.gameRoom);  //the game room should be init with id after handling.
 		assertNotNull(this.gameRoom.getId()); 
 		assertEquals(1, gamecore.getGameRooms().size());
+		assertEquals(CREATE_ROOM, hostClient.getLastedResponse().getEvent());
+		assertEquals(CREATE_ROOM, playerClient.getLastedResponse().getEvent());
+		
 		PlayerRoomIdModel joinRoomModel = new PlayerRoomIdModel(player.getId(), this.gameRoom.getId());
 		createHandler(playerClient, protocolFactory.createProtocol(JOIN_ROOM, REQUEST, 
 				gson.toJson(joinRoomModel))).handle();
 		assertTrue(this.gameRoom.getHost().equals(this.host));
 		assertTrue(this.gameRoom.ifPlayerInStatusList(this.player));
+		assertEquals(JOIN_ROOM, hostClient.getLastedResponse().getEvent());
+		assertEquals(JOIN_ROOM, playerClient.getLastedResponse().getEvent());
 	}
 	
 	public void testChatting(){
@@ -165,7 +170,7 @@ public class TestChatting implements EventHandler.OnRespondingListener{
 			System.out.println(gameRoom);
 			break;
 		case JOIN_ROOM:
-			Player joinPlayer = gson.fromJson(responseProtocol.getData(), Player.class);
+			Player joinPlayer = gson.fromJson(responseProtocol.getData(), PlayerRoomModel.class).getPlayer();
 			assertEquals(this.player, joinPlayer);
 			this.player.setUserStatus(ClientStatus.inRoom);
 			this.gameRoom.addPlayer(joinPlayer);

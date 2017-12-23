@@ -26,5 +26,5 @@ public interface GameCore {
 	void removeClientPlayer(String id);
 	void addGameRoom(GameRoom room);
 	void closeGameRoom(GameRoom room);
-	void removePlayerFromRoom(Player player, GameRoom gameRoom);
+	void removePlayerFromRoomAndBroadcast(Player player, GameRoom gameRoom);
 }

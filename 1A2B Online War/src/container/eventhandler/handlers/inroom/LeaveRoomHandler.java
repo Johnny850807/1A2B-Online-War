@@ -32,7 +32,7 @@ public class LeaveRoomHandler extends GsonEventHandler<PlayerRoomIdModel, Player
 		gameRoom = gameCore().getGameRoom(data.getGameRoomId());
 		int beforeAmount = gameRoom.getPlayerAmount();
 		ClientPlayer clientPlayer = gameCore().getClientPlayer(data.getPlayerId());
-		gameCore().removePlayerFromRoom(clientPlayer.getPlayer(), gameRoom);
+		gameCore().removePlayerFromRoomAndBroadcast(clientPlayer.getPlayer(), gameRoom);
 		int afterPlayerAmount =  gameRoom.getPlayerAmount();
 		assert afterPlayerAmount == beforeAmount - 1 : "Remove failed, before player amount: " + beforeAmount + ", after: " + afterPlayerAmount;
 		return success(new PlayerRoomModel(clientPlayer.getPlayer(), gameRoom));
