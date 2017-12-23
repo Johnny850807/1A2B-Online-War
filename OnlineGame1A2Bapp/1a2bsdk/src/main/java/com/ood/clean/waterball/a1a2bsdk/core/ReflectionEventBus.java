@@ -2,6 +2,7 @@ package com.ood.clean.waterball.a1a2bsdk.core;
 
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -21,6 +22,7 @@ import gamecore.model.RequestStatus;
 
 
 public final class ReflectionEventBus implements EventBus{
+    private static final String TAG = "ReflectionEventBus";
     private static ReflectionEventBus instance;
     private Gson gson = new Gson();
     private Set<GameCallBack> callBackSet;
@@ -82,7 +84,7 @@ public final class ReflectionEventBus implements EventBus{
         }
 
         if (!eventHasBeenConsumed)
-            throw new IllegalStateException("No callback consumes the event: " + event);
+            Log.e(TAG, "No callback consumes the event: " + event);
     }
 
     /**

@@ -46,6 +46,14 @@ public class UserSigningModuleImp extends AbstractGameModule implements UserSign
         client.respond(protocol);
     }
 
+    @Override
+    public void signOut() {
+        if (currentPlayer == null)
+            throw new IllegalStateException("No user signed in.");
+        Protocol protocol = protocolFactory.createProtocol(SIGNOUT, RequestStatus.request.toString(), gson.toJson(currentPlayer));
+        client.respond(protocol);
+    }
+
 
     public Player getCurrentPlayer() {
         if (currentPlayer == null)
@@ -75,7 +83,7 @@ public class UserSigningModuleImp extends AbstractGameModule implements UserSign
         }
 
         @Override
-        @BindCallback(event = SIGNOUT, status = RequestStatus.failed)
+        @BindCallback(event = SIGNIN, status = RequestStatus.failed)
         public void onSignInFailed() {
             callback.onSignInFailed();
         }

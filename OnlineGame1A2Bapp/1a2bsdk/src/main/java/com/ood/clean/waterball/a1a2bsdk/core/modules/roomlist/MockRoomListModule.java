@@ -45,7 +45,6 @@ public class MockRoomListModule implements RoomListModule {
 
     @Override
     public void joinRoom(GameRoom gameRoom) {
-        callback.onJoinRoomSuccessfully(gameRoom);
     }
 
     @Override

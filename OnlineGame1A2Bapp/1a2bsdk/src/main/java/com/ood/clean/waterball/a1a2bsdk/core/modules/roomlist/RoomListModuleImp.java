@@ -1,6 +1,7 @@
 package com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
@@ -14,6 +15,7 @@ import java.util.List;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.model.GameMode;
+import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
 
 import static container.Constants.Events.InRoom.CLOSE_ROOM;
@@ -82,26 +84,52 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
         @BindCallback(event = CREATE_ROOM, status = RequestStatus.success)
         @Override
         public void onNewRoom(GameRoom gameRoom) {
-            callback.onNewRoom(gameRoom);
+            if(gameRoom.getHost().equals(signingModule.getCurrentPlayer()))
+                this.onCreateRoomSuccessfully(gameRoom);
+            else
+            {
+                Log.d(TAG, "New Room created: " + gameRoom);
+                callback.onNewRoom(gameRoom);
+            }
+        }
+
+        @Override
+        public void onCreateRoomSuccessfully(GameRoom gameRoom) {
+            Log.d(TAG, "Room created successfully: " + gameRoom);
+            callback.onCreateRoomSuccessfully(gameRoom);
+        }
+
+        @Override
+        @BindCallback(event = CREATE_ROOM, status = RequestStatus.failed)
+        public void onCreateRoomUnsuccessfully(GameRoom gameRoom) {
+            Log.d(TAG, "Room created unsuccessfully: " + gameRoom);
+            callback.onCreateRoomUnsuccessfully(gameRoom);
         }
 
         @BindCallback(event = CLOSE_ROOM, status = RequestStatus.success)
         @Override
         public void onRoomClosed(GameRoom gameRoom) {
+            Log.d(TAG, "Room closed: " + gameRoom);
             callback.onRoomClosed(gameRoom);
+        }
+
+        @BindCallback(event = JOIN_ROOM, status = RequestStatus.success)
+        @Override
+        public void onJoinRoomSuccessfully(PlayerRoomModel model) {
+            if(model.getPlayer().equals(signingModule.getCurrentPlayer()))
+            {
+                Log.d(TAG, "Join Room successfully: " + model.getGameRoom());
+                callback.onJoinRoomSuccessfully(model);
+            }
+            else
+                this.onRoomUpdated(model.getGameRoom());
         }
 
         @BindCallback(event = "UpdateRoom", status = RequestStatus.success)
         @Override
         public void onRoomUpdated(GameRoom gameRoom) {
+            Log.d(TAG, "Room updated: "  + gameRoom);
             callback.onRoomUpdated(gameRoom);
-        }
-
-
-        @BindCallback(event = JOIN_ROOM, status = RequestStatus.success)
-        @Override
-        public void onJoinRoomSuccessfully(GameRoom gameRoom) {
-            callback.onJoinRoomSuccessfully(gameRoom);
         }
 
         @Override

@@ -19,6 +19,10 @@ public interface UserSigningModule extends GameModule{
      */
     void signIn(@NonNull String name);
 
+    /**
+     * the current user signs out.
+     */
+    void signOut();
 
     /**
      * @return the user who has signed in to the roomlist

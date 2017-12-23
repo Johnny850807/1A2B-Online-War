@@ -36,6 +36,7 @@ import java.util.List;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.GameMode;
+import gamecore.model.PlayerRoomModel;
 
 import static com.example.joanna_zhang.test.R.array.roomMode;
 
@@ -60,7 +61,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
         init();
         setupViews();
-        updateRoomList(roomList);
+        updateRoomList(roomListOfQuery = roomList);
         roomListView.setOnItemClickListener(this);
     }
 
@@ -82,6 +83,12 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         roomListModule.unregisterCallBack(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //TODO Sign out !!! important !!!
+    }
+
     private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
         UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
@@ -93,7 +100,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private void setupViews() {
         findViews();
         setUpSpinner();
-        updateRoomList(roomList);
         roomListView.setDivider(getResources().getDrawable(R.drawable.transperent_color));
 
     }
@@ -315,6 +321,16 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     @Override
+    public void onCreateRoomSuccessfully(GameRoom gameRoom) {
+        //TODO
+    }
+
+    @Override
+    public void onCreateRoomUnsuccessfully(GameRoom gameRoom) {
+        //TODO
+    }
+
+    @Override
     public void onRoomClosed(GameRoom gameRoom) {
         roomList.remove(gameRoom);
         updateRoomList(roomList);
@@ -328,8 +344,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     @Override
-    public void onJoinRoomSuccessfully(GameRoom gameRoom) {
-        enterGameRoom(gameRoom);
+    public void onJoinRoomSuccessfully(PlayerRoomModel model) {
+        enterGameRoom(model.getGameRoom());
     }
 
 }
