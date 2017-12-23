@@ -62,7 +62,8 @@ public class RoomListModuleImp implements RoomListModule {
 
     @Override
     public void joinRoom(GameRoom gameRoom) {
-        //TODO
+        Protocol protocol = protocolFactory.createProtocol("JoinRoom", RequestStatus.request.toString(), gson.toJson(gameRoom));
+        client.respond(protocol);
     }
 
     @Override
@@ -103,7 +104,7 @@ public class RoomListModuleImp implements RoomListModule {
         }
 
 
-        @BindCallback(event = "JoinRooms", status = RequestStatus.success)
+        @BindCallback(event = "JoinRoom", status = RequestStatus.success)
         @Override
         public void onJoinRoomSuccessfully(GameRoom gameRoom) {
             callback.onJoinRoomSuccessfully(gameRoom);
