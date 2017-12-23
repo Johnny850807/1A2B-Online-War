@@ -11,15 +11,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class InputNumberWindowView extends AlertDialog implements View.OnClickListener {
+public class InputNumberWindowView extends Dialog implements View.OnClickListener {
     private Context context;
     private TextView titleTxt;
     private Button button1, button2, button3, button4, button5, button6, button7, button8, button9, button0, cancelBtn, confirmBtn;
     private EditText answerEd;
-    private Dialog dialog;
     private OnClickListener OnClickListener;
-
 
     public InputNumberWindowView(Context context) {
         super(context);
@@ -28,12 +27,10 @@ public class InputNumberWindowView extends AlertDialog implements View.OnClickLi
     }
 
     public void setUpView() {
-        dialog = new Dialog(context);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.input_number_window, null);
-        dialog.setContentView(dialogView);
+        this.setContentView(dialogView);
         findAllViewById(dialogView);
         whenButtonOnClick();
-        dialog.show();
     }
 
     public void findAllViewById(View view) {
@@ -69,7 +66,7 @@ public class InputNumberWindowView extends AlertDialog implements View.OnClickLi
     }
 
     public void update(String guessNumber) {
-            OnClickListener.onEnterClick(guessNumber);
+        OnClickListener.onEnterClick(guessNumber);
     }
 
     @Override
@@ -82,8 +79,11 @@ public class InputNumberWindowView extends AlertDialog implements View.OnClickLi
                 answerEd.setText(str);
                 break;
             case R.id.confirmBtn:
-                update(answerEd.getText().toString());
-                dialog.dismiss();
+                String answer = answerEd.getText().toString();
+                if (answer.length() == 4) {
+                    update(answer);
+                    this.dismiss();
+                }
                 break;
             default:
                 Button button = (Button) v;
@@ -111,22 +111,27 @@ public class InputNumberWindowView extends AlertDialog implements View.OnClickLi
             return this;
         }
 
-        public Builder setTitle(String title){
+        public Builder setTitle(String title) {
             inputNumberWindowView.titleTxt.setText(title);
             return this;
         }
 
-        public Builder setCanceledOnTouchOutside(Boolean b){
+        public Builder setCanceledOnTouchOutside(Boolean b) {
             inputNumberWindowView.setCanceledOnTouchOutside(b);
             return this;
         }
 
-        public Builder setCancelable(Boolean b){
+        public Builder setCancelable(Boolean b) {
             inputNumberWindowView.setCancelable(b);
             return this;
         }
 
         public InputNumberWindowView build() {
+            return inputNumberWindowView;
+        }
+
+        public InputNumberWindowView show() {
+            inputNumberWindowView.show();
             return inputNumberWindowView;
         }
 

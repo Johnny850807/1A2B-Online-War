@@ -2,6 +2,10 @@ package com.example.joanna_zhang.test;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,7 +23,7 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
     private GameRoom gameRoom;
     private ChatWindowView chatWindowView;
     private InputNumberWindowView inputNumberWindowView;
-    private TextView p1NameTxt, p2NameTxt, p1AnswerTxt, p2AnswerTxt;
+    private TextView p1NameTxt, p2NameTxt, p3NameTxt, p4NameTxt, p5NameTxt, p6NameTxt;
     private ListView p1ResultListView, p2ResultListView;
     private List<String> results;
 
@@ -30,7 +34,11 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
 
         CoreGameServer server = CoreGameServer.getInstance();
         setupChatWindow();
-        setupInputNumberWindowView();
+        findViews();
+    }
+
+    private void findViews() {
+        p1NameTxt = (TextView) findViewById(R.id.p1NameTxt);
     }
 
     public void setupChatWindow() {
@@ -46,12 +54,38 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
     }
 
     @Override
-    public void onClick(ChatMessage chatMessage) {
+    public void onChatMessageUpdate(ChatMessage chatMessage) {
 
     }
 
     @Override
     public void onEnterClick(String guessName) {
 
+    }
+
+    private class GuessResultAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return results.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            view = LayoutInflater.from(GroupFightActivity.this).inflate(android.R.layout.simple_list_item_1, viewGroup, false);
+
+            // TODO
+            return null;
+        }
     }
 }
