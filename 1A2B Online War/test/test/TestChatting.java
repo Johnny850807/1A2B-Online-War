@@ -1,17 +1,21 @@
 package test;
 
+import static container.Constants.Events.Chat.*;
+import static container.Constants.Events.InRoom.*;
+import static container.Constants.Events.RoomList.*;
+import static container.Constants.Events.Signing.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.gson.Gson;
 
-import static container.Constants.Events.Signing.*;
-import static container.Constants.Events.RoomList.*;
-import static container.Constants.Events.InRoom.*;
-import static container.Constants.Events.Chat.*;
-
-import container.Constants.Events.Chat;
-import container.Constants.Events.RoomList;
 import container.base.Client;
 import container.eventhandler.EventHandler;
 import container.eventhandler.GameEventHandlerFactory;
@@ -22,17 +26,13 @@ import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.GameMode;
-import gamecore.model.JoinRoomModel;
+import gamecore.model.PlayerRoomIdModel;
+import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
 import gamecore.model.ServerInformation;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
 import mock.MockClient;
-import static org.junit.Assert.*;
-
-import java.awt.Frame;
-import java.io.Reader;
-import java.util.List;
 
 public class TestChatting implements EventHandler.OnRespondingListener{
 	protected static final String REQUEST = RequestStatus.request.toString();
@@ -54,6 +54,7 @@ public class TestChatting implements EventHandler.OnRespondingListener{
 		testSignIn();
 		testCreateRoomAndJoin();
 		testChatting();
+		testPlayerLeft();
 		testCloseRoom();
 	}
 	
@@ -74,7 +75,7 @@ public class TestChatting implements EventHandler.OnRespondingListener{
 		assertNotNull(this.gameRoom);  //the game room should be init with id after handling.
 		assertNotNull(this.gameRoom.getId()); 
 		assertEquals(1, gamecore.getGameRooms().size());
-		JoinRoomModel joinRoomModel = new JoinRoomModel(player.getId(), this.gameRoom.getId());
+		PlayerRoomIdModel joinRoomModel = new PlayerRoomIdModel(player.getId(), this.gameRoom.getId());
 		createHandler(playerClient, protocolFactory.createProtocol(JOIN_ROOM, REQUEST, 
 				gson.toJson(joinRoomModel))).handle();
 		assertTrue(this.gameRoom.getHost().equals(this.host));
@@ -102,6 +103,14 @@ public class TestChatting implements EventHandler.OnRespondingListener{
 	private void assertAllChatmessageContentsEqual(ChatMessage[] expecteds, List<ChatMessage> actuals){
 		for (int i = 0 ; i < expecteds.length ; i ++)
 			assertEquals(expecteds[i].getContent(), actuals.get(i).getContent());
+	}
+	
+	public void testPlayerLeft(){
+		createHandler(playerClient, protocolFactory.createProtocol(LEAVE_ROOM, REQUEST, 
+				gson.toJson(new PlayerRoomIdModel(player.getId(), gameRoom.getId())))).handle();
+		assertEquals(1, gameRoom.getPlayerAmount());
+		assertEquals(LEAVE_ROOM, hostClient.getLastedResponse().getEvent());
+		assertEquals(player, gson.fromJson(hostClient.getLastedResponse().getData(), PlayerRoomModel.class).getPlayer());
 	}
 	
 	public void testCloseRoom(){
@@ -158,6 +167,12 @@ public class TestChatting implements EventHandler.OnRespondingListener{
 			GameRoom closedRoom = gson.fromJson(responseProtocol.getData(), GameRoom.class);
 			assertEquals(this.gameRoom, closedRoom);
 			this.gameRoom = null;
+			break;
+		case LEAVE_ROOM:
+			PlayerRoomModel model = gson.fromJson(responseProtocol.getData(), PlayerRoomModel.class);
+			this.gameRoom.removePlayer(model.getPlayer());
+			assertEquals(this.player, model.getPlayer());
+			assertEquals(this.gameRoom, model.getGameRoom());
 			break;
 		default:
 			System.out.println("No Match: " + responseProtocol);

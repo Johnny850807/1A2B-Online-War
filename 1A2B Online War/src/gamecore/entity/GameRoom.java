@@ -83,16 +83,11 @@ public class GameRoom extends Entity{
 	}
 	
 	public int getPlayerAmount(){
-		return getPlayerStatus().size() + 1;  //the players and the host
+		return getPlayers().size(); 
 	}
 	
 	public void changePlayerStatus(Player player, boolean ready){
-		for (PlayerStatus playerStatus : playerStatusList)
-			if(playerStatus.getPlayer().equals(player))
-			{
-				playerStatus.setReady(ready);
-				break;
-			}
+		getPlayerStatusOfPlayer(player).setReady(ready);
 	}
 	
 	/**
@@ -120,10 +115,14 @@ public class GameRoom extends Entity{
 	}
 	
 	public void removePlayer(Player player){
-		if (ifPlayerInStatusList(player))
-			playerStatusList.remove(player);
-		else 
-			throw new IllegalArgumentException("The removed player doesn't exist in the room !");
+		playerStatusList.remove(getPlayerStatusOfPlayer(player));
+	}
+	
+	public PlayerStatus getPlayerStatusOfPlayer(Player player){
+		for (PlayerStatus playerStatus : playerStatusList)
+			if(playerStatus.getPlayer().equals(player))
+				return playerStatus;
+		throw new IllegalArgumentException("The removed player doesn't exist in the room !");
 	}
 
 	public void setName(String name) {
@@ -143,10 +142,13 @@ public class GameRoom extends Entity{
 	}
 	
 	public boolean ifPlayerInStatusList(Player player){
-		for (PlayerStatus playerStatus : playerStatusList)
-			if (playerStatus.getPlayer().equals(player))
-				return true;
-		return false;
+		try{
+			getPlayerStatusOfPlayer(player);
+			return true;
+		}catch (IllegalStateException e) {
+			//if the player is not in the list, IllegalStateException thrown.
+			return false;
+		}
 	}
 	
 	public void launchGame(){

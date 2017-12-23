@@ -8,26 +8,26 @@ import gamecore.ClientPlayer;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
-import gamecore.model.JoinRoomModel;
+import gamecore.model.PlayerRoomIdModel;
 
 /**
  * @author Johnny850807
  * Input: the joining room.
  * Output: (InRoom / RoomList) the joined player.
  */
-public class JoinRoomHandler extends GsonEventHandler<JoinRoomModel, Player>{
+public class JoinRoomHandler extends GsonEventHandler<PlayerRoomIdModel, Player>{
 
 	public JoinRoomHandler(Client client, Protocol request, GameCore gameCore, ProtocolFactory protocolFactory) {
 		super(client, request, gameCore, protocolFactory);
 	}
 
 	@Override
-	protected Class<JoinRoomModel> getDataClass() {
-		return JoinRoomModel.class;
+	protected Class<PlayerRoomIdModel> getDataClass() {
+		return PlayerRoomIdModel.class;
 	}
 
 	@Override
-	protected Response onHandling(JoinRoomModel data) {
+	protected Response onHandling(PlayerRoomIdModel data) {
 		try{
 			GameRoom room = gameCore().getGameRoom(data.getGameRoomId());
 			ClientPlayer clientPlayer = gameCore().getClientPlayer(data.getPlayerId());

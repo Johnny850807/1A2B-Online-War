@@ -17,7 +17,7 @@ import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.GameMode;
-import gamecore.model.JoinRoomModel;
+import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.RequestStatus;
 import module.FactoryModule;
 import module.SocketConnector;
@@ -134,7 +134,7 @@ public class MainView extends View implements SocketConnector.Callback{
 	
 	private void joinRoom(){
 		String gameRoomId = scanner.next();
-		JoinRoomModel joinRoomModel = new JoinRoomModel(player.getId(), gameRoomId);
+		PlayerRoomIdModel joinRoomModel = new PlayerRoomIdModel(player.getId(), gameRoomId);
 		Protocol signout = protocolfactory.createProtocol("JoinRoom", RequestStatus.request.toString(), gson.toJson(joinRoomModel));
 		SocketConnector.getInstance().send(signout.toString(), this, JOINROOM);
 	}

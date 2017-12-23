@@ -1,10 +1,10 @@
 package gamecore.model;
 
-public class JoinRoomModel {
+public class PlayerRoomIdModel {
 	private String playerId;
 	private String gameRoomId;
 	
-	public JoinRoomModel(String playerId, String gameRoomId) {
+	public PlayerRoomIdModel(String playerId, String gameRoomId) {
 		this.playerId = playerId;
 		this.gameRoomId = gameRoomId;
 	}
