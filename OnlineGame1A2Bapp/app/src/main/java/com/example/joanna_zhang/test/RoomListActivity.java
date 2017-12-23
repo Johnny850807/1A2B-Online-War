@@ -95,6 +95,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         setUpSpinner();
         updateRoomList(roomList);
         roomListView.setDivider(getResources().getDrawable(R.drawable.transperent_color));
+
     }
 
     private void findViews() {

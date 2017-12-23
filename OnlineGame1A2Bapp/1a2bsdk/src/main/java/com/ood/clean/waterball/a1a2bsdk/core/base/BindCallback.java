@@ -11,6 +11,4 @@ import gamecore.model.RequestStatus;
 public @interface BindCallback {
     public String event();
     public RequestStatus status();
-
-
 }

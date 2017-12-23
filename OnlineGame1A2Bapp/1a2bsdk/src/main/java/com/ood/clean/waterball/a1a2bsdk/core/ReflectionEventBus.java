@@ -64,7 +64,7 @@ public final class ReflectionEventBus implements EventBus{
     private void bindMethods(Protocol protocol) throws InvocationTargetException, IllegalAccessException {
         String event = protocol.getEvent();
         RequestStatus status = RequestStatus.valueOf(protocol.getStatus());
-
+        boolean eventHasBeenConsumed = false;
         for (GameCallBack gameCallBack : callBackSet)
         {
             Method[] methods = gameCallBack.getClass().getDeclaredMethods();
@@ -73,10 +73,16 @@ public final class ReflectionEventBus implements EventBus{
                 if (hasCallback) {
                     BindCallback bindCallback = method.getAnnotation(BindCallback.class);
                     if (event.equals(bindCallback.event()) && status == bindCallback.status())
+                    {
+                        eventHasBeenConsumed = true;
                         invokeMethod(gameCallBack, method, protocol);
+                    }
                 }
             }
         }
+
+        if (!eventHasBeenConsumed)
+            throw new IllegalStateException("No callback consumes the event: " + event);
     }
 
     /**

@@ -46,7 +46,7 @@ public class RoomListModuleImp implements RoomListModule {
 
     @Override
     public void unregisterCallBack(Callback callback) {
-        if (this.proxyCallback == null)
+        if (this.proxyCallback == null || this.proxyCallback.callback != callback)
             callback.onError(new CallbackException());
         eventBus.unregisterCallback(proxyCallback);
         this.proxyCallback = null;

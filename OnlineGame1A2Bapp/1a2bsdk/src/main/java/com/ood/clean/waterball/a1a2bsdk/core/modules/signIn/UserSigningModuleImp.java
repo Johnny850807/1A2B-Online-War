@@ -41,7 +41,7 @@ public class UserSigningModuleImp implements UserSigningModule {
 
     @Override
     public void unregisterCallBack(Callback callback) {
-        if (this.proxyCallback == null)
+        if (this.proxyCallback == null || this.proxyCallback.callback != callback)
             callback.onError(new CallbackException());
         eventBus.unregisterCallback(proxyCallback);
         this.proxyCallback = null;
@@ -75,21 +75,21 @@ public class UserSigningModuleImp implements UserSigningModule {
             this.callback = callback;
         }
 
-        @BindCallback(event = "SignIn", status = RequestStatus.success)
         @Override
+        @BindCallback(event = "SignIn", status = RequestStatus.success)
         public void onSignInSuccessfully(@NonNull Player player) {
             currentPlayer = player;
             callback.onSignInSuccessfully(player);
         }
 
-        @BindCallback(event = "SignIn", status = RequestStatus.failed)
         @Override
+        @BindCallback(event = "SignIn", status = RequestStatus.failed)
         public void onSignInFailed() {
             callback.onSignInFailed();
         }
 
-        @BindCallback(event = "GetServerInformation", status = RequestStatus.success)
         @Override
+        @BindCallback(event = "GetServerInformation", status = RequestStatus.success)
         public void onLoadServerInformation(ServerInformation serverInformation) {
             callback.onLoadServerInformation(serverInformation);
         }
