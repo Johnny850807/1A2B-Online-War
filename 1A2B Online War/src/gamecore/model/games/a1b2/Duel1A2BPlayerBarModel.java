@@ -1,4 +1,4 @@
-package gamecore.model.gamemodels.a1b2;
+package gamecore.model.games.a1b2;
 
 import java.util.ArrayList;
 import java.util.List;

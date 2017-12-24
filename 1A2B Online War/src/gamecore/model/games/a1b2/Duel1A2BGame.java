@@ -1,15 +1,12 @@
-package gamecore.model.gamemodels.a1b2;
+package gamecore.model.games.a1b2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import org.omg.PortableInterceptor.SUCCESSFUL;
-
-import com.google.gson.Gson;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import container.Constants.Events.Games;
 import container.Constants.Events.Games.Duel1A2B;
@@ -19,14 +16,14 @@ import gamecore.entity.Player;
 import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.RequestStatus;
-import gamecore.model.gamemodels.Game;
-import gamefactory.GameFactory;
+import gamecore.model.games.Game;
 
 /**
  * @author WaterBall
  * the model holding all the instances of one 1A2B-duel game.
  */
 public class Duel1A2BGame extends Game{
+	private static transient Logger log = LogManager.getLogger(Duel1A2BGame.class);
 	public static final int HOST = 0;
 	public static final int PLAYER = 1;
 	private ClientPlayer hostClient;
@@ -46,6 +43,7 @@ public class Duel1A2BGame extends Game{
 	public void commitPlayerAnswer(String playerId, String answer) throws NumberNotValidException{
 		playerModels.get(playerId).setAnswer(answer);
 		synchronized (playerModels) {
+			log.info("PlayerId: " + playerId + ", Set answer: " + answer);
 			if (hasBothAnswersCommitted())
 				broadcastGuessingStarted();
 		}

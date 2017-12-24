@@ -1,4 +1,4 @@
-package gamecore.model.gamemodels.a1b2;
+package gamecore.model.games.a1b2;
 
 public final class A1B2NumberValidator {
 	private static final char UNASSIGNED = '-';

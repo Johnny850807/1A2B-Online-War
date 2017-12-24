@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+  <Appenders>
+    <Console name="Console">
+      <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} %n         - %msg%n"/>
+    </Console>
+	
+	<File name="MyFile" fileName="logs/app.log" append="false">
+       <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} %n          - %msg%n"/>
+    </File>
+	
+	<File name="ErrorFile" fileName="logs/error.log" append="false">
+       <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} %n          - %msg%n"/>
+    </File>
+  </Appenders>
+  <Loggers>
+    <Root level="error">
+      <AppenderRef ref="ErrorFile"/>
+    </Root>
+	<Root level="all" >
+      <AppenderRef ref="MyFile"/>
+    </Root>
+	<logger name="gamecore.model.games" level="trace">
+      <AppenderRef ref="Console"/>
+	</logger>
+  </Loggers>
+</Configuration>

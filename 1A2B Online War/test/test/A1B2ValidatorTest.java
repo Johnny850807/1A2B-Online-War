@@ -9,9 +9,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import gamecore.model.gamemodels.a1b2.A1B2NumberValidator;
-import gamecore.model.gamemodels.a1b2.GuessResult;
-import gamecore.model.gamemodels.a1b2.NumberNotValidException;
+import gamecore.model.games.a1b2.A1B2NumberValidator;
+import gamecore.model.games.a1b2.GuessResult;
+import gamecore.model.games.a1b2.NumberNotValidException;
 import junit.framework.Assert;
 
 @RunWith(Parameterized.class)

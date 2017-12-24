@@ -1,4 +1,4 @@
-package gamecore.model.gamemodels;
+package gamecore.model.games;
 
 import java.util.Date;
 import java.util.Map;

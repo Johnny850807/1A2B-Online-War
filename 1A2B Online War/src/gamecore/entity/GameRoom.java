@@ -13,8 +13,8 @@ import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.PlayerStatus;
 import gamecore.model.RoomStatus;
-import gamecore.model.gamemodels.Game;
-import gamecore.model.gamemodels.a1b2.Duel1A2BGame;
+import gamecore.model.games.Game;
+import gamecore.model.games.a1b2.Duel1A2BGame;
 
 /**
  * GameRoom contains only the info and the status the room should present. The game of the room will be
