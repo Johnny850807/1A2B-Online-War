@@ -12,7 +12,7 @@ import gamecore.model.gamemodels.a1b2.GuessRecord;
 import gamecore.model.gamemodels.a1b2.GuessResult;
 import gamecore.model.gamemodels.a1b2.NumberNotValidException;
 
-public class TestDuel1A2B {
+public class TestDuel1A2BModel {
 	Player host = new Player("Host");  // the host assumed to be the winner
 	Player player =  new Player("Player");
 	Duel1A2BModel game = new Duel1A2BModel(host, player);

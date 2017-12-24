@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import container.Constants.Events.Games.Duel1A2B;
 import gamecore.entity.Player;
+import gamecore.model.GameMode;
 import gamecore.model.gamemodels.GameModel;
 
 /**
@@ -18,6 +20,7 @@ public class Duel1A2BModel extends GameModel{
 	private Player winner = null;
 	
 	public Duel1A2BModel(Player host, Player anotherPlayer){
+		super(GameMode.DUEL1A2B);
 		playerModels.put(host.getId(), new Duel1A2BPlayerBarModel(host.getName()));
 		playerModels.put(anotherPlayer.getId(), new Duel1A2BPlayerBarModel(anotherPlayer.getName()));
 	}

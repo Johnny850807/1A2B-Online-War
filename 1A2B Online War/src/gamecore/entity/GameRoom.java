@@ -96,8 +96,9 @@ public class GameRoom extends Entity{
 	public List<Player> getPlayers(){
 		List<Player> players = new ArrayList<>();
 		players.add(host);
-		for (PlayerStatus status : playerStatusList)
-			players.add(status.getPlayer());
+		playerStatusList.parallelStream()
+						.map(ps -> ps.getPlayer())
+						.forEach(p -> players.add(p));
 		return players;
 	}
 	
@@ -152,7 +153,7 @@ public class GameRoom extends Entity{
 	}
 	
 	public void launchGame(){
-		if (playerStatusList.size() < getMinPlayerAmount())
+		if (getPlayerAmount() < getMinPlayerAmount())
 			throw new IllegalStateException("The Player amount is not enough to launch the game.");
 		switch (getGameMode()) {
 		case DUEL1A2B:
@@ -165,6 +166,11 @@ public class GameRoom extends Entity{
 			//TODO
 			break;
 		}
+		setRoomStatus(RoomStatus.gamestarted);
+	}
+	
+	public GameModel getGameModel() {
+		return gameModel;
 	}
 	
 	@Override

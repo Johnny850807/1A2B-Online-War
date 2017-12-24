@@ -1,9 +1,14 @@
 package test;
 
-import static container.Constants.Events.Chat.*;
-import static container.Constants.Events.InRoom.*;
-import static container.Constants.Events.RoomList.*;
-import static container.Constants.Events.Signing.*;
+import static container.Constants.Events.Chat.SEND_MSG;
+import static container.Constants.Events.InRoom.CLOSE_ROOM;
+import static container.Constants.Events.InRoom.LAUNCH_GAME;
+import static container.Constants.Events.InRoom.LEAVE_ROOM;
+import static container.Constants.Events.RoomList.CREATE_ROOM;
+import static container.Constants.Events.RoomList.JOIN_ROOM;
+import static container.Constants.Events.Signing.GETINFO;
+import static container.Constants.Events.Signing.SIGNIN;
+import static container.Constants.Events.Signing.SIGNOUT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -12,9 +17,11 @@ import static org.junit.Assert.fail;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import container.base.Client;
 import container.eventhandler.EventHandler;
@@ -30,12 +37,16 @@ import gamecore.model.GameMode;
 import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
+import gamecore.model.RoomStatus;
 import gamecore.model.ServerInformation;
+import gamecore.model.gamemodels.GameModel;
+import gamecore.model.gamemodels.a1b2.Duel1A2BModel;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
 import mock.MockClient;
+import utils.RuntimeTypeAdapterFactory;
 
-public class TestChatting implements EventHandler.OnRespondingListener{
+public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListener{
 	protected static final String REQUEST = RequestStatus.request.toString();
 	protected GameFactory factory = new GameOnlineReleaseFactory();
 	protected GameCore gamecore = factory.getGameCore();
@@ -50,11 +61,23 @@ public class TestChatting implements EventHandler.OnRespondingListener{
 	protected GameRoom gameRoom;
 	protected int signInCount = 0;
 	
+	@Before
+	public void setup(){
+		RuntimeTypeAdapterFactory<GameModel> runtimeTypeAdapterFactory = RuntimeTypeAdapterFactory
+			    .of(GameModel.class, "gameMode")
+			    .registerSubtype(Duel1A2BModel.class, "DUEL1A2B");
+
+		gson = new GsonBuilder()
+					.registerTypeAdapterFactory(runtimeTypeAdapterFactory)
+					.create();
+	}
+	
 	@Test
 	public void test(){
 		testSignIn();
 		testCreateRoomAndJoin();
 		testChatting();
+		testPlayingDuel1A2B();
 		testPlayerLeft();
 		testHostSignOut();  //select one in host sign out or close room
 		//testCloseRoom();
@@ -74,16 +97,15 @@ public class TestChatting implements EventHandler.OnRespondingListener{
 		GameRoom room = new GameRoom(GameMode.DUEL1A2B, "Game", host);
 		createHandler(hostClient, protocolFactory.createProtocol(CREATE_ROOM, REQUEST, 
 				gson.toJson(room))).handle();
-		assertNotNull(this.gameRoom);  //the game room should be init with id after handling.
-		assertNotNull(this.gameRoom.getId()); 
+		assertNotNull(this.gameRoom.getId());  //the game room should be initialized with id after handling.
 		assertEquals(1, gamecore.getGameRooms().size());
+		assertEquals(host, this.gameRoom.getHost());
 		assertEquals(CREATE_ROOM, hostClient.getLastedResponse().getEvent());
 		assertEquals(CREATE_ROOM, playerClient.getLastedResponse().getEvent());
 		
 		PlayerRoomIdModel joinRoomModel = new PlayerRoomIdModel(player.getId(), this.gameRoom.getId());
 		createHandler(playerClient, protocolFactory.createProtocol(JOIN_ROOM, REQUEST, 
 				gson.toJson(joinRoomModel))).handle();
-		assertTrue(this.gameRoom.getHost().equals(this.host));
 		assertTrue(this.gameRoom.ifPlayerInStatusList(this.player));
 		assertEquals(JOIN_ROOM, hostClient.getLastedResponse().getEvent());
 		assertEquals(JOIN_ROOM, playerClient.getLastedResponse().getEvent());
@@ -118,6 +140,13 @@ public class TestChatting implements EventHandler.OnRespondingListener{
 		assertEquals(1, gameRoom.getPlayerAmount());
 		assertEquals(LEAVE_ROOM, hostClient.getLastedResponse().getEvent());
 		assertEquals(player, gson.fromJson(hostClient.getLastedResponse().getData(), PlayerRoomModel.class).getPlayer());
+	}
+	
+	public void testPlayingDuel1A2B(){
+		createHandler(hostClient, protocolFactory.createProtocol(LAUNCH_GAME, REQUEST, 
+				gson.toJson(this.gameRoom))).handle();
+		assertTrue(gameRoom.getRoomStatus() == RoomStatus.gamestarted);
+		assertNotNull(gameRoom.getGameModel());
 	}
 	
 	public void testHostSignOut(){
@@ -193,6 +222,11 @@ public class TestChatting implements EventHandler.OnRespondingListener{
 			break;
 		case SIGNOUT:
 			host = null;
+			break;
+		case LAUNCH_GAME:
+			System.out.println(responseProtocol.getData());
+			this.gameRoom = gson.fromJson(responseProtocol.getData(), GameRoom.class);
+			
 			break;
 		default:
 			System.out.println("No Match: " + responseProtocol);
