@@ -45,6 +45,4 @@ public class GuessResult {
 			return false;
 		return true;
 	}
-	
-	
 }

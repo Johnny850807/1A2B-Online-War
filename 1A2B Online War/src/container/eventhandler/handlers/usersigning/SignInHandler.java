@@ -33,7 +33,7 @@ public class SignInHandler extends GsonEventHandler<Player, Player>{
 
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
-		client().respond(responseProtocol);
+		client().broadcast(responseProtocol);
 	}
 
 }

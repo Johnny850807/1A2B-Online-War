@@ -28,7 +28,7 @@ public class SignOutHandler extends GsonEventHandler<Player, Player>{
 
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
-		client().respond(responseProtocol);
+		client().broadcast(responseProtocol);
 	}
 
 }

@@ -4,6 +4,7 @@ import container.base.Client;
 import container.base.IO;
 import container.eventhandler.GameEventHandlerFactory;
 import container.protocol.ProtocolFactory;
+import gamecore.ClientBinder;
 import gamecore.GameCore;
 
 /**

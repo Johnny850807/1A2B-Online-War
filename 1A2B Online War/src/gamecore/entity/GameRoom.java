@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 import container.eventhandler.handlers.inroom.LaunchGameHandler;
+import container.protocol.ProtocolFactory;
+import gamecore.ClientBinder;
+import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.PlayerStatus;
 import gamecore.model.RoomStatus;
-import gamecore.model.gamemodels.GameModel;
-import gamecore.model.gamemodels.a1b2.Duel1A2BModel;
+import gamecore.model.gamemodels.Game;
+import gamecore.model.gamemodels.a1b2.Duel1A2BGame;
 
 /**
  * GameRoom contains only the info and the status the room should present. The game of the room will be
@@ -21,7 +24,8 @@ public class GameRoom extends Entity{
 	private Player host;
 	private RoomStatus roomStatus = RoomStatus.waiting;
 	private GameMode gameMode;
-	private GameModel gameModel;
+	private Game game;
+	private ProtocolFactory protocolFactory;
 	private List<ChatMessage> chatMessageList = Collections.checkedList(new ArrayList<>(), ChatMessage.class);
 	
 	/**
@@ -29,8 +33,7 @@ public class GameRoom extends Entity{
 	 */
 	private List<PlayerStatus> playerStatusList =  Collections.checkedList(new ArrayList<>(), PlayerStatus.class);
 	private String name;
-	
-	
+
 	public GameRoom(GameMode gameMode, String name, Player host) {
 		this.gameMode = gameMode;
 		this.name = name;
@@ -152,12 +155,27 @@ public class GameRoom extends Entity{
 		}
 	}
 	
-	public void launchGame(){
+	public void setProtocolFactory(ProtocolFactory protocolFactory) {
+		this.protocolFactory = protocolFactory;
+	}
+	
+	public ProtocolFactory getProtocolFactory() {
+		return protocolFactory;
+	}
+	
+	/**
+	 * launch the game and send all the client players into the game.
+	 * @param clientBinder binding interface which allows the game access the client player without coupling to the game core.
+	 */
+	public void launchGame(ClientBinder clientBinder){
 		if (getPlayerAmount() < getMinPlayerAmount())
 			throw new IllegalStateException("The Player amount is not enough to launch the game.");
+
+		ClientPlayer hostClient = clientBinder.getClientPlayer(host.getId());
 		switch (getGameMode()) {
 		case DUEL1A2B:
-			gameModel = new Duel1A2BModel(host, playerStatusList.get(0).getPlayer());
+			ClientPlayer playerClient = clientBinder.getClientPlayer(playerStatusList.get(0).getPlayer().getId());
+			game = new Duel1A2BGame(protocolFactory, id, hostClient, playerClient);
 			break;
 		case GROUP1A2B:
 			//TODO
@@ -167,10 +185,11 @@ public class GameRoom extends Entity{
 			break;
 		}
 		setRoomStatus(RoomStatus.gamestarted);
+		this.game.startGame();
 	}
 	
-	public GameModel getGameModel() {
-		return gameModel;
+	public Game getGameModel() {
+		return game;
 	}
 	
 	@Override

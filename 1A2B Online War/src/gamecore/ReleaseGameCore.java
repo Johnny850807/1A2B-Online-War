@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 
@@ -16,6 +17,7 @@ import container.base.Client;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
+import gamecore.model.ClientPlayer;
 import gamecore.model.ClientStatus;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
@@ -45,13 +47,13 @@ public class ReleaseGameCore implements GameCore{
 	}
 
 	private List<ClientPlayer> getClientsByPlayerList(List<Player> players) {
-		return Linq.From(clientsMap.values()).where(c -> players.contains(c.getPlayer())).toList();
+		return players.parallelStream().map(p -> clientsMap.get(p.getId())).collect(Collectors.toList());
 	}
 
 	@Override
 	public void broadcastClientPlayer(String userId, Protocol response) {
 		ClientPlayer clientPlayer = getClientPlayer(userId);
-		clientPlayer.respondToClient(response);
+		clientPlayer.broadcast(response);
 	}
 
 	@Override
@@ -61,13 +63,13 @@ public class ReleaseGameCore implements GameCore{
 	}
 	
 	private void broadcastToClients(List<ClientPlayer> clientPlayers, Protocol response){
-		for (ClientPlayer clientPlayer : clientPlayers)
-			clientPlayer.respondToClient(response);
+		clientPlayers.parallelStream().forEach(c -> c.broadcast(response));
 	}
 
 	@Override
 	public List<ClientPlayer> getClientPlayers(ClientStatus status){
-		return Linq.From(clientsMap.values()).where(c->c.getPlayerStatus() == status).toList();
+		return getClientPlayers().stream()
+				.filter(c -> c.getPlayerStatus() == status).collect(Collectors.toList());
 	}
 	
 	@Override
@@ -77,7 +79,8 @@ public class ReleaseGameCore implements GameCore{
 	
 	@Override
 	public List<GameRoom> getGameRooms(RoomStatus status) {
-		return Linq.From(roomContainer.values()).where(r->r.getRoomStatus() == status).toList();
+		return getGameRooms().stream()
+				.filter(r->r.getRoomStatus() == status).collect(Collectors.toList());
 	}
 	
 	@Override
@@ -97,8 +100,8 @@ public class ReleaseGameCore implements GameCore{
 	
 	@Override
 	public void addGameRoom(GameRoom room){
-		if (room.getId() == null)
-			throw new IllegalArgumentException("The room's id has not been initialized.");
+		if (room.getId() == null || room.getProtocolFactory() == null)
+			throw new IllegalArgumentException("The room's id or the factory has not been initialized.");
 		Protocol protocol = factory.getProtocolFactory().createProtocol(RoomList.CREATE_ROOM,
 				RequestStatus.success.toString(), gson.toJson(room));
 		broadcastClientPlayers(ClientStatus.signedIn, protocol);
@@ -162,5 +165,15 @@ public class ReleaseGameCore implements GameCore{
 		gameRoom.removePlayer(player);
 		broadcastClientPlayers(ClientStatus.signedIn, protocol);
 		broadcastRoom(gameRoom.getId(), protocol);
+	}
+
+	@Override
+	public ClientBinder clientBinder() {
+		return new ClientBinder() {
+			@Override
+			public ClientPlayer getClientPlayer(String playerId) {
+				return ReleaseGameCore.this.getClientPlayer(playerId);
+			}
+		};
 	}
 }

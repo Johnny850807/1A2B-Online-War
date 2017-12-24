@@ -1,6 +1,7 @@
 package container;
 
 public final class Constants {
+	public final static int VERSION = 1;
 	public final static class Events{
 		public final static class Signing{
 			public final static String SIGNIN = "SignIn";
@@ -22,9 +23,13 @@ public final class Constants {
 			public final static String SEND_MSG = "SendChatMessage";
 		}
 		public final static class Games{
+			public final static String GAMEOVER = "GameOver";
+			
 			public final static class Duel1A2B{
 				public final static String SET_ANSWER = "SetAnswerDuel1A2B";
 				public final static String GUESS = "GuessDuel1A2B";
+				public final static String GUESSING_STARTED = "GuessingStarted";
+				public final static String ONE_ROUND_OVER = "OneRoundOver";
 			}
 		}
 	}

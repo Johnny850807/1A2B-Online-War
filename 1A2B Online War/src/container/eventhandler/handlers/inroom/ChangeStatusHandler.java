@@ -4,10 +4,10 @@ import container.base.Client;
 import container.eventhandler.handlers.GsonEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
-import gamecore.ClientPlayer;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
 import gamecore.model.ChangeStatusModel;
+import gamecore.model.ClientPlayer;
 
 /**
  * @author Johnny850807

@@ -29,7 +29,7 @@ public class LaunchGameHandler extends GsonEventHandler<GameRoom, GameRoom>{
 	protected Response onHandling(GameRoom data) {
 		roomId = data.getId();
 		GameRoom gameRoom = gameCore().getGameRoom(roomId);
-		gameRoom.launchGame();
+		gameRoom.launchGame(gameCore().clientBinder());
 		return success(gameRoom);
 	}
 

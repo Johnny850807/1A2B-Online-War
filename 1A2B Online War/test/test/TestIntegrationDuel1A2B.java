@@ -39,8 +39,8 @@ import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
 import gamecore.model.RoomStatus;
 import gamecore.model.ServerInformation;
-import gamecore.model.gamemodels.GameModel;
-import gamecore.model.gamemodels.a1b2.Duel1A2BModel;
+import gamecore.model.gamemodels.Game;
+import gamecore.model.gamemodels.a1b2.Duel1A2BGame;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
 import mock.MockClient;
@@ -63,9 +63,9 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	
 	@Before
 	public void setup(){
-		RuntimeTypeAdapterFactory<GameModel> runtimeTypeAdapterFactory = RuntimeTypeAdapterFactory
-			    .of(GameModel.class, "gameMode")
-			    .registerSubtype(Duel1A2BModel.class, "DUEL1A2B");
+		RuntimeTypeAdapterFactory<Game> runtimeTypeAdapterFactory = RuntimeTypeAdapterFactory
+			    .of(Game.class, "gameMode")
+			    .registerSubtype(Duel1A2BGame.class, "DUEL1A2B");
 
 		gson = new GsonBuilder()
 					.registerTypeAdapterFactory(runtimeTypeAdapterFactory)
@@ -185,9 +185,15 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		case SIGNIN:
 			Player player = gson.fromJson(responseProtocol.getData(), Player.class);
 			if(player.getName().equals("Host"))
+			{
 				this.host = player;
+				this.hostClient.setId(player.getId());
+			}
 			else if (player.getName().equals("Player"))
+			{
 				this.player = player;
+				this.playerClient.setId(player.getId());
+			}
 			signInCount ++;
 			break;
 		case GETINFO:

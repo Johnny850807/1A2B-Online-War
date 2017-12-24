@@ -6,6 +6,7 @@ import container.base.Client;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
+import gamecore.model.ClientPlayer;
 import gamecore.model.ClientStatus;
 import gamecore.model.RoomStatus;
 
@@ -27,4 +28,6 @@ public interface GameCore {
 	void addGameRoom(GameRoom room);
 	void closeGameRoom(GameRoom room);
 	void removePlayerFromRoomAndBroadcast(Player player, GameRoom gameRoom);
+	
+	ClientBinder clientBinder();
 }

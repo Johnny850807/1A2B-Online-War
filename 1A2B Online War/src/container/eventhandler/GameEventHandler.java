@@ -3,6 +3,7 @@ package container.eventhandler;
 import container.base.Client;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
+import gamecore.ClientBinder;
 import gamecore.GameCore;
 import gamecore.model.ErrorMessage;
 import gamecore.model.RequestStatus;
@@ -21,7 +22,10 @@ public abstract class GameEventHandler<In, Out> implements EventHandler{
 	 * @param gameCore the online game core where to handle all the logics with the games.
 	 * @param protocolFactory the factory which help you create a certain protocol with the specific messages.
 	 */
-	public GameEventHandler(Client client, Protocol request, GameCore gameCore, ProtocolFactory protocolFactory) {
+	public GameEventHandler(Client client, 
+							Protocol request, 
+							GameCore gameCore, 
+							ProtocolFactory protocolFactory) {
 		this.client = client;
 		this.protocolFactory = protocolFactory;
 		this.request = request;
@@ -130,7 +134,7 @@ public abstract class GameEventHandler<In, Out> implements EventHandler{
 		public void handleTheResponse() {
 			if (onRespondingListener != null)
 				onRespondingListener.onErrorResponding(response);
-			client().respond(response);
+			client().broadcast(response);
 		}
 	}
 }

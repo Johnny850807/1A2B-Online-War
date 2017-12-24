@@ -1,13 +1,12 @@
-package gamecore;
+package gamecore.model;
 
 import container.base.Client;
 import container.protocol.Protocol;
 import gamecore.entity.Player;
-import gamecore.model.ClientStatus;
 
 public class ClientPlayer {
 	private Player player;
-	private Client client;
+	private transient Client client;
 	
 	public ClientPlayer(Client client, Player player) {
 		this.client = client;
@@ -47,8 +46,8 @@ public class ClientPlayer {
 		this.client = client;
 	}
 	
-	public void respondToClient(Protocol protocol){
-		client.respond(protocol);
+	public void broadcast(Protocol protocol){
+		client.broadcast(protocol);
 	}
 	
 	@Override

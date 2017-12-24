@@ -5,14 +5,20 @@ import java.util.List;
 
 
 public class Duel1A2BPlayerBarModel {
+	private String playerId;
 	private String name;
 	private String answer;
 	private List<GuessRecord> guessRecords = new ArrayList<>();
 	
-	public Duel1A2BPlayerBarModel(String playerName) {
+	public Duel1A2BPlayerBarModel(String playerId, String playerName) {
+		this.playerId = playerId;
 		this.name = playerName;
 	}
 
+	public String getPlayerId() {
+		return playerId;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -46,5 +52,9 @@ public class Duel1A2BPlayerBarModel {
 	
 	public List<GuessRecord> getGuessRecords() {
 		return guessRecords;
+	}
+	
+	public int getGuessingTimes(){
+		return guessRecords.size();
 	}
 }

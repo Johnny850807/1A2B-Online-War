@@ -1,6 +1,5 @@
 package com.example.joanna_zhang.test;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-
 
 import java.util.List;
 
@@ -36,7 +34,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_in_room);
-
         setupChatWindow();
         findViews();
         setUpThisRoomInfo();

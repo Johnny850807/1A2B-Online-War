@@ -71,7 +71,7 @@ public class SocketClient extends Entity implements Client{
 	}
 	
 	@Override
-	public void respond(Protocol protocol) {
+	public void broadcast(Protocol protocol) {
 		try {
 			System.out.println("===== Response ===== \n" + protocol);
 			dataOutput.writeUTF(protocol.toString());

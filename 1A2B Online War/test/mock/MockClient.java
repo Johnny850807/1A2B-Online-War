@@ -20,6 +20,10 @@ public class MockClient extends Entity implements Client{
 		initId();
 	}
 	
+	public MockClient(String id) {
+		setId(id);
+	}
+	
 	@Override
 	public void run() {}
 
@@ -37,7 +41,7 @@ public class MockClient extends Entity implements Client{
 
 
 	@Override
-	public void respond(Protocol protocol) {
+	public void broadcast(Protocol protocol) {
 		lastedResponse = protocol;
 		responses.add(protocol);
 	}

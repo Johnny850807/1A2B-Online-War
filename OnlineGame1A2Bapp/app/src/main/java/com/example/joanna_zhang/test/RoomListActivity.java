@@ -102,7 +102,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         setUpSpinner();
         roomListView.setDivider(getResources().getDrawable(R.drawable.transperent_color));
     }
-    
+
     private void findViews() {
         searchEdt = (EditText) findViewById(R.id.searchEdt);
         searchEdt.addTextChangedListener(new SearchEditTextWatcher());

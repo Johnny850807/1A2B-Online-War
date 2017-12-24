@@ -8,29 +8,25 @@ import java.util.Date;
  * ChatMessages in the chat.
  */
 public class ChatMessage extends Entity {
-	private GameRoom gameRoom;
+	private String gameRoomId;
     private Player poster;
     private String content;
     private Date postDate = new Date();
-
+    
     public ChatMessage(GameRoom gameRoom, Player poster, String content) {
-    	this.gameRoom = gameRoom;
+    	this(gameRoom.getId(), poster, content);
+    }
+    
+    public ChatMessage(String gameRoomId, Player poster, String content) {
+    	this.gameRoomId = gameRoomId;
         this.poster = poster;
         this.content = content;
     }
     
-    public void setGameRoom(GameRoom gameRoom) {
-		this.gameRoom = gameRoom;
-	}
-    
     public String getGameRoomId(){
-    	return gameRoom.getId();
+    	return gameRoomId;
     }
-    
-    public GameRoom getGameRoom() {
-		return gameRoom;
-	}
-
+ 
     public Player getPoster() {
         return poster;
     }

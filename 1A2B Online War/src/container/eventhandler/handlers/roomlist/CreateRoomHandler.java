@@ -35,6 +35,7 @@ public class CreateRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 			return error(103, new IllegalArgumentException("The room should be given a game mode."));
 		
 		room.initId();
+		room.setProtocolFactory(protocolFactory());
 		gameCore().addGameRoom(room);
 		return success(room);
 	}

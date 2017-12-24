@@ -33,7 +33,7 @@ public class GetRoomsHandler extends GsonEventHandler<Void, List<GameRoom>>{
 
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
-		client().respond(responseProtocol);
+		client().broadcast(responseProtocol);
 	}
 
 }

@@ -14,7 +14,6 @@ public class GameOnlineReleaseFactory implements GameFactory{
 	private GameEventHandlerFactory gameEventHandlerFactory;
 	private ProtocolFactory protocolFactory;
 	private GameCore gameCore;
-
 	
 	@Override
 	public GameCore getGameCore() {
@@ -37,5 +36,5 @@ public class GameOnlineReleaseFactory implements GameFactory{
 		return gameEventHandlerFactory == null ? gameEventHandlerFactory = 
 				new ConfigBasedGameEventHandlerFactory(this) : gameEventHandlerFactory;
 	}
-	
+
 }
