@@ -107,7 +107,8 @@ public class GameRoom extends Entity{
 	 */
 	public List<Player> getPlayers(){
 		List<Player> players = new ArrayList<>();
-		players.add(host);
+		if (host != null)
+			players.add(host);
 		for (PlayerStatus playerStatus : playerStatusList)
 			players.add(playerStatus.getPlayer());
 		return players;
@@ -124,7 +125,10 @@ public class GameRoom extends Entity{
 	}
 	
 	public void removePlayer(Player player){
-		playerStatusList.remove(getPlayerStatusOfPlayer(player));
+		if (player.equals(host))
+			host = null;
+		else
+			playerStatusList.remove(getPlayerStatusOfPlayer(player));
 	}
 	
 	public PlayerStatus getPlayerStatusOfPlayer(Player player){
@@ -225,6 +229,6 @@ public class GameRoom extends Entity{
 	@Override
 	public String toString() {
 		return String.format("Room id: %s, name: %s, GameMode: %s, Host: %s, Players: %d/%d, Status: %s", 
-				id, name, gameMode.toString(), host.getName(), getPlayers().size(), gameMode.getMaxPlayerAmount(), roomStatus.toString());
+				id, name, gameMode.toString(), host == null ? "null" : host.getName(), getPlayers().size(), gameMode.getMaxPlayerAmount(), roomStatus.toString());
 	}
 }

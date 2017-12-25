@@ -35,6 +35,7 @@ public class CreateRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 		if (room.getGameMode() == null)
 			return error(103, new IllegalArgumentException("The room should be given a game mode."));
 		
+		gameCore().getClientPlayer(room.getHost().getId()).getPlayer().setUserStatus(ClientStatus.inRoom);
 		room.initId();
 		room.setLog(new ApacheLoggerAdapter(GameRoom.class));
 		room.setProtocolFactory(protocolFactory());

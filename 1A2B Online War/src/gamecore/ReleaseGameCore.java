@@ -156,12 +156,15 @@ public class ReleaseGameCore implements GameCore{
 	 */
 	private boolean handleThePlayerRemoved(Player player){
 		log.trace("Handling the player removed");
+		if (clientsMap.containsKey(player.getId()))
+			clientsMap.remove(player.getId());
 		for (GameRoom gameRoom : getGameRooms())
 			if (gameRoom.containsPlayer(player))
 			{
 				if (gameRoom.getHost().equals(player))
 				{
 					log.trace("The player is the host from the room: " + gameRoom.getName() + ", closing his room.");
+					gameRoom.removePlayer(player);
 					closeGameRoom(gameRoom);
 				}
 				else
@@ -171,8 +174,6 @@ public class ReleaseGameCore implements GameCore{
 				}
 				return true;
 			}
-		if (clientsMap.containsKey(player.getId()))
-			clientsMap.remove(player.getId());
 		return false;
 	}
 
