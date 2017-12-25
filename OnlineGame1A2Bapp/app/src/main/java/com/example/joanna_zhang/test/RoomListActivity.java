@@ -347,4 +347,14 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         enterGameRoom(model.getGameRoom());
     }
 
+    @Override
+    public void onPlayerJoined(PlayerRoomModel model) {
+        //TODO update the room
+    }
+
+    @Override
+    public void onPlayerLeft(PlayerRoomModel model) {
+        //TODO update the room
+    }
+
 }

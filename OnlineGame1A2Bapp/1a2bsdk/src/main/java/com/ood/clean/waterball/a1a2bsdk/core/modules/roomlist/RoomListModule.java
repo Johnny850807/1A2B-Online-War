@@ -16,6 +16,8 @@ public interface RoomListModule extends GameModule{
     void createRoom(String roomName, GameMode gameMode);
     void joinRoom(GameRoom gameRoom);
     void getGameRoomList();
+    GameRoom getCurrentGameRoom();
+    void cleanCurrentGameRoom();
 
     public interface Callback extends GameCallBack {
         /**

@@ -3,8 +3,6 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom.exceptions.HostCannotPrepareException;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom.exceptions.PlayerNotPreparedException;
 
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
@@ -65,5 +63,10 @@ public interface InRoomModule extends GameModule{
          * when the game cannot be launched.
          */
         public void onGameLaunchedFailed(GameRoom gameRoom);
+
+        /**
+         * when the host kick you out of the room!
+         */
+        public void onYouAreBooted();
     }
 }

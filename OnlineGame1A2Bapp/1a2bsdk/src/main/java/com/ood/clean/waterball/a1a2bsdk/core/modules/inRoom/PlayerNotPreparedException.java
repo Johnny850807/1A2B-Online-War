@@ -1,4 +1,4 @@
-package com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom.exceptions;
+package com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom;
 
 
 public class PlayerNotPreparedException extends IllegalStateException{

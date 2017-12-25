@@ -15,6 +15,7 @@ import java.util.List;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.model.GameMode;
+import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
 
@@ -26,6 +27,7 @@ import static container.Constants.Events.RoomList.JOIN_ROOM;
 
 
 public class RoomListModuleImp extends AbstractGameModule implements RoomListModule {
+    private GameRoom currentGameRoom;
     private UserSigningModule signingModule;
     private ProxyCallback proxyCallback;
 
@@ -59,7 +61,8 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
 
     @Override
     public void joinRoom(GameRoom gameRoom) {
-        Protocol protocol = protocolFactory.createProtocol(JOIN_ROOM, RequestStatus.request.toString(), gson.toJson(gameRoom));
+        Protocol protocol = protocolFactory.createProtocol(JOIN_ROOM, RequestStatus.request.toString(),
+                gson.toJson(new PlayerRoomIdModel(signingModule.getCurrentPlayer().getId(), gameRoom.getId())));
         client.broadcast(protocol);
     }
 
@@ -67,6 +70,16 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
     public void getGameRoomList() {
         Protocol protocol = protocolFactory.createProtocol(GET_ROOMS, RequestStatus.request.toString(), null);
         client.broadcast(protocol);
+    }
+
+    @Override
+    public GameRoom getCurrentGameRoom() {
+        return currentGameRoom;
+    }
+
+    @Override
+    public void cleanCurrentGameRoom(){
+        this.currentGameRoom = null;
     }
 
     public class ProxyCallback implements RoomListModule.Callback{
@@ -99,6 +112,7 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
         public void onCreateRoomSuccessfully(GameRoom gameRoom) {
             Log.d(TAG, "Room created successfully: " + gameRoom);
             callback.onCreateRoomSuccessfully(gameRoom);
+            currentGameRoom = gameRoom;
         }
 
         @Override
@@ -122,6 +136,7 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
             {
                 Log.d(TAG, "Join Room successfully: " + model.getGameRoom());
                 callback.onJoinRoomSuccessfully(model);
+                currentGameRoom = model.getGameRoom();
             }
             else
                 this.onPlayerJoined(model);

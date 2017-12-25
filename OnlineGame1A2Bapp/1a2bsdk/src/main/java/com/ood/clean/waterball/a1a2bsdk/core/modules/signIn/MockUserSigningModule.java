@@ -2,8 +2,6 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules.signIn;
 
 import android.support.annotation.NonNull;
 
-import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.exceptions.UserNameFormatException;
-
 import container.Constants;
 import gamecore.entity.Player;
 import gamecore.model.ServerInformation;
