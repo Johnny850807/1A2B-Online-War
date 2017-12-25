@@ -1,11 +1,13 @@
 package gamecore.model;
 
+import java.io.Serializable;
+
 import gamecore.entity.Player;
 
 /**
  * The status of a player while the player in the waiting room.
  */
-public class PlayerStatus {
+public class PlayerStatus implements Serializable{
 	private Player player;
 	private boolean ready = false;
 	

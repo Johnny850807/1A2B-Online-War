@@ -15,8 +15,8 @@ import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModuleImp;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.MockUserSigningModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModuleImp;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -81,9 +81,10 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
         }
     }
 
+    // TODO don't do this such thing over and over time whenever you need the player, receive the player reference as a property from the constructor instead.
     private Player getCurrentPlayer() {
         CoreGameServer server = CoreGameServer.getInstance();
-        UserSigningModule signingModule = (MockUserSigningModule) server.getModule(ModuleName.SIGNING);
+        UserSigningModule signingModule = (UserSigningModuleImp) server.getModule(ModuleName.SIGNING);
         return signingModule.getCurrentPlayer();
     }
 

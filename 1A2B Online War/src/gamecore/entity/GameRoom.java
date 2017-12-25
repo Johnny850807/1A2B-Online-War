@@ -27,11 +27,11 @@ import utils.ClientPlayersHelper;
 public class GameRoom extends Entity{
 	private transient ProtocolFactory protocolFactory;
 	private transient MyLogger log = new MockLogger();
+	private transient Game game;
 	private Player host;
 	private RoomStatus roomStatus = RoomStatus.waiting;
 	private GameMode gameMode;
-	private Game game;
-	private List<ChatMessage> chatMessageList = Collections.checkedList(new ArrayList<>(), ChatMessage.class);
+	private ArrayList<ChatMessage> chatMessageList = new ArrayList<>();
 	
 	/**
 	 * All the guest player status in the room, except the host.
@@ -158,7 +158,7 @@ public class GameRoom extends Entity{
 		try{
 			getPlayerStatusOfPlayer(player);
 			return true;
-		}catch (IllegalArgumentException e) {
+		}catch (IllegalStateException e) {
 			//if the player is not in the list, IllegalStateException thrown.
 			return false;
 		}

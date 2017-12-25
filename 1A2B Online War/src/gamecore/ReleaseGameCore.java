@@ -111,6 +111,7 @@ public class ReleaseGameCore implements GameCore{
 		Protocol protocol = factory.getProtocolFactory().createProtocol(RoomList.CREATE_ROOM,
 				RequestStatus.success.toString(), gson.toJson(room));
 		broadcastClientPlayers(ClientStatus.signedIn, protocol);
+		broadcastClientPlayer(room.getHost().getId(), protocol);
 		roomContainer.put(room.getId(), room);
 	}
 	

@@ -63,7 +63,7 @@ public class ClientSocket implements Client{
         while(conntected)
         {
             String response = inputStream.readUTF();
-
+            Log.d(TAG, "Received: " + response);
             threadExecutor.post(new Runnable() {
                 @Override
                 public void run() {
@@ -110,7 +110,11 @@ public class ClientSocket implements Client{
         }
         @Override
         public void run() {
-            eventBus.invoke(protocol);
+            try{
+                eventBus.invoke(protocol);
+            }catch (Exception err){
+                Log.e(TAG, "Error occurs while invoking event bus.", err);
+            }
         }
     }
 
@@ -121,7 +125,11 @@ public class ClientSocket implements Client{
         }
         @Override
         public void run() {
-            eventBus.error(err);
+            try{
+                eventBus.error(err);
+            }catch (Exception err){
+                Log.e(TAG, "Error occurs while posting error to event bus.", err);
+            }
         }
     }
 

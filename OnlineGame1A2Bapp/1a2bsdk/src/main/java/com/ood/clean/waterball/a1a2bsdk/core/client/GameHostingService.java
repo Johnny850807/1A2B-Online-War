@@ -27,12 +27,17 @@ public class GameHostingService extends Service {
     private @Inject EventBus eventBus;
     private String address = SERVER_ADDRESS;
     private int port = PORT;
+    private Thread clientThread;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "Socket initializing ..., Ip: " + SERVER_ADDRESS + ":" + PORT);
         Component.inject(this);
-        new Thread(client).start();
+        if (clientThread == null || !clientThread.isAlive())
+        {
+            Log.d(TAG, "Socket initializing ..., Ip: " + SERVER_ADDRESS + ":" + PORT);
+            clientThread = new Thread(client);
+            clientThread.start();
+        }
         return START_STICKY;
     }
 
