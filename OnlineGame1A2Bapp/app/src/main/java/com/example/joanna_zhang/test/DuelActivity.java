@@ -57,9 +57,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     private void setupAnswer() {
         new InputNumberWindowView.Builder(this)
-                .setOnEnterClickListener((number) -> {
-                    p1AnswerTxt.setText(number);
-                })
+                .setOnEnterClickListener(guessNumber -> p1AnswerTxt.setText(guessNumber))
                 .setCanceledOnTouchOutside(false)
                 .setCancelable(false)
                 .setTitle(getString(R.string.setAnswerFrist))

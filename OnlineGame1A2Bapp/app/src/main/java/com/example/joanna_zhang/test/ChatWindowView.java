@@ -42,6 +42,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
 
     private ChatWindowView(Activity activity, GameRoom gameRoom) {
         this.activity = activity;
+        this.gameRoom = gameRoom;
         chatModule = new ChatModuleImp();
         inputMessageEdt = activity.findViewById(R.id.inputChattingTxt);
         chatWindowLst = activity.findViewById(R.id.chatwindowLst);
