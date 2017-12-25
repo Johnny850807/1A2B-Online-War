@@ -152,14 +152,6 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 			assertEquals(expecteds[i].getContent(), actuals.get(i).getContent());
 	}
 	
-	public void testPlayerLeft(){
-		createHandler(playerClient, protocolFactory.createProtocol(LEAVE_ROOM, REQUEST, 
-				gson.toJson(new PlayerRoomIdModel(player.getId(), gameRoom.getId())))).handle();
-		assertEquals(1, gameRoom.getPlayerAmount());
-		assertEquals(LEAVE_ROOM, hostClient.getLastedResponse().getEvent());
-		assertEquals(player, gson.fromJson(hostClient.getLastedResponse().getData(), PlayerRoomModel.class).getPlayer());
-	}
-	
 	public void testPlayingDuel1A2B(){
 		createHandler(hostClient, protocolFactory.createProtocol(LAUNCH_GAME, REQUEST, 
 				gson.toJson(this.gameRoom))).handle();
@@ -210,13 +202,22 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		assertEquals(host.getId(), gameOverModel.getWinnerId());
 	}
 	
+	public void testPlayerLeft(){
+		createHandler(playerClient, protocolFactory.createProtocol(LEAVE_ROOM, REQUEST, 
+				gson.toJson(new PlayerRoomIdModel(player.getId(), gameRoom.getId())))).handle();
+		assertEquals(1, gameRoom.getPlayerAmount());
+		assertEquals(LEAVE_ROOM, hostClient.getLastedResponse().getEvent());
+		assertEquals(player, gson.fromJson(hostClient.getLastedResponse().getData(), PlayerRoomModel.class).getPlayer());
+	}
+	
 	public void testHostSignOut(){
 		assertEquals(1, gamecore.getGameRooms().size());
 		createHandler(hostClient, protocolFactory.createProtocol(SIGNOUT, REQUEST, 
 				gson.toJson(host))).handle();
 		assertTrue(host == null);
 		assertEquals(0, gamecore.getGameRooms().size());
-		assertEquals(CLOSE_ROOM, playerClient.getLastedResponse().getEvent());
+		if(playerClient.getLastedResponse().getEvent().equals(LEAVE_ROOM))
+			assertEquals(CLOSE_ROOM, playerClient.getLastedResponse().getEvent());
 	}
 	
 	public void testCloseRoom(){

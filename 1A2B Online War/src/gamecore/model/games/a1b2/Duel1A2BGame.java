@@ -96,7 +96,7 @@ public class Duel1A2BGame extends Game{
 	}
 	
 	private void broadcastOneRoundOver(){
-		log.trace("Room: " + roomId + ",The " + guessingRound + " round is over. ");
+		log.trace("Room: " + roomId + ", The " + guessingRound + " round is over. ");
 		this.guessingRound ++;
 		List<Duel1A2BPlayerBarModel> models = new ArrayList<>(playerModels.values());
 		Protocol protocol = protocolFactory.createProtocol(Duel1A2B.ONE_ROUND_OVER,

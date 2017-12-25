@@ -87,10 +87,19 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         chatRoomPlayerLst = (ListView) findViewById(R.id.chatRoomPlayersLst);
     }
 
-
     @Override
     public void onChatMessageUpdate(ChatMessage chatMessage) {
-        // 對話窗更新
+
+    }
+
+    @Override
+    public void onMessageSendingFailed(ChatMessage chatMessage) {
+
+    }
+
+    @Override
+    public void onError(Throwable err) {
+
     }
 
     public void gameStartButtonOnClick(View view) {

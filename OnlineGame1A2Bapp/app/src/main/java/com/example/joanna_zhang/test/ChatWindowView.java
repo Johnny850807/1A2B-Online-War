@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
@@ -163,7 +164,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
             String content = chatMessages.get(i).getContent();
             contentTxt.setText(name + " : " + content);
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
             Date date = chatMessages.get(i).getPostDate();
             timeTxt.setText(dateFormat.format(date));
 

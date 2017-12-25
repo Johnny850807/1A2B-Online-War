@@ -52,7 +52,7 @@ public class ReleaseGameCore implements GameCore{
 	}
 
 	private List<ClientPlayer> getClientsByPlayerList(List<Player> players) {
-		return players.parallelStream()
+		return players.stream()
 				.map(p -> clientsMap.get(p.getId())).collect(Collectors.toList());
 	}
 
@@ -69,7 +69,7 @@ public class ReleaseGameCore implements GameCore{
 	}
 	
 	private void broadcastToClients(List<ClientPlayer> clientPlayers, Protocol response){
-		clientPlayers.parallelStream().forEach(c -> c.broadcast(response));
+		clientPlayers.stream().forEach(c -> c.broadcast(response));
 	}
 
 	@Override
@@ -171,15 +171,17 @@ public class ReleaseGameCore implements GameCore{
 				}
 				return true;
 			}
+		if (clientsMap.containsKey(player.getId()))
+			clientsMap.remove(player.getId());
 		return false;
 	}
 
 
 	@Override
 	public void removePlayerFromRoomAndBroadcast(Player player, GameRoom gameRoom){
+		gameRoom.removePlayer(player);
 		Protocol protocol = factory.getProtocolFactory().createProtocol(InRoom.LEAVE_ROOM, 
 				RequestStatus.success.toString(), gson.toJson(new PlayerRoomModel(player, gameRoom)));
-		gameRoom.removePlayer(player);
 		broadcastClientPlayers(ClientStatus.signedIn, protocol);
 		broadcastRoom(gameRoom.getId(), protocol);
 	}
