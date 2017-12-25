@@ -1,12 +1,13 @@
 package com.example.joanna_zhang.test;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,7 +18,7 @@ import java.util.List;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 
-public class DuelActivity extends AppCompatActivity implements ChatWindowView.OnClickListener, InputNumberWindowView.OnClickListener {
+public class DuelActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowView.OnClickListener {
 
 
     //private Duel1A2BGameModule duel1A2BGameModule;
@@ -25,6 +26,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
     private GameRoom gameRoom;
     private ChatWindowView chatWindowView;
     private InputNumberWindowView inputNumberWindowView;
+    private Button inputNumberBtn;
     private TextView p1NameTxt, p2NameTxt, p1AnswerTxt, p2AnswerTxt;
     private ListView p1ResultListView, p2ResultListView;
     private List<String> p1Results, p2Results;
@@ -36,6 +38,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
 
         CoreGameServer server = CoreGameServer.getInstance();
         //duel1A2BGameModule = (Duel1A2BGameModule) server.getModule(ModuleName.SIGNING);
+        Intent intent = getIntent();
 
         setupChatWindow();
         findViews();
@@ -43,6 +46,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
     }
 
     private void findViews() {
+        inputNumberBtn = (Button) findViewById(R.id.inputNumberBtn);
         p1NameTxt = (TextView) findViewById(R.id.p1NameTxt);
         p2NameTxt = (TextView) findViewById(R.id.p2NameTxt);
         p1AnswerTxt = (TextView) findViewById(R.id.p1AnswerTxt);
@@ -93,8 +97,18 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.On
     }
 
     @Override
-    public void onEnterClick(String guessName) {
-        // TODO
+    public void onMessageSendingFailed(ChatMessage chatMessage) {
+
+    }
+
+    @Override
+    public void onError(Throwable err) {
+
+    }
+
+    @Override
+    public void onEnterClick(String guessNumber) {
+        inputNumberBtn.setText(guessNumber);
     }
 
     public void inputNumberOnClick(View view) {

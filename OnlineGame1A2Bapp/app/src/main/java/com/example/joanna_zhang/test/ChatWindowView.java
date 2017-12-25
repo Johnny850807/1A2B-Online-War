@@ -1,6 +1,7 @@
 package com.example.joanna_zhang.test;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModule;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModuleImp;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.MockUserSigningModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
@@ -24,18 +27,20 @@ import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 
-public class ChatWindowView implements View.OnClickListener{
+public class ChatWindowView implements View.OnClickListener, ChatModule.Callback{
 
     private Activity activity;
+    private ChatModule chatModule;
     private GameRoom gameRoom;
     private EditText inputMessageEdt;
     private ListView chatWindowLst;
     private ImageButton sendMessageImgBtn;
     private List<ChatMessage> chatMessages = new ArrayList<>();
-    private List<OnClickListener> onClickListeners = new ArrayList<>();
+    private ChatMessageListener listener;
 
     private ChatWindowView(Activity activity, GameRoom gameRoom) {
         this.activity = activity;
+        chatModule = new ChatModuleImp();
         inputMessageEdt = activity.findViewById(R.id.inputChattingTxt);
         chatWindowLst = activity.findViewById(R.id.chatwindowLst);
         sendMessageImgBtn = activity.findViewById(R.id.sendMessageBtn);
@@ -43,16 +48,15 @@ public class ChatWindowView implements View.OnClickListener{
     }
 
     public void onResume() {
-        // TODO 跟伺服器註冊
+        chatModule.registerCallback(this);
     }
 
     public void onStop() {
-        // TODO 取消註冊
+        chatModule.unregisterCallBack(this);
     }
 
     private void update(ChatMessage chatMessage) {
-        for (OnClickListener onClickListener : onClickListeners)
-            onClickListener.onChatMessageUpdate(chatMessage);
+        listener.onChatMessageUpdate(chatMessage);
 
         chatMessages.add(chatMessage);
         ChatWindowAdapter adapter = new ChatWindowAdapter();
@@ -62,7 +66,7 @@ public class ChatWindowView implements View.OnClickListener{
 
     private void sendMessage(Player poster, String content) {
         ChatMessage chatMessage = new ChatMessage(gameRoom, poster, content);
-        update(chatMessage);
+        chatModule.sendMessage(chatMessage);
     }
 
     @Override
@@ -80,6 +84,26 @@ public class ChatWindowView implements View.OnClickListener{
         return signingModule.getCurrentPlayer();
     }
 
+    @Override
+    public void onMessageReceived(ChatMessage message) {
+        update(message);
+    }
+
+    @Override
+    public void onMessageSent(ChatMessage message) {
+
+    }
+
+    @Override
+    public void onMessageSendingFailed(ChatMessage message) {
+        listener.onMessageSendingFailed(message);
+    }
+
+    @Override
+    public void onError(@NonNull Throwable err) {
+        listener.onError(err);
+    }
+
     public static class Builder {
 
         private ChatWindowView chatWindowView;
@@ -93,8 +117,8 @@ public class ChatWindowView implements View.OnClickListener{
             return this;
         }
 
-        public Builder addOnSendMessageOnClickListener(OnClickListener onClickListener) {
-            chatWindowView.onClickListeners.add(onClickListener);
+        public Builder addOnSendMessageOnClickListener(ChatMessageListener chatMessageListener) {
+            chatWindowView.listener = chatMessageListener;
             return this;
         }
 
@@ -105,8 +129,10 @@ public class ChatWindowView implements View.OnClickListener{
 
     }
 
-    public interface OnClickListener {
+    public interface ChatMessageListener {
         void onChatMessageUpdate(ChatMessage chatMessage);
+        void onMessageSendingFailed(ChatMessage chatMessage);
+        void onError(Throwable err);
     }
 
     private class ChatWindowAdapter extends BaseAdapter {

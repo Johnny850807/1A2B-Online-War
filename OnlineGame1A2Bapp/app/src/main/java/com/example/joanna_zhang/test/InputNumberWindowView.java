@@ -138,7 +138,7 @@ public class InputNumberWindowView extends Dialog implements View.OnClickListene
     }
 
     public interface OnClickListener {
-        void onEnterClick(String guessName);
+        void onEnterClick(String guessNumber);
     }
 
 }

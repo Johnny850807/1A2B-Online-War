@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
@@ -321,12 +322,12 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onCreateRoomSuccessfully(GameRoom gameRoom) {
-        //TODO
+        enterGameRoom(gameRoom);
     }
 
     @Override
     public void onCreateRoomUnsuccessfully(GameRoom gameRoom) {
-        //TODO
+        Toast.makeText(this, R.string.createRoomFailed, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -349,12 +350,16 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onPlayerJoined(PlayerRoomModel model) {
-        //TODO update the room
+        roomList.remove(model.getGameRoom());
+        roomList.add(model.getGameRoom());
+        updateRoomList(roomList);
     }
 
     @Override
     public void onPlayerLeft(PlayerRoomModel model) {
-        //TODO update the room
+        roomList.remove(model.getGameRoom());
+        roomList.add(model.getGameRoom());
+        updateRoomList(roomList);
     }
 
 }
