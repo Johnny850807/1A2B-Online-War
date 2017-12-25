@@ -81,15 +81,15 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/inputNumberEd"
+        android:id="@+id/inputNumberBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="fill"
         android:background="@android:color/transparent"
+        android:gravity="fill"
         android:hint="@string/inputNumber"
+        android:onClick="inputNumberOnClick"
         android:padding="4dp"
-        android:textSize="16sp"
-        android:onClick="inputNumberOnClick"/>
+        android:textSize="16sp" />
 
     <include
         android:id="@+id/chatwindowLst"

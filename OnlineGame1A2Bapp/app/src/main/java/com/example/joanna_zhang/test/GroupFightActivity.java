@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,13 +17,14 @@ import java.util.List;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 
-public class GroupFightActivity extends AppCompatActivity implements ChatWindowView.OnClickListener, InputNumberWindowView.OnClickListener {
+public class GroupFightActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowView.OnClickListener {
 
     //private Duel1A2BGameModule duel1A2BGameModule;
     //private List<GuessRecord> p1ResultList, p2ResultList;
     private GameRoom gameRoom;
     private ChatWindowView chatWindowView;
     private InputNumberWindowView inputNumberWindowView;
+    private Button inputNumberBtn;
     private TextView p1NameTxt, p2NameTxt, p3NameTxt, p4NameTxt, p5NameTxt, p6NameTxt;
     private ListView p1ResultListView, p2ResultListView;
     private List<String> results;
@@ -38,6 +40,7 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void findViews() {
+        inputNumberBtn = (Button) findViewById(R.id.inputNumberBtn);
         p1NameTxt = (TextView) findViewById(R.id.p1NameTxt);
     }
 
@@ -59,8 +62,18 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
     }
 
     @Override
-    public void onEnterClick(String guessName) {
+    public void onMessageSendingFailed(ChatMessage chatMessage) {
 
+    }
+
+    @Override
+    public void onError(Throwable err) {
+
+    }
+
+    @Override
+    public void onEnterClick(String guessNumber) {
+        inputNumberBtn.setText(guessNumber);
     }
 
     private class GuessResultAdapter extends BaseAdapter {

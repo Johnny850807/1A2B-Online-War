@@ -19,7 +19,7 @@ import gamecore.entity.Player;
 import gamecore.model.GameMode;
 
 
-public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowView.OnClickListener {
+public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener {
 
     private ChatWindowView chatWindowView;
     private Button gameStartBtn;
