@@ -8,7 +8,8 @@ import com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom.exceptions.PlayerNot
 
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
-import gamecore.model.PlayerStatus;
+import gamecore.model.ChangeStatusModel;
+import gamecore.model.PlayerRoomModel;
 
 public interface InRoomModule extends GameModule{
     void registerCallback(InRoomModule.Callback callback);
@@ -16,10 +17,10 @@ public interface InRoomModule extends GameModule{
 
     /**
      * the player changes his status to the game.
-     * @param prepare if the player wants to prepare.
+     * @param model if the player wants to prepare.
      * @exception HostCannotPrepareException if you are a host, you shouldn't be able to change the status.
      */
-    public void changeStatus(boolean prepare);
+    public void changeStatus(ChangeStatusModel model);
 
     /**
      * the host launches the game.
@@ -42,17 +43,17 @@ public interface InRoomModule extends GameModule{
         /**
          * when any new player accesses the room.
          */
-        public void onPlayerJoined(PlayerStatus playerStatus);
+        public void onPlayerJoined(PlayerRoomModel model);
 
         /**
          * when any players in the room change his status such as to prepare.
          */
-        public void onPlayerStatusChanged(PlayerStatus playerStatus);
+        public void onPlayerStatusChanged(ChangeStatusModel model);
 
         /**
          * when any player leaves the room.
          */
-        public void onPlayerLeft(PlayerStatus playerStatus);
+        public void onPlayerLeft(PlayerRoomModel model);
 
         /**
          * when the game launched successfully.

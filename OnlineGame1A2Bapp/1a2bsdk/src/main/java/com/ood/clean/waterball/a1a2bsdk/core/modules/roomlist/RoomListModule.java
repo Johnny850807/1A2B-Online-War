@@ -45,7 +45,7 @@ public interface RoomListModule extends GameModule{
         void onRoomClosed(GameRoom gameRoom);
 
         /**
-         * This method will be called if any of the room's info updated.
+         * This method will be called if any of the room's info modified by the host.
          */
         void onRoomUpdated(GameRoom gameRoom);
 
@@ -54,5 +54,16 @@ public interface RoomListModule extends GameModule{
          */
         void onJoinRoomSuccessfully(PlayerRoomModel model);
 
+        /**
+         * This method will be called when someone joined to any room.
+         * You should update the room player amount on the UI.
+         */
+        void onPlayerJoined(PlayerRoomModel model);
+
+        /**
+         * This method will be called when someone left from any room.
+         * You should update the room player amount on the UI.
+         */
+        void onPlayerLeft(PlayerRoomModel model);
     }
 }

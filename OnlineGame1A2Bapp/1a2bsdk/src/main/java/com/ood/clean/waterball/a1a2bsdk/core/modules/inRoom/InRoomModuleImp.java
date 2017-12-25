@@ -67,18 +67,21 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
         @Override
         @BindCallback(event = JOIN_ROOM, status = RequestStatus.success)
         public void onPlayerJoined(PlayerStatus playerStatus) {
+            Log.d(TAG, "player " + playerStatus.getPlayer().getName() + " joined.");
             callback.onPlayerJoined(playerStatus);
         }
 
         @Override
         @BindCallback(event = CHANGE_STATUS, status = RequestStatus.success)
         public void onPlayerStatusChanged(PlayerStatus playerStatus) {
+            Log.d(TAG, "player " + playerStatus.getPlayer().getName() + "'s status changed, ready:" + playerStatus.isReady() +".");
             callback.onPlayerStatusChanged(playerStatus);
         }
 
         @Override
         @BindCallback(event = LEAVE_ROOM, status = RequestStatus.success)
         public void onPlayerLeft(PlayerStatus playerStatus) {
+            Log.d(TAG, "player " + playerStatus.getPlayer().getName() + " left.");
             callback.onPlayerLeft(playerStatus);
         }
 

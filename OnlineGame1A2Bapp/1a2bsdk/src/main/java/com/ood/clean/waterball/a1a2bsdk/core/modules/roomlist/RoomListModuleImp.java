@@ -19,6 +19,7 @@ import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
 
 import static container.Constants.Events.InRoom.CLOSE_ROOM;
+import static container.Constants.Events.InRoom.LEAVE_ROOM;
 import static container.Constants.Events.RoomList.CREATE_ROOM;
 import static container.Constants.Events.RoomList.GET_ROOMS;
 import static container.Constants.Events.RoomList.JOIN_ROOM;
@@ -75,14 +76,15 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
             this.callback = callback;
         }
 
-        @BindCallback(event = GET_ROOMS, status = RequestStatus.success)
         @Override
+        @BindCallback(event = GET_ROOMS, status = RequestStatus.success)
         public void onGetRoomList(List<GameRoom> gameRooms) {
+            Log.d(TAG, "gameRooms got, size:" + gameRooms.size());
             callback.onGetRoomList(gameRooms);
         }
 
-        @BindCallback(event = CREATE_ROOM, status = RequestStatus.success)
         @Override
+        @BindCallback(event = CREATE_ROOM, status = RequestStatus.success)
         public void onNewRoom(GameRoom gameRoom) {
             if(gameRoom.getHost().equals(signingModule.getCurrentPlayer()))
                 this.onCreateRoomSuccessfully(gameRoom);
@@ -113,8 +115,8 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
             callback.onRoomClosed(gameRoom);
         }
 
-        @BindCallback(event = JOIN_ROOM, status = RequestStatus.success)
         @Override
+        @BindCallback(event = JOIN_ROOM, status = RequestStatus.success)
         public void onJoinRoomSuccessfully(PlayerRoomModel model) {
             if(model.getPlayer().equals(signingModule.getCurrentPlayer()))
             {
@@ -122,13 +124,25 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
                 callback.onJoinRoomSuccessfully(model);
             }
             else
-                this.onRoomUpdated(model.getGameRoom());
+                this.onPlayerJoined(model);
         }
 
-        @BindCallback(event = "UpdateRoom", status = RequestStatus.success)
+        @Override
+        public void onPlayerJoined(PlayerRoomModel model) {
+            Log.d(TAG, "Player " + model.getPlayer().getName() + " joined to the room " + model.getGameRoom().getName());
+            callback.onPlayerJoined(model);
+        }
+
+        @Override
+        @BindCallback(event = LEAVE_ROOM, status = RequestStatus.success)
+        public void onPlayerLeft(PlayerRoomModel model) {
+            Log.d(TAG, "Player " + model.getPlayer().getName() + " left from the room " + model.getGameRoom().getName());
+            callback.onPlayerLeft(model);
+        }
+
         @Override
         public void onRoomUpdated(GameRoom gameRoom) {
-            Log.d(TAG, "Room updated: "  + gameRoom);
+            Log.d(TAG, "Room info updated: "  + gameRoom);
             callback.onRoomUpdated(gameRoom);
         }
 
