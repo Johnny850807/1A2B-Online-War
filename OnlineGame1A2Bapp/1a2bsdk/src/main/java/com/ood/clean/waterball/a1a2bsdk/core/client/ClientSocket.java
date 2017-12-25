@@ -1,6 +1,8 @@
 package com.ood.clean.waterball.a1a2bsdk.core.client;
 
 
+import android.util.Log;
+
 import com.ood.clean.waterball.a1a2bsdk.core.Component;
 import com.ood.clean.waterball.a1a2bsdk.core.EventBus;
 import com.ood.clean.waterball.a1a2bsdk.core.ThreadExecutor;
@@ -23,6 +25,7 @@ import static com.ood.clean.waterball.a1a2bsdk.core.Secret.PORT;
 import static com.ood.clean.waterball.a1a2bsdk.core.Secret.SERVER_ADDRESS;
 
 public class ClientSocket implements Client{
+    private final static String TAG = "ClientSocket";
     private @Inject ProtocolFactory protocolFactory;
     private @Inject EventBus eventBus;
     private String id;
@@ -31,6 +34,7 @@ public class ClientSocket implements Client{
     private DataInputStream inputStream;
     private String address;
     private int port;
+    private boolean conntected = false;
 
     public ClientSocket(ThreadExecutor threadExecutor){
         this.id = UUID.randomUUID().toString();
@@ -46,16 +50,16 @@ public class ClientSocket implements Client{
             SocketIO io = new SocketIO(new Socket(address, port));
             this.outputStream = new DataOutputStream(io.getOutputStream());
             this.inputStream = new DataInputStream(io.getInputStream());
-
+            conntected = true;
             listeningInput();
         } catch (Exception err) {
-            err.printStackTrace();
+            Log.e(TAG, "Socket error while initializing.", err);
             threadExecutor.postMain(new PostErrorToEventBusTask(new ConnectionTimedOutException(err)));
         }
     }
 
     private void listeningInput() throws IOException {
-        while(true)
+        while(conntected)
         {
             String response = inputStream.readUTF();
 
@@ -67,6 +71,7 @@ public class ClientSocket implements Client{
                 }
             });
         }
+        Log.w(TAG, "Socket disconnected.");
     }
 
     @Override
@@ -75,9 +80,10 @@ public class ClientSocket implements Client{
             @Override
             public void run() {
                 try{
+                    Log.i(TAG, "Request: "+ protocol);
                     outputStream.writeUTF(protocol.toString());
                 }catch (Exception err){
-                    err.printStackTrace();
+                    Log.e(TAG, "Socket error while requesting.", err);
                     threadExecutor.postMain(new PostErrorToEventBusTask(new ConnectionTimedOutException(err)));
                 }
             }
@@ -91,7 +97,7 @@ public class ClientSocket implements Client{
 
     @Override
     public void disconnect() throws Exception {
-        // TODO
+        conntected = false;
     }
 
     private class InvokeEventBusTask implements Runnable{

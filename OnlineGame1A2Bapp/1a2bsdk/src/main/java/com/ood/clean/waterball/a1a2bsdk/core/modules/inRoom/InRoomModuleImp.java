@@ -1,6 +1,7 @@
 package com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.AbstractGameModule;
 import com.ood.clean.waterball.a1a2bsdk.core.base.BindCallback;
@@ -84,13 +85,15 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
         @Override
         @BindCallback(event = LAUNCH_GAME, status = RequestStatus.success)
         public void onGameLaunchedSuccessfully(GameRoom gameRoom) {
+            Log.d(TAG, "Game launched, info: " + gameRoom);
             callback.onGameLaunchedSuccessfully(gameRoom);
         }
 
         @Override
         @BindCallback(event = LAUNCH_GAME, status = RequestStatus.failed)
-        public void onGameLaunchedFailed() {
-            callback.onGameLaunchedFailed();
+        public void onGameLaunchedFailed(GameRoom gameRoom) {
+            Log.d(TAG, "Game launched, info: " + gameRoom);
+            callback.onGameLaunchedFailed(gameRoom);
         }
 
         @Override

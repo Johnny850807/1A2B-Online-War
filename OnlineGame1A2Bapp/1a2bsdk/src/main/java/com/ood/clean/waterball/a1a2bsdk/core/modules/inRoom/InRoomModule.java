@@ -63,6 +63,6 @@ public interface InRoomModule extends GameModule{
         /**
          * when the game cannot be launched.
          */
-        public void onGameLaunchedFailed();
+        public void onGameLaunchedFailed(GameRoom gameRoom);
     }
 }
