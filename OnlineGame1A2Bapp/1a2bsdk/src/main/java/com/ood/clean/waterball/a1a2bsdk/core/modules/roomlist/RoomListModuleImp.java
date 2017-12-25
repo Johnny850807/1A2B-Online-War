@@ -52,20 +52,20 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
     public void createRoom(String roomName, GameMode gameMode) {
         GameRoom gameRoom = new GameRoom(gameMode, roomName, signingModule.getCurrentPlayer());
         Protocol protocol = protocolFactory.createProtocol(CREATE_ROOM, RequestStatus.request.toString(), gson.toJson(gameRoom));
-        client.respond(protocol);
+        client.broadcast(protocol);
     }
 
 
     @Override
     public void joinRoom(GameRoom gameRoom) {
         Protocol protocol = protocolFactory.createProtocol(JOIN_ROOM, RequestStatus.request.toString(), gson.toJson(gameRoom));
-        client.respond(protocol);
+        client.broadcast(protocol);
     }
 
     @Override
     public void getGameRoomList() {
         Protocol protocol = protocolFactory.createProtocol(GET_ROOMS, RequestStatus.request.toString(), null);
-        client.respond(protocol);
+        client.broadcast(protocol);
     }
 
     public class ProxyCallback implements RoomListModule.Callback{

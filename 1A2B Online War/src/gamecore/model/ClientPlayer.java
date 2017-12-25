@@ -3,6 +3,7 @@ package gamecore.model;
 import container.base.Client;
 import container.protocol.Protocol;
 import gamecore.entity.Player;
+import utils.ForServer;
 
 public class ClientPlayer {
 	private Player player;
@@ -22,12 +23,13 @@ public class ClientPlayer {
 		return player.getUserStatus();
 	}
 	
+	@ForServer
 	public String getClientAddress(){
-		return client.getAddress();
+		return client == null ? "(cannot show the address)" : client.getAddress();
 	}
 	
 	public String getId(){
-		return this.client.getId();
+		return this.player.getId();
 	}
 
 	public Player getPlayer() {
@@ -37,15 +39,18 @@ public class ClientPlayer {
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
-
+	
+	@ForServer
 	public Client getClient() {
 		return client;
 	}
-
+	
+	@ForServer
 	public void setClient(Client client) {
 		this.client = client;
 	}
 	
+	@ForServer
 	public void broadcast(Protocol protocol){
 		client.broadcast(protocol);
 	}
@@ -62,7 +67,7 @@ public class ClientPlayer {
 	
 	@Override
 	public String toString() {
-		return String.format("Client player info: id: %s, address:%s, player name:%s, player status:%s%n", 
-				getId(), getClientAddress(), getPlayerName(), getPlayerStatus().toString());
+		return String.format("id: %s, player name:%s, address:%s, player status:%s%n", 
+				getId(), getPlayerName(), getClientAddress(), getPlayerStatus().toString());
 	}
 }

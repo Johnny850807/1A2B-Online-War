@@ -1,5 +1,6 @@
 package container.eventhandler.handlers.roomlist;
 
+import container.ApacheLoggerAdapter;
 import container.base.Client;
 
 import container.eventhandler.handlers.GsonEventHandler;
@@ -35,6 +36,7 @@ public class CreateRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 			return error(103, new IllegalArgumentException("The room should be given a game mode."));
 		
 		room.initId();
+		room.setLog(new ApacheLoggerAdapter(GameRoom.class));
 		room.setProtocolFactory(protocolFactory());
 		gameCore().addGameRoom(room);
 		return success(room);

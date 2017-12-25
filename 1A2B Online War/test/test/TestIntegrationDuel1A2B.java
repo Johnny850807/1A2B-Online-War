@@ -1,6 +1,10 @@
 package test;
 
 import static container.Constants.Events.Chat.SEND_MSG;
+import static container.Constants.Events.Games.Duel1A2B.GUESS;
+import static container.Constants.Events.Games.Duel1A2B.GUESSING_STARTED;
+import static container.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
+import static container.Constants.Events.Games.Duel1A2B.SET_ANSWER;
 import static container.Constants.Events.InRoom.CLOSE_ROOM;
 import static container.Constants.Events.InRoom.LAUNCH_GAME;
 import static container.Constants.Events.InRoom.LEAVE_ROOM;
@@ -12,18 +16,23 @@ import static container.Constants.Events.Signing.SIGNOUT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import container.Constants.Events.Games;
 import container.base.Client;
+import container.base.MyLogger;
 import container.eventhandler.EventHandler;
 import container.eventhandler.GameEventHandlerFactory;
 import container.protocol.Protocol;
@@ -33,6 +42,7 @@ import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ClientStatus;
+import gamecore.model.ContentModel;
 import gamecore.model.GameMode;
 import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.PlayerRoomModel;
@@ -41,6 +51,8 @@ import gamecore.model.RoomStatus;
 import gamecore.model.ServerInformation;
 import gamecore.model.games.Game;
 import gamecore.model.games.a1b2.Duel1A2BGame;
+import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
+import gamecore.model.games.a1b2.GameOverModel;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
 import mock.MockClient;
@@ -60,6 +72,12 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	protected MockClient playerClient = new MockClient();
 	protected GameRoom gameRoom;
 	protected int signInCount = 0;
+	protected List<Duel1A2BPlayerBarModel> duelModels;
+	
+	@BeforeClass
+	public static void BeforeClass(){
+		System.setProperty("log4j.configurationFile","configuration.xml");
+	}
 	
 	@Before
 	public void setup(){
@@ -147,6 +165,49 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 				gson.toJson(this.gameRoom))).handle();
 		assertTrue(gameRoom.getRoomStatus() == RoomStatus.gamestarted);
 		assertNotNull(gameRoom.getGameModel());
+		
+		ContentModel hostSetAnswer = new ContentModel(host.getId(), gameRoom.getId(), "1234");
+		ContentModel playerSetAnswer = new ContentModel(player.getId(), gameRoom.getId(), "5678");
+		createHandler(hostClient, protocolFactory.createProtocol(SET_ANSWER, REQUEST, 
+				gson.toJson(hostSetAnswer))).handle();
+		assertEquals(SET_ANSWER,  hostClient.getLastedResponse().getEvent());
+		createHandler(playerClient, protocolFactory.createProtocol(SET_ANSWER, REQUEST, 
+				gson.toJson(playerSetAnswer))).handle();
+		assertTrue(playerClient.hasReceivedEvent(SET_ANSWER));
+		assertTrue(playerClient.hasReceivedEvent(GUESSING_STARTED));
+		assertTrue(hostClient.hasReceivedEvent(GUESSING_STARTED));
+		
+		//first round guessing
+		createHandler(hostClient, protocolFactory.createProtocol(GUESS, REQUEST, 
+				gson.toJson(new ContentModel(host.getId(), gameRoom.getId(), "1234")))).handle();
+		assertEquals(GUESS, hostClient.getLastedResponse().getEvent());
+		createHandler(playerClient, protocolFactory.createProtocol(GUESS, REQUEST, 
+				gson.toJson(new ContentModel(player.getId(), gameRoom.getId(), "5678")))).handle();
+		assertTrue(playerClient.hasReceivedEvent(GUESS));;
+		assertTrue(playerClient.hasReceivedEvent(ONE_ROUND_OVER));
+		assertTrue(hostClient.hasReceivedEvent(ONE_ROUND_OVER));
+		
+
+		Type type = new TypeToken<ArrayList<Duel1A2BPlayerBarModel>>(){}.getType();
+		duelModels = gson.fromJson(hostClient.getLastedResponse().getData(), type);
+		assertNotNull(duelModels);
+		assertEquals(1, duelModels.get(0).getGuessingTimes());
+		
+		//second round guessing
+		createHandler(hostClient, protocolFactory.createProtocol(GUESS, REQUEST, 
+				gson.toJson(new ContentModel(host.getId(), gameRoom.getId(), "5678")))).handle();
+		assertEquals(GUESS, hostClient.getLastedResponse().getEvent());
+		createHandler(playerClient, protocolFactory.createProtocol(GUESS, REQUEST, 
+				gson.toJson(new ContentModel(player.getId(), gameRoom.getId(), "1234")))).handle();
+		assertTrue(playerClient.hasReceivedEvent(GUESS));;
+		assertTrue(playerClient.hasReceivedEvent(ONE_ROUND_OVER));
+		assertTrue(hostClient.hasReceivedEvent(ONE_ROUND_OVER));
+		
+		assertTrue(playerClient.hasReceivedEvent(Games.GAMEOVER));
+		assertTrue(hostClient.hasReceivedEvent(Games.GAMEOVER));
+		
+		GameOverModel gameOverModel = gson.fromJson(hostClient.getLastedResponse().getData(), GameOverModel.class);
+		assertEquals(host.getId(), gameOverModel.getWinnerId());
 	}
 	
 	public void testHostSignOut(){
@@ -232,11 +293,9 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		case LAUNCH_GAME:
 			System.out.println(responseProtocol.getData());
 			this.gameRoom = gson.fromJson(responseProtocol.getData(), GameRoom.class);
-			
 			break;
 		default:
 			System.out.println("No Match: " + responseProtocol);
-			fail();
 			break;
 		}
 			

@@ -2,8 +2,6 @@ package gamecore.model;
 
 import java.io.Serializable;
 
-import gamecore.entity.GameRoom;
-
 /**
  * GameMode with a minimum/maximum player limit, as well as each GameMode may own its GameCreator which
  * uses a Factory Method for creating the specific Game.

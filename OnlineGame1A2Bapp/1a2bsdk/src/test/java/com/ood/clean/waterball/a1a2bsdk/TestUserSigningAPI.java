@@ -25,6 +25,7 @@ import container.protocol.XOXOXDelimiterFactory;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.GameMode;
+import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
 import gamecore.model.ServerInformation;
 
@@ -57,8 +58,8 @@ public class TestUserSigningAPI implements UserSigningModule.Callback, RoomListM
     public void testSignInAPI() throws InterruptedException {
         new Thread(client).start();
         Thread.sleep(2000); // waiting for the socket setup.
-        client.respond(protocolFactory.createProtocol("SignIn", RequestStatus.request.toString(), new Gson().toJson(new Player("Johnny"))));
-        client.respond(protocolFactory.createProtocol("GetServerInformation", RequestStatus.request.toString(), null));
+        client.broadcast(protocolFactory.createProtocol("SignIn", RequestStatus.request.toString(), new Gson().toJson(new Player("Johnny"))));
+        client.broadcast(protocolFactory.createProtocol("GetServerInformation", RequestStatus.request.toString(), null));
         Thread.sleep(5000); // waiting for the socket setup.
         Assert.assertNotNull(player);
         Assert.assertNotNull(serverInformation);
@@ -86,8 +87,8 @@ public class TestUserSigningAPI implements UserSigningModule.Callback, RoomListM
     public void onSignInSuccessfully(@NonNull Player player) {
         this.player = player;
         GameRoom gameRoom = new GameRoom(GameMode.DUEL1A2B, "MyRoom", player);
-        client.respond(protocolFactory.createProtocol("GetRooms", RequestStatus.request.toString(), null));
-        client.respond(protocolFactory.createProtocol("CreateRoom", RequestStatus.request.toString(), gson.toJson(gameRoom)));
+        client.broadcast(protocolFactory.createProtocol("GetRooms", RequestStatus.request.toString(), null));
+        client.broadcast(protocolFactory.createProtocol("CreateRoom", RequestStatus.request.toString(), gson.toJson(gameRoom)));
     }
 
     @Override
@@ -112,6 +113,16 @@ public class TestUserSigningAPI implements UserSigningModule.Callback, RoomListM
     }
 
     @Override
+    public void onCreateRoomSuccessfully(GameRoom gameRoom) {
+
+    }
+
+    @Override
+    public void onCreateRoomUnsuccessfully(GameRoom gameRoom) {
+
+    }
+
+    @Override
     public void onRoomClosed(GameRoom gameRoom) {
 
     }
@@ -122,7 +133,7 @@ public class TestUserSigningAPI implements UserSigningModule.Callback, RoomListM
     }
 
     @Override
-    public void onJoinRoomSuccessfully(GameRoom gameRoom) {
+    public void onJoinRoomSuccessfully(PlayerRoomModel model) {
 
     }
 }

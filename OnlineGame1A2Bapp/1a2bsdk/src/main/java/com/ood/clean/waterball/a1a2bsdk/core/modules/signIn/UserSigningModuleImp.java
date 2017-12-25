@@ -43,7 +43,7 @@ public class UserSigningModuleImp extends AbstractGameModule implements UserSign
     public void signIn(@NonNull String name) {
         Player player = new Player(name);
         Protocol protocol = protocolFactory.createProtocol(SIGNIN, RequestStatus.request.toString(), gson.toJson(player));
-        client.respond(protocol);
+        client.broadcast(protocol);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class UserSigningModuleImp extends AbstractGameModule implements UserSign
         if (currentPlayer == null)
             throw new IllegalStateException("No user signed in.");
         Protocol protocol = protocolFactory.createProtocol(SIGNOUT, RequestStatus.request.toString(), gson.toJson(currentPlayer));
-        client.respond(protocol);
+        client.broadcast(protocol);
     }
 
 
@@ -64,7 +64,7 @@ public class UserSigningModuleImp extends AbstractGameModule implements UserSign
     @Override
     public void getServerInformation() {
         Protocol protocol = protocolFactory.createProtocol(GETINFO, RequestStatus.request.toString(), null);
-        client.respond(protocol);
+        client.broadcast(protocol);
     }
 
 

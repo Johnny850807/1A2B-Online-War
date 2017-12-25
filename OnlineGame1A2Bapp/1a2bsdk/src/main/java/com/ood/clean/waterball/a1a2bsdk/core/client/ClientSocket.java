@@ -69,9 +69,8 @@ public class ClientSocket implements Client{
         }
     }
 
-
     @Override
-    public void respond(Protocol protocol) {
+    public void broadcast(Protocol protocol) {
         threadExecutor.post(new Runnable() {
             @Override
             public void run() {

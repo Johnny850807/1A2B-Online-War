@@ -22,26 +22,22 @@ public class Duel1A2BPlayerBarModel {
 	public String getName() {
 		return name;
 	}
-	
-	public void setName(String playerName) {
-		this.name = playerName;
-	}
-	
+
 	public String getAnswer() {
 		return answer;
 	}
 	
-	public void setAnswer(String answer) throws NumberNotValidException {
+	void setAnswer(String answer) throws NumberNotValidException {
 		A1B2NumberValidator.validateNumber(answer);
 		this.answer = answer;
 	}
 	
-	public GuessResult guess(String guess) throws NumberNotValidException{
+	GuessResult guess(String guess) throws NumberNotValidException{
 		A1B2NumberValidator.validateNumber(guess);
 		return A1B2NumberValidator.getGuessResult(answer, guess);
 	}
 	
-	public void addRecord(GuessRecord guessRecord) throws NumberNotValidException{
+	void addRecord(GuessRecord guessRecord) throws NumberNotValidException{
 		A1B2NumberValidator.validateNumber(guessRecord.getGuess());
 		this.guessRecords.add(guessRecord);
 	}

@@ -4,8 +4,8 @@ import container.base.Client;
 import container.base.IO;
 import container.eventhandler.GameEventHandlerFactory;
 import container.protocol.ProtocolFactory;
-import gamecore.ClientBinder;
 import gamecore.GameCore;
+import gamecore.model.ClientBinder;
 
 /**
  * The factory which implements a abstraction factory grouping a set of

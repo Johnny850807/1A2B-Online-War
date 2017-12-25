@@ -3,8 +3,6 @@ package gamecore.entity;
 import java.io.Serializable;
 import java.util.UUID;
 
-import javax.naming.directory.InitialDirContext;
-
 /**
  * @author AndroidWork
  * A Serializable Entity must have a 'id' property. You should invoke 'initId()' to make sure that 

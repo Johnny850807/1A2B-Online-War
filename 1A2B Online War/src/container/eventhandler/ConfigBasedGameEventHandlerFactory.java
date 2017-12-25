@@ -16,6 +16,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.Node;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -33,6 +35,7 @@ import gamefactory.GameFactory;
  * written in the /config/eventhandler.config file.
  */
 public class ConfigBasedGameEventHandlerFactory implements GameEventHandlerFactory{
+	private static Logger log = LogManager.getLogger(ConfigBasedGameEventHandlerFactory.class);
 	private static final String CONFIG_PATH = "./config/eventhandler.config";
 	private static final String EVENT_HANDLER_TAG = "EventHandler";
 	private static final String HANDLER_MAPPING_TAG = "EventHandlerMapping";
@@ -83,9 +86,10 @@ public class ConfigBasedGameEventHandlerFactory implements GameEventHandlerFacto
 		String event = protocol.getEvent();
 		String handlerName = mappings.get(event);
 		try {
+			log.trace("Handler creating: event " + event + ", handlerName: " + handlerName);
 			return createEventHandler(client, protocol, handlerMap.get(handlerName));
-		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			log.error("Handler creating error occurs.", e);
 		}
 		return null;
 	}

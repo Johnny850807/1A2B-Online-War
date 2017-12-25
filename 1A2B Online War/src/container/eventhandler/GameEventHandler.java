@@ -3,8 +3,8 @@ package container.eventhandler;
 import container.base.Client;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
-import gamecore.ClientBinder;
 import gamecore.GameCore;
+import gamecore.model.ClientBinder;
 import gamecore.model.ErrorMessage;
 import gamecore.model.RequestStatus;
 

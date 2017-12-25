@@ -45,4 +45,9 @@ public class GuessResult {
 			return false;
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return a+ "a" + b + "b";
+	}
 }

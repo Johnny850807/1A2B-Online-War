@@ -3,9 +3,9 @@ package container;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 
-import com.google.gson.Gson;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import container.base.Client;
 import container.base.IO;
@@ -15,10 +15,10 @@ import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.Entity;
-import gamecore.entity.Player;
 import gamefactory.GameFactory;
 
 public class SocketClient extends Entity implements Client{
+	private static transient Logger log = LogManager.getLogger(SocketClient.class);
 	private GameFactory gameFactory;
 	private GameEventHandlerFactory gameEventHandlerFactory;
 	private ProtocolFactory protocolFactory;
@@ -34,10 +34,9 @@ public class SocketClient extends Entity implements Client{
 			this.initId(); 
 			this.address = address;
 			initProperties(factory, io);
-		} catch (IOException e) {
-			e.printStackTrace();
+			log.trace("Socket " + getAddress() + " initialized with id: " + getId());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("err", e);
 		}
 	}
 	
@@ -64,7 +63,7 @@ public class SocketClient extends Entity implements Client{
 		{
 			String content = dataInput.readUTF();
 			Protocol protocol = protocolFactory.createProtocol(content);
-			System.out.println("===== Request ===== \n" + protocol);
+			log.info("Request: " + protocol);
 			EventHandler handler = gameEventHandlerFactory.createGameEventHandler(this, protocol);
 			handler.handle();
 		}
@@ -73,11 +72,14 @@ public class SocketClient extends Entity implements Client{
 	@Override
 	public void broadcast(Protocol protocol) {
 		try {
-			System.out.println("===== Response ===== \n" + protocol);
+			log.info("Broadcast: " + protocol);
 			dataOutput.writeUTF(protocol.toString());
 			dataOutput.flush();
-		} catch (IOException e) {
+		}catch (IOException e) {
+			log.trace("socket " + getAddress() + " disconnected.");
 			askGamecoreToUnregisterTheClient();
+		}catch (Exception e) {
+			log.error("err", e);
 		}
 	}
 
@@ -91,7 +93,9 @@ public class SocketClient extends Entity implements Client{
 		try{
 			gameCore.removeClientPlayer(getId());
 		}catch (IllegalStateException e) {
-			System.out.println("Non-Signed In Client disconnects, id: " + getId() + ", address: " + getAddress());
+			log.warn("Non-Signed In Client disconnects, id: " + getId() + ", address: " + getAddress());
+		}catch (Exception e) {
+			log.error("err", e);
 		}
 	}
 

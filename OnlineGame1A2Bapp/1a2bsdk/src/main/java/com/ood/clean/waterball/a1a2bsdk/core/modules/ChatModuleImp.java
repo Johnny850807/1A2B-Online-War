@@ -44,7 +44,7 @@ public class ChatModuleImp extends AbstractGameModule implements ChatModule {
     public void sendMessage(ChatMessage message) {
         String json = gson.toJson(message);
         Protocol protocol = protocolFactory.createProtocol(SEND_MSG, RequestStatus.request.toString(), json);
-        client.respond(protocol);
+        client.broadcast(protocol);
     }
 
     public class ProxyCallback implements ChatModule.Callback{

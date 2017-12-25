@@ -19,9 +19,7 @@
     </Root>
 	<Root level="all" >
       <AppenderRef ref="MyFile"/>
-    </Root>
-	<logger name="gamecore.model.games" level="trace">
       <AppenderRef ref="Console"/>
-	</logger>
+    </Root>
   </Loggers>
 </Configuration>

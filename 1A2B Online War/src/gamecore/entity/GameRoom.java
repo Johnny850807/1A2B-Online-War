@@ -2,30 +2,35 @@ package gamecore.entity;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-import container.eventhandler.handlers.inroom.LaunchGameHandler;
+import com.google.gson.annotations.Expose;
+
+import container.ApacheLoggerAdapter;
+import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
-import gamecore.ClientBinder;
+import gamecore.model.ClientBinder;
 import gamecore.model.ClientPlayer;
+import gamecore.model.ClientStatus;
 import gamecore.model.GameMode;
+import gamecore.model.MockLogger;
 import gamecore.model.PlayerStatus;
 import gamecore.model.RoomStatus;
 import gamecore.model.games.Game;
 import gamecore.model.games.a1b2.Duel1A2BGame;
+import utils.ClientPlayersHelper;
 
 /**
  * GameRoom contains only the info and the status the room should present. The game of the room will be
  * created by a GameMode.
  */
 public class GameRoom extends Entity{
+	private transient ProtocolFactory protocolFactory;
+	private transient MyLogger log = new MockLogger();
 	private Player host;
 	private RoomStatus roomStatus = RoomStatus.waiting;
 	private GameMode gameMode;
 	private Game game;
-	private ProtocolFactory protocolFactory;
 	private List<ChatMessage> chatMessageList = Collections.checkedList(new ArrayList<>(), ChatMessage.class);
 	
 	/**
@@ -52,6 +57,10 @@ public class GameRoom extends Entity{
 	public List<ChatMessage> getChatMessageList() {
 		return chatMessageList;
 	} 
+	
+	public void setLog(MyLogger log) {
+		this.log = log;
+	}
 	
 	public GameMode getGameMode() {
 		return gameMode;
@@ -99,17 +108,13 @@ public class GameRoom extends Entity{
 	public List<Player> getPlayers(){
 		List<Player> players = new ArrayList<>();
 		players.add(host);
-		playerStatusList.parallelStream()
-						.map(ps -> ps.getPlayer())
-						.forEach(p -> players.add(p));
+		for (PlayerStatus playerStatus : playerStatusList)
+			players.add(playerStatus.getPlayer());
 		return players;
-	}
-	
-	public void sendMessage(ChatMessage chatMessage){
-		chatMessageList.add(chatMessage);
 	}
 
 	public void addPlayer(Player player){
+		player.setUserStatus(ClientStatus.inRoom);
 		PlayerStatus playerStatus = new PlayerStatus(player);
 		if (host.equals(player) || playerStatusList.contains(playerStatus))
 			throw new IllegalStateException("Duplicated player added into the status list.");
@@ -126,7 +131,7 @@ public class GameRoom extends Entity{
 		for (PlayerStatus playerStatus : playerStatusList)
 			if(playerStatus.getPlayer().equals(player))
 				return playerStatus;
-		throw new IllegalArgumentException("The removed player doesn't exist in the room !");
+		throw new IllegalStateException("The removed player doesn't exist in the room !");
 	}
 
 	public void setName(String name) {
@@ -168,14 +173,31 @@ public class GameRoom extends Entity{
 	 * @param clientBinder binding interface which allows the game access the client player without coupling to the game core.
 	 */
 	public void launchGame(ClientBinder clientBinder){
-		if (getPlayerAmount() < getMinPlayerAmount())
-			throw new IllegalStateException("The Player amount is not enough to launch the game.");
-
+		log.trace("Room: " + id + ", launcing the " + gameMode.toString() + " game.");
+		validatePlayerAmount();
 		ClientPlayer hostClient = clientBinder.getClientPlayer(host.getId());
+		log.trace("Host prepared: " + hostClient.getPlayerName());
+		List<ClientPlayer> playerClients = new ArrayList<>();
+		for(PlayerStatus playerStatus : playerStatusList)
+			playerClients.add(clientBinder.getClientPlayer(playerStatus.getPlayer().getId()));
+		log.trace("Host prepared: " + hostClient.getPlayerName());
+		log.trace("Players prepared: " + ClientPlayersHelper.toString(playerClients));
+		initGameAndStart(hostClient, playerClients);
+	}
+	
+	private void validatePlayerAmount(){
+		int playerAmount = getPlayerAmount();
+		if (playerAmount < getMinPlayerAmount())
+			throw new IllegalStateException("The Player amount is not enough to launch the game. Expect: " + getMinPlayerAmount() + ", actual: " + playerAmount);
+		if (playerAmount > getMaxPlayerAmount())
+			throw new IllegalStateException("The Player amount is out of the limit. Expect: " + getMaxPlayerAmount() + ", actual: " + playerAmount);
+	}
+	
+	private void initGameAndStart(ClientPlayer hostClient, List<ClientPlayer> playerClients){
 		switch (getGameMode()) {
 		case DUEL1A2B:
-			ClientPlayer playerClient = clientBinder.getClientPlayer(playerStatusList.get(0).getPlayer().getId());
-			game = new Duel1A2BGame(protocolFactory, id, hostClient, playerClient);
+			game = new Duel1A2BGame(protocolFactory, id, hostClient, playerClients.get(0));
+			game.setLog(new ApacheLoggerAdapter(Duel1A2BGame.class));
 			break;
 		case GROUP1A2B:
 			//TODO
@@ -184,8 +206,16 @@ public class GameRoom extends Entity{
 			//TODO
 			break;
 		}
-		setRoomStatus(RoomStatus.gamestarted);
+		
 		this.game.startGame();
+		updateRoomAndPlayerStatusInGame(hostClient, playerClients);
+	}
+	
+	private void updateRoomAndPlayerStatusInGame(ClientPlayer hostClient, List<ClientPlayer> playerClients){
+		hostClient.getPlayer().setUserStatus(ClientStatus.inGame);
+		for(ClientPlayer player : playerClients)
+			player.getPlayer().setUserStatus(ClientStatus.inGame);
+		setRoomStatus(RoomStatus.gamestarted);
 	}
 	
 	public Game getGameModel() {

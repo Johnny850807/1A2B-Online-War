@@ -34,4 +34,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile files('libs/1A2B SDK.jar')
     compile 'javax.inject:javax.inject:1'
+    compile files('libs/log4j-api-2.3.jar')
+    compile files('libs/log4j-core-2.3.jar')
 }

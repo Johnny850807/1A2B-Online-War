@@ -1,6 +1,4 @@
-package gamecore;
-
-import gamecore.model.ClientPlayer;
+package gamecore.model;
 
 public interface ClientBinder {
 	ClientPlayer getClientPlayer(String playerId);

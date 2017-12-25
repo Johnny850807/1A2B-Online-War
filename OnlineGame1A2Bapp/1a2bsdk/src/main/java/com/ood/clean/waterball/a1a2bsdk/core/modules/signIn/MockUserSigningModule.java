@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.exceptions.UserNameFormatException;
 
+import container.Constants;
 import gamecore.entity.Player;
 import gamecore.model.ServerInformation;
 
@@ -43,6 +44,6 @@ public class MockUserSigningModule implements UserSigningModule {
 
     @Override
     public void getServerInformation() {
-        callback.onLoadServerInformation(new ServerInformation(5, 15));
+        callback.onLoadServerInformation(new ServerInformation(Constants.VERSION, 5, 15));
     }
 }

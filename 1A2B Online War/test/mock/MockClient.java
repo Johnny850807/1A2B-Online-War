@@ -2,6 +2,10 @@ package mock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
@@ -12,6 +16,7 @@ import gamecore.entity.ChatMessage;
 import gamecore.entity.Entity;
 
 public class MockClient extends Entity implements Client{
+	private static Logger log = LogManager.getLogger(MockClient.class);
 	private List<Protocol> responses = new ArrayList<>();
 	private Protocol lastedResponse;
 	private Gson gson = new Gson();
@@ -44,6 +49,7 @@ public class MockClient extends Entity implements Client{
 	public void broadcast(Protocol protocol) {
 		lastedResponse = protocol;
 		responses.add(protocol);
+		log.info("Client " + getId() + " broadcasted, msg: " + protocol);
 	}
 
 	@Override
@@ -57,5 +63,9 @@ public class MockClient extends Entity implements Client{
 			if (protocol.getEvent().equals(Chat.SEND_MSG))
 				messages.add(gson.fromJson(protocol.getData(), ChatMessage.class));
 		return messages;
+	}
+	
+	public boolean hasReceivedEvent(String event){
+		return responses.stream().anyMatch(p -> p.getEvent().equals(event));
 	}
 }

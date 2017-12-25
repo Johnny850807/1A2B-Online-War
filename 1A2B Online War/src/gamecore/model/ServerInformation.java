@@ -1,7 +1,5 @@
 package gamecore.model;
 
-import container.Constants;
-
 /**
  * The basic server information contains the amount of the online players or the rooms.
  */

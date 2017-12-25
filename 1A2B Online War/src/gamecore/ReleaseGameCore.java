@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.Gson;
 
 import Linq.Linq;
@@ -17,6 +20,7 @@ import container.base.Client;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
+import gamecore.model.ClientBinder;
 import gamecore.model.ClientPlayer;
 import gamecore.model.ClientStatus;
 import gamecore.model.PlayerRoomModel;
@@ -30,6 +34,7 @@ import gamefactory.GameFactory;
  * methods with the name 'notify' used for sending a response to certain clients.
  */
 public class ReleaseGameCore implements GameCore{
+	private static Logger log = LogManager.getLogger(ReleaseGameCore.class);
 	private GameFactory factory;
 	private Gson gson = new Gson();
 	private Map<String, GameRoom> roomContainer = Collections.checkedMap(new LinkedHashMap<>(), String.class, GameRoom.class); // <id, GameRoom>
@@ -47,7 +52,8 @@ public class ReleaseGameCore implements GameCore{
 	}
 
 	private List<ClientPlayer> getClientsByPlayerList(List<Player> players) {
-		return players.parallelStream().map(p -> clientsMap.get(p.getId())).collect(Collectors.toList());
+		return players.parallelStream()
+				.map(p -> clientsMap.get(p.getId())).collect(Collectors.toList());
 	}
 
 	@Override
@@ -101,7 +107,7 @@ public class ReleaseGameCore implements GameCore{
 	@Override
 	public void addGameRoom(GameRoom room){
 		if (room.getId() == null || room.getProtocolFactory() == null)
-			throw new IllegalArgumentException("The room's id or the factory has not been initialized.");
+			log.error("The room's id or the factory has not been initialized.");
 		Protocol protocol = factory.getProtocolFactory().createProtocol(RoomList.CREATE_ROOM,
 				RequestStatus.success.toString(), gson.toJson(room));
 		broadcastClientPlayers(ClientStatus.signedIn, protocol);
@@ -115,29 +121,33 @@ public class ReleaseGameCore implements GameCore{
 		broadcastRoom(room.getId(), protocol);
 		broadcastClientPlayers(ClientStatus.signedIn, protocol);
 		roomContainer.remove(room.getId());
-		System.out.println("== Room removed ==\n" + room + "====================");
+		log.trace("Room removed: " + room);
 	}
 	
 	@Override
 	public void addBindedClientPlayer(Client client, Player player){
 		if (player.getId() == null)
-			throw new IllegalArgumentException("The player's id has not been initialized.");
+			throw new IllegalStateException("The player's id has not been initialized.");
+		if (clientsMap.containsKey(client.getId()))
+			throw new IllegalStateException("The id is duplicated from the new binded clientplayer !");
+		
 		ClientPlayer clientPlayer = new ClientPlayer(client, player);
-		assert !clientsMap.containsKey(clientPlayer.getId()) : "The id is duplicated from the new binded clientplayer !";
+		
 		clientsMap.put(clientPlayer.getId(), clientPlayer);
-		System.out.println("== Client added ==\n" + clientPlayer +"====================");
+		log.trace("Client added: " + clientPlayer);
 	}
 
 	@Override
 	public void removeClientPlayer(String id) {
 		if (clientsMap.containsKey(id))
 		{
-			ClientPlayer clientPlayer = clientsMap.remove(id);
-			System.out.println("== Client removed ==\n" + clientPlayer +"====================");
+			ClientPlayer clientPlayer = clientsMap.get(id);
+			log.trace("Client removing: " + clientPlayer);
 			handleThePlayerRemoved(clientPlayer.getPlayer());
+			clientsMap.remove(id);
 		}
 		else
-			throw new IllegalStateException("The client wasn't signed.");
+			log.error("The client wasn't signed.");
 	}
 	
 	/**
@@ -145,13 +155,20 @@ public class ReleaseGameCore implements GameCore{
 	 * @return if the player is in any room
 	 */
 	private boolean handleThePlayerRemoved(Player player){
+		log.trace("Handling the player removed");
 		for (GameRoom gameRoom : getGameRooms())
 			if (gameRoom.containsPlayer(player))
 			{
 				if (gameRoom.getHost().equals(player))
+				{
+					log.trace("The player is the host from the room: " + gameRoom.getName() + ", closing his room.");
 					closeGameRoom(gameRoom);
+				}
 				else
+				{
+					log.trace("The player is the player from the room: " + gameRoom.getName() + ", remove him from the room.");
 					removePlayerFromRoomAndBroadcast(player, gameRoom);
+				}
 				return true;
 			}
 		return false;
