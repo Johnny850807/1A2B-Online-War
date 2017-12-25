@@ -52,5 +52,15 @@ public class MockRoomListModule implements RoomListModule {
         callback.onGetRoomList(gameRooms);
     }
 
+    @Override
+    public GameRoom getCurrentGameRoom() {
+        return null;
+    }
+
+    @Override
+    public void cleanCurrentGameRoom() {
+
+    }
+
 
 }

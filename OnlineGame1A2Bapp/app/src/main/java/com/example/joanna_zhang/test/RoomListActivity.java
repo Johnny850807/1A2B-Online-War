@@ -139,6 +139,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     public void updateRoomList(List<GameRoom> list) {
+        enableLoadingRoomListAnimation = true;
         adapter = new MyAdapter(list);
         roomListView.setAdapter(adapter);
     }
