@@ -42,8 +42,7 @@ public class ChatModuleImp extends AbstractGameModule implements ChatModule {
 
     @Override
     public void sendMessage(ChatMessage message) {
-        String json = gson.toJson(message);
-        Protocol protocol = protocolFactory.createProtocol(SEND_MSG, RequestStatus.request.toString(), json);
+        Protocol protocol = protocolFactory.createProtocol(SEND_MSG, RequestStatus.request.toString(), gson.toJson(message));
         client.broadcast(protocol);
     }
 

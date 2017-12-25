@@ -20,6 +20,7 @@ import container.SocketIO;
 import container.base.Client;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
+import gamecore.model.RequestStatus;
 
 import static com.ood.clean.waterball.a1a2bsdk.core.Secret.PORT;
 import static com.ood.clean.waterball.a1a2bsdk.core.Secret.SERVER_ADDRESS;
@@ -84,6 +85,8 @@ public class ClientSocket implements Client{
                     outputStream.writeUTF(protocol.toString());
                 }catch (Exception err){
                     Log.e(TAG, "Socket error while requesting.", err);
+                    threadExecutor.postMain(new InvokeEventBusTask(protocolFactory.createProtocol(protocol.getEvent(),
+                            RequestStatus.failed.toString(), protocol.getData())));
                     threadExecutor.postMain(new PostErrorToEventBusTask(new ConnectionTimedOutException(err)));
                 }
             }
