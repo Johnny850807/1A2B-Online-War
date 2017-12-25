@@ -37,6 +37,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
     private ImageButton sendMessageImgBtn;
     private List<ChatMessage> chatMessages = new ArrayList<>();
     private ChatMessageListener listener;
+    private ChatWindowAdapter adapter = new ChatWindowAdapter();
 
     private ChatWindowView(Activity activity, GameRoom gameRoom) {
         this.activity = activity;
@@ -45,6 +46,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
         chatWindowLst = activity.findViewById(R.id.chatwindowLst);
         sendMessageImgBtn = activity.findViewById(R.id.sendMessageBtn);
         sendMessageImgBtn.setOnClickListener(this);
+        chatWindowLst.setAdapter(adapter);
     }
 
     public void onResume() {
@@ -59,8 +61,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
         listener.onChatMessageUpdate(chatMessage);
 
         chatMessages.add(chatMessage);
-        ChatWindowAdapter adapter = new ChatWindowAdapter();
-        chatWindowLst.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
         chatWindowLst.setSelection(chatWindowLst.getCount() - 1);
     }
 
@@ -113,7 +114,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
         }
 
         public Builder setBackgroundColor(int id) {
-            chatWindowView.activity.findViewById(R.id.chatwindowLst).setBackgroundColor(id);
+            chatWindowView.chatWindowLst.setBackgroundColor(id);
             return this;
         }
 
