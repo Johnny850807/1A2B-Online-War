@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import gamecore.model.ClientPlayer;
 
+/**
+ * @author ¦°¥Ã
+ */
 public class PlayerBlock implements Serializable{
 	private ClientPlayer player;
 	private int hp;

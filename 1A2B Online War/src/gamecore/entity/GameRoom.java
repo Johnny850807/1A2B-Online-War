@@ -18,6 +18,8 @@ import gamecore.model.PlayerStatus;
 import gamecore.model.RoomStatus;
 import gamecore.model.games.Game;
 import gamecore.model.games.a1b2.Duel1A2BGame;
+import gamecore.model.games.a1b2.boss.BasicBoss;
+import gamecore.model.games.a1b2.boss.Boss1A2BGame;
 import utils.ClientPlayersHelper;
 import utils.ForServer;
 
@@ -218,6 +220,12 @@ public class GameRoom extends Entity{
 			break;
 		case DIXIT:
 			//TODO
+			break;
+		case BOSS1A2B:
+			List<ClientPlayer> allPlayers = playerClients;
+			allPlayers.add(hostClient);
+			game = new Boss1A2BGame(protocolFactory, new BasicBoss(), allPlayers, id);
+			game.setLog(new ApacheLoggerAdapter(Boss1A2BGame.class));
 			break;
 		}
 		

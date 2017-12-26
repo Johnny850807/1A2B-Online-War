@@ -31,6 +31,10 @@ public final class Constants {
 				public final static String GUESSING_STARTED = "GuessingStartedDuel1A2B";
 				public final static String ONE_ROUND_OVER = "OneRoundOverDuel1A2B";
 			}
+			
+			public final static class Boss1A2B{
+				public final static String YOUR_TURN = "YourTurnBoss1A2B";
+			}
 		}
 	}
 	public interface ErrorCode{

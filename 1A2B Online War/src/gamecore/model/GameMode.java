@@ -9,8 +9,10 @@ public enum GameMode implements IGameMode{
     
     GROUP1A2B(2,6),
     
-    DIXIT(3,6);
+    DIXIT(3,6),
 
+	BOSS1A2B(1, 4);
+	
     private int minPlayerAmount;
     private int maxPlayerAmount;
 
