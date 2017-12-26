@@ -30,6 +30,7 @@ public class Duel1A2BModuleImp extends AbstractGameModule implements Due11A2BMod
     private UserSigningModule signingModule;
     private RoomListModuleImp roomListModuleImp;
     private ProxyCallback proxyCallback;
+    private boolean answerCommitted;
 
     public Duel1A2BModuleImp(){
         signingModule = (UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING);
@@ -54,6 +55,7 @@ public class Duel1A2BModuleImp extends AbstractGameModule implements Due11A2BMod
 
     @Override
     public void setAnswer(String answer) {
+        answerCommitted = true;
         Protocol protocol = protocolFactory.createProtocol(SET_ANSWER,
                 RequestStatus.request.toString(), gson.toJson(new ContentModel(
                         signingModule.getCurrentPlayer().getId(), roomListModuleImp.getCurrentGameRoom().getId(), answer)));
@@ -83,10 +85,25 @@ public class Duel1A2BModuleImp extends AbstractGameModule implements Due11A2BMod
         }
 
         @Override
+        @BindCallback(event = SET_ANSWER, status = RequestStatus.failed)
+        public void onSetAnswerUnsuccessfully(ContentModel setAnswerModel) {
+            Log.d(TAG, "answer set unsuccessfully: " + setAnswerModel.getContent());
+            answerCommitted = false;
+            callback.onSetAnswerUnsuccessfully(setAnswerModel);
+        }
+
+        @Override
         @BindCallback(event = GUESS, status = RequestStatus.success)
         public void onGuessSuccessfully(ContentModel guessModel) {
             Log.d(TAG, "guessed : " + guessModel.getContent());
             callback.onGuessSuccessfully(guessModel);
+        }
+
+        @Override
+        @BindCallback(event = GUESS, status = RequestStatus.failed)
+        public void onGuessUnsuccessfully(ContentModel guessModel) {
+            Log.d(TAG, "guessing unsuccessfully : " + guessModel.getContent());
+            callback.onGuessUnsuccessfully(guessModel);
         }
 
         @Override

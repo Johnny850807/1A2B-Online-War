@@ -32,6 +32,8 @@ public interface Due11A2BModule extends GameModule {
          */
         void onSetAnswerSuccessfully(ContentModel setAnswerModel);
 
+        void onSetAnswerUnsuccessfully(ContentModel setAnswerModel);
+
         /**
          * while you guessed successfully.
          * Note that the time you get the result from your guess is when both of the players commit the guess,
@@ -39,6 +41,8 @@ public interface Due11A2BModule extends GameModule {
          * wail for the onOneRoundOver() event for getting the result and showing on the view.
          */
         void onGuessSuccessfully(ContentModel guessModel);
+
+        void onGuessUnsuccessfully(ContentModel guessModel);
 
         /**
          * when the both answers committed, the guessing phase started.

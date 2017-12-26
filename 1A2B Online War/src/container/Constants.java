@@ -28,8 +28,8 @@ public final class Constants {
 			public final static class Duel1A2B{
 				public final static String SET_ANSWER = "SetAnswerDuel1A2B";
 				public final static String GUESS = "GuessDuel1A2B";
-				public final static String GUESSING_STARTED = "GuessingStarted";
-				public final static String ONE_ROUND_OVER = "OneRoundOver";
+				public final static String GUESSING_STARTED = "GuessingStartedDuel1A2B";
+				public final static String ONE_ROUND_OVER = "OneRoundOverDuel1A2B";
 			}
 		}
 	}

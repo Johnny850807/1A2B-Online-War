@@ -19,6 +19,7 @@ import java.util.Set;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.model.RequestStatus;
+import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 
 
 public final class ReflectionEventBus implements EventBus{
@@ -112,6 +113,8 @@ public final class ReflectionEventBus implements EventBus{
         //TODO need a better algorithm to solve generic problem, not to parse it by an event name.
         if (event.toUpperCase().contains("ROOM"))
             return new TypeToken<List<GameRoom>>(){}.getType();
+        if (event.toUpperCase().contains("ONEROUNDOVER"))
+            return new TypeToken<List<Duel1A2BPlayerBarModel>>(){}.getType();
         return null;
     }
 }
