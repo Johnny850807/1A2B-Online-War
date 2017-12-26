@@ -52,6 +52,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private Spinner roomModeSpn;
     private RoomListModule roomListModule;
     private BaseAdapter adapter;
+    private GameMode selectedMode;
 
 
     @Override
@@ -117,9 +118,16 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         roomModeSpn.setOnItemSelectedListener(this);
     }
 
+    private void selectRoomList() {
+        roomListOfQuery = roomList;
+
+
+        updateRoomList(roomListOfQuery);
+    }
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-        GameMode selectedMode = gameModes[position];
+        selectedMode = gameModes[position];
         List<GameRoom> results = getRoomsByGameMode(selectedMode);
         roomListOfQuery = results.isEmpty() ? roomList : results;
         updateRoomList(roomListOfQuery);
