@@ -77,7 +77,6 @@ public class SocketClient extends Entity implements Client{
 			dataOutput.flush();
 		}catch (IOException e) {
 			log.trace("socket " + getAddress() + " disconnected.");
-			askGamecoreToUnregisterTheClient();
 		}catch (Exception e) {
 			log.error("err", e);
 		}

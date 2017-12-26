@@ -19,6 +19,7 @@ import gamecore.model.RoomStatus;
 import gamecore.model.games.Game;
 import gamecore.model.games.a1b2.Duel1A2BGame;
 import utils.ClientPlayersHelper;
+import utils.ForServer;
 
 /**
  * GameRoom contains only the info and the status the room should present. The game of the room will be
@@ -126,9 +127,15 @@ public class GameRoom extends Entity{
 	
 	public void removePlayer(Player player){
 		if (player.equals(host))
+		{
 			host = null;
+			log.trace("The host is removed.");
+		}
 		else
+		{
+			log.trace("The player " + player.getName() + " is removed from the status list." );
 			playerStatusList.remove(getPlayerStatusOfPlayer(player));
+		}
 	}
 	
 	public PlayerStatus getPlayerStatusOfPlayer(Player player){
@@ -176,16 +183,19 @@ public class GameRoom extends Entity{
 	 * launch the game and send all the client players into the game.
 	 * @param clientBinder binding interface which allows the game access the client player without coupling to the game core.
 	 */
+	@ForServer
 	public void launchGame(ClientBinder clientBinder){
 		log.trace("Room: " + id + ", launcing the " + gameMode.toString() + " game.");
 		validatePlayerAmount();
+		
 		ClientPlayer hostClient = clientBinder.getClientPlayer(host.getId());
-		log.trace("Host prepared: " + hostClient.getPlayerName());
 		List<ClientPlayer> playerClients = new ArrayList<>();
 		for(PlayerStatus playerStatus : playerStatusList)
 			playerClients.add(clientBinder.getClientPlayer(playerStatus.getPlayer().getId()));
+		
 		log.trace("Host prepared: " + hostClient.getPlayerName());
 		log.trace("Players prepared: " + ClientPlayersHelper.toString(playerClients));
+		
 		initGameAndStart(hostClient, playerClients);
 	}
 	
