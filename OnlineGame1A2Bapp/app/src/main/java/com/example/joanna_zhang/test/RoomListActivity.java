@@ -223,10 +223,11 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         @Override
         public View getView(int position, View view, ViewGroup parent) {
             ViewHolder viewHolder;
-            if (enableLoadingRoomListAnimation) {
+            Log.i("adapter", "GetView: position " + position);
+            /*if (enableLoadingRoomListAnimation) {
                 setRoomListAdapterViewUpdatedAnimation(parent);
                 enableLoadingRoomListAnimation = false; // whenever the animation enabled, the animation will be only executed once.
-            }
+            }*/
 
             if (view == null)  // if the view has not existed in view, init and bind the viewholder
             {
