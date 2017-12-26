@@ -205,8 +205,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     public class MyAdapter extends BaseAdapter {
-
-
         @Override
         public int getCount() {
             return roomListOfQuery.size();
@@ -251,7 +249,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
             viewHolder.roomNameTxt.setText(gameroom.getName());
             viewHolder.roomModeTxt.setText(modeName);
             viewHolder.roomCreatorName.setText(gameroom.getHost().getName());
-            viewHolder.roomPlayerAmountTxt.setText(gameroom.getPlayers().size() + "/" + gameroom.getGameMode().getMaxPlayerAmount());
+            viewHolder.roomPlayerAmountTxt.setText(gameroom.getPlayerAmount() + "/" + gameroom.getGameMode().getMaxPlayerAmount());
 
             return view;
         }
@@ -345,6 +343,11 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onJoinRoomSuccessfully(PlayerRoomModel model) {
         enterGameRoom(model.getGameRoom());
+    }
+
+    @Override
+    public void onJoinRoomUnsuccessfully(PlayerRoomModel model) {
+        Toast.makeText(this, R.string.theRoomIsFull, Toast.LENGTH_SHORT).show();
     }
 
     @Override

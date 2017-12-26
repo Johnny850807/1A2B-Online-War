@@ -56,6 +56,8 @@ public interface RoomListModule extends GameModule{
          */
         void onJoinRoomSuccessfully(PlayerRoomModel model);
 
+        void onJoinRoomUnsuccessfully(PlayerRoomModel model);
+
         /**
          * This method will be called when someone joined to any room.
          * You should update the room player amount on the UI.
