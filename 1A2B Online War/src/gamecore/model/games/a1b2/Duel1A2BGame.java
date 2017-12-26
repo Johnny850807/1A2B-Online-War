@@ -43,7 +43,8 @@ public class Duel1A2BGame extends Game{
 	}
 	
  	@ForServer
-	public void commitPlayerAnswer(String playerId, String answer) throws NumberNotValidException{
+	public void commitPlayerAnswer(String playerId, String answer) throws NumberNotValidException, ProcessInvalidException{
+ 		validateCommittingAnswerOperation(playerId);
 		playerModels.get(playerId).setAnswer(answer);
 		synchronized (playerModels) {
 			log.trace("Room: " + roomId + ", Player: " + getPlayerName(playerId) + ", Set answer: " + answer);
@@ -54,6 +55,11 @@ public class Duel1A2BGame extends Game{
 			}
 		}
 	}
+ 	
+ 	private void validateCommittingAnswerOperation(String playerId) throws ProcessInvalidException{
+ 		if (playerModels.get(playerId).getAnswer() != null)
+ 			throw new ProcessInvalidException("The player has already committed the answer.");
+ 	}
  	
 	public boolean hasBothAnswersCommitted(){
 		for (Duel1A2BPlayerBarModel model : playerModels.values())
@@ -70,25 +76,44 @@ public class Duel1A2BGame extends Game{
 	}
 
  	@ForServer
-	public void guess(String playerId, String guess) throws NumberNotValidException{
-		if(!guessingStarted)
-			log.error("Guessing has not started, but a player is guessing.");
-		//because the action is the player guessing the answer of another player's, so first get the another model out.
-		Duel1A2BPlayerBarModel anotherModel = getAnotherPlayerModel(playerId);
-		GuessResult result = anotherModel.guess(guess);
+	public void guess(String playerId, String guess) throws NumberNotValidException, ProcessInvalidException{
+ 		validateGuessingRequest(playerId);
+		GuessResult result = guessAndGetResult(playerId, guess);
 		playerModels.get(playerId).addRecord(new GuessRecord(guess, result));
+		handleTheResult(playerId, result);
+	}
+ 	
+ 	private void validateGuessingRequest(String playerId) throws ProcessInvalidException{
+		if(!guessingStarted)
+			throw new ProcessInvalidException("Guessing has not started, but a player is guessing.");
+		if (playerModels.get(playerId).getGuessingTimes() == guessingRound)
+			throw new ProcessInvalidException("The player has already guessed in round " +guessingRound + ".");
+ 	}
+ 	
+ 	private GuessResult guessAndGetResult(String playerId, String guess) throws NumberNotValidException{
+ 		//because the action is the player guessing the answer of another player's, so first get the another model out.
+ 		Duel1A2BPlayerBarModel anotherModel = getAnotherPlayerModel(playerId);
+		GuessResult result = anotherModel.guess(guess);
 		log.trace("Room: " + roomId + ", Player: " + getPlayerName(playerId) + ", guess: " + guess + "(" + result + ")");
-		
-		synchronized (this) {
+		return result;
+ 	}
+ 	
+ 	private void handleTheResult(String playerId, GuessResult result){
+ 		synchronized (this) {
 			if (result.getA() == 4 && winner == null)
 			{
 				log.trace("Room: " + roomId + ", The winner exists " + getPlayerName(playerId) + ".");
 				winner = getClientPlayer(playerId);
 			}
+			
 			if (isThisRoundOver())
+			{
 				broadcastOneRoundOver();
+				if (winner != null)
+					broadcastWinnerEvent();
+			}
 		}
-	}
+ 	}
 
 	private boolean isThisRoundOver() {
 		return playerModels.get(hostClient.getId()).getGuessingTimes() == this.guessingRound &&
@@ -96,14 +121,11 @@ public class Duel1A2BGame extends Game{
 	}
 	
 	private void broadcastOneRoundOver(){
-		log.trace("Room: " + roomId + ", The " + guessingRound + " round is over. ");
-		this.guessingRound ++;
+		log.trace("Room: " + roomId + ", The " + guessingRound++ + " round is over. ");
 		List<Duel1A2BPlayerBarModel> models = new ArrayList<>(playerModels.values());
 		Protocol protocol = protocolFactory.createProtocol(Duel1A2B.ONE_ROUND_OVER,
 				RequestStatus.success.toString(), gson.toJson(models));
 		broadcastToAll(protocol);
-		if (winner != null)
-			broadcastWinnerEvent();
 	}
 
 	private void broadcastWinnerEvent() {
@@ -113,7 +135,6 @@ public class Duel1A2BGame extends Game{
 				RequestStatus.success.toString(), gson.toJson(model));
 		broadcastToAll(protocol);
 	}
-
 
 	public ClientPlayer getClientPlayer(String playerId){
 		assert hostClient.getId().equals(playerId) || playerClient.getId().equals(playerId);

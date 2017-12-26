@@ -180,13 +180,4 @@ public class ReleaseGameCore implements GameCore{
 		broadcastRoom(gameRoom.getId(), protocol);
 	}
 
-	@Override
-	public ClientBinder clientBinder() {
-		return new ClientBinder() {
-			@Override
-			public ClientPlayer getClientPlayer(String playerId) {
-				return ReleaseGameCore.this.getClientPlayer(playerId);
-			}
-		};
-	}
 }

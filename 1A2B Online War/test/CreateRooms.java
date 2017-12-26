@@ -1,11 +1,9 @@
-import java.util.function.IntConsumer;
+import static container.Constants.Events.RoomList.CREATE_ROOM;
+
 import java.util.stream.IntStream;
 
 import com.google.gson.Gson;
 
-import container.Constants;
-import container.Constants.Events.Games;
-import container.Constants.Events.Games.Duel1A2B;
 import container.Constants.Events.Signing;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
@@ -18,9 +16,8 @@ import module.SocketConnector;
 import module.SocketConnector.Callback;
 import utils.RandomString;
 
-import static container.Constants.Events.RoomList.*;
-
-public class CreateTenRooms {
+public class CreateRooms {
+	private static final int NUMBER = 200;
 	public static void main(String[] argv){
 		Gson gson = new Gson();
 		SocketConnector cn = SocketConnector.getInstance();
@@ -34,7 +31,7 @@ public class CreateTenRooms {
 			@Override
 			public void onReceive(String message, int requestCode) {
 				Player responseHost = gson.fromJson(factory.createProtocol(message).getData(), Player.class);
-				IntStream.range(0, 10).parallel().forEach(i -> {
+				IntStream.range(0, 200).parallel().forEach(i -> {
 					host.initId();
 					Protocol protocol = factory.createProtocol(CREATE_ROOM, RequestStatus.request.toString(), 
 							gson.toJson(new GameRoom(GameMode.DUEL1A2B, RandomString.next(6), responseHost)));

@@ -32,7 +32,6 @@ import com.google.gson.reflect.TypeToken;
 
 import container.Constants.Events.Games;
 import container.base.Client;
-import container.base.MyLogger;
 import container.eventhandler.EventHandler;
 import container.eventhandler.GameEventHandlerFactory;
 import container.protocol.Protocol;

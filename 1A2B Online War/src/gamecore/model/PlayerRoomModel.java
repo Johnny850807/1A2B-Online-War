@@ -1,9 +1,11 @@
 package gamecore.model;
 
+import java.io.Serializable;
+
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 
-public class PlayerRoomModel {
+public class PlayerRoomModel implements Serializable{
 	private Player player;
 	private GameRoom gameRoom;
 	

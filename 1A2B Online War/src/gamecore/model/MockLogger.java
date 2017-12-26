@@ -1,8 +1,10 @@
 package gamecore.model;
 
+import java.io.Serializable;
+
 import container.base.MyLogger;
 
-public class MockLogger implements MyLogger{
+public class MockLogger implements MyLogger, Serializable{
 
 	@Override
 	public void trace(String msg) {

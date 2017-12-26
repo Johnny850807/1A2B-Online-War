@@ -1,14 +1,11 @@
 package container.eventhandler.handlers.roomlist;
 
-import org.omg.CORBA.PRIVATE_MEMBER;
-
 import container.base.Client;
 import container.eventhandler.handlers.GsonEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
-import gamecore.entity.Player;
 import gamecore.model.ClientPlayer;
 import gamecore.model.ClientStatus;
 import gamecore.model.PlayerRoomIdModel;

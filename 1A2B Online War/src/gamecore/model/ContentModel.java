@@ -1,10 +1,12 @@
 package gamecore.model;
 
+import java.io.Serializable;
+
 /**
  * @author Waterball
  * the model contains the player's id, room's id and the certain content.
  */
-public class ContentModel {
+public class ContentModel implements Serializable{
 	private String playerId;
 	private String roomId;
 	private String content;

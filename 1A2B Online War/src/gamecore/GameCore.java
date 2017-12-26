@@ -11,7 +11,7 @@ import gamecore.model.ClientPlayer;
 import gamecore.model.ClientStatus;
 import gamecore.model.RoomStatus;
 
-public interface GameCore {
+public interface GameCore extends ClientBinder{
 	void broadcastRoom(String roomId, Protocol response);
 	void broadcastClientPlayer(String userId, Protocol response);
 	void broadcastClientPlayers(ClientStatus userStatus, Protocol response);
@@ -29,6 +29,4 @@ public interface GameCore {
 	void addGameRoom(GameRoom room);
 	void closeGameRoom(GameRoom room);
 	void removePlayerFromRoomAndBroadcast(Player player, GameRoom gameRoom);
-	
-	ClientBinder clientBinder();
 }

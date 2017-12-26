@@ -1,11 +1,13 @@
 package gamecore.model;
 
+import java.io.Serializable;
+
 import container.base.Client;
 import container.protocol.Protocol;
 import gamecore.entity.Player;
 import utils.ForServer;
 
-public class ClientPlayer {
+public class ClientPlayer implements Serializable{
 	private Player player;
 	private transient Client client;
 	

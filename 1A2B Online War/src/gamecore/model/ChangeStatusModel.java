@@ -1,6 +1,8 @@
 package gamecore.model;
 
-public class ChangeStatusModel {
+import java.io.Serializable;
+
+public class ChangeStatusModel implements Serializable{
 	private String playerId;
 	private String roomId;
 	private boolean prepare;
