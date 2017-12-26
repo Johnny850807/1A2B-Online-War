@@ -106,6 +106,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     }
 
+
     @Override
     public void onError(Throwable err) {
 
