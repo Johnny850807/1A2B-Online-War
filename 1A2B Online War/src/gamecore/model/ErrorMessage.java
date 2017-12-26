@@ -1,9 +1,11 @@
 package gamecore.model;
 
+import java.io.Serializable;
+
 /**
  * ErrorMessage stands for a certain Exception by its code number.
  */
-public class ErrorMessage {
+public class ErrorMessage implements Serializable{
 	private int code;
 	private String message;
 	

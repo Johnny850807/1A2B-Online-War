@@ -72,12 +72,11 @@ public class SocketClient extends Entity implements Client{
 	@Override
 	public void broadcast(Protocol protocol) {
 		try {
-			log.info("Broadcast: " + protocol);
+			log.info("Broadcast to service(" + getAddress() +"): " + protocol);
 			dataOutput.writeUTF(protocol.toString());
 			dataOutput.flush();
 		}catch (IOException e) {
 			log.trace("socket " + getAddress() + " disconnected.");
-			askGamecoreToUnregisterTheClient();
 		}catch (Exception e) {
 			log.error("err", e);
 		}

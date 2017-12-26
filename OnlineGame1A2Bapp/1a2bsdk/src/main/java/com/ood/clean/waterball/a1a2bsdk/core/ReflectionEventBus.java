@@ -77,6 +77,7 @@ public final class ReflectionEventBus implements EventBus{
                     if (event.equals(bindCallback.event()) && status == bindCallback.status())
                     {
                         eventHasBeenConsumed = true;
+                        Log.d(TAG, "Method found: " + method.getName());
                         invokeMethod(gameCallBack, method, protocol);
                     }
                 }
@@ -97,6 +98,8 @@ public final class ReflectionEventBus implements EventBus{
             Object data = gson.fromJson(protocol.getData(), parameters[0]);
             if (data instanceof List)
                 data = gson.fromJson(protocol.getData(), parseGenericTypeByTheEvent(protocol.getEvent()));
+
+            Log.d(TAG, "Parameter: " + parameters[0].getName() + ", Data: " + data);
             method.invoke(callBack, data);
         }
         else if (parameters.length == 0)

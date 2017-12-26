@@ -11,6 +11,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
+import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
+
 import java.util.List;
 
 import gamecore.entity.ChatMessage;
@@ -21,6 +26,8 @@ import gamecore.model.GameMode;
 
 public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener {
 
+    private GameRoom currentGameRoom;
+    private Player currentPlayer;
     private ChatWindowView chatWindowView;
     private Button gameStartBtn;
     private TextView gameModeTxt;
@@ -34,6 +41,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_in_room);
+        this.currentPlayer = ((UserSigningModule)CoreGameServer.getInstance().getModule(ModuleName.SIGNING)).getCurrentPlayer();
+        this.currentGameRoom = ((RoomListModule)CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST)).getCurrentGameRoom();
         setupChatWindow();
         findViews();
         setUpThisRoomInfo();
@@ -87,10 +96,19 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         chatRoomPlayerLst = (ListView) findViewById(R.id.chatRoomPlayersLst);
     }
 
-
     @Override
     public void onChatMessageUpdate(ChatMessage chatMessage) {
-        // 對話窗更新
+
+    }
+
+    @Override
+    public void onMessageSendingFailed(ChatMessage chatMessage) {
+
+    }
+
+    @Override
+    public void onError(Throwable err) {
+
     }
 
     @Override

@@ -1,15 +1,13 @@
 package container.eventhandler.handlers.roomlist;
 
-import org.omg.CORBA.PRIVATE_MEMBER;
-
 import container.base.Client;
 import container.eventhandler.handlers.GsonEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
-import gamecore.entity.Player;
 import gamecore.model.ClientPlayer;
+import gamecore.model.ClientStatus;
 import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.PlayerRoomModel;
 
@@ -46,7 +44,7 @@ public class JoinRoomHandler extends GsonEventHandler<PlayerRoomIdModel, PlayerR
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
 		gameCore().broadcastRoom(roomId, responseProtocol);
-		client().broadcast(responseProtocol);
+		gameCore().broadcastClientPlayers(ClientStatus.signedIn, responseProtocol);
 	}
 
 }

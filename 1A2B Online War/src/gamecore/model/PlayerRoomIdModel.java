@@ -1,6 +1,8 @@
 package gamecore.model;
 
-public class PlayerRoomIdModel {
+import java.io.Serializable;
+
+public class PlayerRoomIdModel implements Serializable{
 	private String playerId;
 	private String gameRoomId;
 	

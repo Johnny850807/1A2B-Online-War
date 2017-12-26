@@ -19,6 +19,7 @@ import gamecore.model.RoomStatus;
 import gamecore.model.games.Game;
 import gamecore.model.games.a1b2.Duel1A2BGame;
 import utils.ClientPlayersHelper;
+import utils.ForServer;
 
 /**
  * GameRoom contains only the info and the status the room should present. The game of the room will be
@@ -27,11 +28,11 @@ import utils.ClientPlayersHelper;
 public class GameRoom extends Entity{
 	private transient ProtocolFactory protocolFactory;
 	private transient MyLogger log = new MockLogger();
+	private transient Game game;
 	private Player host;
 	private RoomStatus roomStatus = RoomStatus.waiting;
 	private GameMode gameMode;
-	private Game game;
-	private List<ChatMessage> chatMessageList = Collections.checkedList(new ArrayList<>(), ChatMessage.class);
+	private ArrayList<ChatMessage> chatMessageList = new ArrayList<>();
 	
 	/**
 	 * All the guest player status in the room, except the host.
@@ -107,7 +108,8 @@ public class GameRoom extends Entity{
 	 */
 	public List<Player> getPlayers(){
 		List<Player> players = new ArrayList<>();
-		players.add(host);
+		if (host != null)
+			players.add(host);
 		for (PlayerStatus playerStatus : playerStatusList)
 			players.add(playerStatus.getPlayer());
 		return players;
@@ -124,7 +126,16 @@ public class GameRoom extends Entity{
 	}
 	
 	public void removePlayer(Player player){
-		playerStatusList.remove(getPlayerStatusOfPlayer(player));
+		if (player.equals(host))
+		{
+			host = null;
+			log.trace("The host is removed.");
+		}
+		else
+		{
+			log.trace("The player " + player.getName() + " is removed from the status list." );
+			playerStatusList.remove(getPlayerStatusOfPlayer(player));
+		}
 	}
 	
 	public PlayerStatus getPlayerStatusOfPlayer(Player player){
@@ -154,7 +165,7 @@ public class GameRoom extends Entity{
 		try{
 			getPlayerStatusOfPlayer(player);
 			return true;
-		}catch (IllegalArgumentException e) {
+		}catch (IllegalStateException e) {
 			//if the player is not in the list, IllegalStateException thrown.
 			return false;
 		}
@@ -172,16 +183,19 @@ public class GameRoom extends Entity{
 	 * launch the game and send all the client players into the game.
 	 * @param clientBinder binding interface which allows the game access the client player without coupling to the game core.
 	 */
+	@ForServer
 	public void launchGame(ClientBinder clientBinder){
 		log.trace("Room: " + id + ", launcing the " + gameMode.toString() + " game.");
 		validatePlayerAmount();
+		
 		ClientPlayer hostClient = clientBinder.getClientPlayer(host.getId());
-		log.trace("Host prepared: " + hostClient.getPlayerName());
 		List<ClientPlayer> playerClients = new ArrayList<>();
 		for(PlayerStatus playerStatus : playerStatusList)
 			playerClients.add(clientBinder.getClientPlayer(playerStatus.getPlayer().getId()));
+		
 		log.trace("Host prepared: " + hostClient.getPlayerName());
 		log.trace("Players prepared: " + ClientPlayersHelper.toString(playerClients));
+		
 		initGameAndStart(hostClient, playerClients);
 	}
 	
@@ -225,6 +239,6 @@ public class GameRoom extends Entity{
 	@Override
 	public String toString() {
 		return String.format("Room id: %s, name: %s, GameMode: %s, Host: %s, Players: %d/%d, Status: %s", 
-				id, name, gameMode.toString(), host.getName(), getPlayers().size(), gameMode.getMaxPlayerAmount(), roomStatus.toString());
+				id, name, gameMode.toString(), host == null ? "null" : host.getName(), getPlayers().size(), gameMode.getMaxPlayerAmount(), roomStatus.toString());
 	}
 }

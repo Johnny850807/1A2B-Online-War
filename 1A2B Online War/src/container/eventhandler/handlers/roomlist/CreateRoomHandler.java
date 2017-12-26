@@ -8,6 +8,7 @@ import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
 import gamecore.model.ClientStatus;
 
 /**
@@ -34,7 +35,8 @@ public class CreateRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 			return error(102, new IllegalArgumentException("The room should be hosted by a player."));
 		if (room.getGameMode() == null)
 			return error(103, new IllegalArgumentException("The room should be given a game mode."));
-		
+		Player hostPlayer = gameCore().getClientPlayer(room.getHost().getId()).getPlayer();
+		hostPlayer.setUserStatus(ClientStatus.inRoom);
 		room.initId();
 		room.setLog(new ApacheLoggerAdapter(GameRoom.class));
 		room.setProtocolFactory(protocolFactory());

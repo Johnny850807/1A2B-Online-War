@@ -8,6 +8,7 @@ import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.base.AbstractGameModule;
 import com.ood.clean.waterball.a1a2bsdk.core.base.BindCallback;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.CallbackException;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import container.protocol.Protocol;
@@ -18,10 +19,12 @@ import static container.Constants.Events.Chat.SEND_MSG;
 
 public class ChatModuleImp extends AbstractGameModule implements ChatModule {
     protected UserSigningModule signingModule;
+    protected RoomListModule roomListModule;
     protected ProxyCallback proxyCallback;
 
     public ChatModuleImp() {
-        this.signingModule = (UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING);
+        signingModule = (UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING);
+        roomListModule = (RoomListModule) CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST);
     }
 
     @Override
