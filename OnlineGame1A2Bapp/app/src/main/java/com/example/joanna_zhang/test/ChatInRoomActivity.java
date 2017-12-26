@@ -70,7 +70,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     private void setUpPlayerListView() {
         RoomPlayerList playerListAdapter = new RoomPlayerList();
         chatRoomPlayerLst.setAdapter(playerListAdapter);
-
     }
 
     private void setUpThisRoomInfo() {
@@ -105,7 +104,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     public void onMessageSendingFailed(ChatMessage chatMessage) {
 
     }
-
 
     @Override
     public void onError(Throwable err) {

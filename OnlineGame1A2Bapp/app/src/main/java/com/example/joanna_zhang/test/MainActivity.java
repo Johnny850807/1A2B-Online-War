@@ -127,6 +127,11 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         signingModule.unregisterCallBack(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CoreGameServer.getInstance().shutdownConnection();
+    }
 
     private void savePlayerNameToSharedPreferences(String name) {
         sharedPreferences.edit()
