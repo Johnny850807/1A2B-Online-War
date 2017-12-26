@@ -93,6 +93,16 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         // 對話窗更新
     }
 
+    @Override
+    public void onMessageSendingFailed(ChatMessage chatMessage) {
+
+    }
+
+    @Override
+    public void onError(Throwable err) {
+
+    }
+
     public void gameStartButtonOnClick(View view) {
         Intent intent = new Intent(this, gameMode == GameMode.GROUP1A2B ? GroupFightActivity.class : DuelActivity.class);
         intent.putExtra("GameRoom", gameRoom);
