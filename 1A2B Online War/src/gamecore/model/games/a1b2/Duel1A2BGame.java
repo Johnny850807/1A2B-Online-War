@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import container.Constants.Events.Games;
 import container.Constants.Events.Games.Duel1A2B;
 import container.protocol.Protocol;

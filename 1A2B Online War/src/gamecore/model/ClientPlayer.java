@@ -8,8 +8,8 @@ import gamecore.entity.Player;
 import utils.ForServer;
 
 public class ClientPlayer implements Serializable{
-	private Player player;
 	private transient Client client;
+	private Player player;
 	
 	public ClientPlayer(Client client, Player player) {
 		this.client = client;
