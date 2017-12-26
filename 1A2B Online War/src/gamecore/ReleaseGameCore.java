@@ -151,7 +151,7 @@ public class ReleaseGameCore implements GameCore{
 	 * @param player removed player
 	 * @return if the player is in any room
 	 */
-	private boolean handleThePlayerRemovedFromGameRoom(Player player){
+	private void handleThePlayerRemovedFromGameRoom(Player player){
 		log.trace("Handling the player removed.");
 		for (GameRoom gameRoom : getGameRooms())
 			if (gameRoom.containsPlayer(player))
@@ -167,10 +167,8 @@ public class ReleaseGameCore implements GameCore{
 					removePlayerFromRoomAndBroadcast(player, gameRoom);
 				}
 				log.trace("The player is inside the room, remove successfully.");
-				return true;
 			}
 		log.trace("The player is not inside any room, remove successfully.");
-		return false;
 	}
 
 	@Override
