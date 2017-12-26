@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
@@ -147,6 +148,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     public void updateRoomList(List<GameRoom> list) {
+        enableLoadingRoomListAnimation = true;
         adapter = new MyAdapter(list);
         roomListView.setAdapter(adapter);
     }
@@ -177,8 +179,12 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     public void fastJoinRoomBtnOnClick(View view) {
         int roomAmount = roomList.size();
-        int randomNumber = (int) (Math.random() * roomAmount);
-        roomListModule.joinRoom(roomList.get(randomNumber));
+        if (roomAmount != 0) {
+            int randomNumber = (int) (Math.random() * roomAmount);
+            roomListModule.joinRoom(roomList.get(randomNumber));
+        }
+        else
+            Toast.makeText(this, R.string.noRoomCanJoin, Toast.LENGTH_LONG).show();
     }
 
     private void enterGameRoom(GameRoom gameRoom) {
@@ -329,12 +335,12 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onCreateRoomSuccessfully(GameRoom gameRoom) {
-        //TODO
+        enterGameRoom(gameRoom);
     }
 
     @Override
     public void onCreateRoomUnsuccessfully(GameRoom gameRoom) {
-        //TODO
+        Toast.makeText(this, R.string.createRoomFailed, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -357,12 +363,12 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onPlayerJoined(PlayerRoomModel model) {
-        //TODO update the room
+        onRoomUpdated(model.getGameRoom());
     }
 
     @Override
     public void onPlayerLeft(PlayerRoomModel model) {
-        //TODO update the room
+        onRoomUpdated(model.getGameRoom());
     }
 
 }

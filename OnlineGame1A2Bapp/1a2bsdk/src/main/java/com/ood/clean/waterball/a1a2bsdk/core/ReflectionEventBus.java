@@ -19,6 +19,7 @@ import java.util.Set;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.model.RequestStatus;
+import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 
 
 public final class ReflectionEventBus implements EventBus{
@@ -77,6 +78,7 @@ public final class ReflectionEventBus implements EventBus{
                     if (event.equals(bindCallback.event()) && status == bindCallback.status())
                     {
                         eventHasBeenConsumed = true;
+                        Log.d(TAG, "Method found: " + method.getName());
                         invokeMethod(gameCallBack, method, protocol);
                     }
                 }
@@ -97,6 +99,8 @@ public final class ReflectionEventBus implements EventBus{
             Object data = gson.fromJson(protocol.getData(), parameters[0]);
             if (data instanceof List)
                 data = gson.fromJson(protocol.getData(), parseGenericTypeByTheEvent(protocol.getEvent()));
+
+            Log.d(TAG, "Parameter: " + parameters[0].getName() + ", Data: " + data);
             method.invoke(callBack, data);
         }
         else if (parameters.length == 0)
@@ -109,6 +113,8 @@ public final class ReflectionEventBus implements EventBus{
         //TODO need a better algorithm to solve generic problem, not to parse it by an event name.
         if (event.toUpperCase().contains("ROOM"))
             return new TypeToken<List<GameRoom>>(){}.getType();
+        if (event.toUpperCase().contains("ONEROUNDOVER"))
+            return new TypeToken<List<Duel1A2BPlayerBarModel>>(){}.getType();
         return null;
     }
 }

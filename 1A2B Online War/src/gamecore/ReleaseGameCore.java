@@ -37,8 +37,8 @@ public class ReleaseGameCore implements GameCore{
 	private static Logger log = LogManager.getLogger(ReleaseGameCore.class);
 	private GameFactory factory;
 	private Gson gson = new Gson();
-	private Map<String, GameRoom> roomContainer = Collections.checkedMap(new LinkedHashMap<>(), String.class, GameRoom.class); // <id, GameRoom>
-	private Map<String, ClientPlayer> clientsMap = Collections.checkedMap(new HashMap<>(), String.class, ClientPlayer.class); // <id, ClientPlayer>
+	private Map<String, GameRoom> roomContainer = Collections.synchronizedMap(new LinkedHashMap<String, GameRoom>()); // <id, GameRoom>
+	private Map<String, ClientPlayer> clientsMap = Collections.synchronizedMap(new HashMap<String, ClientPlayer>()); // <id, ClientPlayer>
 	
 	public ReleaseGameCore(GameFactory factory) {
 		this.factory = factory;
@@ -47,31 +47,24 @@ public class ReleaseGameCore implements GameCore{
 	@Override
 	public void broadcastRoom(String roomId, Protocol response) {
 		GameRoom room = getGameRoom(roomId);
-		List<Player> players = room.getPlayers();
-		broadcastToClients(getClientsByPlayerList(players), response);
-	}
-
-	private List<ClientPlayer> getClientsByPlayerList(List<Player> players) {
-		return players.parallelStream()
-				.map(p -> clientsMap.get(p.getId())).collect(Collectors.toList());
+		log.trace("Broadcasting room: " + room.getName() + ", event: " + response.getEvent());
+		room.getPlayers().parallelStream().forEach(p -> broadcastClientPlayer(p.getId(), response));
 	}
 
 	@Override
 	public void broadcastClientPlayer(String userId, Protocol response) {
+		log.trace("Broadcasting client player by id: " + userId + ", event: " + response.getEvent());
 		ClientPlayer clientPlayer = getClientPlayer(userId);
 		clientPlayer.broadcast(response);
 	}
 
 	@Override
 	public void broadcastClientPlayers(ClientStatus status, Protocol response) {
-		List<ClientPlayer> clientPlayers = getClientPlayers(status);
-		broadcastToClients(clientPlayers, response);
+		log.trace("Broadcasting client players by status: " + status.toString() + ", event: " + response.getEvent());
+		getClientPlayers().parallelStream().filter(cp -> cp.getPlayerStatus() == status)
+			.forEach(cp -> cp.broadcast(response));
 	}
 	
-	private void broadcastToClients(List<ClientPlayer> clientPlayers, Protocol response){
-		clientPlayers.parallelStream().forEach(c -> c.broadcast(response));
-	}
-
 	@Override
 	public List<ClientPlayer> getClientPlayers(ClientStatus status){
 		return getClientPlayers().stream()
@@ -111,6 +104,7 @@ public class ReleaseGameCore implements GameCore{
 		Protocol protocol = factory.getProtocolFactory().createProtocol(RoomList.CREATE_ROOM,
 				RequestStatus.success.toString(), gson.toJson(room));
 		broadcastClientPlayers(ClientStatus.signedIn, protocol);
+		broadcastClientPlayer(room.getHost().getId(), protocol);
 		roomContainer.put(room.getId(), room);
 	}
 	
@@ -132,7 +126,6 @@ public class ReleaseGameCore implements GameCore{
 			throw new IllegalStateException("The id is duplicated from the new binded clientplayer !");
 		
 		ClientPlayer clientPlayer = new ClientPlayer(client, player);
-		
 		clientsMap.put(clientPlayer.getId(), clientPlayer);
 		log.trace("Client added: " + clientPlayer);
 	}
@@ -143,19 +136,23 @@ public class ReleaseGameCore implements GameCore{
 		{
 			ClientPlayer clientPlayer = clientsMap.get(id);
 			log.trace("Client removing: " + clientPlayer);
-			handleThePlayerRemoved(clientPlayer.getPlayer());
+			handleThePlayerRemovedFromGameRoom(clientPlayer.getPlayer());
 			clientsMap.remove(id);
+			log.trace("Remove the player from the clientsMap.");
 		}
 		else
-			log.error("The client wasn't signed.");
+			log.error("The client didn't sign.");
 	}
 	
 	/**
+	 * Handle the operation of removing the player from any game room if exists, depends on two situation
+	 * (1) the player is a host: close his room and broadcast the close event to the room.
+	 * (2) the player is inside the room but not a host: boot him out from the room and broadcast the leave event to the room.
 	 * @param player removed player
 	 * @return if the player is in any room
 	 */
-	private boolean handleThePlayerRemoved(Player player){
-		log.trace("Handling the player removed");
+	private void handleThePlayerRemovedFromGameRoom(Player player){
+		log.trace("Handling the player removed.");
 		for (GameRoom gameRoom : getGameRooms())
 			if (gameRoom.containsPlayer(player))
 			{
@@ -169,28 +166,18 @@ public class ReleaseGameCore implements GameCore{
 					log.trace("The player is the player from the room: " + gameRoom.getName() + ", remove him from the room.");
 					removePlayerFromRoomAndBroadcast(player, gameRoom);
 				}
-				return true;
+				log.trace("The player is inside the room, remove successfully.");
 			}
-		return false;
+		log.trace("The player is not inside any room, remove successfully.");
 	}
-
 
 	@Override
 	public void removePlayerFromRoomAndBroadcast(Player player, GameRoom gameRoom){
+		gameRoom.removePlayer(player);
 		Protocol protocol = factory.getProtocolFactory().createProtocol(InRoom.LEAVE_ROOM, 
 				RequestStatus.success.toString(), gson.toJson(new PlayerRoomModel(player, gameRoom)));
-		gameRoom.removePlayer(player);
 		broadcastClientPlayers(ClientStatus.signedIn, protocol);
 		broadcastRoom(gameRoom.getId(), protocol);
 	}
 
-	@Override
-	public ClientBinder clientBinder() {
-		return new ClientBinder() {
-			@Override
-			public ClientPlayer getClientPlayer(String playerId) {
-				return ReleaseGameCore.this.getClientPlayer(playerId);
-			}
-		};
-	}
 }

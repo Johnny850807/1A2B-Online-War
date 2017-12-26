@@ -136,4 +136,14 @@ public class TestUserSigningAPI implements UserSigningModule.Callback, RoomListM
     public void onJoinRoomSuccessfully(PlayerRoomModel model) {
 
     }
+
+    @Override
+    public void onPlayerJoined(PlayerRoomModel model) {
+
+    }
+
+    @Override
+    public void onPlayerLeft(PlayerRoomModel model) {
+
+    }
 }

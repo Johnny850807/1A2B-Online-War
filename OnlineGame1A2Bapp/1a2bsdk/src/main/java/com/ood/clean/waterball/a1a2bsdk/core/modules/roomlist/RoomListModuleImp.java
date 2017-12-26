@@ -144,14 +144,14 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
 
         @Override
         public void onPlayerJoined(PlayerRoomModel model) {
-            Log.d(TAG, "Player " + model.getPlayer().getName() + " joined to the room " + model.getGameRoom().getName());
+            Log.d(TAG, "Player " + model.getPlayer().getName() + " joined to the room " + model.getGameRoom());
             callback.onPlayerJoined(model);
         }
 
         @Override
         @BindCallback(event = LEAVE_ROOM, status = RequestStatus.success)
         public void onPlayerLeft(PlayerRoomModel model) {
-            Log.d(TAG, "Player " + model.getPlayer().getName() + " left from the room " + model.getGameRoom().getName());
+            Log.d(TAG, "Player " + model.getPlayer().getName() + " left from the room " + model.getGameRoom());
             callback.onPlayerLeft(model);
         }
 
