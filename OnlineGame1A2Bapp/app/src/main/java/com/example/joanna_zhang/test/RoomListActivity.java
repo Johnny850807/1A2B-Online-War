@@ -304,7 +304,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onGetRoomList(List<GameRoom> gameRooms) {
         roomList = gameRooms;
-        selectRoomList();
+        updateRoomList();
     }
 
     @Override
