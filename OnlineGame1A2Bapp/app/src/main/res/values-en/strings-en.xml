@@ -35,4 +35,6 @@
     <string name="title_activity_chat_window_test">ChatWindowTest</string>
     <string name="game_start">Game Start</string>
     <string name="setAnswerFrist">Please input the answer frist.</string>
+    <string name="createRoomFailed">Create room failed.</string>
+    <string name="noRoomCanJoin">Sorry! No room can join.</string>
 </resources>

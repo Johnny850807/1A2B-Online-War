@@ -120,14 +120,10 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         roomModeSpn.setOnItemSelectedListener(this);
     }
 
-    private void selectRoomList() {
+    public void updateRoomList() {
         List<GameRoom> results = getRoomsByGameMode(selectedMode);
         roomListOfQuery = selectedMode == gameModes[0]? roomList : results;
-    }
-
-    public void updateRoomList() {
         enableLoadingRoomListAnimation = true;
-        selectRoomList();
         adapter.notifyDataSetChanged();
     }
 
