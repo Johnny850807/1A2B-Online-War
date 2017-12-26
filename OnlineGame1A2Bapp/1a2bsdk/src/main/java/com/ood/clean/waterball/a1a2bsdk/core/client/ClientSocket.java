@@ -26,7 +26,7 @@ import static com.ood.clean.waterball.a1a2bsdk.core.Secret.PORT;
 import static com.ood.clean.waterball.a1a2bsdk.core.Secret.SERVER_ADDRESS;
 
 public class ClientSocket implements Client{
-    private final static String TAG = "ClientSocket";
+    private final static String TAG = "Socket";
     private @Inject ProtocolFactory protocolFactory;
     private @Inject EventBus eventBus;
     private String id;

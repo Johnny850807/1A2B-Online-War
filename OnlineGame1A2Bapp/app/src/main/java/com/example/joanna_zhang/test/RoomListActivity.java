@@ -55,7 +55,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private BaseAdapter adapter = new MyAdapter();
     private GameMode selectedMode = gameModes[0];
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,13 +169,13 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     public void fastJoinRoomBtnOnClick(View view) {
-        int roomAmount = roomList.size();
-        if (roomAmount != 0) {
-            int randomNumber = (int) (Math.random() * roomAmount);
+        if (roomList.isEmpty())
+            Toast.makeText(this, R.string.noRoomCanJoin, Toast.LENGTH_LONG).show();
+        else
+        {
+            int randomNumber = (int) (Math.random() * roomList.size());
             roomListModule.joinRoom(roomList.get(randomNumber));
         }
-        else
-            Toast.makeText(this, R.string.noRoomCanJoin, Toast.LENGTH_LONG).show();
     }
 
     private void enterGameRoom(GameRoom gameRoom) {
@@ -189,7 +188,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     public void searchBtnOnClick(View view) {
         enableLoadingRoomListAnimation = true;
         searchAndUpdateRoomList();
-    }
+}
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -202,8 +201,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     public class MyAdapter extends BaseAdapter {
-
-
         @Override
         public int getCount() {
             return roomListOfQuery.size();
@@ -248,7 +245,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
             viewHolder.roomNameTxt.setText(gameroom.getName());
             viewHolder.roomModeTxt.setText(modeName);
             viewHolder.roomCreatorName.setText(gameroom.getHost().getName());
-            viewHolder.roomPlayerAmountTxt.setText(gameroom.getPlayers().size() + "/" + gameroom.getGameMode().getMaxPlayerAmount());
+            viewHolder.roomPlayerAmountTxt.setText(gameroom.getPlayerAmount() + "/" + gameroom.getGameMode().getMaxPlayerAmount());
 
             return view;
         }
@@ -281,17 +278,13 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     private class SearchEditTextWatcher implements TextWatcher {
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
-
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             searchAndUpdateRoomList();
         }
-
         @Override
-        public void afterTextChanged(Editable editable) {
-        }
+        public void afterTextChanged(Editable editable) {}
     }
 
     private void searchAndUpdateRoomList() {
@@ -346,6 +339,11 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onJoinRoomSuccessfully(PlayerRoomModel model) {
         enterGameRoom(model.getGameRoom());
+    }
+
+    @Override
+    public void onJoinRoomUnsuccessfully(PlayerRoomModel model) {
+        Toast.makeText(this, R.string.theRoomIsFull, Toast.LENGTH_SHORT).show();
     }
 
     @Override

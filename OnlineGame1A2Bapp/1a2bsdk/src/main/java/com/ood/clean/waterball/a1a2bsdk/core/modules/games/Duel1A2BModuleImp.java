@@ -55,11 +55,14 @@ public class Duel1A2BModuleImp extends AbstractGameModule implements Due11A2BMod
 
     @Override
     public void setAnswer(String answer) {
-        answerCommitted = true;
-        Protocol protocol = protocolFactory.createProtocol(SET_ANSWER,
-                RequestStatus.request.toString(), gson.toJson(new ContentModel(
-                        signingModule.getCurrentPlayer().getId(), roomListModuleImp.getCurrentGameRoom().getId(), answer)));
-        client.broadcast(protocol);
+        if (!answerCommitted)
+        {
+            answerCommitted = true;
+            Protocol protocol = protocolFactory.createProtocol(SET_ANSWER,
+                    RequestStatus.request.toString(), gson.toJson(new ContentModel(
+                            signingModule.getCurrentPlayer().getId(), roomListModuleImp.getCurrentGameRoom().getId(), answer)));
+            client.broadcast(protocol);
+        }
     }
 
     @Override

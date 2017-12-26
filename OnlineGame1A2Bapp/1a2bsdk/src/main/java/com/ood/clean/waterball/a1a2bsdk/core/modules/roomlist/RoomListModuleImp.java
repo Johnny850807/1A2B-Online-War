@@ -143,6 +143,12 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
         }
 
         @Override
+        @BindCallback(event = JOIN_ROOM, status = RequestStatus.failed)
+        public void onJoinRoomUnsuccessfully(PlayerRoomModel model) {
+            callback.onJoinRoomUnsuccessfully(model);
+        }
+
+        @Override
         public void onPlayerJoined(PlayerRoomModel model) {
             Log.d(TAG, "Player " + model.getPlayer().getName() + " joined to the room " + model.getGameRoom());
             callback.onPlayerJoined(model);
