@@ -12,11 +12,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
+import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.List;
 
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
 
 public class DuelActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowView.OnClickListener {
 
@@ -24,6 +27,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     //private Duel1A2BGameModule duel1A2BGameModule;
     //private List<GuessRecord> p1ResultList, p2ResultList;
     private GameRoom gameRoom;
+    private Player currentPlayer;
     private ChatWindowView chatWindowView;
     private InputNumberWindowView inputNumberWindowView;
     private Button inputNumberBtn;
@@ -38,6 +42,8 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
         CoreGameServer server = CoreGameServer.getInstance();
         //duel1A2BGameModule = (Duel1A2BGameModule) server.getModule(ModuleName.SIGNING);
+        currentPlayer = ((UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING)).getCurrentPlayer();
+
         Intent intent = getIntent();
 
         setupChatWindow();
@@ -65,7 +71,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     public void setupChatWindow() {
-        chatWindowView = new ChatWindowView.Builder(this, gameRoom)
+        chatWindowView = new ChatWindowView.Builder(this, gameRoom, currentPlayer)
                 .addOnSendMessageOnClickListener(this)
                 .build();
     }

@@ -11,17 +11,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
+import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.List;
 
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
 
 public class GroupFightActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowView.OnClickListener {
 
     //private Duel1A2BGameModule duel1A2BGameModule;
     //private List<GuessRecord> p1ResultList, p2ResultList;
     private GameRoom gameRoom;
+    private Player currentPlayer;
     private ChatWindowView chatWindowView;
     private InputNumberWindowView inputNumberWindowView;
     private Button inputNumberBtn;
@@ -35,6 +39,8 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
         setContentView(R.layout.activity_room_fight);
 
         CoreGameServer server = CoreGameServer.getInstance();
+        currentPlayer = ((UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING)).getCurrentPlayer();
+
         setupChatWindow();
         findViews();
     }
@@ -45,7 +51,7 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
     }
 
     public void setupChatWindow() {
-        chatWindowView = new ChatWindowView.Builder(this, gameRoom)
+        chatWindowView = new ChatWindowView.Builder(this, gameRoom, currentPlayer)
                 .addOnSendMessageOnClickListener(this)
                 .build();
     }

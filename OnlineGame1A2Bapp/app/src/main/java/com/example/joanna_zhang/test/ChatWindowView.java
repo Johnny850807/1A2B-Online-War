@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
@@ -33,6 +34,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
     private Activity activity;
     private ChatModule chatModule;
     private GameRoom gameRoom;
+    private Player poster;
     private EditText inputMessageEdt;
     private ListView chatWindowLst;
     private ImageButton sendMessageImgBtn;
@@ -40,9 +42,10 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
     private ChatMessageListener listener;
     private ChatWindowAdapter adapter = new ChatWindowAdapter();
 
-    private ChatWindowView(Activity activity, GameRoom gameRoom) {
+    private ChatWindowView(Activity activity, GameRoom gameRoom, Player poster) {
         this.activity = activity;
         this.gameRoom = gameRoom;
+        this.poster = poster;
         chatModule = new ChatModuleImp();
         inputMessageEdt = activity.findViewById(R.id.inputChattingTxt);
         chatWindowLst = activity.findViewById(R.id.chatwindowLst);
@@ -76,7 +79,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
     public void onClick(View view) {
         String content = inputMessageEdt.getText().toString();
         if (!content.isEmpty()) {
-            sendMessage(getCurrentPlayer(), content);
+            sendMessage(poster, content);
             inputMessageEdt.setText("");
         }
     }
@@ -95,11 +98,13 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
 
     @Override
     public void onMessageSent(ChatMessage message) {
+        Toast.makeText(activity, "ss", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onMessageSendingFailed(ChatMessage message) {
+        Toast.makeText(activity, "failed", Toast.LENGTH_SHORT).show();
         listener.onMessageSendingFailed(message);
     }
 
@@ -112,8 +117,8 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
 
         private ChatWindowView chatWindowView;
 
-        public Builder(Activity activity, GameRoom gameRoom) {
-            chatWindowView = new ChatWindowView(activity, gameRoom);
+        public Builder(Activity activity, GameRoom gameRoom, Player poster) {
+            chatWindowView = new ChatWindowView(activity, gameRoom, poster);
         }
 
         public Builder setBackgroundColor(int id) {
