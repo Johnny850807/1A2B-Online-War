@@ -106,7 +106,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     @Override
-    public void onError(Throwable err) {
+    public void onChatMessageError(Throwable err) {
 
     }
 

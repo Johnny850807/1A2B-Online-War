@@ -73,7 +73,7 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
     }
 
     @Override
-    public void onError(Throwable err) {
+    public void onChatMessageError(Throwable err) {
 
     }
 
