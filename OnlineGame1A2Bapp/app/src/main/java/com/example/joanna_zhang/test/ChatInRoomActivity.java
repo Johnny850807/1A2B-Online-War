@@ -1,6 +1,5 @@
 package com.example.joanna_zhang.test;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -70,7 +69,12 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     protected void onStop() {
         super.onStop();
         chatWindowView.onStop();
-        if (currentPlayer.getId().equals(roomHost.getId()))
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (currentPlayer.equals(roomHost))
             inRoomModule.closeRoom();
         inRoomModule.unregisterCallBack(this);
     }
@@ -84,7 +88,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         inRoomModule = (InRoomModule) CoreGameServer.getInstance().getModule(ModuleName.INROOM);
         currentPlayer = ((UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING)).getCurrentPlayer();
         currentGameRoom = ((RoomListModule) CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST)).getCurrentGameRoom();
-        if (currentPlayer.getId().equals(roomHost.getId()))
+        if (currentPlayer.equals(roomHost))
             gameStartBtn.setText(R.string.game_start);
         setupChatWindow();
     }
@@ -139,11 +143,11 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     public void gameStartButtonOnClick(View view) {
-        if (currentPlayer.getId().equals(roomHost.getId()))
+        if (currentPlayer.equals(roomHost))
             inRoomModule.launchGame();
         else {
             for (PlayerStatus playerStatus : gameRoom.getPlayerStatus())
-                if (playerStatus.getPlayer().getId().equals(currentPlayer.getId())) {
+                if (playerStatus.getPlayer().equals(currentPlayer)) {
                     inRoomModule.changeStatus(new ChangeStatusModel(currentPlayer.getId(), gameRoom.getId(), !playerStatus.isReady()));
                     int statusText = playerStatus.isReady() ? R.string.unReady : R.string.ready;
                     gameStartBtn.setText(statusText);
@@ -168,9 +172,9 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public void onPlayerLeft(PlayerRoomModel model) {
         gameRoom.removePlayer(model.getPlayer());
-        if (model.getPlayer().getId().equals(roomHost.getId())) {
-            Toast.makeText(this, "房主已離開,將關閉房間", Toast.LENGTH_SHORT).show();
-            this.finish();
+        if (model.getPlayer().equals(roomHost)) {
+            Toast.makeText(this, R.string.roomHostLeft, Toast.LENGTH_SHORT).show();
+            finish();
         }
         roomPlayerListAdapter.notifyDataSetChanged();
     }
@@ -192,7 +196,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public void onYouAreBooted() {
         Toast.makeText(this, R.string.youAreBooted, Toast.LENGTH_SHORT).show();
-        this.onStop();
     }
 
     @Override
@@ -228,8 +231,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                 playerName.setText(roomHost.getName());
                 playerReadyOrNot.setImageResource(R.drawable.ready);
             } else {
-                playerName.setText(gameRoom.getPlayerStatus().get(--position).getPlayer().getName());
-                int imageId = gameRoom.getPlayerStatus().get(position).isReady() ? R.drawable.ready : R.drawable.unready;
+                playerName.setText(gameRoom.getPlayerStatus().get(position-1).getPlayer().getName());
+                int imageId = gameRoom.getPlayerStatus().get(position-1).isReady() ? R.drawable.ready : R.drawable.unready;
                 playerReadyOrNot.setImageResource(imageId);
             }
             return view;
