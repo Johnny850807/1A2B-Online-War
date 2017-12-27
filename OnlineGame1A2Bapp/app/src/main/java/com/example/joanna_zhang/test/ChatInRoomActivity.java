@@ -77,9 +77,9 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         setUpGameModeTxt();
         roomPlayerListAdapter = new RoomPlayerListAdapter();
         inRoomModule = (InRoomModule) CoreGameServer.getInstance().getModule(ModuleName.INROOM);
-        this.currentPlayer = ((UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING)).getCurrentPlayer();
-        this.currentGameRoom = ((RoomListModule) CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST)).getCurrentGameRoom();
-        if (currentPlayer.getName().equals(roomHost.getName()))
+        currentPlayer = ((UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING)).getCurrentPlayer();
+        currentGameRoom = ((RoomListModule) CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST)).getCurrentGameRoom();
+        if (currentPlayer.getId().equals(roomHost.getId()))
             gameStartBtn.setText(R.string.game_start);
     }
 
