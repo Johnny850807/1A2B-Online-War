@@ -40,5 +40,9 @@
     <string name="setAnswerFrist">請先設定答案Please input the answer frist.</string>
     <string name="createRoomFailed">創建房間失敗</string>
     <string name="noRoomCanJoin">抱歉，沒有房間可以加入...</string>
+    <string name="roomHostName">Host: </string>
+    <string name="gameStart">開始遊戲</string>
+    <string name="youAreBooted">您被房主踢除了!!</string>
+    <string name="ready">準備</string>
 
 </resources>
