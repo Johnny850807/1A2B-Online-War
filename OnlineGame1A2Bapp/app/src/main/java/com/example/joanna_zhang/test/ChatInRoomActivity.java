@@ -1,8 +1,8 @@
 package com.example.joanna_zhang.test;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +69,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     protected void onStop() {
         super.onStop();
         chatWindowView.onStop();
+        if (currentPlayer.getId().equals(roomHost.getId()))
+            inRoomModule.closeRoom();
         inRoomModule.unregisterCallBack(this);
     }
 
@@ -98,7 +100,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void setUpRoomHost(Player roomHost) {
-
         String str = roomHostNameTxt.getText().toString();
         roomHostNameTxt.setText(str + roomHost.getName());
     }
@@ -128,26 +129,31 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     @Override
     public void onMessageSendingFailed(ChatMessage chatMessage) {
-
+        Toast.makeText(this, "failed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onError(Throwable err) {
+    public void onChatMessageError(Throwable err) {
         Toast.makeText(this, err.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     public void gameStartButtonOnClick(View view) {
         if (currentPlayer.getId().equals(roomHost.getId()))
             inRoomModule.launchGame();
-        //Todo 錯的
-//        else
-//            inRoomModule.changeStatus(new ChangeStatusModel(currentPlayer.getId(), gameRoom.getId(), true));
+        else {
+            for (PlayerStatus playerStatus : gameRoom.getPlayerStatus())
+                if (playerStatus.getPlayer().getId().equals(currentPlayer.getId())) {
+                    inRoomModule.changeStatus(new ChangeStatusModel(currentPlayer.getId(), gameRoom.getId(), !playerStatus.isReady()));
+                    int statusText = playerStatus.isReady() ? R.string.unReady : R.string.ready;
+                    gameStartBtn.setText(statusText);
+                }
+        }
     }
 
     @Override
     public void onPlayerJoined(PlayerRoomModel model) {
         gameRoom.addPlayer(model.getPlayer());
-
+        roomPlayerListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -161,6 +167,11 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public void onPlayerLeft(PlayerRoomModel model) {
         gameRoom.removePlayer(model.getPlayer());
+        if (model.getPlayer().getId().equals(roomHost.getId())) {
+            Toast.makeText(this, "房主已離開,將關閉房間", Toast.LENGTH_SHORT).show();
+            this.finish();
+        }
+        roomPlayerListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -174,13 +185,18 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     @Override
     public void onGameLaunchedFailed(GameRoom gameRoom) {
-        Toast.makeText(this, "開始遊戲失敗!!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.gameLaunchFailed, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onYouAreBooted() {
         Toast.makeText(this, R.string.youAreBooted, Toast.LENGTH_SHORT).show();
         this.onStop();
+    }
+
+    @Override
+    public void onError(@NonNull Throwable err) {
+
     }
 
     private class RoomPlayerListAdapter extends BaseAdapter {
@@ -207,12 +223,12 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
             TextView playerName = view.findViewById(R.id.playerNameTxt);
             ImageView playerReadyOrNot = view.findViewById(R.id.playerReadyOrNotImg);
 
-            if (position == 0){
+            if (position == 0) {
                 playerName.setText(roomHost.getName());
                 playerReadyOrNot.setImageResource(R.drawable.ready);
             } else {
-                playerName.setText(gameRoom.getPlayerStatus().get(position).getPlayer().getName());
-                int imageId = gameRoom.getPlayerStatus().get(position).isReady() ? R.drawable.ready : R.drawable.unready;
+                playerName.setText(gameRoom.getPlayerStatus().get(position-1).getPlayer().getName());
+                int imageId = gameRoom.getPlayerStatus().get(position-1).isReady() ? R.drawable.ready : R.drawable.unready;
                 playerReadyOrNot.setImageResource(imageId);
             }
             return view;

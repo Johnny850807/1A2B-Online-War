@@ -2,6 +2,7 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules;
 
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
@@ -59,20 +60,22 @@ public class ChatModuleImp extends AbstractGameModule implements ChatModule {
         @Override
         @BindCallback(event = SEND_MSG, status = RequestStatus.success)
         public void onMessageReceived(ChatMessage message) {
+            Log.d(TAG, "message received: " + message.getContent());
             if(message.getPoster().equals(signingModule.getCurrentPlayer()))
                 this.onMessageSent(message);
-            else
-                callback.onMessageReceived(message);
+            callback.onMessageReceived(message);
         }
 
         @Override
         public void onMessageSent(ChatMessage message) {
+            Log.d(TAG, "message sent: " + message.getContent());
             callback.onMessageSent(message);
         }
 
         @Override
         @BindCallback(event = SEND_MSG, status = RequestStatus.failed)
         public void onMessageSendingFailed(ChatMessage message) {
+            Log.d(TAG, "message sending unsuccessfully: " + message.getContent());
             callback.onMessageSendingFailed(message);
         }
 

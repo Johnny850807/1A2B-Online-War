@@ -46,5 +46,7 @@
     <string name="youAreBooted">您被房主踢除了!!</string>
     <string name="ready">準備</string>
     <string name="theRoomIsFull">該房間已滿囉</string>
+    <string name="unReady">取消準備</string>
+    <string name="gameLaunchFailed">開始遊戲失敗!!</string>
 
 </resources>
