@@ -108,7 +108,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void setupChatWindow() {
-        chatWindowView = new ChatWindowView.Builder(this, gameRoom)
+        chatWindowView = new ChatWindowView.Builder(this, gameRoom, currentPlayer)
                 .addOnSendMessageOnClickListener(this)
                 .build();
     }
