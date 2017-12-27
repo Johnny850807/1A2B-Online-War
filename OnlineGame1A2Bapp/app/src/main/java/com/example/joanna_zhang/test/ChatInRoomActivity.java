@@ -29,6 +29,17 @@ import gamecore.model.PlayerRoomModel;
 import gamecore.model.PlayerStatus;
 
 
+/**
+ * TODO:
+ * (1) the player sets ready
+ * (2) the host starts the game and 'make sure you have ensured the player amount is suitable to the game', block the action if not.
+ * (3) the host can boot the player by answering yes to the dialog which contains options whether to boot the player
+ *          created and showed by 'long-clicking' the item contains the player status you want to boot.
+ * (4) show the toast if any player left or joined.
+ * (5) replace all 'if game mode == DUEL then ... else Group ...' with the 'switch-case logic helping static method'.
+ * (6) clean your code and organize the methods (put them in the readable order),
+ *      don't let any garbage be here anymore, such as some 'gray-text' attributes, some 'few-lines' methods.
+ */
 public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InRoomModule.Callback {
 
     private GameRoom currentGameRoom;
@@ -49,7 +60,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_in_room);
         init();
-
         setUpPlayerListView();
     }
 
@@ -69,8 +79,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     protected void onStop() {
         super.onStop();
         chatWindowView.onStop();
-        if (currentPlayer.getId().equals(roomHost.getId()))
-            inRoomModule.closeRoom();
         inRoomModule.unregisterCallBack(this);
     }
 
@@ -105,6 +113,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void setUpGameModeTxt() {
+        //TODO
         String gameModeName = gameRoom.getGameMode().toString().contains("GROUP") ? getString(R.string.fight) : getString(R.string.duel);
         gameModeTxt.setText(gameModeName);
     }
@@ -173,6 +182,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public void onGameLaunchedSuccessfully(GameRoom gameRoom) {
         Toast.makeText(this, R.string.gameStart, Toast.LENGTH_SHORT).show();
+
+        //TODO remove this such things
         Class inclass = gameRoom.getGameMode() == GameMode.DUEL1A2B ? DuelActivity.class : GroupFightActivity.class;
         Intent intent = new Intent(this, inclass);
         intent.putExtra("game room", gameRoom);
