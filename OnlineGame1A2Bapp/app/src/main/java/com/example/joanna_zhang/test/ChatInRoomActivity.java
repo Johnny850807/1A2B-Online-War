@@ -228,7 +228,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                 playerName.setText(roomHost.getName());
                 playerReadyOrNot.setImageResource(R.drawable.ready);
             } else {
-                playerName.setText(gameRoom.getPlayerStatus().get(position).getPlayer().getName());
+                playerName.setText(gameRoom.getPlayerStatus().get(--position).getPlayer().getName());
                 int imageId = gameRoom.getPlayerStatus().get(position).isReady() ? R.drawable.ready : R.drawable.unready;
                 playerReadyOrNot.setImageResource(imageId);
             }
