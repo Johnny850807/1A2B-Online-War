@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 
 import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
+import gamecore.GameLifecycleListener;
 import gamecore.model.GameMode;
 import gamecore.model.MockLogger;
 import utils.ForServer;
@@ -22,6 +23,7 @@ public abstract class Game {
 	protected transient MyLogger log = new MockLogger();
 	protected transient ProtocolFactory protocolFactory;
 	protected transient Timer timer;
+	protected transient GameLifecycleListener listener;
 	private transient Map<Integer, TimeListener> timeListeners = new TreeMap<>();
 	protected GameMode gameMode;
 	protected Date launchDate = new Date();
@@ -43,6 +45,7 @@ public abstract class Game {
  	@ForServer
  	public void startGame(){
  		log.trace("Game " + gameMode.toString() + " started.");
+ 		listener.onGameStarted(this);
  		startTimer();
  	}
 
@@ -64,4 +67,25 @@ public abstract class Game {
 	public interface TimeListener{
 		public void onTime(long gameDuration);
 	}
+	
+	public Date getLaunchDate() {
+		return launchDate;
+	}
+	
+	public String getRoomId() {
+		return roomId;
+	}
+	
+	public GameMode getGameMode() {
+		return gameMode;
+	}
+	
+	public long getGameDuration() {
+		return gameDuration;
+	}
+	
+	public void setGameLifecycleListener(GameLifecycleListener lifecycleListener){
+		this.listener = lifecycleListener;
+	}
+	
 }

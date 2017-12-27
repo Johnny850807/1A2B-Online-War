@@ -88,6 +88,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	
 	@Test
 	public void test(){
+		long before = System.currentTimeMillis();
 		testSignIn();
 		testCreateRoomAndJoin();
 		testChatting();
@@ -95,6 +96,8 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		//testPlayerLeft();
 		testHostSignOut();  //select one in host sign out or close room
 		//testCloseRoom();
+		long after = System.currentTimeMillis();
+		System.out.println("Time cost: " + (after - before) + "ms");
 	}
 	
 	public void testSignIn(){
@@ -206,7 +209,6 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	}
 	
 	public void testHostSignOut(){
-		assertEquals(1, gamecore.getGameRooms().size());
 		createHandler(hostClient, protocolFactory.createProtocol(SIGNOUT, REQUEST, 
 				gson.toJson(host))).handle();
 		assertTrue(host == null);
