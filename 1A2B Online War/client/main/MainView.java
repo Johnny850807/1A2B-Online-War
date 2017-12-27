@@ -21,6 +21,7 @@ import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.RequestStatus;
 import module.FactoryModule;
 import module.SocketConnector;
+import utils.MyGson;
 
 public class MainView extends View implements SocketConnector.Callback{
 	private final int SIGNIN = 1;
@@ -31,7 +32,7 @@ public class MainView extends View implements SocketConnector.Callback{
 	private final int JOINROOM = 6;
 	private final int SENDMESSAGE = 7;
 	private final int LAUNCHGAME = 8;
-	private Gson gson = new Gson();
+	private Gson gson = MyGson.getGson();
 	private ProtocolFactory protocolfactory;
 	private Scanner scanner = new Scanner(System.in);
 	private Player player;
@@ -173,7 +174,6 @@ public class MainView extends View implements SocketConnector.Callback{
 			break;
 		case JOINROOM:
 			gameRoom = gson.fromJson(protocol.getData(), GameRoom.class);
-			System.out.println("Joined room: " + gameRoom);
 			break;
 		case SENDMESSAGE:
 			ChatMessage chatMessage = gson.fromJson(protocol.getData(), ChatMessage.class);

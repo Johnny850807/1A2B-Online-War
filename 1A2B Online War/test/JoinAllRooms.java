@@ -18,11 +18,12 @@ import gamecore.model.RequestStatus;
 import module.FactoryModule;
 import module.SocketConnector;
 import module.SocketConnector.Callback;
+import utils.MyGson;
 import utils.RandomString;
 
 public class JoinAllRooms {
 	public static void main(String[] argv){
-		Gson gson = new Gson();
+		Gson gson = MyGson.getGson();
 		SocketConnector cn = SocketConnector.getInstance();
 		cn.connect();
 		

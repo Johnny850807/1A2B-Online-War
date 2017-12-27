@@ -31,7 +31,7 @@ public class CreateRooms {
 			@Override
 			public void onReceive(String message, int requestCode) {
 				Player responseHost = gson.fromJson(factory.createProtocol(message).getData(), Player.class);
-				IntStream.range(0, 200).parallel().forEach(i -> {
+				IntStream.range(0, 10).parallel().forEach(i -> {
 					host.initId();
 					Protocol protocol = factory.createProtocol(CREATE_ROOM, RequestStatus.request.toString(), 
 							gson.toJson(new GameRoom(GameMode.DUEL1A2B, RandomString.next(6), responseHost)));

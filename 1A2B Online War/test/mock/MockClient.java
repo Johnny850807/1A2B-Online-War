@@ -14,12 +14,13 @@ import container.base.Client;
 import container.protocol.Protocol;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.Entity;
+import utils.MyGson;
 
 public class MockClient extends Entity implements Client{
 	private static Logger log = LogManager.getLogger(MockClient.class);
 	private List<Protocol> responses = new ArrayList<>();
 	private Protocol lastedResponse;
-	private Gson gson = new Gson();
+	private Gson gson = MyGson.getGson();
 	
 	public MockClient() {
 		initId();

@@ -122,22 +122,16 @@ public class GameRoom extends Entity{
 		PlayerStatus playerStatus = new PlayerStatus(player);
 		if (host.equals(player) || playerStatusList.contains(playerStatus))
 			throw new IllegalStateException("Duplicated player added into the status list.");
-		if (playerStatusList.size() > getMaxPlayerAmount())
+		if (getPlayerAmount() == getMaxPlayerAmount())
 			throw new IllegalStateException("The Player amount is out of the maximum amount.");
 		playerStatusList.add(playerStatus);
 	}
 	
 	public void removePlayer(Player player){
 		if (player.equals(host))
-		{
 			host = null;
-			log.trace("The host is removed.");
-		}
 		else
-		{
-			log.trace("The player " + player.getName() + " is removed from the status list." );
 			playerStatusList.remove(getPlayerStatusOfPlayer(player));
-		}
 	}
 	
 	public PlayerStatus getPlayerStatusOfPlayer(Player player){

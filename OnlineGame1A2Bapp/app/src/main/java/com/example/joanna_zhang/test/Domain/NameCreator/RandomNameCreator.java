@@ -1,7 +1,7 @@
 package com.example.joanna_zhang.test.Domain.NameCreator;
 
 public class RandomNameCreator implements NameCreator {
-    String[] names = {"莫載啼", "莫載妏", "遊戲王", "林筱珍", "包龍興", "橙汁內", "墨 海馬"};
+    String[] names = {"海綿寶寶", "灰太狼", "", "顏秀真", "徐雄健", "王家輝", "蘇民楊", ""};
 
     @Override
     public String createRandomName() {
