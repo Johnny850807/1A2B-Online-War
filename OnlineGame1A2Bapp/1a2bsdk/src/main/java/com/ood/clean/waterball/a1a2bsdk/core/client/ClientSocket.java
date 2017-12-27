@@ -35,7 +35,7 @@ public class ClientSocket implements Client{
     private DataInputStream inputStream;
     private String address;
     private int port;
-    private boolean conntected = false;
+    private boolean connected = false;
 
     public ClientSocket(ThreadExecutor threadExecutor){
         this.id = UUID.randomUUID().toString();
@@ -51,7 +51,7 @@ public class ClientSocket implements Client{
             SocketIO io = new SocketIO(new Socket(address, port));
             this.outputStream = new DataOutputStream(io.getOutputStream());
             this.inputStream = new DataInputStream(io.getInputStream());
-            conntected = true;
+            connected = true;
             listeningInput();
         } catch (Exception err) {
             Log.e(TAG, "Socket error while initializing.", err);
@@ -60,7 +60,7 @@ public class ClientSocket implements Client{
     }
 
     private void listeningInput() throws IOException {
-        while(conntected)
+        while(connected)
         {
             String response = inputStream.readUTF();
             Log.d(TAG, "Received: " + response);
@@ -100,7 +100,7 @@ public class ClientSocket implements Client{
 
     @Override
     public void disconnect() throws Exception {
-        conntected = false;
+        connected = false;
     }
 
     private class InvokeEventBusTask implements Runnable{

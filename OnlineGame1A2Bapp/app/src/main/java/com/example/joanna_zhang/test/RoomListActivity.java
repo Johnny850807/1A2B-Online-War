@@ -184,11 +184,10 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         startActivity(enterToGameRoom);
     }
 
-
     public void searchBtnOnClick(View view) {
         enableLoadingRoomListAnimation = true;
         searchAndUpdateRoomList();
-}
+    }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
