@@ -48,5 +48,6 @@
     <string name="theRoomIsFull">該房間已滿囉</string>
     <string name="unReady">取消準備</string>
     <string name="gameLaunchFailed">開始遊戲失敗!!</string>
+    <string name="theHostLeftRoomClosed">房主已離開, 將關閉房間</string>
 
 </resources>

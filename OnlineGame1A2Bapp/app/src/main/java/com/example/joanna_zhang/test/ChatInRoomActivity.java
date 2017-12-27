@@ -167,10 +167,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public void onPlayerLeft(PlayerRoomModel model) {
         gameRoom.removePlayer(model.getPlayer());
-        if (model.getPlayer().getId().equals(roomHost.getId())) {
-            Toast.makeText(this, "房主已離開, 將關閉房間", Toast.LENGTH_SHORT).show();
-            this.finish();
-        }
         roomPlayerListAdapter.notifyDataSetChanged();
     }
 
@@ -192,6 +188,12 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     public void onYouAreBooted() {
         Toast.makeText(this, R.string.youAreBooted, Toast.LENGTH_SHORT).show();
         this.onStop();
+    }
+
+    @Override
+    public void onRoomClosed() {
+        Toast.makeText(this, R.string.theHostLeftRoomClosed, Toast.LENGTH_SHORT).show();
+        this.finish();
     }
 
     @Override
