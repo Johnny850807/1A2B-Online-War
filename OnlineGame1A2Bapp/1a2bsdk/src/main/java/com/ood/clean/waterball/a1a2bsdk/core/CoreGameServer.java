@@ -1,12 +1,10 @@
 package com.ood.clean.waterball.a1a2bsdk.core;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
-import com.ood.clean.waterball.a1a2bsdk.core.client.GameHostingService;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,6 +13,10 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import container.base.Client;
+import container.protocol.ProtocolFactory;
+
+import static com.ood.clean.waterball.a1a2bsdk.core.Secret.PORT;
+import static com.ood.clean.waterball.a1a2bsdk.core.Secret.SERVER_ADDRESS;
 
 /**
     Facade pattern of the 1A2B sdk, contains all modules supporting your 1A2B app.
@@ -23,6 +25,11 @@ public final class CoreGameServer {
     private static final String TAG = "Socket";
     private static CoreGameServer instance;
     private @Inject Client client;
+    private @Inject ProtocolFactory protocolFactory;
+    private @Inject EventBus eventBus;
+    private Thread clientThread;
+    private String address = SERVER_ADDRESS;
+    private int port = PORT;
 
     private Map<ModuleName,GameModule> moduleMap;
 
@@ -46,7 +53,13 @@ public final class CoreGameServer {
     public void startEngine(@NonNull Context context){
         if (moduleMap == null)
             prepareModules();
-        context.startService(new Intent(context, GameHostingService.class));
+
+        if (clientThread == null || !clientThread.isAlive())
+        {
+            Log.d(TAG, "Socket initializing ..., Ip: " + SERVER_ADDRESS + ":" + PORT);
+            clientThread = new Thread(client);
+            clientThread.start();
+        }
     }
 
     public void prepareModules(){
