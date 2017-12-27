@@ -22,7 +22,7 @@ import static com.ood.clean.waterball.a1a2bsdk.core.Secret.SERVER_ADDRESS;
  * The main service hosting the socket connection to the server socket.
  */
 public class GameHostingService extends Service {
-    private static final String TAG = "GameHostingService";
+    private static final String TAG = "Service";
     private @Inject Client client;
     private @Inject EventBus eventBus;
     private String address = SERVER_ADDRESS;
@@ -32,6 +32,7 @@ public class GameHostingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Component.inject(this);
+        Log.d(TAG, "Socket starting.");
         if (clientThread == null || !clientThread.isAlive())
         {
             Log.d(TAG, "Socket initializing ..., Ip: " + SERVER_ADDRESS + ":" + PORT);
