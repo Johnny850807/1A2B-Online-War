@@ -1,6 +1,5 @@
 package com.example.joanna_zhang.test;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -228,8 +227,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                 playerName.setText(roomHost.getName());
                 playerReadyOrNot.setImageResource(R.drawable.ready);
             } else {
-                playerName.setText(gameRoom.getPlayerStatus().get(position).getPlayer().getName());
-                int imageId = gameRoom.getPlayerStatus().get(position).isReady() ? R.drawable.ready : R.drawable.unready;
+                playerName.setText(gameRoom.getPlayerStatus().get(position-1).getPlayer().getName());
+                int imageId = gameRoom.getPlayerStatus().get(position-1).isReady() ? R.drawable.ready : R.drawable.unready;
                 playerReadyOrNot.setImageResource(imageId);
             }
             return view;

@@ -83,6 +83,7 @@ public class ClientSocket implements Client{
                 try{
                     Log.i(TAG, "Request: "+ protocol);
                     outputStream.writeUTF(protocol.toString());
+                    Log.i(TAG, "Request " + protocol.getEvent() + " send successfully.");
                 }catch (Exception err){
                     Log.e(TAG, "Socket error while requesting.", err);
                     threadExecutor.postMain(new InvokeEventBusTask(protocolFactory.createProtocol(protocol.getEvent(),
