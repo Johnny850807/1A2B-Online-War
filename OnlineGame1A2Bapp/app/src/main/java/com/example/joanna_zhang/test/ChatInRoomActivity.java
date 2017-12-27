@@ -1,6 +1,7 @@
 package com.example.joanna_zhang.test;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -47,7 +48,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     private ChatWindowView chatWindowView;
     private Button gameStartBtn;
     private TextView gameModeTxt;
-    private TextView roomHostNameTxt;
     private ListView chatRoomPlayerListView;
     private GameRoom gameRoom;
     private GameMode gameMode;
@@ -104,12 +104,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         gameRoom = (GameRoom) getIntent().getSerializableExtra("game room");
         gameMode = gameRoom.getGameMode();
         roomHost = gameRoom.getHost();
-        setUpRoomHost(roomHost);
-    }
-
-    private void setUpRoomHost(Player roomHost) {
-        String str = roomHostNameTxt.getText().toString();
-        roomHostNameTxt.setText(str + roomHost.getName());
     }
 
     private void setUpGameModeTxt() {
@@ -126,7 +120,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     private void findViews() {
         gameModeTxt = (TextView) findViewById(R.id.roomModeNameTxt);
-        roomHostNameTxt = (TextView) findViewById(R.id.roomHostNameTxt);
         gameStartBtn = (Button) findViewById(R.id.gameStartBtn);
         chatRoomPlayerListView = (ListView) findViewById(R.id.chatRoomPlayersLst);
     }
@@ -198,7 +191,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public void onYouAreBooted() {
         Toast.makeText(this, R.string.youAreBooted, Toast.LENGTH_SHORT).show();
-        this.onStop();
+        this.finish();
     }
 
     @Override
@@ -238,6 +231,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
             if (position == 0) {
                 playerName.setText(roomHost.getName());
+                playerName.setTextColor(Color.BLUE);
                 playerReadyOrNot.setImageResource(R.drawable.ready);
             } else {
                 playerName.setText(gameRoom.getPlayerStatus().get(position-1).getPlayer().getName());
