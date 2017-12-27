@@ -74,7 +74,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     private void init() {
         findViews();
-        setupChatWindow();
+
         setUpThisRoomInfo();
         setUpGameModeTxt();
         roomPlayerListAdapter = new RoomPlayerListAdapter();
@@ -83,6 +83,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         currentGameRoom = ((RoomListModule) CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST)).getCurrentGameRoom();
         if (currentPlayer.getId().equals(roomHost.getId()))
             gameStartBtn.setText(R.string.game_start);
+        setupChatWindow();
     }
 
     private void setUpPlayerListView() {
@@ -136,11 +137,11 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     public void gameStartButtonOnClick(View view) {
-        if (currentPlayer == roomHost)
+        if (currentPlayer.getId().equals(roomHost.getId()))
             inRoomModule.launchGame();
         //Todo 錯的
-//        else if (player != roomHost)
-//            inRoomModule.changeStatus(new ChangeStatusModel(player.getId(), gameRoom.getId(), true));
+//        else
+//            inRoomModule.changeStatus(new ChangeStatusModel(currentPlayer.getId(), gameRoom.getId(), true));
     }
 
     @Override

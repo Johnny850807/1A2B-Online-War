@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
@@ -97,11 +98,13 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
 
     @Override
     public void onMessageSent(ChatMessage message) {
+        Toast.makeText(activity, "ss", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onMessageSendingFailed(ChatMessage message) {
+        Toast.makeText(activity, "failed", Toast.LENGTH_SHORT).show();
         listener.onMessageSendingFailed(message);
     }
 
