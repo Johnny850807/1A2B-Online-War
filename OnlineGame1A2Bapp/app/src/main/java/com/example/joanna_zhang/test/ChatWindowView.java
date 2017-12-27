@@ -99,7 +99,6 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
     @Override
     public void onMessageSent(ChatMessage message) {
         Toast.makeText(activity, "ss", Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
