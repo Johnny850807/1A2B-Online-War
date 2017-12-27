@@ -1,5 +1,7 @@
 package com.example.joanna_zhang.test;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -163,6 +165,10 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public void onGameLaunchedSuccessfully(GameRoom gameRoom) {
         Toast.makeText(this, R.string.gameStart, Toast.LENGTH_SHORT).show();
+        Class inclass = gameRoom.getGameMode() == GameMode.DUEL1A2B ? DuelActivity.class : GroupFightActivity.class;
+        Intent intent = new Intent(this, inclass);
+        intent.putExtra("game room", gameRoom);
+        startActivity(intent);
     }
 
     @Override
