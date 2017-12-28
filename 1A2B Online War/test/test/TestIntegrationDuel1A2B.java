@@ -5,9 +5,7 @@ import static container.Constants.Events.Games.Duel1A2B.GUESS;
 import static container.Constants.Events.Games.Duel1A2B.GUESSING_STARTED;
 import static container.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
 import static container.Constants.Events.Games.Duel1A2B.SET_ANSWER;
-import static container.Constants.Events.InRoom.CLOSE_ROOM;
-import static container.Constants.Events.InRoom.LAUNCH_GAME;
-import static container.Constants.Events.InRoom.LEAVE_ROOM;
+import static container.Constants.Events.InRoom.*;
 import static container.Constants.Events.RoomList.CREATE_ROOM;
 import static container.Constants.Events.RoomList.JOIN_ROOM;
 import static container.Constants.Events.Signing.GETINFO;
@@ -92,7 +90,8 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		testSignIn();
 		testCreateRoomAndJoin();
 		testChatting();
-		testPlayingDuel1A2B();
+		//testPlayingDuel1A2B();  //if enable this, the game room will be closed after game completed
+		testBootingPlayer();
 		//testPlayerLeft();
 		testHostSignOut();  //select one in host sign out or close room
 		//testCloseRoom();
@@ -198,6 +197,13 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		
 		GameOverModel gameOverModel = gson.fromJson(hostClient.getLastedResponse().getData(), GameOverModel.class);
 		assertEquals(host.getId(), gameOverModel.getWinnerId());
+	}
+	
+	public void testBootingPlayer(){
+		createHandler(hostClient, protocolFactory.createProtocol(BOOTED, REQUEST, 
+				gson.toJson(new PlayerRoomIdModel(player.getId(), gameRoom.getId())))).handle();
+		assertEquals(BOOTED, playerClient.getLastedResponse().getEvent());
+		assertEquals(LEAVE_ROOM, hostClient.getLastedResponse().getEvent());
 	}
 	
 	public void testPlayerLeft(){
