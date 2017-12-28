@@ -11,6 +11,7 @@ import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.RequestStatus;
 import gamecore.model.games.Game;
+import gamecore.model.games.GameEnteringWaitingBox;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.GuessResult;
 import gamecore.model.games.a1b2.NumberNotValidException;
@@ -79,5 +80,13 @@ public class Boss1A2BGame extends Game{
 	
 	private PlayerSpirit createPlayerSpirit(ClientPlayer clientPlayer){
 		return new PlayerSpirit(clientPlayer, log, protocolFactory);
+	}
+
+	@Override
+	protected GameEnteringWaitingBox createEnteringWaitingBox() {
+		ClientPlayer[] players = new ClientPlayer[playerSpirits.size()];
+		for (int i = 0 ; i < playerSpirits.size() ; i ++)
+			players[i] = playerSpirits.get(i).getPlayer();
+		return new GameEnteringWaitingBox(this, players);
 	}
 }
