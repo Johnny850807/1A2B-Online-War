@@ -133,8 +133,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-    }
+    public void onNothingSelected(AdapterView<?> adapterView) {}
 
     public List<GameRoom> getRoomsByGameMode(GameMode gameMode) {
         List<GameRoom> results = new ArrayList<>();
@@ -144,6 +143,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         return results;
     }
 
+    //TODO clean your codes
     public void createRoomBtnOnClick(View view) {
         AlertDialog.Builder createRoomDialogBuilder = new AlertDialog.Builder(RoomListActivity.this);
         view = LayoutInflater.from(RoomListActivity.this).inflate(R.layout.create_room_dialog, null);

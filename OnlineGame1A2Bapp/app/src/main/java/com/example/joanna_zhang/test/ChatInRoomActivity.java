@@ -140,7 +140,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     public void gameStartButtonOnClick(View view) {
-        if (currentPlayer.getId().equals(roomHost.getId()))
+        if (currentPlayer.equals(roomHost))
             inRoomModule.launchGame();
         else {
             for (PlayerStatus playerStatus : gameRoom.getPlayerStatus())

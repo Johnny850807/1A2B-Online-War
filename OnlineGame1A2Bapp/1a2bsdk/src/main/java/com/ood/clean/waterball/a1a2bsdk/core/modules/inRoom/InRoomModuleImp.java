@@ -63,7 +63,7 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
 
     @Override
     public void launchGame() {
-        Protocol protocol = protocolFactory.createProtocol(CHANGE_STATUS,
+        Protocol protocol = protocolFactory.createProtocol(LAUNCH_GAME,
                 RequestStatus.request.toString(), gson.toJson(roomListModule.getCurrentGameRoom()));
         client.broadcast(protocol);
     }
