@@ -26,6 +26,7 @@ public final class Constants {
 		public final static class Games{
 			public final static String GAMESTARTED = "GameStarted";
 			public final static String GAMEINTERRUPTED = "GameInterruptd";
+			public final static String ENTERGAME = "EnterGame";
 			public final static String GAMEOVER = "GameOver";
 			
 			public final static class Duel1A2B{

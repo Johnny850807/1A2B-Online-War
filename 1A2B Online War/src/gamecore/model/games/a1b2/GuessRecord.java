@@ -25,5 +25,11 @@ public class GuessRecord {
 		this.result = result;
 	}
 	
+	public int getA(){
+		return this.getResult().getA();
+	}
 	
+	public int getB(){
+		return this.getResult().getB();
+	}
 }

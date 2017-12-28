@@ -227,7 +227,8 @@ public class GameRoom extends Entity{
 		case BOSS1A2B:
 			List<ClientPlayer> allPlayers = playerClients;
 			allPlayers.add(hostClient);
-			game = new Boss1A2BGame(protocolFactory, new BasicBoss(), allPlayers, id);
+			game = new Boss1A2BGame(protocolFactory, new BasicBoss(new ApacheLoggerAdapter(BasicBoss.class), protocolFactory), 
+					allPlayers, id);
 			game.setLog(new ApacheLoggerAdapter(Boss1A2BGame.class));
 			break;
 		}
