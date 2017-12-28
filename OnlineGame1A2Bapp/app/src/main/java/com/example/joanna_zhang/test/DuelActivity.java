@@ -59,12 +59,14 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     @Override
     protected void onResume() {
         super.onResume();
+        chatWindowView.onResume();
         duel1A2BModule.registerCallback(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        chatWindowView.onStop();
         duel1A2BModule.unregisterCallBack(this);
     }
 
@@ -170,6 +172,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         p1ResultList = models.get(0).getGuessRecords();
         p2ResultList = models.get(1).getGuessRecords();
         updateResultList();
+        inputNumberBtn.setEnabled(true);
     }
 
     @Override
