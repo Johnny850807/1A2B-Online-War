@@ -50,5 +50,6 @@
     <string name="gameLaunchFailed">開始遊戲失敗!!</string>
     <string name="theHostLeftRoomClosed">房主已離開, 將關閉房間</string>
     <string name="gameOver">遊戲結束</string>
+    <string name="pleaseInputGuess">請輸入答案</string>
 
 </resources>

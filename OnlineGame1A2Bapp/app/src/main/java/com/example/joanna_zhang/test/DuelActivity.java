@@ -43,12 +43,17 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     private Button inputNumberBtn;
     private TextView p1NameTxt, p2NameTxt, p1AnswerTxt, p2AnswerTxt;
     private ListView p1ResultListView, p2ResultListView;
+    private GuessResultAdapter p1GuessResultAdapter, p2GuessResultAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_duel);
         init();
+        setupAnswer();
+        findViews();
+        setUpChatWindow();
+        setUpInputNumberWindowView();
     }
 
     @Override
@@ -70,18 +75,12 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     private void init() {
-        setUpRoomInformation();
-        setupAnswer();
-        findViews();
-        setUpChatWindow();
-        setUpInputNumberWindowView();
-    }
-
-    private void setUpRoomInformation() {
         CoreGameServer server = CoreGameServer.getInstance();
         duel1A2BModule = (Duel1A2BModule) server.getModule(ModuleName.GAME1A2BDUEL);
         currentPlayer = ((UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING)).getCurrentPlayer();
         currentGameRoom = ((RoomListModule) CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST)).getCurrentGameRoom();
+        p1GuessResultAdapter = new GuessResultAdapter(p1ResultList);
+        p2GuessResultAdapter = new GuessResultAdapter(p2ResultList);
     }
 
     private void findViews() {
@@ -112,14 +111,15 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     private void setUpInputNumberWindowView() {
         inputNumberWindowView = new InputNumberWindowView.Builder(this)
                 .setOnEnterClickListener(this)
-                .setTitle("請輸入答案")
+                .setTitle(getString(R.string.pleaseInputGuess))
                 .build();
     }
 
-    public void updateResultList(List<GuessRecord> resultList, ListView resultListView) {
-        GuessResultAdapter adapter = new GuessResultAdapter(resultList);
-        resultListView.setAdapter(adapter);
-        resultListView.setSelection(resultListView.getCount() - 1);
+    public void updateResultList() {
+        p1GuessResultAdapter.notifyDataSetChanged();
+        p2GuessResultAdapter.notifyDataSetChanged();
+        p1ResultListView.setSelection(p1ResultListView.getCount() - 1);
+        p2ResultListView.setSelection(p2ResultListView.getCount() - 1);
     }
 
     @Override
@@ -134,6 +134,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     @Override
     public void onEnterClick(String guessNumber) {
         inputNumberBtn.setText(guessNumber);
+        inputNumberBtn.setEnabled(false);
         duel1A2BModule.guess(guessNumber);
     }
 
@@ -148,9 +149,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     @Override
-    public void onSetAnswerUnsuccessfully(ContentModel setAnswerModel) {
-
-    }
+    public void onSetAnswerUnsuccessfully(ContentModel setAnswerModel) {}
 
     @Override
     public void onGuessSuccessfully(ContentModel guessModel) {
@@ -158,9 +157,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     @Override
-    public void onGuessUnsuccessfully(ContentModel guessModel) {
-
-    }
+    public void onGuessUnsuccessfully(ContentModel guessModel) {}
 
     @Override
     public void onGuessingStarted() {
@@ -172,8 +169,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     public void onOneRoundOver(List<Duel1A2BPlayerBarModel> models) {
         p1ResultList = models.get(0).getGuessRecords();
         p2ResultList = models.get(1).getGuessRecords();
-        updateResultList(p1ResultList, p1ResultListView);
-        updateResultList(p2ResultList, p2ResultListView);
+        updateResultList();
     }
 
     @Override
@@ -182,7 +178,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
                 .setTitle(R.string.gameOver)
                 .setMessage(gameOverModel.getWinnerId())
                 .setIcon(R.drawable.logo)
-                .setPositiveButton(R.string.confirm,  new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         finish();

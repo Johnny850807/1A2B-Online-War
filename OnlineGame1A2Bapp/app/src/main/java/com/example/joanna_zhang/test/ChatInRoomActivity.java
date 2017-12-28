@@ -202,7 +202,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     @Override
     public void onError(@NonNull Throwable err) {
-
+        Toast.makeText(this, err.getMessage(), Toast.LENGTH_LONG).show();
     }
 
     private class RoomPlayerListAdapter extends BaseAdapter {
