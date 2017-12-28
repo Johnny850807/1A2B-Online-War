@@ -90,8 +90,8 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		testSignIn();
 		testCreateRoomAndJoin();
 		testChatting();
-		//testPlayingDuel1A2B();  //if enable this, the game room will be closed after game completed
-		testBootingPlayer();
+		testPlayingDuel1A2B();  //if enable this, the game room will be closed after game completed
+		//testBootingPlayer();
 		//testPlayerLeft();
 		testHostSignOut();  //select one in host sign out or close room
 		//testCloseRoom();

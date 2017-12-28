@@ -9,7 +9,6 @@ import com.google.gson.annotations.Expose;
 import container.ApacheLoggerAdapter;
 import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
-import gamecore.GameLifecycleListener;
 import gamecore.model.ClientBinder;
 import gamecore.model.ClientPlayer;
 import gamecore.model.ClientStatus;
@@ -18,6 +17,7 @@ import gamecore.model.MockLogger;
 import gamecore.model.PlayerStatus;
 import gamecore.model.RoomStatus;
 import gamecore.model.games.Game;
+import gamecore.model.games.GameLifecycleListener;
 import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamecore.model.games.a1b2.boss.BasicBoss;
 import gamecore.model.games.a1b2.boss.Boss1A2BGame;
@@ -227,7 +227,8 @@ public class GameRoom extends Entity{
 		case BOSS1A2B:
 			List<ClientPlayer> allPlayers = playerClients;
 			allPlayers.add(hostClient);
-			game = new Boss1A2BGame(protocolFactory, new BasicBoss(), allPlayers, id);
+			game = new Boss1A2BGame(protocolFactory, new BasicBoss(new ApacheLoggerAdapter(BasicBoss.class), protocolFactory), 
+					allPlayers, id);
 			game.setLog(new ApacheLoggerAdapter(Boss1A2BGame.class));
 			break;
 		}
