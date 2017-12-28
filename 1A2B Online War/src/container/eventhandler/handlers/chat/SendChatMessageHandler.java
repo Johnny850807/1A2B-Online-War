@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import container.Constants.Events.InRoom;
 import container.base.Client;
 import container.eventhandler.handlers.GsonEventHandler;
+import container.eventhandler.handlers.inroom.BootPlayerHandler;
 import container.eventhandler.handlers.inroom.ChangeStatusHandler;
 import container.eventhandler.handlers.inroom.LeaveRoomHandler;
 import container.protocol.Protocol;
@@ -85,9 +86,9 @@ public class SendChatMessageHandler extends GsonEventHandler<ChatMessage, ChatMe
 		if (player.getName().equals(ServerConstant.GM_ACTUALNAM))
 			log.trace("gm IS BOOTING SELF.");
 		
-		Protocol protocol = protocolFactory().createProtocol(InRoom.LEAVE_ROOM, RequestStatus.request.toString(),
+		Protocol protocol = protocolFactory().createProtocol(InRoom.BOOTED, RequestStatus.request.toString(),
 				gson.toJson(new PlayerRoomIdModel(player.getId(), room.getId())));
-		new LeaveRoomHandler(client(), protocol, gameCore(), protocolFactory()).handle();
+		new BootPlayerHandler(client(), protocol, gameCore(), protocolFactory()).handle();
 	}
 	
 	private void changeAllPlayerStatuses(boolean ready){

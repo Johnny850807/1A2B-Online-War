@@ -20,6 +20,7 @@ import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
 
+import static container.Constants.Events.InRoom.BOOTED;
 import static container.Constants.Events.InRoom.CHANGE_STATUS;
 import static container.Constants.Events.InRoom.CLOSE_ROOM;
 import static container.Constants.Events.InRoom.LAUNCH_GAME;
@@ -114,16 +115,12 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
             if (!model.getGameRoom().equals(roomListModule.getCurrentGameRoom()))
                 throw new IllegalStateException("The event you got was from the other room!");
 
-            if(model.getPlayer().equals(signingModule.getCurrentPlayer()))
-                this.onYouAreBooted();
-            else
-            {
-                Log.d(TAG, "player " + model.getPlayer().getName() + " left.");
-                callback.onPlayerLeft(model);
-            }
+            Log.d(TAG, "player " + model.getPlayer().getName() + " left.");
+            callback.onPlayerLeft(model);
         }
 
         @Override
+        @BindCallback(event = BOOTED, status = RequestStatus.success)
         public void onYouAreBooted() {
             Log.d(TAG, "the current user got booted.");
             callback.onYouAreBooted();

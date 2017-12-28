@@ -1,7 +1,6 @@
-package gamecore;
+package gamecore.model.games;
 
 import gamecore.model.ClientPlayer;
-import gamecore.model.games.Game;
 import gamecore.model.games.a1b2.GameOverModel;
 
 public interface GameLifecycleListener {
