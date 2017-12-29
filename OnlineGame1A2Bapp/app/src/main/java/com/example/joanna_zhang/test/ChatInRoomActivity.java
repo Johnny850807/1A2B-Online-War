@@ -17,7 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.joanna_zhang.test.Unit.ConvertGameModeToStringHelper;
+import com.example.joanna_zhang.test.Unit.ConvertGameHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom.InRoomModule;
@@ -119,8 +119,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void setUpGameModeTxt() {
-        //TODO
-        String gameModeName = ConvertGameModeToStringHelper.getGameModeText(this, gameMode);
+        String gameModeName = ConvertGameHelper.getGameModeText(this, gameMode);
         gameModeTxt.setText(gameModeName);
     }
 
@@ -137,9 +136,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     @Override
-    public void onChatMessageUpdate(ChatMessage chatMessage) {
-
-    }
+    public void onChatMessageUpdate(ChatMessage chatMessage) {}
 
     @Override
     public void onMessageSendingFailed(ChatMessage chatMessage) {
@@ -154,7 +151,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     public void gameStartButtonOnClick(View view) {
         if (currentPlayer.equals(roomHost) && gameRoom.getPlayers().size() >= 2) {
             inRoomModule.launchGame();
-
         }
         else {
             for (PlayerStatus playerStatus : gameRoom.getPlayerStatus())
@@ -213,32 +209,32 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public void onYouAreBooted() {
         Toast.makeText(this, R.string.youAreBooted, Toast.LENGTH_SHORT).show();
-        this.finish();
+        finish();
     }
 
     @Override
     public void onRoomClosed() {
         Toast.makeText(this, R.string.theHostLeftRoomClosed, Toast.LENGTH_SHORT).show();
-        this.finish();
+        finish();
     }
 
     @Override
     public void onError(@NonNull Throwable err) {
-        Toast.makeText(this, err.getMessage(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.errorHappened, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         new AlertDialog.Builder(this)
-                .setTitle("剔除玩家")
-                .setMessage("確定要剔除此玩家嗎?")
-                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                .setTitle(R.string.bootPlayer)
+                .setMessage(R.string.sureAboutBootThisPlayer)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         inRoomModule.bootPlayer(gameRoom.getPlayerStatus().get(position).getPlayer());
                     }
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton(R.string.cancel, null)
                 .show();
         return true;
     }

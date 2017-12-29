@@ -26,7 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.joanna_zhang.test.Unit.ConvertGameModeToStringHelper;
+import com.example.joanna_zhang.test.Unit.ConvertGameHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
@@ -91,7 +91,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     protected void onDestroy() {
         super.onDestroy();
         signingModule.signOut();
-        //TODO Sign out !!! important !!!
     }
 
     private void init() {
@@ -199,7 +198,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onError(@NonNull Throwable err) {
-        //todo handle the error
+        Toast.makeText(this, R.string.errorHappened, Toast.LENGTH_SHORT).show();
     }
 
     public class MyAdapter extends BaseAdapter {
@@ -243,7 +242,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
             GameRoom gameroom = roomListOfQuery.get(position);
 
             String modeName = "1A2B ";
-            modeName += ConvertGameModeToStringHelper.getGameModeText(new AppCompatActivity(), gameroom.getGameMode());  //todo not only two mode
+            modeName += ConvertGameHelper.getGameModeText(new AppCompatActivity(), gameroom.getGameMode());  //todo not only two mode
 
             viewHolder.roomNameTxt.setText(gameroom.getName());
             viewHolder.roomModeTxt.setText(modeName);

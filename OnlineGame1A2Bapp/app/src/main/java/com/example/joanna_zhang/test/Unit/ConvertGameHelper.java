@@ -6,7 +6,7 @@ import com.example.joanna_zhang.test.R;
 
 import gamecore.model.GameMode;
 
-public class ConvertGameModeToStringHelper {
+public class ConvertGameHelper {
 
     public static String getGameModeText(Context context, GameMode gameMode){
         String gameModeText = null;

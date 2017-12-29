@@ -57,5 +57,8 @@
     <string name="chatMessageError">錯誤:傳送訊息</string>
     <string name="gameOver">遊戲結束</string>
     <string name="pleaseInputGuess">請輸入答案</string>
+    <string name="errorHappened">發生錯誤</string>
+    <string name="bootPlayer">剔除玩家</string>
+    <string name="sureAboutBootThisPlayer">確定要剔除此玩家嗎?</string>
 
 </resources>
