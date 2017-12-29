@@ -17,7 +17,7 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="8dp"
-        android:paddingRight="4dp">
+        android:paddingRight="4dp"><!--TODO yellow background!-->
 
         <EditText
             android:id="@+id/inputChattingTxt"
