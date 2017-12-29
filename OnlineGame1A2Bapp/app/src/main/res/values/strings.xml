@@ -61,5 +61,7 @@
     <string name="bootPlayer">剔除玩家</string>
     <string name="sureAboutBootThisPlayer">確定要剔除此玩家嗎?</string>
     <string name="modeName">1A2B</string>
+    <string name="waitOtherPlayersJoin">等待對手加入..</string>
+    <string name="pleaseWait">請稍後</string>
 
 </resources>

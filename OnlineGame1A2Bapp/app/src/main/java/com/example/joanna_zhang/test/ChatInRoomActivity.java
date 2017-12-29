@@ -249,25 +249,25 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("請選擇欲剔除玩家");
-
-        final ArrayAdapter<PlayerStatus> players = new ArrayAdapter<PlayerStatus>(, R.layout.chat_room_player_list_item);
-            for (PlayerStatus player : gameRoom.getPlayerStatus())
-                players.add(player);
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.setAdapter(players, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int position) {
-                PlayerStatus player = players.getItem(position);
-//                new AlertDialog.Builder(DialogActivity.this)
-            }
-        });
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("請選擇欲剔除玩家");
+//
+//        ArrayAdapter<PlayerStatus> players = new ArrayAdapter<PlayerStatus>(, R.layout.chat_room_player_list_item);
+//            for (PlayerStatus player : gameRoom.getPlayerStatus())
+//                players.add(player);
+//        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        });
+//        builder.setAdapter(players, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int position) {
+//                PlayerStatus player = players.getItem(position);
+////                new AlertDialog.Builder(DialogActivity.this)
+//            }
+//        });
 //        new AlertDialog.Builder(this)
 //                .setTitle(R.string.bootPlayer)
 //                .setMessage(R.string.sureAboutBootThisPlayer)
