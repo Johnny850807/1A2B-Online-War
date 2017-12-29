@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:layout_height="50dp"
     android:padding="16dp">
 
     <TextView
         android:id="@+id/playerNameTxt"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_toStartOf="@+id/playerReadyOrNotImg"
+        android:layout_toLeftOf="@+id/playerReadyOrNotImg"
         android:text="林宗億"
-        android:layout_weight="4"
         android:gravity="center_vertical"/>
 
-    <ImageView
-        android:layout_weight="1"
+    <View
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:id="@+id/playerReadyOrNotImg"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:src="@drawable/no_player"/>
+        android:layout_width="17dp"
+        android:layout_height="28dp"
+        android:background="@drawable/gray_circle"/>
 
-</LinearLayout>
+</RelativeLayout>
