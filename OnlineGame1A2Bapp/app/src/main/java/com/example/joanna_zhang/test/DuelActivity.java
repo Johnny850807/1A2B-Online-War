@@ -80,7 +80,6 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
 
     private void init() {
