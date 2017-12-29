@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         String playerName = sharedPreferences.getString("name", "");
         if (!playerName.isEmpty())
         {
-            signIn(playerName);
             nameEd.setText(playerName);
             autoSignInCheckbox.setChecked(true);
         }
