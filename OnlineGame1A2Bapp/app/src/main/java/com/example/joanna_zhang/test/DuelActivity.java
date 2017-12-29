@@ -229,10 +229,6 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
             this.resultList = resultList;
         }
 
-        public void setResultList(List<GuessRecord> resultList) {
-            this.resultList = resultList;
-        }
-
         @Override
         public int getCount() {
             return resultList.size();
