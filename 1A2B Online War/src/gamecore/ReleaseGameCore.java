@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import Linq.Linq;
 import container.Constants.Events.Games;
 import container.Constants.Events.InRoom;
 import container.Constants.Events.RoomList;
@@ -21,7 +20,6 @@ import container.base.Client;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
-import gamecore.model.ClientBinder;
 import gamecore.model.ClientPlayer;
 import gamecore.model.ClientStatus;
 import gamecore.model.PlayerRoomModel;
@@ -51,8 +49,12 @@ public class ReleaseGameCore implements GameCore{
 	public void broadcastRoom(String roomId, Protocol response) {
 		GameRoom room = getGameRoom(roomId);
 		synchronized (room) {
-			log.trace("Broadcasting room: " + room.getName() + ", event: " + response.getEvent());
-			room.getPlayers().parallelStream().forEach(p -> broadcastClientPlayer(p.getId(), response));
+			if (roomContainer.containsKey(room.getId()))
+			{
+				log.trace("Broadcasting room: " + room.getName() + ", event: " + response.getEvent());
+				room.getPlayers().parallelStream().forEach(p -> broadcastClientPlayer(p.getId(), response));
+				log.trace("Broadcasting room completed.");
+			}
 		}
 	}
 
@@ -61,6 +63,7 @@ public class ReleaseGameCore implements GameCore{
 		log.trace("Broadcasting client player by id: " + userId + ", event: " + response.getEvent());
 		ClientPlayer clientPlayer = getClientPlayer(userId);
 		clientPlayer.broadcast(response);
+		log.trace("Broadcasting client completed.");
 	}
 
 	@Override
@@ -68,6 +71,7 @@ public class ReleaseGameCore implements GameCore{
 		log.trace("Broadcasting client players by status: " + status.toString() + ", event: " + response.getEvent());
 		getClientPlayers().parallelStream().filter(cp -> cp.getPlayerStatus() == status)
 			.forEach(cp -> cp.broadcast(response));
+		log.trace("Broadcasting clients completed.");
 	}
 	
 	@Override
@@ -108,15 +112,15 @@ public class ReleaseGameCore implements GameCore{
 			log.error("The room's id or the factory has not been initialized.");
 		Protocol protocol = factory.getProtocolFactory().createProtocol(RoomList.CREATE_ROOM,
 				RequestStatus.success.toString(), gson.toJson(room));
-		synchronized (clientsMap) {
-			if (clientsMap.containsKey(room.getHost().getId()))
-			{
-				broadcastClientPlayers(ClientStatus.signedIn, protocol);
-				broadcastClientPlayer(room.getHost().getId(), protocol);
-				roomContainer.put(room.getId(), room);
-			}
-		}
 		
+		if (clientsMap.containsKey(room.getHost().getId()))
+		{
+			broadcastClientPlayers(ClientStatus.signedIn, protocol);
+			broadcastClientPlayer(room.getHost().getId(), protocol);
+			roomContainer.put(room.getId(), room);
+		}
+		else
+			log.error("The host of the added room not exists!");
 	}
 	
 	@Override
@@ -137,26 +141,23 @@ public class ReleaseGameCore implements GameCore{
 			throw new IllegalStateException("The id is duplicated from the new binded clientplayer !");
 		
 		ClientPlayer clientPlayer = new ClientPlayer(client, player);
-		synchronized (clientsMap) {
-			clientsMap.put(clientPlayer.getId(), clientPlayer);
-			log.trace("Client added: " + clientPlayer);
-		}
+		clientsMap.put(clientPlayer.getId(), clientPlayer);
+		log.trace("Client added: " + clientPlayer);
 	}
 
 	@Override
 	public void removeClientPlayer(String id) {
-		synchronized (clientsMap) {
-			if (clientsMap.containsKey(id))
-			{
-				ClientPlayer clientPlayer = clientsMap.get(id);
-				log.trace("Client removing: " + clientPlayer);
-				handleThePlayerRemovedEventToRooms(clientPlayer.getPlayer());
-				clientsMap.remove(id);
-				log.trace("Remove the player from the clientsMap.");
-			}
-			else
-				log.error("The client didn't sign.");
+		if (clientsMap.containsKey(id))
+		{
+				
+			ClientPlayer clientPlayer = clientsMap.get(id);
+			log.trace("Client removing: " + clientPlayer);
+			handleThePlayerRemovedEventToRooms(clientPlayer.getPlayer());
+			clientsMap.remove(id);
+			log.trace("Remove the player from the clientsMap.");
 		}
+		else
+			log.error("The client didn't sign.");
 	}
 	
 	/**
@@ -194,9 +195,16 @@ public class ReleaseGameCore implements GameCore{
 	public void removePlayerFromRoomAndBroadcast(Player player, GameRoom gameRoom){
 		Protocol protocol = factory.getProtocolFactory().createProtocol(InRoom.LEAVE_ROOM, 
 				RequestStatus.success.toString(), gson.toJson(new PlayerRoomModel(player, gameRoom)));
-		gameRoom.removePlayer(player);
-		broadcastClientPlayers(ClientStatus.signedIn, protocol);
-		broadcastRoom(gameRoom.getId(), protocol);
+		gameRoom = getGameRoom(gameRoom.getId());
+		synchronized(gameRoom)
+		{
+			if (gameRoom.containsPlayer(player))
+			{
+				gameRoom.removePlayer(player);
+				broadcastClientPlayers(ClientStatus.signedIn, protocol);
+				broadcastRoom(gameRoom.getId(), protocol);
+			}
+		}
 	}
 
 	@Override
