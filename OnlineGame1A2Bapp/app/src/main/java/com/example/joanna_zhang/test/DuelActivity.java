@@ -34,7 +34,7 @@ import gamecore.model.games.a1b2.GuessRecord;
 public class DuelActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowView.OnClickListener, Duel1A2BModule.Callback {
 
     private Duel1A2BModule duel1A2BModule;
-    private ProgressDialog progressDialog;
+    private android.app.AlertDialog progressDialog;
     private List<GuessRecord> p1ResultList, p2ResultList;
     private GameRoom currentGameRoom;
     private Player currentPlayer;
@@ -129,7 +129,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     private void waitOtherPlayersPrepare() {
-        progressDialog = (ProgressDialog) new ProgressDialog.Builder(DuelActivity.this)
+        progressDialog = new ProgressDialog.Builder(DuelActivity.this)
                 .setCancelable(true)
                 .setTitle(getString(R.string.pleaseWait))
                 .setMessage(getString(R.string.waitOtherPlayersJoin))
