@@ -21,7 +21,7 @@ import module.SocketConnector.Callback;
 import utils.RandomString;
 
 public class CreateRooms {
-	private static final int NUMBER = 1000;
+	private static final int NUMBER = 2000;
 	public static void main(String[] argv){
 		Gson gson = new Gson();
 		SocketConnector cn = SocketConnector.getInstance();

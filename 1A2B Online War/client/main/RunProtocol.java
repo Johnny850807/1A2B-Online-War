@@ -13,8 +13,8 @@ import module.SocketConnector;
 import utils.MyGson;
 
 public class RunProtocol {
-	private static final String PLAYERID = "c71be4a8-18be-43fb-ba22-7a207c9af227";
-	private static final String ROOMID = "8a173bb0-f01e-4b98-89d8-5a2174725339";
+	private static final String PLAYERID = "e297fdad-21f6-4b0a-8b5c-3926305cf088";
+	private static final String ROOMID = "dffbaa92-0d97-4827-9ac2-958d7ca1d3b2";
 	private static final String ANSWER = "5678";
 	private static final String GUESSNUMBER = "1234";
 	private static final Gson gson = MyGson.getGson();
