@@ -1,19 +1,23 @@
 package com.example.joanna_zhang.test;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.joanna_zhang.test.Unit.ConvertGameHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom.InRoomModule;
@@ -34,13 +38,13 @@ import gamecore.model.PlayerStatus;
  * (1) the player sets ready
  * (2) the host starts the game and 'make sure you have ensured the player amount is suitable to the game', block the action if not.
  * (3) the host can boot the player by answering yes to the dialog which contains options whether to boot the player
- *          created and showed by 'long-clicking' the item contains the player status you want to boot.
+ * created and showed by 'long-clicking' the item contains the player status you want to boot.
  * (4) show the toast if any player left or joined.
  * (5) replace all 'if game mode == DUEL then ... else Group ...' with the 'switch-case logic helping static method'.
  * (6) clean your code and organize the methods (put them in the readable order),
- *      don't let any garbage be here anymore, such as some 'gray-text' attributes, some 'few-lines' methods.
+ * don't let any garbage be here anymore, such as some 'gray-text' attributes, some 'few-lines' methods.
  */
-public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InRoomModule.Callback {
+public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InRoomModule.Callback, AdapterView.OnItemLongClickListener {
 
     private GameRoom currentGameRoom;
     private Player currentPlayer;
@@ -81,6 +85,14 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         inRoomModule.unregisterCallBack(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (currentPlayer.equals(roomHost))
+            inRoomModule.closeRoom();
+
+    }
+
     private void init() {
         findViews();
 
@@ -90,13 +102,14 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         inRoomModule = (InRoomModule) CoreGameServer.getInstance().getModule(ModuleName.INROOM);
         currentPlayer = ((UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING)).getCurrentPlayer();
         currentGameRoom = ((RoomListModule) CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST)).getCurrentGameRoom();
-        if (currentPlayer.getId().equals(roomHost.getId()))
+        if (currentPlayer.equals(roomHost))
             gameStartBtn.setText(R.string.game_start);
         setupChatWindow();
     }
 
     private void setUpPlayerListView() {
         chatRoomPlayerListView.setAdapter(roomPlayerListAdapter);
+        chatRoomPlayerListView.setOnItemLongClickListener(this);
     }
 
     private void setUpThisRoomInfo() {
@@ -106,8 +119,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void setUpGameModeTxt() {
-        //TODO
-        String gameModeName = gameRoom.getGameMode().toString().contains("GROUP") ? getString(R.string.fight) : getString(R.string.duel);
+        String gameModeName = ConvertGameHelper.getGameModeText(this, gameMode);
         gameModeTxt.setText(gameModeName);
     }
 
@@ -124,30 +136,30 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     @Override
-    public void onChatMessageUpdate(ChatMessage chatMessage) {
-
-    }
+    public void onChatMessageUpdate(ChatMessage chatMessage) {}
 
     @Override
     public void onMessageSendingFailed(ChatMessage chatMessage) {
-        Toast.makeText(this, "failed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.messageSendingFailed, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onChatMessageError(Throwable err) {
-        Toast.makeText(this, err.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.chatMessageError, Toast.LENGTH_SHORT).show();
     }
 
     public void gameStartButtonOnClick(View view) {
-        if (currentPlayer.equals(roomHost))
+        if (currentPlayer.equals(roomHost) && gameRoom.getPlayers().size() >= 2) {
             inRoomModule.launchGame();
+        }
         else {
             for (PlayerStatus playerStatus : gameRoom.getPlayerStatus())
-                if (playerStatus.getPlayer().getId().equals(currentPlayer.getId())) {
+                if (playerStatus.getPlayer().equals(currentPlayer)) {
                     inRoomModule.changeStatus(new ChangeStatusModel(currentPlayer.getId(), gameRoom.getId(), !playerStatus.isReady()));
                     int statusText = playerStatus.isReady() ? R.string.unReady : R.string.ready;
                     gameStartBtn.setText(statusText);
                 }
+            roomPlayerListAdapter.notifyDataSetChanged();
         }
     }
 
@@ -155,6 +167,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     public void onPlayerJoined(PlayerRoomModel model) {
         gameRoom.addPlayer(model.getPlayer());
         roomPlayerListAdapter.notifyDataSetChanged();
+        Toast.makeText(this, model.getPlayer() + getString(R.string.isJoined), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -168,6 +181,11 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public void onPlayerLeft(PlayerRoomModel model) {
         gameRoom.removePlayer(model.getPlayer());
+        if (model.getPlayer().equals(roomHost)) {
+            Toast.makeText(this, R.string.theHostLeftRoomClosed, Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        Toast.makeText(this, model.getPlayer() + getString(R.string.isLeft), Toast.LENGTH_SHORT).show();
         roomPlayerListAdapter.notifyDataSetChanged();
     }
 
@@ -180,6 +198,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         Intent intent = new Intent(this, inclass);
         intent.putExtra("game room", gameRoom);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -190,18 +209,34 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public void onYouAreBooted() {
         Toast.makeText(this, R.string.youAreBooted, Toast.LENGTH_SHORT).show();
-        this.finish();
+        finish();
     }
 
     @Override
     public void onRoomClosed() {
         Toast.makeText(this, R.string.theHostLeftRoomClosed, Toast.LENGTH_SHORT).show();
-        this.finish();
+        finish();
     }
 
     @Override
     public void onError(@NonNull Throwable err) {
-        Toast.makeText(this, err.getMessage(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.errorHappened, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.bootPlayer)
+                .setMessage(R.string.sureAboutBootThisPlayer)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        inRoomModule.bootPlayer(gameRoom.getPlayerStatus().get(position).getPlayer());
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+        return true;
     }
 
     private class RoomPlayerListAdapter extends BaseAdapter {

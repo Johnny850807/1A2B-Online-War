@@ -49,7 +49,16 @@
     <string name="unReady">取消準備</string>
     <string name="gameLaunchFailed">開始遊戲失敗!!</string>
     <string name="theHostLeftRoomClosed">房主已離開, 將關閉房間</string>
+    <string name="isLeft">已離開!</string>
+    <string name="isJoined">加入房間!</string>
+    <string name="boss">Boss戰</string>
+    <string name="dixit">Dixit戰</string>
+    <string name="messageSendingFailed">訊息傳送錯誤</string>
+    <string name="chatMessageError">錯誤:傳送訊息</string>
     <string name="gameOver">遊戲結束</string>
     <string name="pleaseInputGuess">請輸入答案</string>
+    <string name="errorHappened">發生錯誤</string>
+    <string name="bootPlayer">剔除玩家</string>
+    <string name="sureAboutBootThisPlayer">確定要剔除此玩家嗎?</string>
 
 </resources>
