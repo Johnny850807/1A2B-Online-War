@@ -17,7 +17,7 @@ public class PlayerSpirit extends AbstractSpirit{
 		this.player = player;
 	}
 	
-	public ClientPlayer getPlayer() {
+	public ClientPlayer getClientPlayer() {
 		return player;
 	}
 	public void setPlayer(ClientPlayer player) {
@@ -30,7 +30,7 @@ public class PlayerSpirit extends AbstractSpirit{
 	
 	@Override
 	@ForServer
-	public void onHisTurn() {
+	public void action() {
 		
 	}
 	

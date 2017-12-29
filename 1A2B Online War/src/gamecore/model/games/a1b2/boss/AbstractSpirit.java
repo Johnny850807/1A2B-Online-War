@@ -1,10 +1,13 @@
 package gamecore.model.games.a1b2.boss;
 
+import java.util.Random;
+
 import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.GuessRecord;
 import gamecore.model.games.a1b2.GuessResult;
+import gamecore.model.games.a1b2.boss.AttackResult.AttackType;
 import utils.ForServer;
 
 public abstract class AbstractSpirit implements Spirit{
@@ -35,17 +38,23 @@ public abstract class AbstractSpirit implements Spirit{
 	
 	@Override
 	@ForServer
-	public AttackResult damage(AbstractSpirit attacker, String guess) {
+	public AttackResult attack(AbstractSpirit attacker, String guess) {
 		GuessResult guessResult = A1B2NumberValidator.getGuessResult(answer, guess);
 		int damage = onParsingDamage(guessResult);
 		GuessRecord guessRecord = new GuessRecord(guess, guessResult);
-		AttackResult attackResult =  new AttackResult(damage, guessRecord, attacker, this);
+		AttackResult attackResult =  new AttackResult(damage, AttackType.NORMAL, guessRecord, attacker, this);
 		onDamaging(attackResult);
 		return attackResult;
 	}
 
 	protected int onParsingDamage(GuessResult guessResult){
-		return /*TODO*/ 100;
+		// formula (r = random number): (28+r)*(a+b) - ((7+r)*b) 
+		int a = guessResult.getA(), b = guessResult.getB();
+		return (28+getRandom(5, 13))*(a+b) - (7+getRandom(1, 6))*b + getRandom(1, 15) + (a==4?80:0);
+	}
+	
+	private int getRandom(int min, int max){
+		return new Random().nextInt(max+1) + min;
 	}
 	
 	protected void onDamaging(AttackResult attackResult){

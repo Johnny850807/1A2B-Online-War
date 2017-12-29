@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -114,12 +113,10 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         super.onDestroy();
         if (currentPlayer.equals(roomHost))
             inRoomModule.closeRoom();
-
     }
 
     private void init() {
         findViews();
-
         setUpThisRoomInfo();
         setUpGameModeTxt();
         roomPlayerListAdapter = new RoomPlayerListAdapter();

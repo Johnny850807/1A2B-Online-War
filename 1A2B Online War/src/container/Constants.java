@@ -3,6 +3,7 @@ package container;
 public final class Constants {
 	public final static int VERSION = 1;
 	public final static class Events{
+		public final static String PING = "Ping";
 		public final static class Signing{
 			public final static String SIGNIN = "SignIn";
 			public final static  String SIGNOUT = "SignOut";
@@ -37,7 +38,7 @@ public final class Constants {
 			}
 			
 			public final static class Boss1A2B{
-				public final static String YOUR_TURN = "YourTurnBoss1A2B";
+				public final static String NEXT_TURN = "NextTurnBoss1A2B";
 			}
 		}
 	}
