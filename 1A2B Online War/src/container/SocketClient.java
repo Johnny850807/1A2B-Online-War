@@ -53,6 +53,8 @@ public class SocketClient extends Entity implements Client{
 	public void run() {
 		try {
 			listeningToClientInput();
+		} catch (RuntimeException e) {
+			log.error("Client input runtime error...", e);
 		} catch (IOException e) {
 			askGamecoreToUnregisterTheClient();
 		}

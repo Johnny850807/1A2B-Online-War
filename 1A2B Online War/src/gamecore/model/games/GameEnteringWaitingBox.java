@@ -2,6 +2,7 @@ package gamecore.model.games;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import gamecore.model.ClientPlayer;
@@ -20,12 +21,22 @@ import gamecore.model.ClientPlayer;
  */
 public class GameEnteringWaitingBox {
 	private Set<String> unenteredPlayerIds = Collections.synchronizedSet(new HashSet<>());  
+	private ClientPlayer[] allPlayers;
 	private OnGamePlayersAllEnteredListener listener;
 	
 	public GameEnteringWaitingBox(OnGamePlayersAllEnteredListener listener, ClientPlayer ...clientPlayers){
 		this.listener = listener;
 		for (ClientPlayer clientPlayer : clientPlayers)
 			unenteredPlayerIds.add(clientPlayer.getId());
+		allPlayers = clientPlayers;
+	}
+	
+	public GameEnteringWaitingBox(OnGamePlayersAllEnteredListener listener, List<ClientPlayer> clientPlayers){
+		this.listener = listener;
+		for (ClientPlayer clientPlayer : clientPlayers)
+			unenteredPlayerIds.add(clientPlayer.getId());
+		allPlayers = new ClientPlayer[clientPlayers.size()];
+		allPlayers = clientPlayers.toArray(allPlayers);
 	}
 	
 	public void enter(ClientPlayer clientPlayer){
@@ -36,5 +47,9 @@ public class GameEnteringWaitingBox {
 	
 	public interface OnGamePlayersAllEnteredListener{
 		public void onAllPlayerEntered();
+	}
+	
+	public ClientPlayer[] getAllPlayers() {
+		return allPlayers;
 	}
 }

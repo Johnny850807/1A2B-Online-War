@@ -30,7 +30,7 @@ public class GuessHandler extends GsonEventHandler<ContentModel, ContentModel>{
 	protected Response onHandling(ContentModel guessModel) {
 		try{
 			GameRoom room = gameCore().getGameRoom(guessModel.getRoomId());
-			Duel1A2BGame gameModel = (Duel1A2BGame) room.getGameModel();
+			Duel1A2BGame gameModel = (Duel1A2BGame) room.getGame();
 			gameModel.guess(guessModel.getPlayerId(), guessModel.getContent());
 			return success(guessModel);
 		}catch (NumberNotValidException e) {

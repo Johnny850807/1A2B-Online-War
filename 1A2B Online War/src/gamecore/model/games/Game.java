@@ -19,8 +19,10 @@ import container.protocol.ProtocolFactory;
 import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.MockLogger;
+import gamecore.model.RequestStatus;
 import gamecore.model.games.GameEnteringWaitingBox.OnGamePlayersAllEnteredListener;
 import gamecore.model.games.a1b2.GameOverModel;
+import gamecore.model.games.a1b2.ProcessInvalidException;
 import utils.ForServer;
 
 public abstract class Game implements OnGamePlayersAllEnteredListener{
@@ -35,12 +37,12 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
 	protected Date launchDate = new Date();
 	protected String roomId;
 	protected long gameDuration = 2000;
+	protected boolean gameStarted = false;
 	
 	public Game(ProtocolFactory protocolFactory, GameMode gameMode, String roomId) {
 		this.gameMode = gameMode;
 		this.roomId = roomId;
 		this.protocolFactory = protocolFactory;
-		this.enteringWaitingBox = createEnteringWaitingBox();
 		timer = new Timer(gameMode.toString());
 	}
 
@@ -52,13 +54,15 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
  	@ForServer
  	public void enterGame(ClientPlayer clientPlayer){
  		log.trace("The player " + clientPlayer.getPlayerName() + " entered.");
- 		enteringWaitingBox.enter(clientPlayer);
+ 		if (enteringWaitingBox != null)
+ 			enteringWaitingBox.enter(clientPlayer);
+ 		else
+ 			throw new IllegalStateException("The entering waiting box is not initialized.");
  	}
  	
- 	/**
- 	 * @return factory method creates the waiting box fit to the game players.
- 	 */
- 	protected abstract GameEnteringWaitingBox createEnteringWaitingBox();
+ 	public void setEnteringWaitingBox(GameEnteringWaitingBox enteringWaitingBox) {
+		this.enteringWaitingBox = enteringWaitingBox;
+	}
  	
  	@Override
  	public void onAllPlayerEntered() {
@@ -69,6 +73,7 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
  	@ForServer
  	public void startGame(){
  		log.trace("Game " + gameMode.toString() + " started.");
+ 		gameStarted = true;
  		startTimer();
  	}
 
@@ -86,6 +91,12 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
 					timeListeners.get(gameDuration).onTime(gameDuration);
 			}
 		}, 2000, 1000);
+	}
+	
+	
+	public void validGameStarted(){
+		if (!isGameStarted())
+			throw new ProcessInvalidException("The game is not started.");
 	}
 	
 	public interface TimeListener{
@@ -117,6 +128,10 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
 	
 	public void setGameLifecycleListener(GameLifecycleListener lifecycleListener){
 		this.listener = lifecycleListener;
+	}
+	
+	public boolean isGameStarted() {
+		return gameStarted;
 	}
 	
 }

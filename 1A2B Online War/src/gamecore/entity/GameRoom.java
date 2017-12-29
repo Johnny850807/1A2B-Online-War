@@ -15,6 +15,7 @@ import gamecore.model.MockLogger;
 import gamecore.model.PlayerStatus;
 import gamecore.model.RoomStatus;
 import gamecore.model.games.Game;
+import gamecore.model.games.GameEnteringWaitingBox;
 import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamecore.model.games.a1b2.boss.BasicBoss;
 import gamecore.model.games.a1b2.boss.Boss1A2BGame;
@@ -210,6 +211,10 @@ public class GameRoom extends Entity{
 	}
 	
 	private void initGame(ClientPlayer hostClient, List<ClientPlayer> playerClients, Game.GameLifecycleListener listener){
+		List<ClientPlayer> allPlayers = new ArrayList<>();
+		allPlayers.add(hostClient);
+		allPlayers.addAll(playerClients);
+		
 		switch (getGameMode()) {
 		case DUEL1A2B:
 			game = new Duel1A2BGame(protocolFactory, id, hostClient, playerClients.get(0));
@@ -222,15 +227,14 @@ public class GameRoom extends Entity{
 			//TODO
 			break;
 		case BOSS1A2B:
-			List<ClientPlayer> allPlayers = playerClients;
-			allPlayers.add(hostClient);
 			game = new Boss1A2BGame(protocolFactory, new BasicBoss(new ApacheLoggerAdapter(BasicBoss.class), protocolFactory), 
 					allPlayers, id);
 			game.setLog(new ApacheLoggerAdapter(Boss1A2BGame.class));
 			break;
 		}
 		
-		this.game.setGameLifecycleListener(listener);
+		game.setGameLifecycleListener(listener);
+		game.setEnteringWaitingBox(new GameEnteringWaitingBox(game, allPlayers));
 		updateRoomAndPlayerStatusInGame(hostClient, playerClients);
 	}
 	
@@ -241,7 +245,7 @@ public class GameRoom extends Entity{
 		setRoomStatus(RoomStatus.gamestarted);
 	}
 	
-	public Game getGameModel() {
+	public Game getGame() {
 		return game;
 	}
 	

@@ -82,11 +82,4 @@ public class Boss1A2BGame extends Game{
 		return new PlayerSpirit(clientPlayer, log, protocolFactory);
 	}
 
-	@Override
-	protected GameEnteringWaitingBox createEnteringWaitingBox() {
-		ClientPlayer[] players = new ClientPlayer[playerSpirits.size()];
-		for (int i = 0 ; i < playerSpirits.size() ; i ++)
-			players[i] = playerSpirits.get(i).getPlayer();
-		return new GameEnteringWaitingBox(this, players);
-	}
 }
