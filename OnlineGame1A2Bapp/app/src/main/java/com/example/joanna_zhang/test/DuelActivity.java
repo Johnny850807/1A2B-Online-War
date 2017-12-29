@@ -50,7 +50,6 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_duel);
         init();
-        setupAnswer();
         findViews();
         setUpChatWindow();
         setUpInputNumberWindowView();
@@ -143,7 +142,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     @Override
     public void onGameStarted() {
         progressDialog.dismiss();
-        Toast.makeText(this, "開始遊戲", Toast.LENGTH_SHORT).show();
+        setupAnswer();
     }
 
     @Override
