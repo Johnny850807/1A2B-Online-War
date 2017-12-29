@@ -1,6 +1,7 @@
 package gamecore.model.games;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -11,18 +12,24 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import container.Constants.Events.Games;
 import container.base.MyLogger;
+import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
+import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.MockLogger;
+import gamecore.model.games.GameEnteringWaitingBox.OnGamePlayersAllEnteredListener;
+import gamecore.model.games.a1b2.GameOverModel;
 import utils.ForServer;
 
-public abstract class Game {
+public abstract class Game implements OnGamePlayersAllEnteredListener{
 	protected static transient Gson gson = new Gson();
 	protected transient MyLogger log = new MockLogger();
 	protected transient ProtocolFactory protocolFactory;
 	protected transient Timer timer;
 	protected transient GameLifecycleListener listener;
+	protected transient GameEnteringWaitingBox enteringWaitingBox;
 	private transient Map<Integer, TimeListener> timeListeners = new TreeMap<>();
 	protected GameMode gameMode;
 	protected Date launchDate = new Date();
@@ -33,6 +40,7 @@ public abstract class Game {
 		this.gameMode = gameMode;
 		this.roomId = roomId;
 		this.protocolFactory = protocolFactory;
+		this.enteringWaitingBox = createEnteringWaitingBox();
 		timer = new Timer(gameMode.toString());
 	}
 
@@ -40,14 +48,31 @@ public abstract class Game {
  		this(protocolFactory, gameMode, roomId);
  		this.launchDate = luanchDate;
 	}
+
+ 	@ForServer
+ 	public void enterGame(ClientPlayer clientPlayer){
+ 		log.trace("The player " + clientPlayer.getPlayerName() + " entered.");
+ 		enteringWaitingBox.enter(clientPlayer);
+ 	}
+ 	
+ 	/**
+ 	 * @return factory method creates the waiting box fit to the game players.
+ 	 */
+ 	protected abstract GameEnteringWaitingBox createEnteringWaitingBox();
+ 	
+ 	@Override
+ 	public void onAllPlayerEntered() {
+ 		listener.onGameStarted(this);
+ 		startGame();
+ 	}
  	
  	@ForServer
  	public void startGame(){
  		log.trace("Game " + gameMode.toString() + " started.");
- 		listener.onGameStarted(this);
  		startTimer();
  	}
 
+ 	
  	public void setLog(MyLogger log) {
 		this.log = log;
 	}
@@ -67,6 +92,13 @@ public abstract class Game {
 		public void onTime(long gameDuration);
 	}
 	
+	public interface GameLifecycleListener {
+		public void onGameStarted(Game game);
+		public void onGameInterrupted(Game game, ClientPlayer noResponsePlayer);
+		public void onGameOver(Game game, GameOverModel gameOverModel);
+	}
+
+
 	public Date getLaunchDate() {
 		return launchDate;
 	}

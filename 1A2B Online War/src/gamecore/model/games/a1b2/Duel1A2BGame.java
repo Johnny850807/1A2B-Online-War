@@ -14,6 +14,7 @@ import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.RequestStatus;
 import gamecore.model.games.Game;
+import gamecore.model.games.GameEnteringWaitingBox;
 import utils.ForServer;
 
 /**
@@ -175,5 +176,10 @@ public class Duel1A2BGame extends Game{
 	
 	public String getPlayerName(String playerId){
 		return getClientPlayer(playerId).getPlayerName();
+	}
+	
+	@Override
+	protected GameEnteringWaitingBox createEnteringWaitingBox() {
+		return new GameEnteringWaitingBox(this, hostClient, playerClient);
 	}
 }
