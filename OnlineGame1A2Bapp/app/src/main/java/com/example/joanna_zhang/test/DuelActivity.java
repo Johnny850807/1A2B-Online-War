@@ -196,8 +196,12 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     @Override
     public void onOneRoundOver(List<Duel1A2BPlayerBarModel> models) {
-        p1ResultList = models.get(0).getGuessRecords();
-        p2ResultList = models.get(1).getGuessRecords();
+        Duel1A2BPlayerBarModel playerBarModel1 = models.get(0);
+        Duel1A2BPlayerBarModel playerBarModel2 = models.get(1);
+        p1ResultList = playerBarModel1.getPlayerId().equals(currentPlayer.getId()) ? playerBarModel1.getGuessRecords() :
+                playerBarModel2.getGuessRecords();
+        p2ResultList = playerBarModel1.getPlayerId().equals(currentPlayer.getId()) ? playerBarModel2.getGuessRecords() :
+                playerBarModel1.getGuessRecords();
         updateResultList();
         inputNumberBtn.setEnabled(true);
     }
