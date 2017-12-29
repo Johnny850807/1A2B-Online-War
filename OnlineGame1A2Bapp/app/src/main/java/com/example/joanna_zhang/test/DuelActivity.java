@@ -249,7 +249,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         public View getView(int i, View view, ViewGroup viewGroup) {
             view = LayoutInflater.from(DuelActivity.this).inflate(android.R.layout.simple_list_item_1, viewGroup, false);
 
-            TextView resultTxt = findViewById(android.R.id.text1);
+            TextView resultTxt = view.findViewById(android.R.id.text1);
             StringBuilder result = new StringBuilder();
             result.append(resultList.get(i).getGuess())
                     .append('-')
