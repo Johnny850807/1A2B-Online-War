@@ -67,15 +67,11 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         setUpPlayerListView();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        chatWindowView.onResume();
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
+        chatWindowView.onResume();
         inRoomModule.registerCallback(this);
     }
 
