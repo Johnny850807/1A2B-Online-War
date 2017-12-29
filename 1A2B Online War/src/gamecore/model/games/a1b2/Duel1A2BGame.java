@@ -14,6 +14,7 @@ import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.RequestStatus;
 import gamecore.model.games.Game;
+import gamecore.model.games.GameEnteringWaitingBox;
 import utils.ForServer;
 
 /**
@@ -54,6 +55,7 @@ public class Duel1A2BGame extends Game{
 	}
  	
  	private void validateCommittingAnswerOperation(String playerId) throws ProcessInvalidException{
+ 		validGameStarted();
  		if (playerModels.get(playerId).getAnswer() != null)
  			throw new ProcessInvalidException("The player has already committed the answer.");
  	}
@@ -81,6 +83,7 @@ public class Duel1A2BGame extends Game{
 	}
  	
  	private void validateGuessingRequest(String playerId) throws ProcessInvalidException{
+ 		validGameStarted();
 		if(!guessingStarted)
 			throw new ProcessInvalidException("Guessing has not started, but a player is guessing.");
 		if (playerModels.get(playerId).getGuessingTimes() == guessingRound)
@@ -176,4 +179,5 @@ public class Duel1A2BGame extends Game{
 	public String getPlayerName(String playerId){
 		return getClientPlayer(playerId).getPlayerName();
 	}
+	
 }

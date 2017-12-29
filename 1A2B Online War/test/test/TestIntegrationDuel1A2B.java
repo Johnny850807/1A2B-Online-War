@@ -1,6 +1,7 @@
 package test;
 
 import static container.Constants.Events.Chat.SEND_MSG;
+import static container.Constants.Events.Games.*;
 import static container.Constants.Events.Games.Duel1A2B.GUESS;
 import static container.Constants.Events.Games.Duel1A2B.GUESSING_STARTED;
 import static container.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
@@ -154,6 +155,13 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		createHandler(hostClient, protocolFactory.createProtocol(LAUNCH_GAME, REQUEST, 
 				gson.toJson(this.gameRoom))).handle();
 		assertTrue(gameRoom.getRoomStatus() == RoomStatus.gamestarted);
+		
+		createHandler(hostClient, protocolFactory.createProtocol(ENTERGAME, REQUEST, 
+				gson.toJson(new PlayerRoomIdModel(host.getId(), gameRoom.getId())))).handle();
+		createHandler(playerClient, protocolFactory.createProtocol(ENTERGAME, REQUEST, 
+				gson.toJson(new PlayerRoomIdModel(player.getId(), gameRoom.getId())))).handle();
+		assertEquals(GAMESTARTED, hostClient.getLastedResponse().getEvent());
+		assertEquals(GAMESTARTED, playerClient.getLastedResponse().getEvent());
 		
 		ContentModel hostSetAnswer = new ContentModel(host.getId(), gameRoom.getId(), "1234");
 		ContentModel playerSetAnswer = new ContentModel(player.getId(), gameRoom.getId(), "5678");

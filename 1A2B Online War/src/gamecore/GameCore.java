@@ -10,9 +10,9 @@ import gamecore.model.ClientBinder;
 import gamecore.model.ClientPlayer;
 import gamecore.model.ClientStatus;
 import gamecore.model.RoomStatus;
-import gamecore.model.games.GameLifecycleListener;
+import gamecore.model.games.Game;
 
-public interface GameCore extends ClientBinder, GameLifecycleListener{
+public interface GameCore extends ClientBinder, Game.GameLifecycleListener{
 	void broadcastRoom(String roomId, Protocol response);
 	void broadcastClientPlayer(String userId, Protocol response);
 	void broadcastClientPlayers(ClientStatus userStatus, Protocol response);

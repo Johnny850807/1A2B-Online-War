@@ -1,6 +1,5 @@
 package com.ood.clean.waterball.a1a2bsdk.core.modules.games;
 
-import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 
 import java.util.List;
@@ -15,6 +14,8 @@ public interface Duel1A2BModule extends GameModule {
     void registerCallback(Duel1A2BModule.Callback callback);
     void unregisterCallBack(Duel1A2BModule.Callback callback);
 
+    void enterGame();
+
     /**
      * set the answer.
      */
@@ -25,7 +26,7 @@ public interface Duel1A2BModule extends GameModule {
      */
     void guess(String guess);
 
-    public interface Callback extends GameCallBack{
+    public interface Callback extends OnlineGameModule.Callback{
 
         /**
          * while you set the answer successfully.

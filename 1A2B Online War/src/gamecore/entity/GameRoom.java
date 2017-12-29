@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.gson.annotations.Expose;
-
 import container.ApacheLoggerAdapter;
 import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
@@ -17,7 +15,7 @@ import gamecore.model.MockLogger;
 import gamecore.model.PlayerStatus;
 import gamecore.model.RoomStatus;
 import gamecore.model.games.Game;
-import gamecore.model.games.GameLifecycleListener;
+import gamecore.model.games.GameEnteringWaitingBox;
 import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamecore.model.games.a1b2.boss.BasicBoss;
 import gamecore.model.games.a1b2.boss.Boss1A2BGame;
@@ -189,7 +187,7 @@ public class GameRoom extends Entity{
 	 * @param clientBinder binding interface which allows the game access the client player without coupling to the game core.
 	 */
 	@ForServer
-	public void launchGame(ClientBinder clientBinder, GameLifecycleListener listener){
+	public void launchGame(ClientBinder clientBinder, Game.GameLifecycleListener listener){
 		log.trace("Room: " + id + ", launcing the " + gameMode.toString() + " game.");
 		validatePlayerAmount();
 		
@@ -201,7 +199,7 @@ public class GameRoom extends Entity{
 		log.trace("Host prepared: " + hostClient.getPlayerName());
 		log.trace("Players prepared: " + ClientPlayersHelper.toString(playerClients));
 		
-		initGameAndStart(hostClient, playerClients, listener);
+		initGame(hostClient, playerClients, listener);
 	}
 	
 	private void validatePlayerAmount(){
@@ -212,7 +210,11 @@ public class GameRoom extends Entity{
 			throw new IllegalStateException("The Player amount is out of the limit. Expect: " + getMaxPlayerAmount() + ", actual: " + playerAmount);
 	}
 	
-	private void initGameAndStart(ClientPlayer hostClient, List<ClientPlayer> playerClients, GameLifecycleListener listener){
+	private void initGame(ClientPlayer hostClient, List<ClientPlayer> playerClients, Game.GameLifecycleListener listener){
+		List<ClientPlayer> allPlayers = new ArrayList<>();
+		allPlayers.add(hostClient);
+		allPlayers.addAll(playerClients);
+		
 		switch (getGameMode()) {
 		case DUEL1A2B:
 			game = new Duel1A2BGame(protocolFactory, id, hostClient, playerClients.get(0));
@@ -225,16 +227,14 @@ public class GameRoom extends Entity{
 			//TODO
 			break;
 		case BOSS1A2B:
-			List<ClientPlayer> allPlayers = playerClients;
-			allPlayers.add(hostClient);
 			game = new Boss1A2BGame(protocolFactory, new BasicBoss(new ApacheLoggerAdapter(BasicBoss.class), protocolFactory), 
 					allPlayers, id);
 			game.setLog(new ApacheLoggerAdapter(Boss1A2BGame.class));
 			break;
 		}
 		
-		this.game.setGameLifecycleListener(listener);
-		this.game.startGame();
+		game.setGameLifecycleListener(listener);
+		game.setEnteringWaitingBox(new GameEnteringWaitingBox(game, allPlayers));
 		updateRoomAndPlayerStatusInGame(hostClient, playerClients);
 	}
 	
@@ -245,7 +245,7 @@ public class GameRoom extends Entity{
 		setRoomStatus(RoomStatus.gamestarted);
 	}
 	
-	public Game getGameModel() {
+	public Game getGame() {
 		return game;
 	}
 	
@@ -254,4 +254,5 @@ public class GameRoom extends Entity{
 		return String.format("Room id: %s, name: %s, GameMode: %s, Host: %s, Players: %d/%d, Status: %s", 
 				id, name, gameMode.toString(), host == null ? "null" : host.getName(), getPlayers().size(), gameMode.getMaxPlayerAmount(), roomStatus.toString());
 	}
+
 }

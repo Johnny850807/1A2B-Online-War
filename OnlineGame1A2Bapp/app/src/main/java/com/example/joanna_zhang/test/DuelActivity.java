@@ -1,6 +1,5 @@
 package com.example.joanna_zhang.test;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,7 +32,6 @@ import gamecore.model.games.a1b2.GuessRecord;
 
 public class DuelActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowView.OnClickListener, Duel1A2BModule.Callback {
 
-
     private Duel1A2BModule duel1A2BModule;
     private List<GuessRecord> p1ResultList, p2ResultList;
     private GameRoom currentGameRoom;
@@ -61,6 +59,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         super.onResume();
         chatWindowView.onResume();
         duel1A2BModule.registerCallback(this);
+        duel1A2BModule.enterGame();
     }
 
     @Override
@@ -122,6 +121,11 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         p2GuessResultAdapter.notifyDataSetChanged();
         p1ResultListView.setSelection(p1ResultListView.getCount() - 1);
         p2ResultListView.setSelection(p2ResultListView.getCount() - 1);
+    }
+
+    @Override
+    public void onGameStarted() {
+        //TODO
     }
 
     @Override

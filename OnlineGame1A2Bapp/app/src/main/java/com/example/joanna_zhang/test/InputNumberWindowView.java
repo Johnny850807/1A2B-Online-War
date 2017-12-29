@@ -3,15 +3,12 @@ package com.example.joanna_zhang.test;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.res.Resources;
-import android.support.v4.media.RatingCompat;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 public class InputNumberWindowView extends Dialog implements View.OnClickListener {
     private Context context;
