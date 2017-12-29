@@ -2,7 +2,6 @@ package com.example.joanna_zhang.test;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -19,9 +18,9 @@ import android.widget.Toast;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.Duel1A2BModule;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import gamecore.entity.ChatMessage;
@@ -225,7 +224,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     private class GuessResultAdapter extends BaseAdapter {
 
-        private List<GuessRecord> resultList;
+        private List<GuessRecord> resultList = new ArrayList<>();
 
         public void setResultList(List<GuessRecord> resultList) {
             this.resultList = resultList;
