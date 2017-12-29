@@ -108,9 +108,15 @@ public class ReleaseGameCore implements GameCore{
 			log.error("The room's id or the factory has not been initialized.");
 		Protocol protocol = factory.getProtocolFactory().createProtocol(RoomList.CREATE_ROOM,
 				RequestStatus.success.toString(), gson.toJson(room));
-		broadcastClientPlayers(ClientStatus.signedIn, protocol);
-		broadcastClientPlayer(room.getHost().getId(), protocol);
-		roomContainer.put(room.getId(), room);
+		synchronized (clientsMap) {
+			if (clientsMap.containsKey(room.getHost().getId()))
+			{
+				broadcastClientPlayers(ClientStatus.signedIn, protocol);
+				broadcastClientPlayer(room.getHost().getId(), protocol);
+				roomContainer.put(room.getId(), room);
+			}
+		}
+		
 	}
 	
 	@Override
@@ -131,22 +137,26 @@ public class ReleaseGameCore implements GameCore{
 			throw new IllegalStateException("The id is duplicated from the new binded clientplayer !");
 		
 		ClientPlayer clientPlayer = new ClientPlayer(client, player);
-		clientsMap.put(clientPlayer.getId(), clientPlayer);
-		log.trace("Client added: " + clientPlayer);
+		synchronized (clientsMap) {
+			clientsMap.put(clientPlayer.getId(), clientPlayer);
+			log.trace("Client added: " + clientPlayer);
+		}
 	}
 
 	@Override
 	public void removeClientPlayer(String id) {
-		if (clientsMap.containsKey(id))
-		{
-			ClientPlayer clientPlayer = clientsMap.get(id);
-			log.trace("Client removing: " + clientPlayer);
-			handleThePlayerRemovedEventToRooms(clientPlayer.getPlayer());
-			clientsMap.remove(id);
-			log.trace("Remove the player from the clientsMap.");
+		synchronized (clientsMap) {
+			if (clientsMap.containsKey(id))
+			{
+				ClientPlayer clientPlayer = clientsMap.get(id);
+				log.trace("Client removing: " + clientPlayer);
+				handleThePlayerRemovedEventToRooms(clientPlayer.getPlayer());
+				clientsMap.remove(id);
+				log.trace("Remove the player from the clientsMap.");
+			}
+			else
+				log.error("The client didn't sign.");
 		}
-		else
-			log.error("The client didn't sign.");
 	}
 	
 	/**

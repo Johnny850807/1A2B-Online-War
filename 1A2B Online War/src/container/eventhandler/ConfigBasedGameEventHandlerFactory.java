@@ -5,16 +5,12 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
-
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.soap.Node;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,7 +62,10 @@ public class ConfigBasedGameEventHandlerFactory implements GameEventHandlerFacto
 		for (int i = 0 ; i < mappingNodes.getLength() ; i ++)
 		{
 			Element element = (Element) mappingNodes.item(i);
-			mappings.put(element.getAttribute("event"), element.getAttribute("handlerName"));
+			String event = element.getAttribute("event");
+			String handlerName = element.getAttribute("handlerName");
+			log.info("Event handler registering.. event: " + event + "  ->  handler name: " + handlerName);
+			mappings.put(event, handlerName);
 		}
 	}
 	
@@ -76,7 +75,10 @@ public class ConfigBasedGameEventHandlerFactory implements GameEventHandlerFacto
 		{
 			Element element = (Element) handlerNodes.item(i);
 			String handlerClassName = "container.eventhandler.handlers." + element.getAttribute("handlerClass");
-			handlerMap.put(element.getAttribute("handlerName"), Class.forName(handlerClassName));
+			Class<?> handlerClass = Class.forName(handlerClassName);
+			String handlerName = element.getAttribute("handlerName");
+			log.info("Event handler class mapping.. handler name: " + handlerName + "  ->  class: " + handlerClass);
+			handlerMap.put(handlerName, handlerClass);
 		}
 	}
 	

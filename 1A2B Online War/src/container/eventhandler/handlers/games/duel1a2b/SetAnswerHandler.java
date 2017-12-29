@@ -7,7 +7,6 @@ import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
 import gamecore.model.ContentModel;
-import gamecore.model.GameMode;
 import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamecore.model.games.a1b2.NumberNotValidException;
 
