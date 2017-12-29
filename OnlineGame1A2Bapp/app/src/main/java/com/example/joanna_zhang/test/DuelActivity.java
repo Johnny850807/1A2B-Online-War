@@ -1,5 +1,6 @@
 package com.example.joanna_zhang.test;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,6 +34,7 @@ import gamecore.model.games.a1b2.GuessRecord;
 public class DuelActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowView.OnClickListener, Duel1A2BModule.Callback {
 
     private Duel1A2BModule duel1A2BModule;
+    private ProgressDialog progressDialog;
     private List<GuessRecord> p1ResultList, p2ResultList;
     private GameRoom currentGameRoom;
     private Player currentPlayer;
@@ -52,6 +54,12 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         findViews();
         setUpChatWindow();
         setUpInputNumberWindowView();
+        String p2Name = currentGameRoom.getPlayers().get(0).equals(currentPlayer)?
+                currentGameRoom.getPlayers().get(1).getName() : currentGameRoom.getPlayers().get(0).getName();
+        p1NameTxt.setText(currentPlayer.getName());
+        p2NameTxt.setText(p2Name);
+        p1ResultListView.setAdapter(p1GuessResultAdapter);
+        p2ResultListView.setAdapter(p2GuessResultAdapter);
     }
 
     @Override
@@ -60,6 +68,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         chatWindowView.onResume();
         duel1A2BModule.registerCallback(this);
         duel1A2BModule.enterGame();
+        waitOtherPlayersPrepare();
     }
 
     @Override
@@ -116,6 +125,14 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
                 .build();
     }
 
+    private void waitOtherPlayersPrepare() {
+        progressDialog = (ProgressDialog) new ProgressDialog.Builder(DuelActivity.this)
+                .setCancelable(true)
+                .setTitle(getString(R.string.pleaseWait))
+                .setMessage(getString(R.string.waitOtherPlayersJoin))
+                .show();
+    }
+
     public void updateResultList() {
         p1GuessResultAdapter.notifyDataSetChanged();
         p2GuessResultAdapter.notifyDataSetChanged();
@@ -125,7 +142,8 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     @Override
     public void onGameStarted() {
-        //TODO
+        progressDialog.dismiss();
+        Toast.makeText(this, "開始遊戲", Toast.LENGTH_SHORT).show();
     }
 
     @Override
