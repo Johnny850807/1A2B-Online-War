@@ -1,5 +1,6 @@
 package com.ood.clean.waterball.a1a2bsdk.core.modules.games;
 
+import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 
 public interface OnlineGameModule extends GameModule{
@@ -12,4 +13,8 @@ public interface OnlineGameModule extends GameModule{
      * , therefore the game started event will be emitted while all players are ready.
      */
     void enterGame();
+
+    public interface Callback extends GameCallBack{
+        void onGameStarted();
+    }
 }

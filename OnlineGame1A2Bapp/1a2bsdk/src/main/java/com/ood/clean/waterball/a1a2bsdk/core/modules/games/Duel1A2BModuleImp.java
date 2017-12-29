@@ -20,13 +20,14 @@ import static container.Constants.Events.Games.Duel1A2B.GUESSING_STARTED;
 import static container.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
 import static container.Constants.Events.Games.Duel1A2B.SET_ANSWER;
 import static container.Constants.Events.Games.GAMEOVER;
+import static container.Constants.Events.Games.GAMESTARTED;
 
 public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1A2BModule {
     private ProxyCallback proxyCallback;
     private boolean answerCommitted;
 
     @Override
-    public void registerCallback(Callback callback) {
+    public void registerCallback(Duel1A2BModule.Callback callback) {
         if (this.proxyCallback != null)
             callback.onError(new CallbackException());
         this.proxyCallback = new Duel1A2BModuleImp.ProxyCallback(callback);
@@ -34,7 +35,7 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
     }
 
     @Override
-    public void unregisterCallBack(Callback callback) {
+    public void unregisterCallBack(Duel1A2BModule.Callback callback) {
         if (this.proxyCallback == null || this.proxyCallback.callback != callback)
             callback.onError(new CallbackException());
         eventBus.unregisterCallback(proxyCallback);
@@ -66,6 +67,14 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
 
         public ProxyCallback(Duel1A2BModule.Callback callback) {
             this.callback = callback;
+        }
+
+
+        @Override
+        @BindCallback(event = GAMESTARTED, status = RequestStatus.success)
+        public void onGameStarted() {
+            Log.d(TAG, "the game " + roomListModule.getCurrentGameRoom().getGameMode() + " started.");
+            callback.onGameStarted();
         }
 
         @Override
