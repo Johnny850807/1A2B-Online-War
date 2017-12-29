@@ -26,7 +26,7 @@ import static container.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
 import static container.Constants.Events.Games.Duel1A2B.SET_ANSWER;
 import static container.Constants.Events.Games.GAMEOVER;
 
-public class Duel1A2BModuleImp extends AbstractGameModule implements Due11A2BModule{
+public class Duel1A2BModuleImp extends AbstractGameModule implements Duel1A2BModule {
     private UserSigningModule signingModule;
     private RoomListModuleImp roomListModuleImp;
     private ProxyCallback proxyCallback;
@@ -73,10 +73,10 @@ public class Duel1A2BModuleImp extends AbstractGameModule implements Due11A2BMod
         client.broadcast(protocol);
     }
 
-    public class ProxyCallback implements Due11A2BModule.Callback{
-        private Due11A2BModule.Callback callback;
+    public class ProxyCallback implements Duel1A2BModule.Callback{
+        private Duel1A2BModule.Callback callback;
 
-        public ProxyCallback(Due11A2BModule.Callback callback) {
+        public ProxyCallback(Duel1A2BModule.Callback callback) {
             this.callback = callback;
         }
 

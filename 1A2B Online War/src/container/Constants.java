@@ -16,6 +16,7 @@ public final class Constants {
 		public final static class InRoom{
 			public final static String CLOSE_ROOM = "CloseRoom";
 			public final static String LEAVE_ROOM = "LeaveRoom";
+			public final static String BOOTED = "Booted";
 			public final static String CHANGE_STATUS = "ChangeStatus";
 			public final static String LAUNCH_GAME = "LaunchGame";
 		}
@@ -23,6 +24,9 @@ public final class Constants {
 			public final static String SEND_MSG = "SendChatMessage";
 		}
 		public final static class Games{
+			public final static String GAMESTARTED = "GameStarted";
+			public final static String GAMEINTERRUPTED = "GameInterruptd";
+			public final static String ENTERGAME = "EnterGame";
 			public final static String GAMEOVER = "GameOver";
 			
 			public final static class Duel1A2B{

@@ -10,6 +10,7 @@ import gamecore.model.ClientBinder;
 import gamecore.model.ClientPlayer;
 import gamecore.model.ClientStatus;
 import gamecore.model.RoomStatus;
+import gamecore.model.games.GameLifecycleListener;
 
 public interface GameCore extends ClientBinder, GameLifecycleListener{
 	void broadcastRoom(String roomId, Protocol response);

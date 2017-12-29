@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
+import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModuleImp;
 
@@ -43,7 +45,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
         this.activity = activity;
         this.gameRoom = gameRoom;
         this.poster = poster;
-        chatModule = new ChatModuleImp();  //TODO Wrong
+        chatModule = (ChatModule) CoreGameServer.getInstance().getModule(ModuleName.CHAT);
         inputMessageEdt = activity.findViewById(R.id.inputChattingTxt);
         chatWindowLst = activity.findViewById(R.id.chatwindowLst);
         sendMessageImgBtn = activity.findViewById(R.id.sendMessageBtn);

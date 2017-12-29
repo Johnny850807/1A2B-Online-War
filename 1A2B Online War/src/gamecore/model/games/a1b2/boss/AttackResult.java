@@ -1,38 +1,52 @@
 package gamecore.model.games.a1b2.boss;
 
 import gamecore.model.ClientPlayer;
+import gamecore.model.games.a1b2.GuessRecord;
 import gamecore.model.games.a1b2.GuessResult;
 
 public class AttackResult {
-	private ClientPlayer player;
-	private String guess;
-	private GuessResult result;
 	private int damage;
+	private GuessRecord guessRecord;
+	private AbstractSpirit attacker;
+	private AbstractSpirit attacked;
 	
-	public ClientPlayer getPlayer() {
-		return player;
+	public AttackResult(int damage, GuessRecord guessRecord, AbstractSpirit attacker, AbstractSpirit attacked) {
+		this.damage = damage;
+		this.guessRecord = guessRecord;
+		this.attacker = attacker;
+		this.attacked = attacked;
 	}
-	public void setPlayer(ClientPlayer player) {
-		this.player = player;
-	}
-	public String getGuess() {
-		return guess;
-	}
-	public void setGuess(String guess) {
-		this.guess = guess;
-	}
-	public GuessResult getResult() {
-		return result;
-	}
-	public void setResult(GuessResult result) {
-		this.result = result;
-	}
+	
 	public int getDamage() {
 		return damage;
 	}
 	public void setDamage(int damage) {
 		this.damage = damage;
 	}
+	public GuessRecord getGuessRecord() {
+		return guessRecord;
+	}
+	public void setGuessRecord(GuessRecord guessRecord) {
+		this.guessRecord = guessRecord;
+	}
+	public AbstractSpirit getAttacker() {
+		return attacker;
+	}
+	public void setAttacker(AbstractSpirit attacker) {
+		this.attacker = attacker;
+	}
+	public AbstractSpirit getAttacked() {
+		return attacked;
+	}
+	public void setAttacked(AbstractSpirit attacked) {
+		this.attacked = attacked;
+	}
 	
+	public int getA(){
+		return this.getGuessRecord().getA();
+	}
 	
+	public int getB(){
+		return this.getGuessRecord().getB();
+	}
 }

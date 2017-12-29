@@ -55,5 +55,7 @@
     <string name="dixit">Dixit戰</string>
     <string name="messageSendingFailed">訊息傳送錯誤</string>
     <string name="chatMessageError">錯誤:傳送訊息</string>
+    <string name="gameOver">遊戲結束</string>
+    <string name="pleaseInputGuess">請輸入答案</string>
 
 </resources>

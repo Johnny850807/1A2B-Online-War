@@ -1,26 +1,60 @@
 package gamecore.model.games.a1b2.boss;
 
-import java.util.List;
-import java.util.Random;
+import java.util.UUID;
 
-import gamecore.model.ClientPlayer;
+import container.base.MyLogger;
+import container.protocol.ProtocolFactory;
 
-public class BasicBoss extends Boss{
-	
+public class BasicBoss extends Monster{
+
+	public BasicBoss(MyLogger log, ProtocolFactory protocolFactory) {
+		super(UUID.randomUUID().toString(), "Boss", log, protocolFactory);
+	}
+
 	@Override
-	protected void init() {
+	public void init() {
 		
 	}
 	
 	@Override
-	protected void damage(ClientPlayer player, String guess) {
-
+	public void setAnswer(String answer) {
+		
 	}
 
 	@Override
-	protected void action(List<PlayerBlock> playerBlocks) {
-		int randomTarget = new Random().nextInt(playerBlocks.size());
-		PlayerBlock target = playerBlocks.get(randomTarget);
+	public void onHisTurn() {
 		
 	}
+
+
+	@Override
+	public Type getType() {
+		return Type.MONSTER;
+	}
+
+	@Override
+	public int getMp() {
+		return 1000;
+	}
+
+	@Override
+	public int getMaxHp() {
+		return 3000;
+	}
+
+	@Override
+	protected void onAnswerGuessed4A(AttackResult attackResult) {
+		
+	}
+
+	@Override
+	protected void onDie(AttackResult attackResult) {
+		
+	}
+
+	@Override
+	protected void onSurvivedFromAttack(AttackResult attackResult) {
+		
+	}
+
 }

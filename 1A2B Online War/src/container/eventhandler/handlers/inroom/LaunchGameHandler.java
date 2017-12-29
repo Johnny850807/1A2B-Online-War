@@ -7,7 +7,6 @@ import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
 import gamecore.model.ClientStatus;
-import gamecore.model.GameMode;
 
 /**
  * @author Johnny850807

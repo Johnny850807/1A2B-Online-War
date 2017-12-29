@@ -10,10 +10,10 @@ import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
 
 
-public interface Due11A2BModule extends GameModule {
+public interface Duel1A2BModule extends GameModule {
 
-    void registerCallback(Due11A2BModule.Callback callback);
-    void unregisterCallBack(Due11A2BModule.Callback callback);
+    void registerCallback(Duel1A2BModule.Callback callback);
+    void unregisterCallBack(Duel1A2BModule.Callback callback);
 
     /**
      * set the answer.
