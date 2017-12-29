@@ -12,4 +12,10 @@ public class MyApplication extends Application{
         super.onCreate();
         CoreGameServer.getInstance().startEngine(getApplicationContext());
     }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        CoreGameServer.getInstance().shutdownConnection();
+    }
 }
