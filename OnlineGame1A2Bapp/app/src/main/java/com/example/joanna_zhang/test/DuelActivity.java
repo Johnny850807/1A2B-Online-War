@@ -2,6 +2,7 @@ package com.example.joanna_zhang.test;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -82,7 +83,8 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         CoreGameServer server = CoreGameServer.getInstance();
         duel1A2BModule = (Duel1A2BModule) server.getModule(ModuleName.GAME1A2BDUEL);
         currentPlayer = ((UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING)).getCurrentPlayer();
-        currentGameRoom = ((RoomListModule) CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST)).getCurrentGameRoom();
+        currentGameRoom = (GameRoom) getIntent().getSerializableExtra("game room");
+        //currentGameRoom = ((RoomListModule) CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST)).getCurrentGameRoom();
         p1GuessResultAdapter = new GuessResultAdapter();
         p2GuessResultAdapter = new GuessResultAdapter();
     }
