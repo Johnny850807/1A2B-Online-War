@@ -15,6 +15,8 @@ public interface Duel1A2BModule extends GameModule {
     void registerCallback(Duel1A2BModule.Callback callback);
     void unregisterCallBack(Duel1A2BModule.Callback callback);
 
+    void enterGame();
+
     /**
      * set the answer.
      */

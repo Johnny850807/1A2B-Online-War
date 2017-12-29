@@ -4,13 +4,8 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules.games;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
-import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
-import com.ood.clean.waterball.a1a2bsdk.core.base.AbstractGameModule;
 import com.ood.clean.waterball.a1a2bsdk.core.base.BindCallback;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.CallbackException;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModuleImp;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.List;
 
@@ -26,16 +21,9 @@ import static container.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
 import static container.Constants.Events.Games.Duel1A2B.SET_ANSWER;
 import static container.Constants.Events.Games.GAMEOVER;
 
-public class Duel1A2BModuleImp extends AbstractGameModule implements Duel1A2BModule {
-    private UserSigningModule signingModule;
-    private RoomListModuleImp roomListModuleImp;
+public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1A2BModule {
     private ProxyCallback proxyCallback;
     private boolean answerCommitted;
-
-    public Duel1A2BModuleImp(){
-        signingModule = (UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING);
-        roomListModuleImp = (RoomListModuleImp) CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST);
-    }
 
     @Override
     public void registerCallback(Callback callback) {
@@ -60,7 +48,7 @@ public class Duel1A2BModuleImp extends AbstractGameModule implements Duel1A2BMod
             answerCommitted = true;
             Protocol protocol = protocolFactory.createProtocol(SET_ANSWER,
                     RequestStatus.request.toString(), gson.toJson(new ContentModel(
-                            signingModule.getCurrentPlayer().getId(), roomListModuleImp.getCurrentGameRoom().getId(), answer)));
+                            signingModule.getCurrentPlayer().getId(), roomListModule.getCurrentGameRoom().getId(), answer)));
             client.broadcast(protocol);
         }
     }
@@ -69,7 +57,7 @@ public class Duel1A2BModuleImp extends AbstractGameModule implements Duel1A2BMod
     public void guess(String guess) {
         Protocol protocol = protocolFactory.createProtocol(GUESS,
                 RequestStatus.request.toString(), gson.toJson(new ContentModel(
-                        signingModule.getCurrentPlayer().getId(), roomListModuleImp.getCurrentGameRoom().getId(), guess)));
+                        signingModule.getCurrentPlayer().getId(), roomListModule.getCurrentGameRoom().getId(), guess)));
         client.broadcast(protocol);
     }
 
