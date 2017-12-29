@@ -180,7 +180,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
             for (PlayerStatus playerStatus : gameRoom.getPlayerStatus())
                 if (playerStatus.getPlayer().equals(currentPlayer)) {
                     inRoomModule.changeStatus(new ChangeStatusModel(currentPlayer.getId(), gameRoom.getId(), !playerStatus.isReady()));
-                    int statusText = playerStatus.isReady() ? R.string.unReady : R.string.ready;
+                    int statusText = !playerStatus.isReady() ? R.string.unReady : R.string.ready;
                     gameStartBtn.setText(statusText);
                 }
             roomPlayerListAdapter.notifyDataSetChanged();

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">1A2B</string>
     <string name="login">登入</string>
-    <string name="autoLogin">自動登入</string>
+    <string name="recordName">記住名稱</string>
     <string name="inputName">輸入名稱</string>
     <string name="serverStatus" formatted="false">伺服器狀態：房間%d間、在線%d人</string>
     <string name="signInFailedMessage">登入失敗</string>
