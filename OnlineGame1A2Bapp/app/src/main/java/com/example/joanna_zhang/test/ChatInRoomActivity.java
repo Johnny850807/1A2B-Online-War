@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -227,16 +226,16 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
             view = LayoutInflater.from(ChatInRoomActivity.this).inflate(R.layout.chat_room_player_list_item, viewGroup, false);
 
             TextView playerName = view.findViewById(R.id.playerNameTxt);
-            ImageView playerReadyOrNot = view.findViewById(R.id.playerReadyOrNotImg);
+            View playerReadyOrNot = view.findViewById(R.id.playerReadyOrNotImg);
 
             if (position == 0) {
                 playerName.setText(roomHost.getName());
                 playerName.setTextColor(Color.BLUE);
-                playerReadyOrNot.setImageResource(R.drawable.ready);
+                playerReadyOrNot.setBackgroundResource(R.drawable.green_circle);
             } else {
                 playerName.setText(gameRoom.getPlayerStatus().get(position-1).getPlayer().getName());
-                int imageId = gameRoom.getPlayerStatus().get(position-1).isReady() ? R.drawable.ready : R.drawable.unready;
-                playerReadyOrNot.setImageResource(imageId);
+                int imageId = gameRoom.getPlayerStatus().get(position-1).isReady() ? R.drawable.green_circle : R.drawable.red_circle;
+                playerReadyOrNot.setBackgroundResource(imageId);
             }
             return view;
         }
