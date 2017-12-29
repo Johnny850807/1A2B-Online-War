@@ -53,12 +53,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         findViews();
         setUpChatWindow();
         setUpInputNumberWindowView();
-        String p2Name = currentGameRoom.getPlayers().get(0).equals(currentPlayer)?
-                currentGameRoom.getPlayers().get(1).getName() : currentGameRoom.getPlayers().get(0).getName();
-        p1NameTxt.setText(currentPlayer.getName());
-        p2NameTxt.setText(p2Name);
-        p1ResultListView.setAdapter(p1GuessResultAdapter);
-        p2ResultListView.setAdapter(p2GuessResultAdapter);
+        setUpAdapters();
     }
 
     @Override
@@ -88,8 +83,8 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         duel1A2BModule = (Duel1A2BModule) server.getModule(ModuleName.GAME1A2BDUEL);
         currentPlayer = ((UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING)).getCurrentPlayer();
         currentGameRoom = ((RoomListModule) CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST)).getCurrentGameRoom();
-        p1GuessResultAdapter = new GuessResultAdapter(p1ResultList);
-        p2GuessResultAdapter = new GuessResultAdapter(p2ResultList);
+        p1GuessResultAdapter = new GuessResultAdapter();
+        p2GuessResultAdapter = new GuessResultAdapter();
     }
 
     private void findViews() {
@@ -100,6 +95,15 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         p2AnswerTxt = (TextView) findViewById(R.id.p2AnswerTxt);
         p1ResultListView = (ListView) findViewById(R.id.p1ResultLst);
         p2ResultListView = (ListView) findViewById(R.id.p2ResultLst);
+        String p2Name = currentGameRoom.getPlayers().get(0).equals(currentPlayer)?
+                currentGameRoom.getPlayers().get(1).getName() : currentGameRoom.getPlayers().get(0).getName();
+        p1NameTxt.setText(currentPlayer.getName());
+        p2NameTxt.setText(p2Name);
+    }
+
+    private void setUpAdapters() {
+        p1ResultListView.setAdapter(p1GuessResultAdapter);
+        p2ResultListView.setAdapter(p2GuessResultAdapter);
     }
 
     private void setupAnswer() {
@@ -133,6 +137,8 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     public void updateResultList() {
+        p1GuessResultAdapter.setResultList(p1ResultList);
+        p2GuessResultAdapter.setResultList(p2ResultList);
         p1GuessResultAdapter.notifyDataSetChanged();
         p2GuessResultAdapter.notifyDataSetChanged();
         p1ResultListView.setSelection(p1ResultListView.getCount() - 1);
@@ -220,7 +226,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
         private List<GuessRecord> resultList;
 
-        GuessResultAdapter(List<GuessRecord> resultList) {
+        public void setResultList(List<GuessRecord> resultList) {
             this.resultList = resultList;
         }
 
