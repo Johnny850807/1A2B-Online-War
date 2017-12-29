@@ -1,12 +1,17 @@
 package container.eventhandler.handlers;
 
+import java.util.Date;
+
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import container.base.Client;
 import container.eventhandler.GameEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
+import utils.DateDeserializer;
+import utils.MyGson;
 
 /**
  * Abstract handler helping subclasses converting the input JSON into the object.
@@ -15,7 +20,12 @@ import gamecore.GameCore;
  * @param <Out> the output source type.
  */
 public abstract class GsonEventHandler<In, Out> extends GameEventHandler<In, Out>{
-	protected static Gson gson = new Gson();
+	protected static Gson gson;
+	
+	static{
+		gson = MyGson.getGson();
+	}
+	
 	public GsonEventHandler(Client client, Protocol request, GameCore gameCore, ProtocolFactory protocolFactory) {
 		super(client, request, gameCore, protocolFactory);
 	}

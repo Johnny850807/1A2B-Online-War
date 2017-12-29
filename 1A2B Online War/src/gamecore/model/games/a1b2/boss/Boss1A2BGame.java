@@ -15,6 +15,7 @@ import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.GuessResult;
 import gamecore.model.games.a1b2.NumberNotValidException;
 import gamecore.model.games.a1b2.ProcessInvalidException;
+import utils.ForServer;
 
 /**
  * @author Waterball
@@ -37,6 +38,7 @@ public class Boss1A2BGame extends Game{
 		boss.init();
 	}
 	
+	@ForServer
 	public void attack(String playerId, String guess) throws NumberNotValidException{
 		A1B2NumberValidator.validateNumber(guess);
 		validateAttackingOperation(playerId);
@@ -63,7 +65,7 @@ public class Boss1A2BGame extends Game{
 		return whosTurn + 1 == clientPlayers.size();
 	}
 	
-	public void broadcastTurn(){
+	private void broadcastTurn(){
 		ClientPlayer who = clientPlayers.get(whosTurn);
 		Protocol protocol = protocolFactory.createProtocol(YOUR_TURN, RequestStatus.success.toString(), null);
 		who.broadcast(protocol);

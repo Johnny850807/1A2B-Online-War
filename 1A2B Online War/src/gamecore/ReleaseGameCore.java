@@ -26,6 +26,8 @@ import gamecore.model.ClientStatus;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
 import gamecore.model.RoomStatus;
+import gamecore.model.games.Game;
+import gamecore.model.games.a1b2.GameOverModel;
 import gamefactory.GameFactory;
 
 /**
@@ -47,8 +49,10 @@ public class ReleaseGameCore implements GameCore{
 	@Override
 	public void broadcastRoom(String roomId, Protocol response) {
 		GameRoom room = getGameRoom(roomId);
-		log.trace("Broadcasting room: " + room.getName() + ", event: " + response.getEvent());
-		room.getPlayers().parallelStream().forEach(p -> broadcastClientPlayer(p.getId(), response));
+		synchronized (room) {
+			log.trace("Broadcasting room: " + room.getName() + ", event: " + response.getEvent());
+			room.getPlayers().parallelStream().forEach(p -> broadcastClientPlayer(p.getId(), response));
+		}
 	}
 
 	@Override
@@ -153,22 +157,24 @@ public class ReleaseGameCore implements GameCore{
 	 */
 	private void handleThePlayerRemovedFromGameRoom(Player player){
 		log.trace("Handling the player removed.");
-		for (GameRoom gameRoom : getGameRooms())
-			if (gameRoom.containsPlayer(player))
-			{
-				if (gameRoom.getHost().equals(player))
+		getGameRooms().parallelStream().forEach(gameRoom -> {
+			synchronized (gameRoom) {
+				if (roomContainer.containsKey(gameRoom.getId()) && gameRoom.containsPlayer(player))
 				{
-					log.trace("The player is the host from the room: " + gameRoom.getName() + ", closing his room.");
-					closeGameRoom(gameRoom);
+					if (gameRoom.getHost().equals(player))
+					{
+						log.trace("The player is the host from the room: " + gameRoom.getName() + ", closing his room.");
+						closeGameRoom(gameRoom);
+					}
+					else
+					{
+						log.trace("The player is the player from the room: " + gameRoom.getName() + ", remove him from the room.");
+						removePlayerFromRoomAndBroadcast(player, gameRoom);
+					}
+					log.trace("The player is inside the room, remove successfully.");
 				}
-				else
-				{
-					log.trace("The player is the player from the room: " + gameRoom.getName() + ", remove him from the room.");
-					removePlayerFromRoomAndBroadcast(player, gameRoom);
-				}
-				log.trace("The player is inside the room, remove successfully.");
 			}
-		log.trace("The player is not inside any room, remove successfully.");
+		});
 	}
 
 	@Override
@@ -178,6 +184,28 @@ public class ReleaseGameCore implements GameCore{
 				RequestStatus.success.toString(), gson.toJson(new PlayerRoomModel(player, gameRoom)));
 		broadcastClientPlayers(ClientStatus.signedIn, protocol);
 		broadcastRoom(gameRoom.getId(), protocol);
+	}
+
+	@Override
+	public void onGameStarted(Game game) {
+		
+	}
+
+	@Override
+	public void onGameInterrupted(Game game, ClientPlayer noResponsePlayer) {
+		
+	}
+
+	@Override
+	public void onGameOver(Game game, GameOverModel gameOverModel) {
+		GameRoom room = getGameRoom(game.getRoomId());
+		synchronized (room) {
+			if (roomContainer.containsKey(room.getId()))
+			{
+				log.trace("Game over, the room " + room.getName() + " closed.");
+				roomContainer.remove(room.getId());
+			}
+		}
 	}
 
 }

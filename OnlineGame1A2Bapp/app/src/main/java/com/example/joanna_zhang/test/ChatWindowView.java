@@ -11,12 +11,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
-import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModuleImp;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModuleImp;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,6 +23,8 @@ import java.util.Locale;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
+
+
 
 public class ChatWindowView implements View.OnClickListener, ChatModule.Callback{
 
@@ -45,7 +43,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
         this.activity = activity;
         this.gameRoom = gameRoom;
         this.poster = poster;
-        chatModule = new ChatModuleImp();
+        chatModule = new ChatModuleImp();  //TODO Wrong
         inputMessageEdt = activity.findViewById(R.id.inputChattingTxt);
         chatWindowLst = activity.findViewById(R.id.chatwindowLst);
         sendMessageImgBtn = activity.findViewById(R.id.sendMessageBtn);
@@ -63,7 +61,6 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
 
     private void update(ChatMessage chatMessage) {
         listener.onChatMessageUpdate(chatMessage);
-
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
         chatWindowLst.setSelection(chatWindowLst.getCount() - 1);
@@ -81,13 +78,6 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
             sendMessage(poster, content);
             inputMessageEdt.setText("");
         }
-    }
-
-    // TODO don't do this such thing over and over time whenever you need the player, receive the player reference as a property from the constructor instead.
-    private Player getCurrentPlayer() {
-        CoreGameServer server = CoreGameServer.getInstance();
-        UserSigningModule signingModule = (UserSigningModuleImp) server.getModule(ModuleName.SIGNING);
-        return signingModule.getCurrentPlayer();
     }
 
     @Override

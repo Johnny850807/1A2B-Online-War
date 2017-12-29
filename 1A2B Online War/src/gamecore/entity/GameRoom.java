@@ -9,6 +9,7 @@ import com.google.gson.annotations.Expose;
 import container.ApacheLoggerAdapter;
 import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
+import gamecore.GameLifecycleListener;
 import gamecore.model.ClientBinder;
 import gamecore.model.ClientPlayer;
 import gamecore.model.ClientStatus;
@@ -118,25 +119,27 @@ public class GameRoom extends Entity{
 	}
 
 	public void addPlayer(Player player){
-		player.setUserStatus(ClientStatus.inRoom);
-		PlayerStatus playerStatus = new PlayerStatus(player);
-		if (host.equals(player) || playerStatusList.contains(playerStatus))
+		synchronized (this) {
+			player.setUserStatus(ClientStatus.inRoom);
+			PlayerStatus playerStatus = new PlayerStatus(player);
+			validateNewPlayer(playerStatus);
+			playerStatusList.add(playerStatus);
+		}
+	}
+	
+	private void validateNewPlayer(PlayerStatus playerStatus){
+		if (host.equals(playerStatus.getPlayer()) || playerStatusList.contains(playerStatus))
 			throw new IllegalStateException("Duplicated player added into the status list.");
-		if (playerStatusList.size() > getMaxPlayerAmount())
+		if (getPlayerAmount() == getMaxPlayerAmount())
 			throw new IllegalStateException("The Player amount is out of the maximum amount.");
-		playerStatusList.add(playerStatus);
 	}
 	
 	public void removePlayer(Player player){
-		if (player.equals(host))
-		{
-			host = null;
-			log.trace("The host is removed.");
-		}
-		else
-		{
-			log.trace("The player " + player.getName() + " is removed from the status list." );
-			playerStatusList.remove(getPlayerStatusOfPlayer(player));
+		synchronized (this) {
+			if (player.equals(host))
+				host = null;
+			else
+				playerStatusList.remove(getPlayerStatusOfPlayer(player));
 		}
 	}
 	
@@ -186,7 +189,7 @@ public class GameRoom extends Entity{
 	 * @param clientBinder binding interface which allows the game access the client player without coupling to the game core.
 	 */
 	@ForServer
-	public void launchGame(ClientBinder clientBinder){
+	public void launchGame(ClientBinder clientBinder, GameLifecycleListener listener){
 		log.trace("Room: " + id + ", launcing the " + gameMode.toString() + " game.");
 		validatePlayerAmount();
 		
@@ -198,7 +201,7 @@ public class GameRoom extends Entity{
 		log.trace("Host prepared: " + hostClient.getPlayerName());
 		log.trace("Players prepared: " + ClientPlayersHelper.toString(playerClients));
 		
-		initGameAndStart(hostClient, playerClients);
+		initGameAndStart(hostClient, playerClients, listener);
 	}
 	
 	private void validatePlayerAmount(){
@@ -209,7 +212,7 @@ public class GameRoom extends Entity{
 			throw new IllegalStateException("The Player amount is out of the limit. Expect: " + getMaxPlayerAmount() + ", actual: " + playerAmount);
 	}
 	
-	private void initGameAndStart(ClientPlayer hostClient, List<ClientPlayer> playerClients){
+	private void initGameAndStart(ClientPlayer hostClient, List<ClientPlayer> playerClients, GameLifecycleListener listener){
 		switch (getGameMode()) {
 		case DUEL1A2B:
 			game = new Duel1A2BGame(protocolFactory, id, hostClient, playerClients.get(0));
@@ -229,6 +232,7 @@ public class GameRoom extends Entity{
 			break;
 		}
 		
+		this.game.setGameLifecycleListener(listener);
 		this.game.startGame();
 		updateRoomAndPlayerStatusInGame(hostClient, playerClients);
 	}

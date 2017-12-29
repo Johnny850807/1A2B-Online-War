@@ -2,6 +2,7 @@ package gamecore.model.games.a1b2.boss;
 
 import java.io.Serializable;
 
+import container.protocol.Protocol;
 import gamecore.model.ClientPlayer;
 
 /**
@@ -32,5 +33,8 @@ public class PlayerBlock implements Serializable{
 		this.answer = answer;
 	}
 	
+	public void broadcast(Protocol protocol){
+		player.broadcast(protocol);
+	}
 	
 }

@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.joanna_zhang.test.Unit.ConvertGameModeToStringHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
@@ -52,6 +53,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private ListView roomListView;
     private Spinner roomModeSpn;
     private RoomListModule roomListModule;
+    private UserSigningModule signingModule;
     private BaseAdapter adapter = new MyAdapter();
     private GameMode selectedMode = gameModes[0];
 
@@ -88,12 +90,13 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        signingModule.signOut();
         //TODO Sign out !!! important !!!
     }
 
     private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
-        UserSigningModule signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
+        signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
         roomListModule = (RoomListModule) server.getModule(ModuleName.ROOMLIST);
         player = signingModule.getCurrentPlayer();
         Log.d(TAG, "Signed In Player: " + player);
@@ -240,7 +243,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
             GameRoom gameroom = roomListOfQuery.get(position);
 
             String modeName = "1A2B ";
-            modeName += (gameroom.getGameMode() == GameMode.DUEL1A2B) ? getString(R.string.duel) : getString(R.string.fight);  //todo not only two mode
+            modeName += ConvertGameModeToStringHelper.getGameModeText(new AppCompatActivity(), gameroom.getGameMode());  //todo not only two mode
 
             viewHolder.roomNameTxt.setText(gameroom.getName());
             viewHolder.roomModeTxt.setText(modeName);

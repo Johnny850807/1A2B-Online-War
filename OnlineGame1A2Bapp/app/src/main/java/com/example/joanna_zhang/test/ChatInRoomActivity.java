@@ -1,12 +1,16 @@
 package com.example.joanna_zhang.test;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.joanna_zhang.test.Unit.ConvertGameModeToStringHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom.InRoomModule;
@@ -29,14 +34,24 @@ import gamecore.model.PlayerRoomModel;
 import gamecore.model.PlayerStatus;
 
 
-public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InRoomModule.Callback {
+/**
+ * TODO:
+ * (1) the player sets ready
+ * (2) the host starts the game and 'make sure you have ensured the player amount is suitable to the game', block the action if not.
+ * (3) the host can boot the player by answering yes to the dialog which contains options whether to boot the player
+ * created and showed by 'long-clicking' the item contains the player status you want to boot.
+ * (4) show the toast if any player left or joined.
+ * (5) replace all 'if game mode == DUEL then ... else Group ...' with the 'switch-case logic helping static method'.
+ * (6) clean your code and organize the methods (put them in the readable order),
+ * don't let any garbage be here anymore, such as some 'gray-text' attributes, some 'few-lines' methods.
+ */
+public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InRoomModule.Callback, AdapterView.OnItemLongClickListener {
 
     private GameRoom currentGameRoom;
     private Player currentPlayer;
     private ChatWindowView chatWindowView;
     private Button gameStartBtn;
     private TextView gameModeTxt;
-    private TextView roomHostNameTxt;
     private ListView chatRoomPlayerListView;
     private GameRoom gameRoom;
     private GameMode gameMode;
@@ -49,7 +64,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_in_room);
         init();
-
         setUpPlayerListView();
     }
 
@@ -69,6 +83,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     protected void onStop() {
         super.onStop();
         chatWindowView.onStop();
+        inRoomModule.unregisterCallBack(this);
     }
 
     @Override
@@ -76,7 +91,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         super.onDestroy();
         if (currentPlayer.equals(roomHost))
             inRoomModule.closeRoom();
-        inRoomModule.unregisterCallBack(this);
+
     }
 
     private void init() {
@@ -95,22 +110,18 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     private void setUpPlayerListView() {
         chatRoomPlayerListView.setAdapter(roomPlayerListAdapter);
+        chatRoomPlayerListView.setOnItemLongClickListener(this);
     }
 
     private void setUpThisRoomInfo() {
         gameRoom = (GameRoom) getIntent().getSerializableExtra("game room");
         gameMode = gameRoom.getGameMode();
         roomHost = gameRoom.getHost();
-        setUpRoomHost(roomHost);
-    }
-
-    private void setUpRoomHost(Player roomHost) {
-        String str = roomHostNameTxt.getText().toString();
-        roomHostNameTxt.setText(str + roomHost.getName());
     }
 
     private void setUpGameModeTxt() {
-        String gameModeName = gameRoom.getGameMode().toString().contains("GROUP") ? getString(R.string.fight) : getString(R.string.duel);
+        //TODO
+        String gameModeName = ConvertGameModeToStringHelper.getGameModeText(this, gameMode);
         gameModeTxt.setText(gameModeName);
     }
 
@@ -122,7 +133,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     private void findViews() {
         gameModeTxt = (TextView) findViewById(R.id.roomModeNameTxt);
-        roomHostNameTxt = (TextView) findViewById(R.id.roomHostNameTxt);
         gameStartBtn = (Button) findViewById(R.id.gameStartBtn);
         chatRoomPlayerListView = (ListView) findViewById(R.id.chatRoomPlayersLst);
     }
@@ -134,16 +144,16 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     @Override
     public void onMessageSendingFailed(ChatMessage chatMessage) {
-        Toast.makeText(this, "failed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.messageSendingFailed, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onChatMessageError(Throwable err) {
-        Toast.makeText(this, err.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.chatMessageError, Toast.LENGTH_SHORT).show();
     }
 
     public void gameStartButtonOnClick(View view) {
-        if (currentPlayer.equals(roomHost))
+        if (currentPlayer.equals(roomHost) && gameRoom.getPlayers().size() >= 2)
             inRoomModule.launchGame();
         else {
             for (PlayerStatus playerStatus : gameRoom.getPlayerStatus())
@@ -152,6 +162,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                     int statusText = playerStatus.isReady() ? R.string.unReady : R.string.ready;
                     gameStartBtn.setText(statusText);
                 }
+            roomPlayerListAdapter.notifyDataSetChanged();
         }
     }
 
@@ -159,6 +170,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     public void onPlayerJoined(PlayerRoomModel model) {
         gameRoom.addPlayer(model.getPlayer());
         roomPlayerListAdapter.notifyDataSetChanged();
+        Toast.makeText(this, model.getPlayer() + getString(R.string.isJoined), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -173,15 +185,18 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     public void onPlayerLeft(PlayerRoomModel model) {
         gameRoom.removePlayer(model.getPlayer());
         if (model.getPlayer().equals(roomHost)) {
-            Toast.makeText(this, R.string.roomHostLeft, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.theHostLeftRoomClosed, Toast.LENGTH_SHORT).show();
             finish();
         }
+        Toast.makeText(this, model.getPlayer() + getString(R.string.isLeft), Toast.LENGTH_SHORT).show();
         roomPlayerListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onGameLaunchedSuccessfully(GameRoom gameRoom) {
         Toast.makeText(this, R.string.gameStart, Toast.LENGTH_SHORT).show();
+
+        //TODO remove this such things
         Class inclass = gameRoom.getGameMode() == GameMode.DUEL1A2B ? DuelActivity.class : GroupFightActivity.class;
         Intent intent = new Intent(this, inclass);
         intent.putExtra("game room", gameRoom);
@@ -196,11 +211,34 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public void onYouAreBooted() {
         Toast.makeText(this, R.string.youAreBooted, Toast.LENGTH_SHORT).show();
+        this.finish();
+    }
+
+    @Override
+    public void onRoomClosed() {
+        Toast.makeText(this, R.string.theHostLeftRoomClosed, Toast.LENGTH_SHORT).show();
+        this.finish();
     }
 
     @Override
     public void onError(@NonNull Throwable err) {
 
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        new AlertDialog.Builder(this)
+                .setTitle("剔除玩家")
+                .setMessage("確定要剔除此玩家嗎?")
+                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        inRoomModule.bootPlayer(gameRoom.getPlayerStatus().get(position).getPlayer());
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .show();
+        return true;
     }
 
     private class RoomPlayerListAdapter extends BaseAdapter {
@@ -229,10 +267,11 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
             if (position == 0) {
                 playerName.setText(roomHost.getName());
+                playerName.setTextColor(Color.BLUE);
                 playerReadyOrNot.setImageResource(R.drawable.ready);
             } else {
-                playerName.setText(gameRoom.getPlayerStatus().get(position-1).getPlayer().getName());
-                int imageId = gameRoom.getPlayerStatus().get(position-1).isReady() ? R.drawable.ready : R.drawable.unready;
+                playerName.setText(gameRoom.getPlayerStatus().get(position - 1).getPlayer().getName());
+                int imageId = gameRoom.getPlayerStatus().get(position - 1).isReady() ? R.drawable.ready : R.drawable.unready;
                 playerReadyOrNot.setImageResource(imageId);
             }
             return view;

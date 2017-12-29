@@ -130,6 +130,13 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
         }
 
         @Override
+        @BindCallback(event = CLOSE_ROOM, status = RequestStatus.success)
+        public void onRoomClosed() {
+            Log.d(TAG, "Room closed.");
+            callback.onRoomClosed();
+        }
+
+        @Override
         @BindCallback(event = LAUNCH_GAME, status = RequestStatus.success)
         public void onGameLaunchedSuccessfully(GameRoom gameRoom) {
             if (!gameRoom.equals(roomListModule.getCurrentGameRoom()))

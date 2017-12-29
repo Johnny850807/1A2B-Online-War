@@ -48,6 +48,12 @@
     <string name="theRoomIsFull">該房間已滿囉</string>
     <string name="unReady">取消準備</string>
     <string name="gameLaunchFailed">開始遊戲失敗!!</string>
-    <string name="roomHostLeft">房主已離開,將關閉房間</string>
+    <string name="theHostLeftRoomClosed">房主已離開, 將關閉房間</string>
+    <string name="isLeft">已離開!</string>
+    <string name="isJoined">加入房間!</string>
+    <string name="boss">Boss戰</string>
+    <string name="dixit">Dixit戰</string>
+    <string name="messageSendingFailed">訊息傳送錯誤</string>
+    <string name="chatMessageError">錯誤:傳送訊息</string>
 
 </resources>

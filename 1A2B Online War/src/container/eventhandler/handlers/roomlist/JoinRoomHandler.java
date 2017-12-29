@@ -35,10 +35,11 @@ public class JoinRoomHandler extends GsonEventHandler<PlayerRoomIdModel, PlayerR
 			ClientPlayer clientPlayer = gameCore().getClientPlayer(data.getPlayerId());
 			room.addPlayer(clientPlayer.getPlayer());
 			return success(new PlayerRoomModel(clientPlayer.getPlayer(), room));
-		}catch (Exception e) {
+		}catch (IllegalStateException e) {
+			return error(205, e);
+		} catch (Exception e) {
 			return error(404, e);
 		}
-		
 	}
 
 	@Override

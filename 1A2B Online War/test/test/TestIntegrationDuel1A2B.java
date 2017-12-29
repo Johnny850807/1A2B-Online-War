@@ -19,6 +19,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
@@ -55,6 +56,8 @@ import gamecore.model.games.a1b2.GameOverModel;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
 import mock.MockClient;
+import utils.DateDeserializer;
+import utils.MyGson;
 import utils.RuntimeTypeAdapterFactory;
 
 public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListener{
@@ -64,7 +67,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	protected ProtocolFactory protocolFactory = factory.getProtocolFactory();
 	protected GameEventHandlerFactory eventHandlerFactory = factory.getGameEventHandlerFactory();
 	protected MockClient clientHost;
-	protected Gson gson = new Gson();
+	protected Gson gson = MyGson.getGson();
 	protected Player host = new Player("Host");
 	protected Player player = new Player("Player");
 	protected MockClient hostClient = new MockClient(); 
@@ -80,17 +83,12 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	
 	@Before
 	public void setup(){
-		RuntimeTypeAdapterFactory<Game> runtimeTypeAdapterFactory = RuntimeTypeAdapterFactory
-			    .of(Game.class, "gameMode")
-			    .registerSubtype(Duel1A2BGame.class, "DUEL1A2B");
-
-		gson = new GsonBuilder()
-					.registerTypeAdapterFactory(runtimeTypeAdapterFactory)
-					.create();
+		
 	}
 	
 	@Test
 	public void test(){
+		long before = System.currentTimeMillis();
 		testSignIn();
 		testCreateRoomAndJoin();
 		testChatting();
@@ -98,6 +96,8 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		//testPlayerLeft();
 		testHostSignOut();  //select one in host sign out or close room
 		//testCloseRoom();
+		long after = System.currentTimeMillis();
+		System.out.println("Time cost: " + (after - before) + "ms");
 	}
 	
 	public void testSignIn(){
@@ -209,7 +209,6 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	}
 	
 	public void testHostSignOut(){
-		assertEquals(1, gamecore.getGameRooms().size());
 		createHandler(hostClient, protocolFactory.createProtocol(SIGNOUT, REQUEST, 
 				gson.toJson(host))).handle();
 		assertTrue(host == null);
@@ -227,6 +226,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	
 	
 	protected EventHandler createHandler(Client client, Protocol protocol){
+		System.out.println("Sending : " + protocol);
 		EventHandler handler = eventHandlerFactory.createGameEventHandler(client, protocol);
 		handler.setOnRespondingListener(this);
 		return handler;

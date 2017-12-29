@@ -68,5 +68,10 @@ public interface InRoomModule extends GameModule{
          * when the host kick you out of the room!
          */
         public void onYouAreBooted();
+
+        /**
+         * when the room got closed.
+         */
+        public void onRoomClosed();
     }
 }
