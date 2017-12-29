@@ -1,4 +1,4 @@
-package com.example.joanna_zhang.test.Unit;
+package com.example.joanna_zhang.test.Utils;
 
 import android.content.Context;
 
@@ -6,7 +6,7 @@ import com.example.joanna_zhang.test.R;
 
 import gamecore.model.GameMode;
 
-public class ConvertGameHelper {
+public class GameModeHelper {
 
     public static String getGameModeText(Context context, GameMode gameMode){
         String gameModeText = null;
@@ -25,6 +25,12 @@ public class ConvertGameHelper {
                 break;
         }
         return  gameModeText;
+    }
+
+    public static Class getGameModeActivity(GameMode gameMode){
+        Class activity = null;
+
+        return  activity;
     }
 
 }

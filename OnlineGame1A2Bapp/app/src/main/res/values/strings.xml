@@ -60,5 +60,6 @@
     <string name="errorHappened">發生錯誤</string>
     <string name="bootPlayer">剔除玩家</string>
     <string name="sureAboutBootThisPlayer">確定要剔除此玩家嗎?</string>
+    <string name="modeName">1A2B</string>
 
 </resources>

@@ -7,17 +7,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.joanna_zhang.test.Unit.ConvertGameHelper;
+import com.example.joanna_zhang.test.Utils.GameModeHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom.InRoomModule;
@@ -86,6 +88,28 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            sureAboutComeBackRoomList();
+        }
+        return false;
+    }
+
+    private void sureAboutComeBackRoomList() {
+        new AlertDialog.Builder(this)
+                .setTitle("返回遊戲大廳")
+                .setMessage("確定要返回遊戲大廳?")
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (currentPlayer.equals(roomHost))
@@ -119,7 +143,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void setUpGameModeTxt() {
-        String gameModeName = ConvertGameHelper.getGameModeText(this, gameMode);
+        String gameModeName = GameModeHelper.getGameModeText(this, gameMode);
         gameModeTxt.setText(gameModeName);
     }
 
@@ -225,17 +249,36 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.bootPlayer)
-                .setMessage(R.string.sureAboutBootThisPlayer)
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        inRoomModule.bootPlayer(gameRoom.getPlayerStatus().get(position).getPlayer());
-                    }
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("請選擇欲剔除玩家");
+
+        final ArrayAdapter<PlayerStatus> players = new ArrayAdapter<PlayerStatus>(, R.layout.chat_room_player_list_item);
+            for (PlayerStatus player : gameRoom.getPlayerStatus())
+                players.add(player);
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setAdapter(players, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int position) {
+                PlayerStatus player = players.getItem(position);
+//                new AlertDialog.Builder(DialogActivity.this)
+            }
+        });
+//        new AlertDialog.Builder(this)
+//                .setTitle(R.string.bootPlayer)
+//                .setMessage(R.string.sureAboutBootThisPlayer)
+//                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        inRoomModule.bootPlayer(gameRoom.getPlayerStatus().get(position).getPlayer());
+//                    }
+//                })
+//                .setNegativeButton(R.string.cancel, null)
+//                .show();
         return true;
     }
 

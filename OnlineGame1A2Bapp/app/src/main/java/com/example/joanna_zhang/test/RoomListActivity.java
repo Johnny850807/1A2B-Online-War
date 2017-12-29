@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.joanna_zhang.test.Unit.ConvertGameHelper;
+import com.example.joanna_zhang.test.Utils.GameModeHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
@@ -126,6 +127,28 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         roomListOfQuery = selectedMode == gameModes[0]? roomList : results;
         enableLoadingRoomListAnimation = true;
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            sureAboutSignOut();
+        }
+        return false;
+    }
+
+    private void sureAboutSignOut() {
+        new AlertDialog.Builder(this)
+                .setTitle("登出")
+                .setMessage("確定要登出嗎?")
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     @Override
@@ -241,8 +264,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
             GameRoom gameroom = roomListOfQuery.get(position);
 
-            String modeName = "1A2B ";
-            modeName += ConvertGameHelper.getGameModeText(new AppCompatActivity(), gameroom.getGameMode());  //todo not only two mode
+            String modeName = getString(R.string.modeName);
+            modeName += GameModeHelper.getGameModeText(parent.getContext(), gameroom.getGameMode());
 
             viewHolder.roomNameTxt.setText(gameroom.getName());
             viewHolder.roomModeTxt.setText(modeName);
