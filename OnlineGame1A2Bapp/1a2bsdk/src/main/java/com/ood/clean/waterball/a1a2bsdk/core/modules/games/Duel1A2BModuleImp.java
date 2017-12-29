@@ -24,7 +24,6 @@ import static container.Constants.Events.Games.GAMESTARTED;
 
 public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1A2BModule {
     private ProxyCallback proxyCallback;
-    private boolean answerCommitted;
 
     @Override
     public void registerCallback(Duel1A2BModule.Callback callback) {
@@ -44,14 +43,11 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
 
     @Override
     public void setAnswer(String answer) {
-        if (!answerCommitted)
-        {
-            answerCommitted = true;
-            Protocol protocol = protocolFactory.createProtocol(SET_ANSWER,
-                    RequestStatus.request.toString(), gson.toJson(new ContentModel(
-                            signingModule.getCurrentPlayer().getId(), roomListModule.getCurrentGameRoom().getId(), answer)));
-            client.broadcast(protocol);
-        }
+        Protocol protocol = protocolFactory.createProtocol(SET_ANSWER,
+                RequestStatus.request.toString(), gson.toJson(new ContentModel(
+                        signingModule.getCurrentPlayer().getId(), roomListModule.getCurrentGameRoom().getId(), answer)));
+        client.broadcast(protocol);
+
     }
 
     @Override
@@ -88,7 +84,6 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
         @BindCallback(event = SET_ANSWER, status = RequestStatus.failed)
         public void onSetAnswerUnsuccessfully(ContentModel setAnswerModel) {
             Log.d(TAG, "answer set unsuccessfully: " + setAnswerModel.getContent());
-            answerCommitted = false;
             callback.onSetAnswerUnsuccessfully(setAnswerModel);
         }
 
