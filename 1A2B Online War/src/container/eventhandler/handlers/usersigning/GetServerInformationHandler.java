@@ -2,18 +2,23 @@ package container.eventhandler.handlers.usersigning;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import container.Constants;
 import container.base.Client;
 import container.eventhandler.handlers.GsonEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
+import gamecore.ReleaseGameCore;
 import gamecore.entity.GameRoom;
 import gamecore.model.ClientPlayer;
 import gamecore.model.ServerInformation;
+import utils.GamecoreHelper;
 
 public class GetServerInformationHandler extends GsonEventHandler<Void, ServerInformation>{
-
+	private static final Logger log = LogManager.getLogger(ReleaseGameCore.class);
 	public GetServerInformationHandler(Client client, Protocol request, GameCore gameCore,
 			ProtocolFactory protocolFactory) {
 		super(client, request, gameCore, protocolFactory);
@@ -30,6 +35,9 @@ public class GetServerInformationHandler extends GsonEventHandler<Void, ServerIn
 		List<ClientPlayer> players = gameCore().getClientPlayers();
 		ServerInformation information = new ServerInformation(Constants.VERSION, players.size(), 
 				rooms.size());
+		log.debug("Info of gamecore:");
+		log.debug("Clients: " + GamecoreHelper.playersToString(gameCore().getClientPlayers()));
+		log.debug("Rooms: " + GamecoreHelper.roomsToString(gameCore().getGameRooms()));
 		return success(information);
 	}
 

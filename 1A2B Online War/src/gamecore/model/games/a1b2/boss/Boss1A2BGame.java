@@ -24,34 +24,37 @@ import utils.ForServer;
 public class Boss1A2BGame extends Game{
 	private Monster boss;
 	private List<PlayerSpirit> playerSpirits = Collections.synchronizedList(new ArrayList<>());
+	private List<AttackResult> attackResults = new ArrayList<>();
 	private int whosTurn = 0; // the index from the clientPlayer showing who's turn.
 	
 	public Boss1A2BGame(ProtocolFactory protocolFactory, Monster boss, List<ClientPlayer> clientPlayers, String roomId) {
 		super(protocolFactory, GameMode.BOSS1A2B, roomId);
 		this.boss = boss;
 		for (ClientPlayer clientPlayer : clientPlayers)
-			playerSpirits.add(createPlayerSpirit(clientPlayer));
+			playerSpirits.add(new PlayerSpirit(clientPlayer, log, protocolFactory));
 	}
 	
 	@Override
 	public void startGame() {
 		super.startGame();
+		boss.init(this);
 	}
 	
 	@ForServer
 	public void attack(String playerId, String guess) throws NumberNotValidException{
-		A1B2NumberValidator.validateNumber(guess);
 		validateAttackingOperation(playerId);
-		PlayerSpirit player = getPlayerSpirit(playerId);
-		boss.damage(player, guess);
-		
-		if (isAllPlayerTurnsOver())
-			startBossAction();
+		A1B2NumberValidator.validateNumber(guess);
+		PlayerSpirit attacker = getPlayerSpirit(playerId);
+		AttackResult attackResult = boss.attack(attacker, guess);
+		attackResults.add(attackResult);
+		if (allPlayerTurnsOver())
+			boss.action();
 		whosTurn = whosTurn + 1 > playerSpirits.size() ? 0 : whosTurn + 1;
-		broadcastTurn();
+		broadcastNextTurn();
 	}
 
 	private void validateAttackingOperation(String playerId) {
+		validGameStarted();
 		PlayerSpirit who = playerSpirits.get(whosTurn);
 		if (!who.getId().equals(playerId))
 			throw new ProcessInvalidException("Not your turn.");
@@ -61,14 +64,15 @@ public class Boss1A2BGame extends Game{
 		
 	}
 	
-	private boolean isAllPlayerTurnsOver(){
-		return whosTurn + 1 == playerSpirits.size();
+	private boolean allPlayerTurnsOver(){
+		return whosTurn == playerSpirits.size() - 1;
 	}
 	
-	private void broadcastTurn(){
+	private void broadcastNextTurn(){
 		PlayerSpirit who = playerSpirits.get(whosTurn);
-		Protocol protocol = protocolFactory.createProtocol(YOUR_TURN, RequestStatus.success.toString(), null);
-		who.broadcast(protocol);
+		Protocol protocol = protocolFactory.createProtocol(NEXT_TURN, RequestStatus.success.toString(), 
+				gson.toJson(who.getClientPlayer().getPlayer()));
+		broadcastToAll(protocol);
 	}
 	
 	public PlayerSpirit getPlayerSpirit(String playerId){
@@ -77,9 +81,31 @@ public class Boss1A2BGame extends Game{
 				return player;
 		throw new IllegalArgumentException("playerId " + playerId + " not exists");
 	}
-	
-	private PlayerSpirit createPlayerSpirit(ClientPlayer clientPlayer){
-		return new PlayerSpirit(clientPlayer, log, protocolFactory);
+
+	public void broadcastToAll(Protocol protocol){
+		for (PlayerSpirit player : playerSpirits)
+			player.broadcast(protocol);
 	}
 
+	@ForServer
+	public void addAttackResult(AttackResult attackResult){
+		this.attackResults.add(attackResult);
+	}
+	
+	public void removeAttackResult(AttackResult attackResult){
+		this.attackResults.remove(attackResult);
+	}
+	
+	public List<PlayerSpirit> getPlayerSpirits() {
+		return playerSpirits;
+	}
+	
+	public int getWhosTurn() {
+		return whosTurn;
+	}
+	
+	@ForServer
+	public Monster getBoss() {
+		return boss;
+	}
 }

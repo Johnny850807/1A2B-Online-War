@@ -19,7 +19,7 @@ import gamecore.model.games.GameEnteringWaitingBox;
 import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamecore.model.games.a1b2.boss.BasicBoss;
 import gamecore.model.games.a1b2.boss.Boss1A2BGame;
-import utils.ClientPlayersHelper;
+import utils.GamecoreHelper;
 import utils.ForServer;
 
 /**
@@ -133,12 +133,10 @@ public class GameRoom extends Entity{
 	}
 	
 	public void removePlayer(Player player){
-		synchronized (this) {
-			if (player.equals(host))
-				host = null;
-			else
-				playerStatusList.remove(getPlayerStatusOfPlayer(player));
-		}
+		if (player.equals(host))
+			host = null;
+		else
+			playerStatusList.remove(getPlayerStatusOfPlayer(player));
 	}
 	
 	public PlayerStatus getPlayerStatusOfPlayer(Player player){
@@ -161,7 +159,7 @@ public class GameRoom extends Entity{
 	}
 	
 	public boolean containsPlayer(Player player){
-		return host.equals(player) || ifPlayerInStatusList(player);
+		return (host != null && host.equals(player)) || ifPlayerInStatusList(player);
 	}
 	
 	public boolean ifPlayerInStatusList(Player player){
@@ -197,7 +195,7 @@ public class GameRoom extends Entity{
 			playerClients.add(clientBinder.getClientPlayer(playerStatus.getPlayer().getId()));
 		
 		log.trace("Host prepared: " + hostClient.getPlayerName());
-		log.trace("Players prepared: " + ClientPlayersHelper.toString(playerClients));
+		log.trace("Players prepared: " + GamecoreHelper.playersToString(playerClients));
 		
 		initGame(hostClient, playerClients, listener);
 	}

@@ -6,15 +6,17 @@ import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
 
 public class BasicBoss extends Monster{
-
+	protected Boss1A2BGame context;
+	
 	public BasicBoss(MyLogger log, ProtocolFactory protocolFactory) {
 		super(UUID.randomUUID().toString(), "Boss", log, protocolFactory);
 	}
 
 	@Override
-	public void init() {
-		
+	public void init(Boss1A2BGame context) {
+		this.context = context;
 	}
+	
 	
 	@Override
 	public void setAnswer(String answer) {
@@ -22,7 +24,7 @@ public class BasicBoss extends Monster{
 	}
 
 	@Override
-	public void onHisTurn() {
+	public void action() {
 		
 	}
 

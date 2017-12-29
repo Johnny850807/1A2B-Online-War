@@ -6,11 +6,11 @@ import utils.ForServer;
 
 public interface Spirit extends Serializable{
 	@ForServer
-	AttackResult damage(AbstractSpirit attacker, String guess);
+	AttackResult attack(AbstractSpirit attacker, String guess);
 	
 	@ForServer
 	void setAnswer(String answer);
 	
 	@ForServer
-	void onHisTurn();
+	void action();
 }
