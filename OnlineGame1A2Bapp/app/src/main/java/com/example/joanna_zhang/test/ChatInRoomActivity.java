@@ -101,6 +101,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        if (currentPlayer.equals(roomHost))
+                            inRoomModule.closeRoom();
                         finish();
                     }
                 })
@@ -108,12 +110,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                 .show();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (currentPlayer.equals(roomHost))
-            inRoomModule.closeRoom();
-    }
 
     private void init() {
         findViews();
