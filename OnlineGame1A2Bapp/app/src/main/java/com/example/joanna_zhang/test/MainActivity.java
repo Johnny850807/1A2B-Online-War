@@ -3,6 +3,7 @@ package com.example.joanna_zhang.test;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +16,12 @@ import android.widget.TextView;
 
 import com.example.joanna_zhang.test.Domain.NameCreator.NameCreator;
 import com.example.joanna_zhang.test.Domain.NameCreator.RandomNameCreator;
-import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
+import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutException;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
+
+import java.util.concurrent.TimeUnit;
 
 import gamecore.entity.Player;
 import gamecore.model.ServerInformation;
@@ -28,7 +31,7 @@ import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYERNAME;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.SP_NAME;
 
 
-public class MainActivity extends AppCompatActivity implements UserSigningModule.Callback {
+public class MainActivity extends AppCompatActivity implements UserSigningModule.Callback{
     private static final String TAG = "MainActivity";
     private CoreGameServer gameServer = CoreGameServer.getInstance();
     private UserSigningModule signingModule;
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     private TextView serverStatusTxt;
     private SharedPreferences sharedPreferences;
     private NameCreator nameCreator = new RandomNameCreator();
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         setContentView(R.layout.activity_main);
         init();
         findViews();
-        readPlayerNameFromSharedPreferences();
     }
 
     private void init(){
@@ -60,15 +63,6 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         serverStatusTxt = (TextView) findViewById(R.id.serverStatus);
     }
 
-    private void readPlayerNameFromSharedPreferences() {
-        String playerName = sharedPreferences.getString(PLAYERNAME, "");
-        if (!playerName.isEmpty())
-        {
-            nameEd.setText(playerName);
-            autoSignInCheckbox.setChecked(true);
-        }
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -78,9 +72,34 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v(TAG, "onResume, registering callback and getting server info");
+        Log.v(TAG, "onResume, registering.");
         signingModule.registerCallback(this);
+        CoreGameServer.getInstance().startEngine(this);
+    }
+
+    @Override
+    public void onServerReconnected() {
+        Log.v(TAG, "onServerReconnected.");
         signingModule.getServerInformation();
+        readPlayerNameFromSharedPreferences();
+        //loadServerInformationIn10Secs();
+        loginBtn.setEnabled(true);
+    }
+
+    private void readPlayerNameFromSharedPreferences() {
+        String playerName = sharedPreferences.getString(PLAYERNAME, "");
+        if (!playerName.isEmpty())
+        {
+            nameEd.setText(playerName);
+            autoSignInCheckbox.setChecked(true);
+        }
+    }
+
+    private void loadServerInformationIn10Secs(){
+        handler.postDelayed(()->{
+            signingModule.getServerInformation();
+            loadServerInformationIn10Secs();
+        }, TimeUnit.SECONDS.toMillis(10));
     }
 
     public void loginButtonOnClick(View view) {
@@ -139,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     protected void onStop() {
         super.onStop();
         Log.v(TAG, "OnStop.");
+        handler.removeCallbacks(null);
         signingModule.unregisterCallBack(this);
     }
 
@@ -148,4 +168,5 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         Log.v(TAG, "onDestroy, shut down the connection.");
         CoreGameServer.getInstance().shutdownConnection();
     }
+
 }

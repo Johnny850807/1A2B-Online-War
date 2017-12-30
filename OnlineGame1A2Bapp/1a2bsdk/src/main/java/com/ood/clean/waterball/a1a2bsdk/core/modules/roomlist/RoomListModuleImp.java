@@ -19,6 +19,7 @@ import gamecore.model.RequestStatus;
 
 import static container.Constants.Events.InRoom.CLOSE_ROOM;
 import static container.Constants.Events.InRoom.LEAVE_ROOM;
+import static container.Constants.Events.RECONNECTED;
 import static container.Constants.Events.RoomList.CREATE_ROOM;
 import static container.Constants.Events.RoomList.GET_ROOMS;
 import static container.Constants.Events.RoomList.JOIN_ROOM;
@@ -149,6 +150,12 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
         public void onRoomUpdated(GameRoom gameRoom) {
             Log.d(TAG, "Room info updated: "  + gameRoom);
             callback.onRoomUpdated(gameRoom);
+        }
+
+        @Override
+        @BindCallback(event = RECONNECTED, status = RequestStatus.success)
+        public void onServerReconnected() {
+            callback.onServerReconnected();
         }
 
         @Override

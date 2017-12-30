@@ -2,6 +2,7 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules.signIn;
 
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.ood.clean.waterball.a1a2bsdk.core.base.AbstractGameModule;
@@ -13,12 +14,14 @@ import gamecore.entity.Player;
 import gamecore.model.RequestStatus;
 import gamecore.model.ServerInformation;
 
+import static container.Constants.Events.RECONNECTED;
 import static container.Constants.Events.Signing.GETINFO;
 import static container.Constants.Events.Signing.SIGNIN;
 import static container.Constants.Events.Signing.SIGNOUT;
 
 
 public class UserSigningModuleImp extends AbstractGameModule implements UserSigningModule{
+    private static final String TAG = "UserSigningModuleImp";
     private Gson gson = new Gson();
     private ProxyCallback proxyCallback;
 
@@ -67,23 +70,34 @@ public class UserSigningModuleImp extends AbstractGameModule implements UserSign
         @Override
         @BindCallback(event = SIGNIN, status = RequestStatus.success)
         public void onSignInSuccessfully(@NonNull Player player) {
+            Log.v(TAG, "onSignInSuccessfully " + player);
             callback.onSignInSuccessfully(player);
         }
 
         @Override
         @BindCallback(event = SIGNIN, status = RequestStatus.failed)
         public void onSignInFailed() {
+            Log.v(TAG, "onSignInFailed");
             callback.onSignInFailed();
         }
 
         @Override
         @BindCallback(event = GETINFO, status = RequestStatus.success)
         public void onLoadServerInformation(ServerInformation serverInformation) {
+            Log.v(TAG, "onLoadServerInformation");
             callback.onLoadServerInformation(serverInformation);
         }
 
         @Override
+        @BindCallback(event = RECONNECTED, status = RequestStatus.success)
+        public void onServerReconnected() {
+            Log.v(TAG, "onServerReconnected");
+            callback.onServerReconnected();
+        }
+
+        @Override
         public void onError(@NonNull Throwable err) {
+            Log.e(TAG, "Error", err);
             callback.onError(err);
         }
     }

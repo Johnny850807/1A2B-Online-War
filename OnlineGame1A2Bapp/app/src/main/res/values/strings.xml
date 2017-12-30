@@ -8,8 +8,8 @@
     <string name="signInWelcomeMessage">歡迎回來!!</string>
     <string name="errorMessage">錯誤訊息</string>
     <string name="signInMessage">登入訊息</string>
-    <string name="signInFailed_pleaseCheckYourNetwork">登入失敗: 請檢查你的網路</string>
-    <string name="signInFailedPlayerNameIsInvalid">登入失敗: 玩家名稱無效</string>
+    <string name="signInFailed_pleaseCheckYourNetwork">網路無法連接，請檢查你的網路。</string>
+    <string name="signInFailedPlayerNameIsInvalid">登入失敗： 玩家名稱無效。</string>
     <string name="default_room_name">來玩噢!!</string>
     <string name="create">創建</string>
     <string name="gameMode">模式</string>

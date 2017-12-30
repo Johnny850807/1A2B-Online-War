@@ -7,5 +7,6 @@ import android.support.annotation.NonNull;
  * mark interface
  */
 public interface GameCallBack {
+    void onServerReconnected();
     void onError(@NonNull Throwable err);
 }

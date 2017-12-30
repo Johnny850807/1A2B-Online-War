@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
+import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModule;
 
@@ -82,6 +82,11 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
             sendMessage(poster, content);
             inputMessageEdt.setText("");
         }
+    }
+
+    @Override
+    public void onServerReconnected() {
+        //TODO
     }
 
     @Override

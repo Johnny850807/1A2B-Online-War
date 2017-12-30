@@ -15,6 +15,7 @@ import gamecore.entity.Player;
 import gamecore.model.RequestStatus;
 
 import static container.Constants.Events.Chat.SEND_MSG;
+import static container.Constants.Events.RECONNECTED;
 
 public class ChatModuleImp extends AbstractGameModule implements ChatModule {
     protected ProxyCallback proxyCallback;
@@ -78,6 +79,13 @@ public class ChatModuleImp extends AbstractGameModule implements ChatModule {
             Log.d(TAG, "message sending unsuccessfully: " + message.getContent());
             callback.onMessageSendingFailed(message);
         }
+
+        @Override
+        @BindCallback(event = RECONNECTED, status = RequestStatus.success)
+        public void onServerReconnected() {
+            callback.onServerReconnected();
+        }
+
 
         @Override
         public void onError(@NonNull Throwable err) {

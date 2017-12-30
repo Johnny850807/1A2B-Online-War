@@ -82,7 +82,8 @@
             android:background="@drawable/corner"
             android:onClick="loginButtonOnClick"
             android:text="@string/login"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:enabled="false"/>
     </LinearLayout>
 
 
