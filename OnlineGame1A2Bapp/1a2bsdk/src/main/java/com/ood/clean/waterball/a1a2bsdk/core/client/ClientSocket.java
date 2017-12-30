@@ -12,7 +12,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -38,7 +37,7 @@ public class ClientSocket implements Client{
     private boolean connected = false;
 
     public ClientSocket(ThreadExecutor threadExecutor){
-        this.id = UUID.randomUUID().toString();
+        this.id = "ClientSocket";
         this.threadExecutor = threadExecutor;
         this.address = SERVER_ADDRESS;
         this.port = PORT;
@@ -46,28 +45,40 @@ public class ClientSocket implements Client{
 
     @Override
     public void run() {
-        try {
+        try{
             Component.inject(this);
             SocketIO io = new SocketIO(new Socket(address, port));
             this.outputStream = new DataOutputStream(io.getOutputStream());
             this.inputStream = new DataInputStream(io.getInputStream());
             connected = true;
+            listeningInputAsync();
             threadExecutor.postMain(NotifyCoreGameServerTask.CONNECTED);
-            listeningInput();
-        } catch (IOException err){
-            handleInputError(err);
-        } catch (RuntimeException err) {
-            handleInputError(err);
-        } catch (Exception err){
-            err.printStackTrace();
+        } catch (IOException e) {
+            handleInputError(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private void listeningInput() throws IOException {
-        while(connected)
-            listenToNextInput();
-        Log.w(TAG, "Socket disconnected.");
+    private void listeningInputAsync(){
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    while(connected)
+                        listenToNextInput();
+                    Log.w(TAG, "Socket disconnected.");
+                } catch (IOException err) {
+                    handleInputError(err);
+                } catch (RuntimeException err) {
+                    handleInputError(err);
+                } catch (Exception err) {
+                    err.printStackTrace();
+                }
+            }
+        }.start();
     }
+
 
     private synchronized void listenToNextInput() throws IOException{
         if (connected)
@@ -78,7 +89,7 @@ public class ClientSocket implements Client{
                 @Override
                 public void run() {
                     Protocol protocol = protocolFactory.createProtocol(response);
-                    threadExecutor.postMain(new InvokeEventBusTask(protocol));
+                    threadExecutor.postMain(new InvokeEventBusTask(protocol, eventBus));
                 }
             });
         }
@@ -87,7 +98,7 @@ public class ClientSocket implements Client{
     private void handleInputError(IOException err){
         Log.e(TAG, "Socket IOException.", err);
         threadExecutor.postMain(NotifyCoreGameServerTask.DISCONNECTED);
-        threadExecutor.postMain(new PostErrorToEventBusTask(new ConnectionTimedOutException(err)));
+        threadExecutor.postMain(new PostErrorToEventBusTask(new ConnectionTimedOutException(err), eventBus));
     }
 
     private void handleInputError(RuntimeException err){
@@ -96,7 +107,7 @@ public class ClientSocket implements Client{
     }
 
     @Override
-    public synchronized void broadcast(Protocol protocol) {
+    public void broadcast(Protocol protocol) {
         threadExecutor.post(new Runnable() {
             @Override
             public void run() {
@@ -115,8 +126,8 @@ public class ClientSocket implements Client{
         Protocol failedProtocol = protocolFactory.createProtocol(protocol.getEvent(),
                 RequestStatus.failed.toString(), protocol.getData());
 
-        threadExecutor.postMain(new InvokeEventBusTask(failedProtocol));
-        threadExecutor.postMain(new PostErrorToEventBusTask(new ConnectionTimedOutException(err)));
+        threadExecutor.postMain(new InvokeEventBusTask(failedProtocol, eventBus));
+        threadExecutor.postMain(new PostErrorToEventBusTask(new ConnectionTimedOutException(err), eventBus));
     }
 
     @Override

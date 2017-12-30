@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     public void loginButtonOnClick(View view) {
         String playerName = nameEd.getText().toString();
         signingModule.signIn(playerName);
+        loginBtn.setEnabled(false);
     }
 
     public void randomNameButtonOnClick(View view) {
@@ -129,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     @Override
     public void onSignInFailed() {
         createAndShowErrorMessage(getString(R.string.signInFailedPlayerNameIsInvalid));
+        loginBtn.setEnabled(true);
     }
 
     @Override

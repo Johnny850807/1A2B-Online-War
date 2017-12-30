@@ -10,6 +10,7 @@ import container.protocol.Protocol;
 class InvokeEventBusTask implements Runnable{
     private Protocol protocol;
     private EventBus eventBus;
+
     InvokeEventBusTask(Protocol protocol, EventBus eventBus) {
         this.protocol = protocol;
         this.eventBus = eventBus;
