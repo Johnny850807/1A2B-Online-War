@@ -68,6 +68,8 @@
     <string name="comeBackToRoomList">返回遊戲大廳</string>
     <string name="sureAboutComeBackToRoomList">確定要返回遊戲大廳?</string>
     <string name="selectWhichPlayerYouWantToBoot">請選擇欲剔除玩家</string>
-    <string name="thePlayerYouWantToBoot">欲剔除的玩家</string>
+    <string name="thePlayerYouWantToBoot" formatted="false">是否要踢 %s 玩家 ?</string>
+    <string name="yes" >是</string>
+    <string name="no" >否</string>
 
 </resources>

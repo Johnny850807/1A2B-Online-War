@@ -5,6 +5,7 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.MockRoomListModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.MockUserSigningModule;
 
+@Deprecated
 public class MockGameModuleFactory implements GameModuleFactory {
 
     @Override

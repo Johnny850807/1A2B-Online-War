@@ -75,24 +75,28 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     protected void onResume() {
         super.onResume();
+        Log.v(TAG, "OnResume, getting the game room list.");
         roomListModule.getGameRoomList();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Log.v(TAG, "onStart, registering.");
         roomListModule.registerCallback(currentPlayer, this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        Log.v(TAG, "onStop, unregistering.");
         roomListModule.unregisterCallBack(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.v(TAG, "onDestroy, signing out.");
         signingModule.signOut(currentPlayer);
     }
 

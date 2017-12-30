@@ -28,7 +28,6 @@ import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ChangeStatusModel;
-import gamecore.model.GameMode;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.PlayerStatus;
 
@@ -39,11 +38,11 @@ import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 /**
  * TODO:
  * (1) the player sets ready - ok
- * (2) the host starts the game and 'make sure you have ensured the player amount is suitable to the game', block the action if not. - do
+ * (2) the host starts the game and 'make sure you have ensured the player amount is suitable to the game', block the action if not. - ok
  * (3) the host can boot the player by answering yes to the dialog which contains options whether to boot the player
  * created and showed by 'long-clicking' the item contains the player status you want to boot.
  * (4) show the toast if any player left or joined.  - ok
- * (5) replace all 'if game mode == DUEL then ... else Group ...' with the 'switch-case logic helping static method'.
+ * (5) replace all 'if game mode == DUEL then ... else Group ...' with the 'switch-case logic helping static method'. - ok
  * (6) clean your code and organize the methods (put them in the readable order),
  * don't let any garbage be here anymore, such as some 'gray-text' attributes, some 'few-lines' methods.
  */
@@ -135,7 +134,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void findViews() {
-        gameModeTxt = (TextView) findViewById(R.id.roomModeNameTxt);
+        gameModeTxt = findViewById(R.id.roomModeNameTxt);
         gameStartBtn = (Button) findViewById(R.id.gameStartBtn);
         chatRoomPlayerListView = (ListView) findViewById(R.id.chatRoomPlayersLst);
     }
@@ -160,7 +159,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         } else {
             for (PlayerStatus playerStatus : currentGameRoom.getPlayerStatus())
                 if (playerStatus.getPlayer().equals(currentPlayer)) {
-
                     inRoomModule.changeStatus(new ChangeStatusModel(currentPlayer.getId(), currentGameRoom.getId(), !playerStatus.isReady()));
                     int statusText = !playerStatus.isReady() ? R.string.unReady : R.string.ready;
                     gameStartBtn.setText(statusText);
@@ -190,7 +188,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     public void onPlayerJoined(PlayerRoomModel model) {
         currentGameRoom.addPlayer(model.getPlayer());
         roomPlayerListAdapter.notifyDataSetChanged();
-        Toast.makeText(this, model.getPlayer() + getString(R.string.isJoined), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, model.getPlayer().getName() + getString(R.string.isJoined), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -211,7 +209,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
             finish();
         } else
             roomPlayerListAdapter.notifyDataSetChanged();
-        Toast.makeText(this, model.getPlayer() + getString(R.string.isLeft), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, model.getPlayer().getName() + getString(R.string.isLeft), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -249,35 +247,24 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(ChatInRoomActivity.this);
-        builder.setTitle(R.string.selectWhichPlayerYouWantToBoot);
-
-        ArrayAdapter<PlayerStatus> playerAdapter = new ArrayAdapter<PlayerStatus>(ChatInRoomActivity.this, R.layout.chat_room_player_list_item);
-        for (PlayerStatus player : currentGameRoom.getPlayerStatus())
-            playerAdapter.add(player);
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.setAdapter(playerAdapter, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int position) {
-                PlayerStatus player = playerAdapter.getItem(position);
-                new AlertDialog.Builder(ChatInRoomActivity.this)
-                        .setMessage(player.getPlayer().getName())
-                        .setTitle(R.string.thePlayerYouWantToBoot)
-                        .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                inRoomModule.bootPlayer(player.getPlayer());
+        String[] YESORNO = new String[]{getString(R.string.yes), getString(R.string.no)};
+        if (position != 0 && currentPlayer.equals(currentGameRoom.getHost()))
+            new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.thePlayerYouWantToBoot, currentGameRoom.getPlayers().get(position).getName()))
+                    .setItems(YESORNO, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int position) {
+                            switch (position){
+                                case 0:
+                                    inRoomModule.bootPlayer(currentGameRoom.getPlayers().get(position));
+                                    break;
+                                case 1:
+                                    dialog.dismiss();
+                                    break;
                             }
-                        })
-                        .show();
-            }
-        })
-                .show();
+                        }
+                    })
+            .show();
         return true;
     }
 

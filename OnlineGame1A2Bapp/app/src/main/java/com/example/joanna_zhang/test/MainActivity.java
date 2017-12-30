@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -28,6 +29,7 @@ import static com.example.joanna_zhang.test.Utils.Params.Keys.SP_NAME;
 
 
 public class MainActivity extends AppCompatActivity implements UserSigningModule.Callback {
+    private static final String TAG = "MainActivity";
     private CoreGameServer gameServer = CoreGameServer.getInstance();
     private UserSigningModule signingModule;
     private Button loginBtn;
@@ -41,10 +43,21 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        init();
         findViews();
+        readPlayerNameFromSharedPreferences();
+    }
+
+    private void init(){
         signingModule = (UserSigningModule) gameServer.createModule(ModuleName.SIGNING);
         sharedPreferences = getSharedPreferences(SP_NAME, MODE_PRIVATE);
-        readPlayerNameFromSharedPreferences();
+    }
+
+    private void findViews() {
+        nameEd = (EditText) findViewById(R.id.inputName);
+        loginBtn = (Button) findViewById(R.id.loginButton);
+        autoSignInCheckbox = (CheckBox) findViewById(R.id.checkbox);
+        serverStatusTxt = (TextView) findViewById(R.id.serverStatus);
     }
 
     private void readPlayerNameFromSharedPreferences() {
@@ -59,23 +72,19 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     @Override
     protected void onStart() {
         super.onStart();
+        Log.v(TAG, "OnStart.");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.v(TAG, "onResume, registering callback and getting server info");
         signingModule.registerCallback(this);
         signingModule.getServerInformation();
     }
 
-    private void findViews() {
-        nameEd = (EditText) findViewById(R.id.inputName);
-        loginBtn = (Button) findViewById(R.id.loginButton);
-        autoSignInCheckbox = (CheckBox) findViewById(R.id.checkbox);
-        serverStatusTxt = (TextView) findViewById(R.id.serverStatus);
-    }
-
     public void loginButtonOnClick(View view) {
         String playerName = nameEd.getText().toString();
-        signIn(playerName);
-    }
-
-    private void signIn(String playerName){
         signingModule.signIn(playerName);
     }
 
@@ -88,10 +97,15 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         loginBtn.setEnabled(true);
         savePlayerNameToSharedPreferences(autoSignInCheckbox.isChecked() ? nameEd.getText().toString() : "");
         Intent intent = new Intent(this, RoomListActivity.class);
-        intent.putExtra(PLAYER, player); // send the player data to the next activity
+        intent.putExtra(PLAYER, player);
         startActivity(intent);
     }
 
+    private void savePlayerNameToSharedPreferences(String name) {
+        sharedPreferences.edit()
+                .putString(PLAYERNAME, name)
+                .apply();
+    }
 
     @Override
     public void onSignInFailed() {
@@ -99,12 +113,11 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     }
 
     @Override
-    public void onLoadServerInformation(ServerInformation serverInformation) {
-        int roomAmount = serverInformation.getOnlineRoomAmount();
-        int onlineAmount = serverInformation.getOnlineUserAmount();
-        serverStatusTxt.setText(getString(R.string.serverStatus, roomAmount, onlineAmount));
+    public void onError(@NonNull Throwable err) {
+        loginBtn.setEnabled(true);
+        if (err instanceof ConnectionTimedOutException)
+            createAndShowErrorMessage(getString(R.string.signInFailed_pleaseCheckYourNetwork));
     }
-
 
     public void createAndShowErrorMessage(String exceptionMessage) {
         new AlertDialog.Builder(MainActivity.this)
@@ -115,30 +128,24 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
                 .show();
     }
 
-
     @Override
-    public void onError(@NonNull Throwable err) {
-        loginBtn.setEnabled(true);
-        if (err instanceof ConnectionTimedOutException)
-            createAndShowErrorMessage(getString(R.string.signInFailed_pleaseCheckYourNetwork));
+    public void onLoadServerInformation(ServerInformation serverInformation) {
+        int roomAmount = serverInformation.getOnlineRoomAmount();
+        int onlineAmount = serverInformation.getOnlineUserAmount();
+        serverStatusTxt.setText(getString(R.string.serverStatus, roomAmount, onlineAmount));
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        Log.v(TAG, "OnStop.");
         signingModule.unregisterCallBack(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.v(TAG, "onDestroy, shut down the connection.");
         CoreGameServer.getInstance().shutdownConnection();
     }
-
-    private void savePlayerNameToSharedPreferences(String name) {
-        sharedPreferences.edit()
-                .putString(PLAYERNAME, name)
-                .apply();
-    }
-
 }
