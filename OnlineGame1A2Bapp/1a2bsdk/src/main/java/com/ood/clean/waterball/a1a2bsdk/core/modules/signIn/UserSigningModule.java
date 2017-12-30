@@ -10,7 +10,6 @@ import gamecore.entity.Player;
 import gamecore.model.ServerInformation;
 
 public interface UserSigningModule extends GameModule{
-    String TAG = "Signing";
     void registerCallback(UserSigningModule.Callback callback);
     void unregisterCallBack(UserSigningModule.Callback callback);
 

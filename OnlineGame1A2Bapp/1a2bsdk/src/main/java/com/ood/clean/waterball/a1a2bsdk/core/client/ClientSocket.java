@@ -12,7 +12,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -26,7 +25,7 @@ import static com.ood.clean.waterball.a1a2bsdk.core.Secret.PORT;
 import static com.ood.clean.waterball.a1a2bsdk.core.Secret.SERVER_ADDRESS;
 
 public class ClientSocket implements Client{
-    private final static String TAG = "Socket";
+    final static String TAG = "Socket";
     private @Inject ProtocolFactory protocolFactory;
     private @Inject EventBus eventBus;
     private String id;
@@ -38,7 +37,7 @@ public class ClientSocket implements Client{
     private boolean connected = false;
 
     public ClientSocket(ThreadExecutor threadExecutor){
-        this.id = UUID.randomUUID().toString();
+        this.id = "ClientSocket";
         this.threadExecutor = threadExecutor;
         this.address = SERVER_ADDRESS;
         this.port = PORT;
@@ -46,21 +45,43 @@ public class ClientSocket implements Client{
 
     @Override
     public void run() {
-        try {
+        try{
             Component.inject(this);
             SocketIO io = new SocketIO(new Socket(address, port));
             this.outputStream = new DataOutputStream(io.getOutputStream());
             this.inputStream = new DataInputStream(io.getInputStream());
             connected = true;
-            listeningInput();
-        } catch (Exception err) {
-            Log.e(TAG, "Socket error while initializing.", err);
-            threadExecutor.postMain(new PostErrorToEventBusTask(new ConnectionTimedOutException(err)));
+            listeningInputAsync();
+            threadExecutor.postMain(NotifyCoreGameServerTask.CONNECTED);
+        } catch (IOException e) {
+            handleInputError(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private void listeningInput() throws IOException {
-        while(connected)
+    private void listeningInputAsync(){
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    while(connected)
+                        listenToNextInput();
+                    Log.w(TAG, "Socket disconnected.");
+                } catch (IOException err) {
+                    handleInputError(err);
+                } catch (RuntimeException err) {
+                    handleInputError(err);
+                } catch (Exception err) {
+                    err.printStackTrace();
+                }
+            }
+        }.start();
+    }
+
+
+    private synchronized void listenToNextInput() throws IOException{
+        if (connected)
         {
             String response = inputStream.readUTF();
             Log.d(TAG, "Received: " + response);
@@ -68,11 +89,21 @@ public class ClientSocket implements Client{
                 @Override
                 public void run() {
                     Protocol protocol = protocolFactory.createProtocol(response);
-                    threadExecutor.postMain(new InvokeEventBusTask(protocol));
+                    threadExecutor.postMain(new InvokeEventBusTask(protocol, eventBus));
                 }
             });
         }
-        Log.w(TAG, "Socket disconnected.");
+    }
+
+    private void handleInputError(IOException err){
+        Log.e(TAG, "Socket IOException.", err);
+        threadExecutor.postMain(NotifyCoreGameServerTask.DISCONNECTED);
+        threadExecutor.postMain(new PostErrorToEventBusTask(new ConnectionTimedOutException(err), eventBus));
+    }
+
+    private void handleInputError(RuntimeException err){
+        Log.e(TAG, "Socket runtime error.", err);
+        err.printStackTrace();
     }
 
     @Override
@@ -83,15 +114,20 @@ public class ClientSocket implements Client{
                 try{
                     Log.i(TAG, "Request: "+ protocol);
                     outputStream.writeUTF(protocol.toString());
-                    Log.i(TAG, "Request " + protocol.getEvent() + " send successfully.");
                 }catch (Exception err){
-                    Log.e(TAG, "Socket error while requesting.", err);
-                    threadExecutor.postMain(new InvokeEventBusTask(protocolFactory.createProtocol(protocol.getEvent(),
-                            RequestStatus.failed.toString(), protocol.getData())));
-                    threadExecutor.postMain(new PostErrorToEventBusTask(new ConnectionTimedOutException(err)));
+                    handleOutputError(protocol, err);
                 }
             }
         });
+    }
+
+    private void handleOutputError(Protocol protocol, Exception err){
+        Log.e(TAG, "Socket error while requesting.", err);
+        Protocol failedProtocol = protocolFactory.createProtocol(protocol.getEvent(),
+                RequestStatus.failed.toString(), protocol.getData());
+
+        threadExecutor.postMain(new InvokeEventBusTask(failedProtocol, eventBus));
+        threadExecutor.postMain(new PostErrorToEventBusTask(new ConnectionTimedOutException(err), eventBus));
     }
 
     @Override
@@ -100,38 +136,9 @@ public class ClientSocket implements Client{
     }
 
     @Override
-    public void disconnect() throws Exception {
+    public synchronized void disconnect() throws Exception {
         connected = false;
-    }
-
-    private class InvokeEventBusTask implements Runnable{
-        Protocol protocol;
-        private InvokeEventBusTask(Protocol protocol) {
-            this.protocol = protocol;
-        }
-        @Override
-        public void run() {
-            try{
-                eventBus.invoke(protocol);
-            }catch (Exception err){
-                Log.e(TAG, "Error occurs while invoking event bus.", err);
-            }
-        }
-    }
-
-    private class PostErrorToEventBusTask implements Runnable{
-        private Exception err;
-        private PostErrorToEventBusTask(Exception err) {
-            this.err = err;
-        }
-        @Override
-        public void run() {
-            try{
-                eventBus.error(err);
-            }catch (Exception err){
-                Log.e(TAG, "Error occurs while posting error to event bus.", err);
-            }
-        }
+        threadExecutor.postMain(NotifyCoreGameServerTask.DISCONNECTED);
     }
 
     public String getAddress() {

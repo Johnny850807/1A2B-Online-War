@@ -21,6 +21,7 @@ import static container.Constants.Events.InRoom.CHANGE_STATUS;
 import static container.Constants.Events.InRoom.CLOSE_ROOM;
 import static container.Constants.Events.InRoom.LAUNCH_GAME;
 import static container.Constants.Events.InRoom.LEAVE_ROOM;
+import static container.Constants.Events.RECONNECTED;
 import static container.Constants.Events.RoomList.JOIN_ROOM;
 
 
@@ -149,6 +150,12 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
 
             Log.d(TAG, "Game launched, info: " + gameRoom);
             callback.onGameLaunchedFailed(gameRoom);
+        }
+
+        @Override
+        @BindCallback(event = RECONNECTED, status = RequestStatus.success)
+        public void onServerReconnected() {
+            callback.onServerReconnected();
         }
 
         @Override

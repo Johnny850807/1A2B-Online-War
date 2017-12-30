@@ -23,6 +23,7 @@ import static container.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
 import static container.Constants.Events.Games.Duel1A2B.SET_ANSWER;
 import static container.Constants.Events.Games.GAMEOVER;
 import static container.Constants.Events.Games.GAMESTARTED;
+import static container.Constants.Events.RECONNECTED;
 
 public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1A2BModule {
     private ProxyCallback proxyCallback;
@@ -141,6 +142,12 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
         public void onGameOver(GameOverModel gameOverModel) {
             Log.d(TAG, "Game over, the winner's id is: " + gameOverModel.getWinnerId());
             callback.onGameOver(gameOverModel);
+        }
+
+        @Override
+        @BindCallback(event = RECONNECTED, status = RequestStatus.success)
+        public void onServerReconnected() {
+            callback.onServerReconnected();
         }
 
         @Override

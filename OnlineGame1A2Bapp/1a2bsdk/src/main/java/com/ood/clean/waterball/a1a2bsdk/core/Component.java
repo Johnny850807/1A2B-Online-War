@@ -18,10 +18,10 @@ import container.protocol.XOXOXDelimiterFactory;
  * A collection of global variables doing dependency injection.
  */
 public class Component {
-    public static ThreadExecutor threadExecutor = new HandlerExecutor();
-    public static Client client = new ClientSocket(threadExecutor);
-    public static EventBus eventBus = new ReflectionEventBus();
-    public static ProtocolFactory protocolFactory = new XOXOXDelimiterFactory();
+    private static ThreadExecutor threadExecutor = new HandlerExecutor();
+    private static Client client = new ClientSocket(threadExecutor);
+    private static EventBus eventBus = new ReflectionEventBus();
+    private static ProtocolFactory protocolFactory = new XOXOXDelimiterFactory();
 
 
     /**

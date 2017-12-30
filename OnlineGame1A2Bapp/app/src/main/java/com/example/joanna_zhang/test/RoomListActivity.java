@@ -28,7 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Utils.GameModeHelper;
-import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
+import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
@@ -386,6 +386,11 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onPlayerLeft(PlayerRoomModel model) {
         onRoomUpdated(model.getGameRoom());
+    }
+
+    @Override
+    public void onServerReconnected() {
+        //TODO
     }
 
 }

@@ -16,7 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
+import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.Duel1A2BModule;
 
@@ -151,6 +151,11 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     public void onGameStarted() {
         progressDialog.dismiss();
         setupAnswer();
+    }
+
+    @Override
+    public void onServerReconnected() {
+        //TODO
     }
 
     @Override
