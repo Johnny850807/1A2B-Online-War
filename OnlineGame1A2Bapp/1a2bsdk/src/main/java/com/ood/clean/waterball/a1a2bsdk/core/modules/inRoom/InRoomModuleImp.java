@@ -70,7 +70,7 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
     @Override
     public void bootPlayer(Player player) {
         // reuse the 'player left' event, to make that player leave from the room.
-        Protocol protocol = protocolFactory.createProtocol(LEAVE_ROOM,
+        Protocol protocol = protocolFactory.createProtocol(BOOTED,
                 RequestStatus.request.toString(), gson.toJson(new PlayerRoomIdModel(player.getId(),
                         currentGameRoom.getId())));
         client.broadcast(protocol);
