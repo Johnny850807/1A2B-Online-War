@@ -261,6 +261,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         public View getView(int i, View view, ViewGroup viewGroup) {
             view = LayoutInflater.from(DuelActivity.this).inflate(android.R.layout.simple_list_item_1, viewGroup, false);
 
+            //TODO optimize view like what we designed
             TextView resultTxt = view.findViewById(android.R.id.text1);
             StringBuilder result = new StringBuilder();
             result.append(resultList.get(i).getGuess())
