@@ -28,7 +28,7 @@ public class MockRoomListModule implements RoomListModule {
     }
 
     @Override
-    public void registerCallback(Callback callback) {
+    public void registerCallback(Player currentPlayer, Callback callback) {
         this.callback = callback;
     }
 
@@ -50,16 +50,6 @@ public class MockRoomListModule implements RoomListModule {
     @Override
     public void getGameRoomList() {
         callback.onGetRoomList(gameRooms);
-    }
-
-    @Override
-    public GameRoom getCurrentGameRoom() {
-        return null;
-    }
-
-    @Override
-    public void cleanCurrentGameRoom() {
-
     }
 
 

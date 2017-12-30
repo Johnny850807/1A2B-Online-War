@@ -11,6 +11,8 @@ import javax.inject.Inject;
 
 import container.base.Client;
 import container.protocol.ProtocolFactory;
+import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
 import utils.MyGson;
 
 public abstract class AbstractGameModule implements GameModule{
@@ -26,4 +28,14 @@ public abstract class AbstractGameModule implements GameModule{
         Log.d(TAG, "injection completed.");
     }
 
+    protected void validate(Player player){
+        if (player == null || player.getName() == null || player.getId() == null)
+            throw new IllegalArgumentException("The player is invalid.");
+    }
+
+    protected void validate(GameRoom room){
+        if (room == null || room.getHost() == null || room.getName() == null || room.getChatMessageList() == null
+                || room.getId() == null)
+            throw new IllegalArgumentException("The room is not invalid.");
+    }
 }

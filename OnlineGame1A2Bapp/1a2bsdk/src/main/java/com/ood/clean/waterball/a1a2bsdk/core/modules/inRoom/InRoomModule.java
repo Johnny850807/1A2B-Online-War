@@ -10,7 +10,7 @@ import gamecore.model.ChangeStatusModel;
 import gamecore.model.PlayerRoomModel;
 
 public interface InRoomModule extends GameModule{
-    void registerCallback(InRoomModule.Callback callback);
+    void registerCallback(Player currentPlayer, GameRoom currentRoom, InRoomModule.Callback callback);
     void unregisterCallBack(InRoomModule.Callback callback);
 
     /**

@@ -10,6 +10,8 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.CallbackException;
 import java.util.List;
 
 import container.protocol.Protocol;
+import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
 import gamecore.model.ContentModel;
 import gamecore.model.RequestStatus;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
@@ -24,9 +26,16 @@ import static container.Constants.Events.Games.GAMESTARTED;
 
 public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1A2BModule {
     private ProxyCallback proxyCallback;
+    protected Player currentPlayer;
+    protected GameRoom currentGameRoom;
 
     @Override
-    public void registerCallback(Duel1A2BModule.Callback callback) {
+    public void registerCallback(Player currentPlayer, GameRoom currentGameRoom, Duel1A2BModule.Callback callback) {
+        validate(currentPlayer);
+        validate(currentGameRoom);
+        this.currentPlayer = currentPlayer;
+        this.currentGameRoom = currentGameRoom;
+
         if (this.proxyCallback != null)
             callback.onError(new CallbackException());
         this.proxyCallback = new Duel1A2BModuleImp.ProxyCallback(callback);
@@ -39,13 +48,15 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
             callback.onError(new CallbackException());
         eventBus.unregisterCallback(proxyCallback);
         this.proxyCallback = null;
+        this.currentPlayer = null;
+        this.currentGameRoom = null;
     }
 
     @Override
     public void setAnswer(String answer) {
         Protocol protocol = protocolFactory.createProtocol(SET_ANSWER,
                 RequestStatus.request.toString(), gson.toJson(new ContentModel(
-                        signingModule.getCurrentPlayer().getId(), roomListModule.getCurrentGameRoom().getId(), answer)));
+                        currentPlayer.getId(), currentGameRoom.getId(), answer)));
         client.broadcast(protocol);
 
     }
@@ -54,8 +65,18 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
     public void guess(String guess) {
         Protocol protocol = protocolFactory.createProtocol(GUESS,
                 RequestStatus.request.toString(), gson.toJson(new ContentModel(
-                        signingModule.getCurrentPlayer().getId(), roomListModule.getCurrentGameRoom().getId(), guess)));
+                        currentPlayer.getId(), currentGameRoom.getId(), guess)));
         client.broadcast(protocol);
+    }
+
+    @Override
+    protected Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    @Override
+    protected GameRoom getCurrentGameRoom() {
+        return currentGameRoom;
     }
 
     public class ProxyCallback implements Duel1A2BModule.Callback{
@@ -69,7 +90,7 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
         @Override
         @BindCallback(event = GAMESTARTED, status = RequestStatus.success)
         public void onGameStarted() {
-            Log.d(TAG, "the game " + roomListModule.getCurrentGameRoom().getGameMode() + " started.");
+            Log.d(TAG, "the game " + currentGameRoom.getGameMode() + " started.");
             callback.onGameStarted();
         }
 

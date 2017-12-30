@@ -22,6 +22,10 @@ import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 import gamecore.entity.Player;
 import gamecore.model.ServerInformation;
 
+import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
+import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYERNAME;
+import static com.example.joanna_zhang.test.Utils.Params.Keys.SP_NAME;
+
 
 public class MainActivity extends AppCompatActivity implements UserSigningModule.Callback {
     private CoreGameServer gameServer = CoreGameServer.getInstance();
@@ -39,12 +43,12 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         setContentView(R.layout.activity_main);
         findViews();
         signingModule = (UserSigningModule) gameServer.getModule(ModuleName.SIGNING);
-        sharedPreferences = getSharedPreferences("1A2B", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(SP_NAME, MODE_PRIVATE);
         readPlayerNameFromSharedPreferences();
     }
 
     private void readPlayerNameFromSharedPreferences() {
-        String playerName = sharedPreferences.getString("name", "");
+        String playerName = sharedPreferences.getString(PLAYERNAME, "");
         if (!playerName.isEmpty())
         {
             nameEd.setText(playerName);
@@ -56,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     protected void onStart() {
         super.onStart();
         signingModule.registerCallback(this);
-        //signingModule.getServerInformation();
+        signingModule.getServerInformation();
     }
 
     private void findViews() {
@@ -84,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         loginBtn.setEnabled(true);
         savePlayerNameToSharedPreferences(autoSignInCheckbox.isChecked() ? nameEd.getText().toString() : "");
         Intent intent = new Intent(this, RoomListActivity.class);
-        intent.putExtra("player", player); // send the player data to the next activity
+        intent.putExtra(PLAYER, player); // send the player data to the next activity
         startActivity(intent);
     }
 
@@ -133,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
 
     private void savePlayerNameToSharedPreferences(String name) {
         sharedPreferences.edit()
-                .putString("name", name)
+                .putString(PLAYERNAME, name)
                 .apply();
     }
 

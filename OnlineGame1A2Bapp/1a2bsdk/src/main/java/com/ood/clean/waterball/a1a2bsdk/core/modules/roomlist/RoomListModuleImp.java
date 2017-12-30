@@ -3,17 +3,15 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
-import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.base.AbstractGameModule;
 import com.ood.clean.waterball.a1a2bsdk.core.base.BindCallback;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.CallbackException;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.List;
 
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
 import gamecore.model.GameMode;
 import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.PlayerRoomModel;
@@ -27,16 +25,14 @@ import static container.Constants.Events.RoomList.JOIN_ROOM;
 
 
 public class RoomListModuleImp extends AbstractGameModule implements RoomListModule {
-    private GameRoom currentGameRoom;
-    private UserSigningModule signingModule;
     private ProxyCallback proxyCallback;
-
-    public RoomListModuleImp() {
-        this.signingModule = (UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING);
-    }
+    private Player currentPlayer;
 
     @Override
-    public void registerCallback(Callback callback) {
+    public void registerCallback(Player currentPlayer, Callback callback) {
+        validate(currentPlayer);
+        this.currentPlayer = currentPlayer;
+
         if (this.proxyCallback != null)
             callback.onError(new CallbackException());
         this.proxyCallback = new ProxyCallback(callback);
@@ -49,20 +45,20 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
             callback.onError(new CallbackException());
         eventBus.unregisterCallback(proxyCallback);
         this.proxyCallback = null;
+        this.currentPlayer = null;
     }
 
     @Override
     public void createRoom(String roomName, GameMode gameMode) {
-        GameRoom gameRoom = new GameRoom(gameMode, roomName, signingModule.getCurrentPlayer());
+        GameRoom gameRoom = new GameRoom(gameMode, roomName, currentPlayer);
         Protocol protocol = protocolFactory.createProtocol(CREATE_ROOM, RequestStatus.request.toString(), gson.toJson(gameRoom));
         client.broadcast(protocol);
     }
 
-
     @Override
     public void joinRoom(GameRoom gameRoom) {
         Protocol protocol = protocolFactory.createProtocol(JOIN_ROOM, RequestStatus.request.toString(),
-                gson.toJson(new PlayerRoomIdModel(signingModule.getCurrentPlayer().getId(), gameRoom.getId())));
+                gson.toJson(new PlayerRoomIdModel(currentPlayer.getId(), gameRoom.getId())));
         client.broadcast(protocol);
     }
 
@@ -70,16 +66,6 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
     public void getGameRoomList() {
         Protocol protocol = protocolFactory.createProtocol(GET_ROOMS, RequestStatus.request.toString(), null);
         client.broadcast(protocol);
-    }
-
-    @Override
-    public GameRoom getCurrentGameRoom() {
-        return currentGameRoom;
-    }
-
-    @Override
-    public void cleanCurrentGameRoom(){
-        this.currentGameRoom = null;
     }
 
     public class ProxyCallback implements RoomListModule.Callback{
@@ -99,7 +85,7 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
         @Override
         @BindCallback(event = CREATE_ROOM, status = RequestStatus.success)
         public void onNewRoom(GameRoom gameRoom) {
-            if(gameRoom.getHost().equals(signingModule.getCurrentPlayer()))
+            if(gameRoom.getHost().equals(currentPlayer))
                 this.onCreateRoomSuccessfully(gameRoom);
             else
             {
@@ -112,7 +98,6 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
         public void onCreateRoomSuccessfully(GameRoom gameRoom) {
             Log.d(TAG, "Room created successfully: " + gameRoom);
             callback.onCreateRoomSuccessfully(gameRoom);
-            currentGameRoom = gameRoom;
         }
 
         @Override
@@ -132,11 +117,10 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
         @Override
         @BindCallback(event = JOIN_ROOM, status = RequestStatus.success)
         public void onJoinRoomSuccessfully(PlayerRoomModel model) {
-            if(model.getPlayer().equals(signingModule.getCurrentPlayer()))
+            if(model.getPlayer().equals(currentPlayer))
             {
                 Log.d(TAG, "Join Room successfully: " + model.getGameRoom());
                 callback.onJoinRoomSuccessfully(model);
-                currentGameRoom = model.getGameRoom();
             }
             else
                 this.onPlayerJoined(model);

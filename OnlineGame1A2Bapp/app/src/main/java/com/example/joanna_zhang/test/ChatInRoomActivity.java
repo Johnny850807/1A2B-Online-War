@@ -24,8 +24,6 @@ import com.example.joanna_zhang.test.Utils.GameModeHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom.InRoomModule;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
@@ -34,6 +32,9 @@ import gamecore.model.ChangeStatusModel;
 import gamecore.model.GameMode;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.PlayerStatus;
+
+import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
+import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
 
 /**
@@ -74,7 +75,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     protected void onResume() {
         super.onResume();
         chatWindowView.onResume();
-        inRoomModule.registerCallback(this);
+        inRoomModule.registerCallback(currentPlayer, currentGameRoom, this);
     }
 
     @Override
@@ -115,8 +116,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         setUpGameModeTxt();
         roomPlayerListAdapter = new RoomPlayerListAdapter();
         inRoomModule = (InRoomModule) CoreGameServer.getInstance().getModule(ModuleName.INROOM);
-        currentPlayer = ((UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING)).getCurrentPlayer();
-        currentGameRoom = ((RoomListModule) CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST)).getCurrentGameRoom();
+        currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
+        currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
         if (currentPlayer.equals(roomHost))
             gameStartBtn.setText(R.string.game_start);
         setupChatWindow();

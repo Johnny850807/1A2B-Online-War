@@ -20,7 +20,6 @@ import static container.Constants.Events.Signing.SIGNOUT;
 
 public class UserSigningModuleImp extends AbstractGameModule implements UserSigningModule{
     private Gson gson = new Gson();
-    private Player currentPlayer;
     private ProxyCallback proxyCallback;
 
     @Override
@@ -47,18 +46,9 @@ public class UserSigningModuleImp extends AbstractGameModule implements UserSign
     }
 
     @Override
-    public void signOut() {
-        if (currentPlayer == null)
-            throw new IllegalStateException("No user signed in.");
+    public void signOut(Player currentPlayer) {
         Protocol protocol = protocolFactory.createProtocol(SIGNOUT, RequestStatus.request.toString(), gson.toJson(currentPlayer));
         client.broadcast(protocol);
-    }
-
-
-    public Player getCurrentPlayer() {
-        if (currentPlayer == null)
-            throw new IllegalStateException("There is no signed in user.");
-        return currentPlayer;
     }
 
     @Override
@@ -66,7 +56,6 @@ public class UserSigningModuleImp extends AbstractGameModule implements UserSign
         Protocol protocol = protocolFactory.createProtocol(GETINFO, RequestStatus.request.toString(), null);
         client.broadcast(protocol);
     }
-
 
     public class ProxyCallback implements UserSigningModule.Callback {
         private UserSigningModule.Callback callback;
@@ -78,7 +67,6 @@ public class UserSigningModuleImp extends AbstractGameModule implements UserSign
         @Override
         @BindCallback(event = SIGNIN, status = RequestStatus.success)
         public void onSignInSuccessfully(@NonNull Player player) {
-            currentPlayer = player;
             callback.onSignInSuccessfully(player);
         }
 

@@ -3,14 +3,10 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
-import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.base.AbstractGameModule;
 import com.ood.clean.waterball.a1a2bsdk.core.base.BindCallback;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.CallbackException;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.EventBroadcastException;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
@@ -29,17 +25,17 @@ import static container.Constants.Events.RoomList.JOIN_ROOM;
 
 
 public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
-    protected RoomListModule roomListModule;
-    protected UserSigningModule signingModule;
     protected ProxyCallback proxyCallback;
-
-    public InRoomModuleImp(){
-        this.signingModule = (UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING);
-        this.roomListModule = (RoomListModule) CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST);
-    }
+    protected Player currentPlayer;
+    protected GameRoom currentGameRoom;
 
     @Override
-    public void registerCallback(InRoomModule.Callback callback) {
+    public void registerCallback(Player currentPlayer, GameRoom currentRoom, Callback callback) {
+        validate(currentPlayer);
+        validate(currentRoom);
+        this.currentPlayer = currentPlayer;
+        this.currentGameRoom = currentRoom;
+
         if (this.proxyCallback != null)
             callback.onError(new CallbackException());
         this.proxyCallback = new InRoomModuleImp.ProxyCallback(callback);
@@ -52,6 +48,8 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
             callback.onError(new CallbackException());
         eventBus.unregisterCallback(proxyCallback);
         this.proxyCallback = null;
+        this.currentPlayer = null;
+        this.currentGameRoom = null;
     }
 
     @Override
@@ -64,7 +62,7 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
     @Override
     public void launchGame() {
         Protocol protocol = protocolFactory.createProtocol(LAUNCH_GAME,
-                RequestStatus.request.toString(), gson.toJson(roomListModule.getCurrentGameRoom()));
+                RequestStatus.request.toString(), gson.toJson(currentGameRoom));
         client.broadcast(protocol);
     }
 
@@ -73,14 +71,14 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
         // reuse the 'player left' event, to make that player leave from the room.
         Protocol protocol = protocolFactory.createProtocol(LEAVE_ROOM,
                 RequestStatus.request.toString(), gson.toJson(new PlayerRoomIdModel(player.getId(),
-                        roomListModule.getCurrentGameRoom().getId())));
+                        currentGameRoom.getId())));
         client.broadcast(protocol);
     }
 
     @Override
     public void closeRoom() {
         Protocol protocol = protocolFactory.createProtocol(CLOSE_ROOM,
-                RequestStatus.request.toString(), gson.toJson(roomListModule.getCurrentGameRoom()));
+                RequestStatus.request.toString(), gson.toJson(currentGameRoom));
         client.broadcast(protocol);
     }
 
@@ -94,7 +92,7 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
         @Override
         @BindCallback(event = JOIN_ROOM, status = RequestStatus.success)
         public void onPlayerJoined(PlayerRoomModel model) {
-            if (!model.getGameRoom().equals(roomListModule.getCurrentGameRoom()))
+            if (!model.getGameRoom().equals(currentGameRoom))
                 throw new IllegalStateException("The event you got was from the other room!");
             Log.d(TAG, "player " + model.getPlayer().getName() + " joined.");
             callback.onPlayerJoined(model);
@@ -103,7 +101,7 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
         @Override
         @BindCallback(event = CHANGE_STATUS, status = RequestStatus.success)
         public void onPlayerStatusChanged(ChangeStatusModel model) {
-            if (!model.getRoomId().equals(roomListModule.getCurrentGameRoom().getId()))
+            if (!model.getRoomId().equals(currentGameRoom.getId()))
                 throw new IllegalStateException("The event you got was from the other room!");
             Log.d(TAG, "player's id " + model.getPlayerId() + "status changed, ready:" + model.isPrepare() +".");
             callback.onPlayerStatusChanged(model);
@@ -112,7 +110,7 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
         @Override
         @BindCallback(event = LEAVE_ROOM, status = RequestStatus.success)
         public void onPlayerLeft(PlayerRoomModel model) {
-            if (!model.getGameRoom().equals(roomListModule.getCurrentGameRoom()))
+            if (!model.getGameRoom().equals(currentGameRoom))
                 throw new IllegalStateException("The event you got was from the other room!");
 
             Log.d(TAG, "player " + model.getPlayer().getName() + " left.");
@@ -136,7 +134,7 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
         @Override
         @BindCallback(event = LAUNCH_GAME, status = RequestStatus.success)
         public void onGameLaunchedSuccessfully(GameRoom gameRoom) {
-            if (!gameRoom.equals(roomListModule.getCurrentGameRoom()))
+            if (!gameRoom.equals(currentGameRoom))
                 throw new EventBroadcastException(LAUNCH_GAME);
 
             Log.d(TAG, "Game launched, info: " + gameRoom);
@@ -146,7 +144,7 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
         @Override
         @BindCallback(event = LAUNCH_GAME, status = RequestStatus.failed)
         public void onGameLaunchedFailed(GameRoom gameRoom) {
-            if (!gameRoom.equals(roomListModule.getCurrentGameRoom()))
+            if (!gameRoom.equals(currentGameRoom))
                 throw new EventBroadcastException(LAUNCH_GAME);
 
             Log.d(TAG, "Game launched, info: " + gameRoom);

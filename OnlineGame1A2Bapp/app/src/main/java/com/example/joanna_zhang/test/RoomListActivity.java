@@ -42,10 +42,11 @@ import gamecore.model.GameMode;
 import gamecore.model.PlayerRoomModel;
 
 import static com.example.joanna_zhang.test.R.array.roomMode;
+import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
 public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener, RoomListModule.Callback, ListView.OnItemClickListener {
     private final static String TAG = "RoomListActivity";
-    private Player player;
+    private Player currentPlayer;
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
     private GameMode[] gameModes = {null, GameMode.GROUP1A2B, GameMode.DUEL1A2B};
@@ -79,7 +80,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     protected void onStart() {
         super.onStart();
-        roomListModule.registerCallback(this);
+        roomListModule.registerCallback(currentPlayer, this);
     }
 
     @Override
@@ -91,15 +92,15 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        signingModule.signOut();
+        signingModule.signOut(currentPlayer);
     }
 
     private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
+        currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
         signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
         roomListModule = (RoomListModule) server.getModule(ModuleName.ROOMLIST);
-        player = signingModule.getCurrentPlayer();
-        Log.d(TAG, "Signed In Player: " + player);
+        Log.d(TAG, "Signed In Player: " + currentPlayer);
     }
 
     private void setupViews() {

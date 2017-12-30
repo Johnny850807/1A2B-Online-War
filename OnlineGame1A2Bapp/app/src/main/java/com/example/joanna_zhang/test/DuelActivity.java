@@ -69,13 +69,13 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     @Override
     protected void onStop() {
         super.onStop();
-        chatWindowView.onStop();
         duel1A2BModule.unregisterCallBack(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        chatWindowView.onStop();
     }
 
     private void init() {

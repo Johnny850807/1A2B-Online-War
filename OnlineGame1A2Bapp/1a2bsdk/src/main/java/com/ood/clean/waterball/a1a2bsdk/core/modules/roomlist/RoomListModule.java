@@ -6,18 +6,17 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 import java.util.List;
 
 import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
 import gamecore.model.GameMode;
 import gamecore.model.PlayerRoomModel;
 
 
 public interface RoomListModule extends GameModule{
-    void registerCallback(RoomListModule.Callback callback);
+    void registerCallback(Player currentPlayer, RoomListModule.Callback callback);
     void unregisterCallBack(RoomListModule.Callback callback);
     void createRoom(String roomName, GameMode gameMode);
     void joinRoom(GameRoom gameRoom);
     void getGameRoomList();
-    GameRoom getCurrentGameRoom();
-    void cleanCurrentGameRoom();
 
     public interface Callback extends GameCallBack {
         /**
