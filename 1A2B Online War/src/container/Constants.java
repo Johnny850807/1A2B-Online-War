@@ -4,6 +4,7 @@ public final class Constants {
 	public final static int VERSION = 1;
 	public final static class Events{
 		public final static String PING = "Ping";
+		public final static String RECONNECTED = "Reconnected";
 		public final static class Signing{
 			public final static String SIGNIN = "SignIn";
 			public final static  String SIGNOUT = "SignOut";

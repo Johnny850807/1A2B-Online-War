@@ -10,7 +10,7 @@ public class GamecoreHelper {
 	public static String playersToString(Collection<ClientPlayer> clientPlayers){
 		StringBuilder strb = new StringBuilder();
 		for(ClientPlayer cp : clientPlayers)
-			strb.append(cp.getPlayerName()).append(" ");
+			strb.append(cp.getPlayerName()).append(" ").append(cp.getPlayer().getUserStatus()).append("\n");
 		return strb.toString();
 	}
 	

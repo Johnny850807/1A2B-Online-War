@@ -112,8 +112,8 @@ public class ReleaseGameCore implements GameCore{
 	
 	@Override
 	public void addGameRoom(GameRoom room){
-		if (room.getId() == null || room.getProtocolFactory() == null)
-			log.error("The room's id or the factory has not been initialized.");
+		if (room.getId() == null || room.getProtocolFactory() == null || room.getHost() == null)
+			log.error("The room is invalid.");
 		Protocol protocol = factory.getProtocolFactory().createProtocol(RoomList.CREATE_ROOM,
 				RequestStatus.success.toString(), gson.toJson(room));
 		
@@ -134,6 +134,7 @@ public class ReleaseGameCore implements GameCore{
 				RequestStatus.success.toString(), gson.toJson(room));
 		broadcastRoom(room.getId(), protocol);
 		broadcastClientPlayers(ClientStatus.signedIn, protocol);
+		room.getPlayers().forEach(p -> p.setUserStatus(ClientStatus.signedIn));
 		removeTheRoomSync(room, "Room removed: " + room);
 	}
 	
