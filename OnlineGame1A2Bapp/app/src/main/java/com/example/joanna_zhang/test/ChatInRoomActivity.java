@@ -210,7 +210,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         //TODO remove this such things
         Class inclass = gameRoom.getGameMode() == GameMode.DUEL1A2B ? DuelActivity.class : GroupFightActivity.class;
         Intent intent = new Intent(this, inclass);
-        intent.putExtra("game room", gameRoom);
+        intent.putExtra(PLAYER, currentPlayer);
+        intent.putExtra(GAMEROOM, gameRoom);
         startActivity(intent);
         finish();
     }
