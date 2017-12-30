@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -37,11 +38,11 @@ import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
 /**
  * TODO:
- * (1) the player sets ready
- * (2) the host starts the game and 'make sure you have ensured the player amount is suitable to the game', block the action if not.
+ * (1) the player sets ready - ok
+ * (2) the host starts the game and 'make sure you have ensured the player amount is suitable to the game', block the action if not. - do
  * (3) the host can boot the player by answering yes to the dialog which contains options whether to boot the player
  * created and showed by 'long-clicking' the item contains the player status you want to boot.
- * (4) show the toast if any player left or joined.
+ * (4) show the toast if any player left or joined.  - ok
  * (5) replace all 'if game mode == DUEL then ... else Group ...' with the 'switch-case logic helping static method'.
  * (6) clean your code and organize the methods (put them in the readable order),
  * don't let any garbage be here anymore, such as some 'gray-text' attributes, some 'few-lines' methods.
@@ -95,8 +96,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     private void sureAboutComeBackRoomList() {
         new AlertDialog.Builder(this)
-                .setTitle("返回遊戲大廳")
-                .setMessage("確定要返回遊戲大廳?")
+                .setTitle(R.string.comeBackToRoomList)
+                .setMessage(R.string.sureAboutComeBackToRoomList)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -153,18 +154,39 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     public void gameStartButtonOnClick(View view) {
-        if (currentPlayer.equals(currentGameRoom.getHost()) && currentGameRoom.getPlayers().size() >= 2) {
+        if (currentPlayer.equals(currentGameRoom.getHost()) && playerAmountEnoughToLaunchGame() && allPlayersAreReady()) {
             inRoomModule.launchGame();
         }
         else {
             for (PlayerStatus playerStatus : currentGameRoom.getPlayerStatus())
                 if (playerStatus.getPlayer().equals(currentPlayer)) {
+
                     inRoomModule.changeStatus(new ChangeStatusModel(currentPlayer.getId(), currentGameRoom.getId(), !playerStatus.isReady()));
-                    int statusText = playerStatus.isReady() ? R.string.unReady : R.string.ready;
+                    int statusText = !playerStatus.isReady() ? R.string.unReady : R.string.ready;
                     gameStartBtn.setText(statusText);
                 }
             roomPlayerListAdapter.notifyDataSetChanged();
         }
+    }
+
+    private boolean playerAmountEnoughToLaunchGame(){
+        if (currentGameRoom.getPlayerAmount() >= 2)
+            return true;
+        else
+            Toast.makeText(this, R.string.playerAmountNotEnoughToLuanchGame, Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    private boolean allPlayersAreReady() {
+        int readyAmount = 0;
+        for (PlayerStatus player : currentGameRoom.getPlayerStatus())
+            if (player.isReady())
+                readyAmount++;
+        if (readyAmount == currentGameRoom.getPlayerAmount()-1)
+            return true;
+        else
+            Toast.makeText(this, R.string.someoneDidntReady, Toast.LENGTH_SHORT).show();
+        return false;
     }
 
     @Override
@@ -189,8 +211,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
             Toast.makeText(this, R.string.theHostLeftRoomClosed, Toast.LENGTH_SHORT).show();
             finish();
         }
-        Toast.makeText(this, model.getPlayer() + getString(R.string.isLeft), Toast.LENGTH_SHORT).show();
         roomPlayerListAdapter.notifyDataSetChanged();
+        Toast.makeText(this, model.getPlayer() + getString(R.string.isLeft), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -230,25 +252,35 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("請選擇欲剔除玩家");
-//
-//        ArrayAdapter<PlayerStatus> players = new ArrayAdapter<PlayerStatus>(, R.layout.chat_room_player_list_item);
-//            for (PlayerStatus player : gameRoom.getPlayerStatus())
-//                players.add(player);
-//        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.dismiss();
-//            }
-//        });
-//        builder.setAdapter(players, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int position) {
-//                PlayerStatus player = players.getItem(position);
-////                new AlertDialog.Builder(DialogActivity.this)
-//            }
-//        });
+        AlertDialog.Builder builder = new AlertDialog.Builder(ChatInRoomActivity.this);
+        builder.setTitle(R.string.selectWhichPlayerYouWantToBoot);
+
+        ArrayAdapter<PlayerStatus> players = new ArrayAdapter<PlayerStatus>(ChatInRoomActivity.this, R.layout.chat_room_player_list_item);
+            for (PlayerStatus player : currentGameRoom.getPlayerStatus())
+                players.add(player);
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setAdapter(players, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int position) {
+                PlayerStatus player = players.getItem(position);
+                new AlertDialog.Builder(ChatInRoomActivity.this)
+                        .setMessage(player.getPlayer().getName())
+                        .setTitle(R.string.thePlayerYouWantToBoot)
+                        .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                inRoomModule.bootPlayer(player.getPlayer());
+                            }
+                        })
+                        .show();
+            }
+        })
+        .show();
 //        new AlertDialog.Builder(this)
 //                .setTitle(R.string.bootPlayer)
 //                .setMessage(R.string.sureAboutBootThisPlayer)

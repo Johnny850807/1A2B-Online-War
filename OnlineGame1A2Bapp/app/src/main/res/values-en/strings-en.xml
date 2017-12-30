@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">1A2B</string>
     <string name="login">Login</string>
-    <string name="autoLogin">AutoLogin</string>
+    <string name="recordName">AutoLogin</string>
     <string name="inputName">Input your name</string>
     <string name="serverStatus" formatted="false">Server status: % room, % people online</string>
     <string name="signInFailedMessage">Sign In Failed.</string>

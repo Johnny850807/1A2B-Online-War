@@ -97,9 +97,9 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         p2AnswerTxt = (TextView) findViewById(R.id.p2AnswerTxt);
         p1ResultListView = (ListView) findViewById(R.id.p1ResultLst);
         p2ResultListView = (ListView) findViewById(R.id.p2ResultLst);
+        p1NameTxt.setText(currentPlayer.getName());
         String p2Name = currentGameRoom.getPlayers().get(0).equals(currentPlayer)?
                 currentGameRoom.getPlayers().get(1).getName() : currentGameRoom.getPlayers().get(0).getName();
-        p1NameTxt.setText(currentPlayer.getName());
         p2NameTxt.setText(p2Name);
     }
 
