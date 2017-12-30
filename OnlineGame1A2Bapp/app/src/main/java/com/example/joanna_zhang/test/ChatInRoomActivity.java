@@ -228,9 +228,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     public void onGameLaunchedSuccessfully(GameRoom gameRoom) {
         Toast.makeText(this, R.string.gameStart, Toast.LENGTH_SHORT).show();
 
-        //TODO remove this such things
-        Class inclass = gameRoom.getGameMode() == GameMode.DUEL1A2B ? DuelActivity.class : GroupFightActivity.class;
-        Intent intent = new Intent(this, inclass);
+        Intent intent = new Intent(this, GameModeHelper.getGameModeActivity(gameMode));
         intent.putExtra("game room", gameRoom);
         startActivity(intent);
         finish();
@@ -289,17 +287,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
             }
         })
         .show();
-//        new AlertDialog.Builder(this)
-//                .setTitle(R.string.bootPlayer)
-//                .setMessage(R.string.sureAboutBootThisPlayer)
-//                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        inRoomModule.bootPlayer(gameRoom.getPlayerStatus().get(position).getPlayer());
-//                    }
-//                })
-//                .setNegativeButton(R.string.cancel, null)
-//                .show();
         return true;
     }
 
