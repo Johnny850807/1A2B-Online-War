@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 import container.ApacheLoggerAdapter;
+import container.base.ClientBinder;
 import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
-import gamecore.model.ClientBinder;
 import gamecore.model.ClientPlayer;
 import gamecore.model.ClientStatus;
 import gamecore.model.GameMode;

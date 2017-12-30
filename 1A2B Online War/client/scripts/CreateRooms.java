@@ -1,3 +1,4 @@
+package scripts;
 import static container.Constants.Events.RoomList.CREATE_ROOM;
 
 import java.util.ArrayList;

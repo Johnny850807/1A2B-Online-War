@@ -47,6 +47,7 @@ public class Boss1A2BGame extends Game{
 		PlayerSpirit attacker = getPlayerSpirit(playerId);
 		AttackResult attackResult = boss.attack(attacker, guess);
 		attackResults.add(attackResult);
+		
 		if (allPlayerTurnsOver())
 			boss.action();
 		whosTurn = whosTurn + 1 > playerSpirits.size() ? 0 : whosTurn + 1;
