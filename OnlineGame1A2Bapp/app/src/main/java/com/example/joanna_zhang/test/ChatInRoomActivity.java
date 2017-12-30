@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +47,7 @@ import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
  * don't let any garbage be here anymore, such as some 'gray-text' attributes, some 'few-lines' methods.
  */
 public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InRoomModule.Callback, AdapterView.OnItemLongClickListener {
-
+    private static final String TAG = "ChatInRoomActivity";
     private GameRoom currentGameRoom;
     private Player currentPlayer;
     private ChatWindowView chatWindowView;
@@ -251,18 +252,21 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        final int YES = 0;
+        final int NO = 1;
         String[] YESORNO = new String[]{getString(R.string.yes), getString(R.string.no)};
         if (position != 0 && currentPlayer.equals(currentGameRoom.getHost()))
             new AlertDialog.Builder(this)
                     .setTitle(getString(R.string.thePlayerYouWantToBoot, currentGameRoom.getPlayers().get(position).getName()))
                     .setItems(YESORNO, new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int position) {
-                            switch (position){
-                                case 0:
+                        public void onClick(DialogInterface dialog, int yesOrNo) {
+                            switch (yesOrNo){
+                                case YES:
+                                    Log.d(TAG, "On booting item long click, position: " + position);
                                     inRoomModule.bootPlayer(currentGameRoom.getPlayers().get(position));
                                     break;
-                                case 1:
+                                case NO:
                                     dialog.dismiss();
                                     break;
                             }
