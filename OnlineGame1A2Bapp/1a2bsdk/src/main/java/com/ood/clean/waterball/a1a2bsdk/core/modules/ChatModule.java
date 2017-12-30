@@ -5,9 +5,11 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 
 import gamecore.entity.ChatMessage;
+import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
 
 public interface ChatModule extends GameModule{
-    void registerCallback(ChatModule.Callback callback);
+    void registerCallback(Player currentPlayer, GameRoom currentRoom, ChatModule.Callback callback);
     void unregisterCallBack(ChatModule.Callback callback);
     void sendMessage(ChatMessage message);
 

@@ -2,6 +2,7 @@ package com.example.joanna_zhang.test;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,6 @@ import android.widget.TextView;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModule;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModuleImp;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import gamecore.entity.Player;
 
 
 public class ChatWindowView implements View.OnClickListener, ChatModule.Callback{
-
+    private static final String TAG = "ChatWindowView";
     private Activity activity;
     private ChatModule chatModule;
     private GameRoom gameRoom;
@@ -54,10 +54,12 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
     }
 
     public void onResume() {
-        chatModule.registerCallback(this);
+        Log.i(TAG, "ChatWindowView onResume");
+        chatModule.registerCallback(poster, gameRoom, this);
     }
 
     public void onStop() {
+        Log.i(TAG, "ChatWindowView onStop");
         chatModule.unregisterCallBack(this);
     }
 
@@ -99,6 +101,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
 
     @Override
     public void onError(@NonNull Throwable err) {
+        Log.d("error", "error", err);
         listener.onChatMessageError(err);
     }
 

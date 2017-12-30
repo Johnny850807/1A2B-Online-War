@@ -4,32 +4,30 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
-import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.base.AbstractGameModule;
 import com.ood.clean.waterball.a1a2bsdk.core.base.BindCallback;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.CallbackException;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import container.protocol.Protocol;
 import gamecore.entity.ChatMessage;
+import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
 import gamecore.model.RequestStatus;
 
 import static container.Constants.Events.Chat.SEND_MSG;
 
 public class ChatModuleImp extends AbstractGameModule implements ChatModule {
-    protected UserSigningModule signingModule;
-    protected RoomListModule roomListModule;
     protected ProxyCallback proxyCallback;
-
-    public ChatModuleImp() {
-        signingModule = (UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING);
-        roomListModule = (RoomListModule) CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST);
-    }
+    protected Player currentPlayer;
+    protected GameRoom currentGameRoom;
 
     @Override
-    public void registerCallback(Callback callback) {
+    public void registerCallback(Player currentPlayer, GameRoom currentRoom, Callback callback) {
+        validate(currentPlayer);
+        validate(currentRoom);
+        this.currentPlayer = currentPlayer;
+        this.currentGameRoom = currentRoom;
+
         if (this.proxyCallback != null)
             callback.onError(new CallbackException());
         this.proxyCallback = new ChatModuleImp.ProxyCallback(callback);
@@ -42,6 +40,8 @@ public class ChatModuleImp extends AbstractGameModule implements ChatModule {
             callback.onError(new CallbackException());
         eventBus.unregisterCallback(proxyCallback);
         this.proxyCallback = null;
+        this.currentPlayer = null;
+        this.currentGameRoom = null;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ChatModuleImp extends AbstractGameModule implements ChatModule {
         @BindCallback(event = SEND_MSG, status = RequestStatus.success)
         public void onMessageReceived(ChatMessage message) {
             Log.d(TAG, "message received: " + message.getContent());
-            if(message.getPoster().equals(signingModule.getCurrentPlayer()))
+            if(message.getPoster().equals(currentPlayer))
                 this.onMessageSent(message);
             callback.onMessageReceived(message);
         }

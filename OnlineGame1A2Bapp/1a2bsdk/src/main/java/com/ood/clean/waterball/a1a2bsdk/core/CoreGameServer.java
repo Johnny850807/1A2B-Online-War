@@ -6,10 +6,6 @@ import android.util.Log;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import container.base.Client;
@@ -23,15 +19,12 @@ import static com.ood.clean.waterball.a1a2bsdk.core.Secret.SERVER_ADDRESS;
  **/
 public final class CoreGameServer {
     private static final String TAG = "Socket";
+    private static final GameModuleFactory moduleFactory = new ReleaseGameModuleFactory();
     private static CoreGameServer instance;
     private @Inject Client client;
     private @Inject ProtocolFactory protocolFactory;
     private @Inject EventBus eventBus;
     private Thread clientThread;
-    private String address = SERVER_ADDRESS;
-    private int port = PORT;
-
-    private Map<ModuleName,GameModule> moduleMap;
 
     private CoreGameServer(){
         Component.inject(this);
@@ -51,9 +44,6 @@ public final class CoreGameServer {
      * @param context MainActivity
      */
     public void startEngine(@NonNull Context context){
-        if (moduleMap == null)
-            prepareModules();
-
         if (clientThread == null || !clientThread.isAlive())
         {
             Log.d(TAG, "Socket initializing ..., Ip: " + SERVER_ADDRESS + ":" + PORT);
@@ -62,21 +52,13 @@ public final class CoreGameServer {
         }
     }
 
-    public void prepareModules(){
-        moduleMap = Collections.checkedMap(new HashMap<ModuleName, GameModule>(),ModuleName.class, GameModule.class);
-        new ReleaseGameModuleInflater().onPrepareModules(moduleMap);
-    }
 
     /**
      * @param name module's name enum
      * @return matching name module
      */
     public GameModule getModule(ModuleName name){
-
-        if (!moduleMap.containsKey(name))
-            throw new IllegalArgumentException(name.toString() + " module is not prepared.");
-
-        return moduleMap.get(name);
+        return moduleFactory.createModule(name);
     }
 
     /**

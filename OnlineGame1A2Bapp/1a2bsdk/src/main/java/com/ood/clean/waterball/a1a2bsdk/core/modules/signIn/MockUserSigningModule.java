@@ -30,15 +30,7 @@ public class MockUserSigningModule implements UserSigningModule {
     }
 
     @Override
-    public void signOut() {
-        currentPlayer = null;
-    }
-
-    public Player getCurrentPlayer() {
-        if (currentPlayer == null)
-            throw new IllegalStateException("There is no user signed in.");
-        return currentPlayer;
-    }
+    public void signOut(Player player) {}
 
     @Override
     public void getServerInformation() {

@@ -4,6 +4,8 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 
 import java.util.List;
 
+import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
 import gamecore.model.ContentModel;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
@@ -11,7 +13,7 @@ import gamecore.model.games.a1b2.GameOverModel;
 
 public interface Duel1A2BModule extends GameModule {
 
-    void registerCallback(Duel1A2BModule.Callback callback);
+    void registerCallback(Player currentPlayer, GameRoom currentGameRoom, Duel1A2BModule.Callback callback);
     void unregisterCallBack(Duel1A2BModule.Callback callback);
 
     void enterGame();
