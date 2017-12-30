@@ -254,7 +254,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(ChatInRoomActivity.this);
         builder.setTitle(R.string.selectWhichPlayerYouWantToBoot);
-
+        String[] YESORNO = new String[]{getString(R.string.yes), getString(R.string.no)};
         ArrayAdapter<PlayerStatus> players = new ArrayAdapter<PlayerStatus>(ChatInRoomActivity.this, R.layout.chat_room_player_list_item);
             for (PlayerStatus player : currentGameRoom.getPlayerStatus())
                 players.add(player);
