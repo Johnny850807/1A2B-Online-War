@@ -1,4 +1,4 @@
-package main;
+package scripts;
 
 
 import com.google.gson.Gson;
@@ -14,9 +14,12 @@ import module.FactoryModule;
 import module.SocketConnector;
 import utils.MyGson;
 
+/**
+ * a script used to run any protocol.
+ */
 public class RunProtocol {
-	private static final String PLAYERID = "f2360edd-5537-4a81-ba19-0261abc80586";
-	private static final String ROOMID = "a119a119-20b1-4e27-8650-299f5c158a41";
+	private static final String PLAYERID = "a69b02fc-3b0f-421d-b4ca-200a0ce765fa";
+	private static final String ROOMID = "a69b02fc-3b0f-421d-b4ca-200a0ce765fas";
 	private static final String ANSWER = "5678";
 	private static final String GUESSNUMBER = "1234";
 	private static final Gson gson = MyGson.getGson();

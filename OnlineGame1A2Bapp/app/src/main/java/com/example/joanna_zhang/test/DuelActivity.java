@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.Duel1A2BModule;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +30,9 @@ import gamecore.model.ContentModel;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
 import gamecore.model.games.a1b2.GuessRecord;
+
+import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
+import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
 public class DuelActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowView.OnClickListener, Duel1A2BModule.Callback {
 
@@ -61,7 +63,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     protected void onResume() {
         super.onResume();
         chatWindowView.onResume();
-        duel1A2BModule.registerCallback(this);
+        duel1A2BModule.registerCallback(currentPlayer, currentGameRoom, this);
         duel1A2BModule.enterGame();
         waitOtherPlayersPrepare();
     }
@@ -80,10 +82,9 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
-        duel1A2BModule = (Duel1A2BModule) server.getModule(ModuleName.GAME1A2BDUEL);
-        currentPlayer = ((UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING)).getCurrentPlayer();
-        currentGameRoom = (GameRoom) getIntent().getSerializableExtra("game room");
-        //currentGameRoom = ((RoomListModule) CoreGameServer.getInstance().getModule(ModuleName.ROOMLIST)).getCurrentGameRoom();
+        duel1A2BModule = (Duel1A2BModule) server.createModule(ModuleName.GAME1A2BDUEL);
+        currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
+        currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
         p1GuessResultAdapter = new GuessResultAdapter();
         p2GuessResultAdapter = new GuessResultAdapter();
     }
@@ -96,9 +97,9 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         p2AnswerTxt = (TextView) findViewById(R.id.p2AnswerTxt);
         p1ResultListView = (ListView) findViewById(R.id.p1ResultLst);
         p2ResultListView = (ListView) findViewById(R.id.p2ResultLst);
+        p1NameTxt.setText(currentPlayer.getName());
         String p2Name = currentGameRoom.getPlayers().get(0).equals(currentPlayer)?
                 currentGameRoom.getPlayers().get(1).getName() : currentGameRoom.getPlayers().get(0).getName();
-        p1NameTxt.setText(currentPlayer.getName());
         p2NameTxt.setText(p2Name);
     }
 

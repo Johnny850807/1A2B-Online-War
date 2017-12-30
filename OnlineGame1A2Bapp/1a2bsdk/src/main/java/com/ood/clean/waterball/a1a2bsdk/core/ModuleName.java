@@ -3,7 +3,7 @@ package com.ood.clean.waterball.a1a2bsdk.core;
 
 /**
  * the enum represents the key of the module,
- * you can use this enum to get the corresponding module from CoreGameServer.getModule(ModuleName key);
+ * you can use this enum to get the corresponding module from CoreGameServer.createModule(ModuleName key);
  */
 public enum ModuleName {
     /**

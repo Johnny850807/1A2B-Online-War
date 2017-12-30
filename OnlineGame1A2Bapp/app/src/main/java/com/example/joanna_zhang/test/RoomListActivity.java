@@ -42,6 +42,7 @@ import gamecore.model.GameMode;
 import gamecore.model.PlayerRoomModel;
 
 import static com.example.joanna_zhang.test.R.array.roomMode;
+import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
 public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener, RoomListModule.Callback, ListView.OnItemClickListener {
@@ -98,8 +99,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
         currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
-        signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
-        roomListModule = (RoomListModule) server.getModule(ModuleName.ROOMLIST);
+        signingModule = (UserSigningModule) server.createModule(ModuleName.SIGNING);
+        roomListModule = (RoomListModule) server.createModule(ModuleName.ROOMLIST);
         Log.d(TAG, "Signed In Player: " + currentPlayer);
     }
 
@@ -206,7 +207,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     private void enterGameRoom(GameRoom gameRoom) {
         Intent enterToGameRoom = new Intent(this, ChatInRoomActivity.class);
-        enterToGameRoom.putExtra("game room", gameRoom);
+        enterToGameRoom.putExtra(PLAYER, currentPlayer);
+        enterToGameRoom.putExtra(GAMEROOM, gameRoom);
         startActivity(enterToGameRoom);
     }
 

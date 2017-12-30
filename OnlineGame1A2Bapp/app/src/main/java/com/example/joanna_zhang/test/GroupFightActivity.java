@@ -1,7 +1,7 @@
 package com.example.joanna_zhang.test;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +11,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ood.clean.waterball.a1a2bsdk.core.CoreGameServer;
-import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
 import java.util.List;
 
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
+
+import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
 public class GroupFightActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowView.OnClickListener {
 
@@ -39,8 +39,7 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
         setContentView(R.layout.activity_room_fight);
 
         CoreGameServer server = CoreGameServer.getInstance();
-        currentPlayer = ((UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING)).getCurrentPlayer();
-
+        currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
         setupChatWindow();
         findViews();
     }

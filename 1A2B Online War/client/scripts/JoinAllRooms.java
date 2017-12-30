@@ -1,3 +1,4 @@
+package scripts;
 import static container.Constants.Events.RoomList.*;
 
 import java.util.List;

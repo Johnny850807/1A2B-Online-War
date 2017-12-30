@@ -1,10 +1,10 @@
 package container.eventhandler;
 
 import container.base.Client;
+import container.base.ClientBinder;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
-import gamecore.model.ClientBinder;
 import gamecore.model.ErrorMessage;
 import gamecore.model.RequestStatus;
 

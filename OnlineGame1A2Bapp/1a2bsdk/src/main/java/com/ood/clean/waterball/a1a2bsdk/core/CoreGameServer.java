@@ -57,7 +57,7 @@ public final class CoreGameServer {
      * @param name module's name enum
      * @return matching name module
      */
-    public GameModule getModule(ModuleName name){
+    public GameModule createModule(ModuleName name){
         return moduleFactory.createModule(name);
     }
 

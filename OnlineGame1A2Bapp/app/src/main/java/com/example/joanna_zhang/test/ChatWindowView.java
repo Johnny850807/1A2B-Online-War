@@ -45,7 +45,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
         this.activity = activity;
         this.gameRoom = gameRoom;
         this.poster = poster;
-        chatModule = (ChatModule) CoreGameServer.getInstance().getModule(ModuleName.CHAT);
+        chatModule = (ChatModule) CoreGameServer.getInstance().createModule(ModuleName.CHAT);
         inputMessageEdt = activity.findViewById(R.id.inputChattingTxt);
         chatWindowLst = activity.findViewById(R.id.chatwindowLst);
         sendMessageImgBtn = activity.findViewById(R.id.sendMessageBtn);
