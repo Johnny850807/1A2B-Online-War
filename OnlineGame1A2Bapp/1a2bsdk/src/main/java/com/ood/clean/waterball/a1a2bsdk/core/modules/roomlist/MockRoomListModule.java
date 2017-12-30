@@ -39,7 +39,7 @@ public class MockRoomListModule implements RoomListModule {
 
     @Override
     public void createRoom(String roomName, GameMode gameMode) {
-        UserSigningModule userSigningModule = (UserSigningModule) CoreGameServer.getInstance().getModule(ModuleName.SIGNING);
+        UserSigningModule userSigningModule = (UserSigningModule) CoreGameServer.getInstance().createModule(ModuleName.SIGNING);
         //callback.onCreateRoomSuccessfully(new GameRoom(gameMode, roomName, userSigningModule.getCurrentPlayer()));
     }
 

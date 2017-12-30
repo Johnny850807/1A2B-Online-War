@@ -82,7 +82,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
-        duel1A2BModule = (Duel1A2BModule) server.getModule(ModuleName.GAME1A2BDUEL);
+        duel1A2BModule = (Duel1A2BModule) server.createModule(ModuleName.GAME1A2BDUEL);
         currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
         currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
         p1GuessResultAdapter = new GuessResultAdapter();

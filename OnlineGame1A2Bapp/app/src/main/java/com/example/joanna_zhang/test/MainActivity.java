@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViews();
-        signingModule = (UserSigningModule) gameServer.getModule(ModuleName.SIGNING);
+        signingModule = (UserSigningModule) gameServer.createModule(ModuleName.SIGNING);
         sharedPreferences = getSharedPreferences(SP_NAME, MODE_PRIVATE);
         readPlayerNameFromSharedPreferences();
     }

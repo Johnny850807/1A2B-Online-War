@@ -99,8 +99,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
         currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
-        signingModule = (UserSigningModule) server.getModule(ModuleName.SIGNING);
-        roomListModule = (RoomListModule) server.getModule(ModuleName.ROOMLIST);
+        signingModule = (UserSigningModule) server.createModule(ModuleName.SIGNING);
+        roomListModule = (RoomListModule) server.createModule(ModuleName.ROOMLIST);
         Log.d(TAG, "Signed In Player: " + currentPlayer);
     }
 

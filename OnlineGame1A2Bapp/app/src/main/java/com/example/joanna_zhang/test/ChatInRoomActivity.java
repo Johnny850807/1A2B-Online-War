@@ -114,7 +114,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
         currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
         roomPlayerListAdapter = new RoomPlayerListAdapter();
-        inRoomModule = (InRoomModule) CoreGameServer.getInstance().getModule(ModuleName.INROOM);
+        inRoomModule = (InRoomModule) CoreGameServer.getInstance().createModule(ModuleName.INROOM);
     }
 
     private void setUpPlayerListView() {
