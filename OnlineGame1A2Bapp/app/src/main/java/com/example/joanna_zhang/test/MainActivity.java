@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
 
     private void signIn(String playerName){
         signingModule.signIn(playerName);
-        loginBtn.setEnabled(false);
     }
 
     public void randomNameButtonOnClick(View view) {
