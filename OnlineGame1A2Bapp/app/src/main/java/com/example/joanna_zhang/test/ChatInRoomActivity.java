@@ -28,7 +28,6 @@ import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ChangeStatusModel;
-import gamecore.model.GameMode;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.PlayerStatus;
 
@@ -39,11 +38,11 @@ import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 /**
  * TODO:
  * (1) the player sets ready - ok
- * (2) the host starts the game and 'make sure you have ensured the player amount is suitable to the game', block the action if not. - do
+ * (2) the host starts the game and 'make sure you have ensured the player amount is suitable to the game', block the action if not. - ok
  * (3) the host can boot the player by answering yes to the dialog which contains options whether to boot the player
  * created and showed by 'long-clicking' the item contains the player status you want to boot.
  * (4) show the toast if any player left or joined.  - ok
- * (5) replace all 'if game mode == DUEL then ... else Group ...' with the 'switch-case logic helping static method'.
+ * (5) replace all 'if game mode == DUEL then ... else Group ...' with the 'switch-case logic helping static method'. - ok
  * (6) clean your code and organize the methods (put them in the readable order),
  * don't let any garbage be here anymore, such as some 'gray-text' attributes, some 'few-lines' methods.
  */
@@ -88,7 +87,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             sureAboutComeBackRoomList();
         }
         return false;
@@ -135,13 +134,14 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void findViews() {
-        gameModeTxt = (TextView) findViewById(R.id.roomModeNameTxt);
+        gameModeTxt = findViewById(R.id.roomModeNameTxt);
         gameStartBtn = (Button) findViewById(R.id.gameStartBtn);
         chatRoomPlayerListView = (ListView) findViewById(R.id.chatRoomPlayersLst);
     }
 
     @Override
-    public void onChatMessageUpdate(ChatMessage chatMessage) {}
+    public void onChatMessageUpdate(ChatMessage chatMessage) {
+    }
 
     @Override
     public void onMessageSendingFailed(ChatMessage chatMessage) {
@@ -156,11 +156,9 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     public void gameStartButtonOnClick(View view) {
         if (currentPlayer.equals(currentGameRoom.getHost()) && playerAmountEnoughToLaunchGame() && allPlayersAreReady()) {
             inRoomModule.launchGame();
-        }
-        else {
+        } else {
             for (PlayerStatus playerStatus : currentGameRoom.getPlayerStatus())
                 if (playerStatus.getPlayer().equals(currentPlayer)) {
-
                     inRoomModule.changeStatus(new ChangeStatusModel(currentPlayer.getId(), currentGameRoom.getId(), !playerStatus.isReady()));
                     int statusText = !playerStatus.isReady() ? R.string.unReady : R.string.ready;
                     gameStartBtn.setText(statusText);
@@ -169,7 +167,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         }
     }
 
-    private boolean playerAmountEnoughToLaunchGame(){
+    private boolean playerAmountEnoughToLaunchGame() {
         if (currentGameRoom.getPlayerAmount() >= 2)
             return true;
         else
@@ -178,29 +176,28 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private boolean allPlayersAreReady() {
-        int readyAmount = 0;
         for (PlayerStatus player : currentGameRoom.getPlayerStatus())
-            if (player.isReady())
-                readyAmount++;
-        if (readyAmount == currentGameRoom.getPlayerAmount()-1)
-            return true;
-        else
-            Toast.makeText(this, R.string.someoneDidntReady, Toast.LENGTH_SHORT).show();
-        return false;
+            if (!player.isReady()) {
+                Toast.makeText(this, R.string.someoneDidntReady, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        return true;
     }
 
     @Override
     public void onPlayerJoined(PlayerRoomModel model) {
         currentGameRoom.addPlayer(model.getPlayer());
         roomPlayerListAdapter.notifyDataSetChanged();
-        Toast.makeText(this, model.getPlayer() + getString(R.string.isJoined), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, model.getPlayer().getName() + getString(R.string.isJoined), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onPlayerStatusChanged(ChangeStatusModel model) {
         for (PlayerStatus playerStatus : currentGameRoom.getPlayerStatus())
-            if (playerStatus.getPlayer().getId().equals(model.getPlayerId()))
+            if (playerStatus.getPlayer().getId().equals(model.getPlayerId())) {
                 playerStatus.setReady(model.isPrepare());
+                break;
+            }
         roomPlayerListAdapter.notifyDataSetChanged();
     }
 
@@ -210,18 +207,16 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         if (model.getPlayer().equals(currentGameRoom.getHost())) {
             Toast.makeText(this, R.string.theHostLeftRoomClosed, Toast.LENGTH_SHORT).show();
             finish();
-        }
-        roomPlayerListAdapter.notifyDataSetChanged();
-        Toast.makeText(this, model.getPlayer() + getString(R.string.isLeft), Toast.LENGTH_SHORT).show();
+        } else
+            roomPlayerListAdapter.notifyDataSetChanged();
+        Toast.makeText(this, model.getPlayer().getName() + getString(R.string.isLeft), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onGameLaunchedSuccessfully(GameRoom gameRoom) {
         Toast.makeText(this, R.string.gameStart, Toast.LENGTH_SHORT).show();
 
-        //TODO remove this such things
-        Class inclass = gameRoom.getGameMode() == GameMode.DUEL1A2B ? DuelActivity.class : GroupFightActivity.class;
-        Intent intent = new Intent(this, inclass);
+        Intent intent = new Intent(this, GameModeHelper.getGameModeActivity(currentGameRoom.getGameMode()));
         intent.putExtra(PLAYER, currentPlayer);
         intent.putExtra(GAMEROOM, gameRoom);
         startActivity(intent);
@@ -257,46 +252,24 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(ChatInRoomActivity.this);
-        builder.setTitle(R.string.selectWhichPlayerYouWantToBoot);
         String[] YESORNO = new String[]{getString(R.string.yes), getString(R.string.no)};
-        ArrayAdapter<PlayerStatus> players = new ArrayAdapter<PlayerStatus>(ChatInRoomActivity.this, R.layout.chat_room_player_list_item);
-            for (PlayerStatus player : currentGameRoom.getPlayerStatus())
-                players.add(player);
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.setAdapter(players, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int position) {
-                PlayerStatus player = players.getItem(position);
-                new AlertDialog.Builder(ChatInRoomActivity.this)
-                        .setMessage(player.getPlayer().getName())
-                        .setTitle(R.string.thePlayerYouWantToBoot)
-                        .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                inRoomModule.bootPlayer(player.getPlayer());
+        if (position != 0 && currentPlayer.equals(currentGameRoom.getHost()))
+            new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.thePlayerYouWantToBoot, currentGameRoom.getPlayers().get(position).getName()))
+                    .setItems(YESORNO, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int position) {
+                            switch (position){
+                                case 0:
+                                    inRoomModule.bootPlayer(currentGameRoom.getPlayers().get(position));
+                                    break;
+                                case 1:
+                                    dialog.dismiss();
+                                    break;
                             }
-                        })
-                        .show();
-            }
-        })
-        .show();
-//        new AlertDialog.Builder(this)
-//                .setTitle(R.string.bootPlayer)
-//                .setMessage(R.string.sureAboutBootThisPlayer)
-//                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        inRoomModule.bootPlayer(gameRoom.getPlayerStatus().get(position).getPlayer());
-//                    }
-//                })
-//                .setNegativeButton(R.string.cancel, null)
-//                .show();
+                        }
+                    })
+            .show();
         return true;
     }
 
@@ -329,8 +302,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                 playerName.setTextColor(Color.BLUE);
                 playerReadyOrNot.setBackgroundResource(R.drawable.green_circle);
             } else {
-                playerName.setText(currentGameRoom.getPlayerStatus().get(position-1).getPlayer().getName());
-                int imageId = currentGameRoom.getPlayerStatus().get(position-1).isReady() ? R.drawable.green_circle : R.drawable.red_circle;
+                playerName.setText(currentGameRoom.getPlayerStatus().get(position - 1).getPlayer().getName());
+                int imageId = currentGameRoom.getPlayerStatus().get(position - 1).isReady() ? R.drawable.green_circle : R.drawable.red_circle;
                 playerReadyOrNot.setBackgroundResource(imageId);
             }
             return view;
