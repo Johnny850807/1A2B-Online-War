@@ -187,15 +187,14 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         return false;
     }
 
+    //Todo
     private boolean allPlayersAreReady() {
-        int readyAmount = 0;
         for (PlayerStatus player : gameRoom.getPlayerStatus())
-            if (player.isReady())
-                readyAmount++;
-        if (readyAmount == gameRoom.getPlayerAmount()-1)
-            return true;
-        else
-            Toast.makeText(this, R.string.someoneDidntReady, Toast.LENGTH_SHORT).show();
+            if (!player.isReady()) {
+                Toast.makeText(this, R.string.someoneDidntReady, Toast.LENGTH_SHORT).show();
+                return false;
+
+            }
         return false;
     }
 
@@ -209,8 +208,10 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public void onPlayerStatusChanged(ChangeStatusModel model) {
         for (PlayerStatus playerStatus : gameRoom.getPlayerStatus())
-            if (playerStatus.getPlayer().getId().equals(model.getPlayerId()))
+            if (playerStatus.getPlayer().getId().equals(model.getPlayerId())) {
                 playerStatus.setReady(model.isPrepare());
+                break;
+            }
         roomPlayerListAdapter.notifyDataSetChanged();
     }
 
@@ -221,7 +222,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
             Toast.makeText(this, R.string.theHostLeftRoomClosed, Toast.LENGTH_SHORT).show();
             finish();
         }
-        roomPlayerListAdapter.notifyDataSetChanged();
+        else
+            roomPlayerListAdapter.notifyDataSetChanged();
         Toast.makeText(this, model.getPlayer() + getString(R.string.isLeft), Toast.LENGTH_SHORT).show();
     }
 
@@ -262,19 +264,19 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         AlertDialog.Builder builder = new AlertDialog.Builder(ChatInRoomActivity.this);
         builder.setTitle(R.string.selectWhichPlayerYouWantToBoot);
 
-        ArrayAdapter<PlayerStatus> players = new ArrayAdapter<PlayerStatus>(ChatInRoomActivity.this, R.layout.chat_room_player_list_item);
+        ArrayAdapter<PlayerStatus> playerAdapter = new ArrayAdapter<PlayerStatus>(ChatInRoomActivity.this, R.layout.chat_room_player_list_item);
             for (PlayerStatus player : gameRoom.getPlayerStatus())
-                players.add(player);
+                playerAdapter.add(player);
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-        builder.setAdapter(players, new DialogInterface.OnClickListener() {
+        builder.setAdapter(playerAdapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int position) {
-                PlayerStatus player = players.getItem(position);
+                PlayerStatus player = playerAdapter.getItem(position);
                 new AlertDialog.Builder(ChatInRoomActivity.this)
                         .setMessage(player.getPlayer().getName())
                         .setTitle(R.string.thePlayerYouWantToBoot)
