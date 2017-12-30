@@ -36,7 +36,7 @@ public class GetServerInformationHandler extends GsonEventHandler<Void, ServerIn
 		ServerInformation information = new ServerInformation(Constants.VERSION, players.size(), 
 				rooms.size());
 		log.debug("Info of gamecore:");
-		log.debug("Clients: " + GamecoreHelper.playersToString(gameCore().getClientPlayers()));
+		log.debug("Clients: " + GamecoreHelper.clientsToString(gameCore().getClientPlayers()));
 		log.debug("Rooms: " + GamecoreHelper.roomsToString(gameCore().getGameRooms()));
 		return success(information);
 	}

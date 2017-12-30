@@ -195,7 +195,7 @@ public class GameRoom extends Entity{
 			playerClients.add(clientBinder.getClientPlayer(playerStatus.getPlayer().getId()));
 		
 		log.trace("Host prepared: " + hostClient.getPlayerName());
-		log.trace("Players prepared: " + GamecoreHelper.playersToString(playerClients));
+		log.trace("Players prepared: " + GamecoreHelper.clientsToString(playerClients));
 		
 		initGame(hostClient, playerClients, listener);
 	}

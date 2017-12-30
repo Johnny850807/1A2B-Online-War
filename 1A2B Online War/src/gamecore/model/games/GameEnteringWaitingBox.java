@@ -23,6 +23,7 @@ public class GameEnteringWaitingBox {
 	private Set<String> unenteredPlayerIds = Collections.synchronizedSet(new HashSet<>());  
 	private ClientPlayer[] allPlayers;
 	private OnGamePlayersAllEnteredListener listener;
+	private boolean hasEmittedEnterGame = false;
 	
 	public GameEnteringWaitingBox(OnGamePlayersAllEnteredListener listener, ClientPlayer ...clientPlayers){
 		this.listener = listener;
@@ -41,8 +42,11 @@ public class GameEnteringWaitingBox {
 	
 	public void enter(ClientPlayer clientPlayer){
 		unenteredPlayerIds.remove(clientPlayer.getId());
-		if (unenteredPlayerIds.isEmpty())
+		if (unenteredPlayerIds.isEmpty() && !hasEmittedEnterGame)
+		{
 			listener.onAllPlayerEntered();
+			hasEmittedEnterGame = true;
+		}
 	}
 	
 	public interface OnGamePlayersAllEnteredListener{

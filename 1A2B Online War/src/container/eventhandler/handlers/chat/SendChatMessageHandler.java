@@ -21,6 +21,7 @@ import gamecore.entity.Player;
 import gamecore.model.ChangeStatusModel;
 import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.RequestStatus;
+import gamecore.model.RoomStatus;
 
 /**
  * @author Johnny850807
@@ -68,7 +69,8 @@ public class SendChatMessageHandler extends GsonEventHandler<ChatMessage, ChatMe
 				if (action.equals("boot")) // "gm boot (index of the player)"
 				{
 					log.trace("COMMAND - BOOTING PLAYER: " + Integer.valueOf(value));
-					bootPlayer(Integer.valueOf(value));
+					if (room.getRoomStatus() != RoomStatus.gamestarted)
+						bootPlayer(Integer.valueOf(value));
 				}
 				if (action.equals("status")) // "gm status (true|false)"
 				{
