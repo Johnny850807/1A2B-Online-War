@@ -170,8 +170,13 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     @Override
     public void onEnterClick(String guessNumber) {
         inputNumberBtn.setText(guessNumber);
-        inputNumberBtn.setEnabled(false);
-        duel1A2BModule.guess(guessNumber);
+    }
+
+    public void onSendGuessNumberBtnClick(View view) {
+        String guessNumber = inputNumberBtn.getText().toString();
+        if (!guessNumber.isEmpty())
+            inputNumberBtn.setEnabled(false);
+            duel1A2BModule.guess(guessNumber);
     }
 
     public void inputNumberOnClick(View view) {
@@ -210,6 +215,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         p2ResultList = playerBarModel1.getPlayerId().equals(currentPlayer.getId()) ? playerBarModel2.getGuessRecords() :
                 playerBarModel1.getGuessRecords();
         updateResultList();
+        inputNumberBtn.setText(null);
         inputNumberBtn.setEnabled(true);
     }
 

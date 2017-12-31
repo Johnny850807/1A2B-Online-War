@@ -62,6 +62,12 @@ public class InputNumberWindowView extends Dialog implements View.OnClickListene
         confirmBtn.setOnClickListener(this);
     }
 
+    @Override
+    public void show() {
+        super.show();
+        answerEd.setText("");
+    }
+
     public void update(String guessNumber) {
         OnClickListener.onEnterClick(guessNumber);
     }

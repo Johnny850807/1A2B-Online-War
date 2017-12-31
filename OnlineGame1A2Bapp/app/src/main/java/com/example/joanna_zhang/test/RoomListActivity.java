@@ -68,7 +68,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         init();
         setupViews();
         roomListView.setAdapter(adapter);
-        updateRoomList();
+        selectAndUpdateRoomList();
         roomListView.setOnItemClickListener(this);
     }
 
@@ -128,13 +128,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         roomModeSpn.setOnItemSelectedListener(this);
     }
 
-    public void updateRoomList() {
-        List<GameRoom> results = getRoomsByGameMode(selectedMode);
-        roomListOfQuery = selectedMode == gameModes[0]? roomList : results;
-        enableLoadingRoomListAnimation = true;
-        adapter.notifyDataSetChanged();
-    }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK){
@@ -160,19 +153,11 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
         selectedMode = gameModes[position];
-        updateRoomList();
+        selectAndUpdateRoomList();
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {}
-
-    public List<GameRoom> getRoomsByGameMode(GameMode gameMode) {
-        List<GameRoom> results = new ArrayList<>();
-        for (GameRoom gameRoom : roomList)
-            if (gameRoom.getGameMode() == gameMode)
-                results.add(gameRoom);
-        return results;
-    }
 
     //TODO clean your codes
     public void createRoomBtnOnClick(View view) {
@@ -218,7 +203,40 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     public void searchBtnOnClick(View view) {
         enableLoadingRoomListAnimation = true;
-        searchAndUpdateRoomList();
+        selectAndUpdateRoomList();
+    }
+
+    private List<GameRoom> getRoomsByGameMode(List<GameRoom> rooms) {
+        List<GameRoom> results = new ArrayList<>();
+        if (selectedMode == gameModes[0])
+            return rooms;
+        for (GameRoom gameRoom : rooms)
+            if (gameRoom.getGameMode() == selectedMode)
+                results.add(gameRoom);
+        return results;
+    }
+
+    private List<GameRoom> getRoomsByKeyName(List<GameRoom> rooms) {
+        List<GameRoom> results = new ArrayList<>();
+        String key = searchEdt.getText().toString();
+        if (key.isEmpty())
+            return rooms;
+        for (GameRoom gameRoom : rooms)
+            if (gameRoom.getName().contains(key) || gameRoom.getHost().getName().contains(key))
+                results.add(gameRoom);
+        return results;
+    }
+
+    private List<GameRoom> getRoomsByKeyNameAndGameMode(List<GameRoom> rooms) {
+        List<GameRoom> results;
+        results = getRoomsByGameMode(rooms);
+        return getRoomsByKeyName(results);
+    }
+
+    public void selectAndUpdateRoomList() {
+        roomListOfQuery = getRoomsByKeyNameAndGameMode(roomList);
+        enableLoadingRoomListAnimation = true;
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -313,36 +331,22 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            searchAndUpdateRoomList();
+            selectAndUpdateRoomList();
         }
         @Override
         public void afterTextChanged(Editable editable) {}
     }
 
-    private void searchAndUpdateRoomList() {
-        String searchTxt = searchEdt.getText().toString();
-        roomListOfQuery = (searchTxt.isEmpty())? roomList : getRoomsByKeyName(searchTxt);
-        updateRoomList();
-    }
-
-    private List<GameRoom> getRoomsByKeyName(String keyName) {
-        List<GameRoom> results = new ArrayList<>();
-        for (GameRoom gameRoom : roomListOfQuery)
-            if (gameRoom.getName().contains(keyName) || gameRoom.getHost().getName().contains(keyName))
-                results.add(gameRoom);
-        return results;
-    }
-
     @Override
     public void onGetRoomList(List<GameRoom> gameRooms) {
         roomList = gameRooms;
-        updateRoomList();
+        selectAndUpdateRoomList();
     }
 
     @Override
     public void onNewRoom(GameRoom gameRoom) {
         roomList.add(gameRoom);
-        updateRoomList();
+        selectAndUpdateRoomList();
     }
 
     @Override
@@ -358,14 +362,14 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onRoomClosed(GameRoom gameRoom) {
         roomList.remove(gameRoom);
-        updateRoomList();
+        selectAndUpdateRoomList();
     }
 
     @Override
     public void onRoomUpdated(GameRoom gameRoom) {
         roomList.remove(gameRoom);
         roomList.add(gameRoom);
-        updateRoomList();
+        selectAndUpdateRoomList();
     }
 
     @Override
