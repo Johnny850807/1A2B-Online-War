@@ -20,6 +20,7 @@ public class WaterBotServer {
 		int amount = /*Integer.parseInt(argv[0]);*/1;
 		List<Thread> botWorkers = new ArrayList<>();
 
+		Brain duel1A2BBrain = new InRoomBrain(null, gameFactory.getProtocolFactory());
 		Brain inroomBrain = new InRoomBrain(null, gameFactory.getProtocolFactory());
 		Brain roomlistBrain = new RoomListBrain(inroomBrain, gameFactory.getProtocolFactory());
 		Brain signBrain = new SignBrain(roomlistBrain, gameFactory.getProtocolFactory());

@@ -36,8 +36,7 @@ public abstract class ChainBrain implements Brain{
 	}
 	
 	@Override
-	public synchronized void react(WaterBot waterBot, Protocol protocol, Client client) {
-		delay(300);
+	public void react(WaterBot waterBot, Protocol protocol, Client client) {
 	}
 	
 	protected void nextIfNotNull(WaterBot waterBot, Protocol protocol, Client client){

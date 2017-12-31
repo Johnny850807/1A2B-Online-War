@@ -32,6 +32,7 @@ import gamecore.model.games.Game;
 import gamecore.model.games.a1b2.GameOverModel;
 import gamefactory.GameFactory;
 import utils.ForServer;
+import utils.MyGson;
 
 /**
  * @author Waterball
@@ -43,7 +44,7 @@ import utils.ForServer;
 public class ReleaseGameCore implements GameCore{
 	private static Logger log = LogManager.getLogger(ReleaseGameCore.class);
 	private GameFactory factory;
-	private Gson gson = new Gson();
+	private Gson gson = MyGson.getGson();
 	private Map<String, GameRoom> roomContainer = Collections.synchronizedMap(new LinkedHashMap<String, GameRoom>()); // <id, GameRoom>
 	private Map<String, ClientPlayer> clientsMap = Collections.synchronizedMap(new HashMap<String, ClientPlayer>()); // <id, ClientPlayer>
 	

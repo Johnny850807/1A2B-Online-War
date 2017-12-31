@@ -6,10 +6,12 @@ import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
 import gamecore.model.ClientPlayer;
 import gamecore.model.ClientStatus;
 import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.PlayerRoomModel;
+import gamecore.model.RoomStatus;
 
 /**
  * @author Johnny850807
@@ -32,7 +34,13 @@ public class JoinRoomHandler extends GsonEventHandler<PlayerRoomIdModel, PlayerR
 		try{
 			roomId = data.getGameRoomId();
 			GameRoom room = gameCore().getGameRoom(roomId);
+			if (room.getRoomStatus() != RoomStatus.waiting)
+				return error(208, new IllegalStateException("The game of the room has been started."));
+			
 			ClientPlayer clientPlayer = gameCore().getClientPlayer(data.getPlayerId());
+			if (hasThePlayerJoinedAnotherRom(clientPlayer.getPlayer()))
+				return error(209, new IllegalStateException("The player has joined to another room."));
+			
 			room.addPlayer(clientPlayer.getPlayer());
 			return success(new PlayerRoomModel(clientPlayer.getPlayer(), room));
 		}catch (IllegalStateException e) {
@@ -42,6 +50,13 @@ public class JoinRoomHandler extends GsonEventHandler<PlayerRoomIdModel, PlayerR
 		}
 	}
 
+	private boolean hasThePlayerJoinedAnotherRom(Player player){
+		for(GameRoom gameRoom : gameCore().getGameRooms())
+			if (gameRoom.containsPlayer(player))
+				return true;
+		return false;
+	}
+	
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
 		gameCore().broadcastRoom(roomId, responseProtocol);
