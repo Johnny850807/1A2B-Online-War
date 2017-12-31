@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import container.base.Client;
 import container.protocol.Protocol;
+import container.waterbot.brain.SharedMemory;
 
 public class WaterBot{
 	private static Logger log = LogManager.getLogger(WaterBot.class);
@@ -17,6 +18,7 @@ public class WaterBot{
 	private String name;
 	private int wid;
 	private static int amount = 0;
+	private SharedMemory memory = new SharedMemory();
 	
 	static{
 		NAMESTACK.push("Water");
@@ -49,6 +51,7 @@ public class WaterBot{
 		if (client == null)
 			throw new IllegalStateException("The client should not be null");
 		log.trace("WaterBot " + wid + " receives protocol: " + protocol);
+		brain.react(this, protocol, client);
 	}
 
 	public Brain getBrain() {
@@ -70,5 +73,8 @@ public class WaterBot{
 	public static int getAmount() {
 		return amount;
 	}
-
+	
+	public SharedMemory getMemory() {
+		return memory;
+	}
 }

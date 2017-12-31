@@ -4,13 +4,30 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.Time;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.runner.Request;
+
+import com.google.gson.Gson;
 
 import container.base.Client;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
+import gamecore.entity.Player;
+import gamecore.model.RequestStatus;
+import utils.MyGson;
+
+import static container.Constants.*;
+import static container.Constants.Events.*;
+import static container.Constants.Events.Signing.*;
+import static container.Constants.Events.RoomList.*;
+import static container.Constants.Events.Chat.*;
+import static container.Constants.Events.InRoom.*;
 
 public class WbotClient implements Client{
 	private static final Logger log = LogManager.getLogger(WbotClient.class);
@@ -22,6 +39,8 @@ public class WbotClient implements Client{
 	private DataInputStream dataInputStream;
 	private WaterBot waterBot;
 	private ProtocolFactory protocolFactory;
+	private Timer timer = new Timer();
+	private Gson gson = MyGson.getGson();
 
 	public WbotClient(WaterBot waterBot, ProtocolFactory protocolFactory) {
 		this.waterBot = waterBot;
@@ -38,10 +57,22 @@ public class WbotClient implements Client{
 			dataOutputStream = new DataOutputStream(socket.getOutputStream());
 			connected = true;
 			log.trace("Robot " + waterBot.getName() + " has setup his socket connection.");
+			signInAfterFiveSeconds();
 			listeningInput();
 		} catch (IOException e) {
 			log.error("Error while the robot " + waterBot.getName() + " setup the socket.");
 		}	
+	}
+
+	private void signInAfterFiveSeconds() {
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				Protocol protocol = protocolFactory.createProtocol(SIGNIN, RequestStatus.request.toString(),
+						gson.toJson(new Player(waterBot.getName())));
+				broadcast(protocol);
+			}
+		}, TimeUnit.SECONDS.toMillis(5));
 	}
 
 	private void listeningInput(){
