@@ -16,8 +16,10 @@
         android:background="#fff"
         android:gravity="center"
         android:orientation="horizontal"
+        android:paddingEnd="4dp"
         android:paddingLeft="8dp"
-        android:paddingRight="4dp"><!--TODO yellow background!-->
+        android:paddingRight="4dp"
+        android:paddingStart="8dp">
 
         <EditText
             android:id="@+id/inputChattingTxt"
@@ -26,12 +28,12 @@
             android:layout_weight="1"
             android:hint="@string/inputMessage"
             android:inputType="text"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <ImageButton
             android:id="@+id/sendMessageBtn"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             android:src="@drawable/enter" />
