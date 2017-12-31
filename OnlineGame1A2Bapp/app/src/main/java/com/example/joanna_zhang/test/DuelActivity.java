@@ -3,6 +3,7 @@ package com.example.joanna_zhang.test;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -27,9 +28,11 @@ import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ContentModel;
+import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
 import gamecore.model.games.a1b2.GuessRecord;
+import gamecore.model.games.a1b2.NumberNotValidException;
 
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
@@ -47,6 +50,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     private TextView p1NameTxt, p2NameTxt, p1AnswerTxt, p2AnswerTxt;
     private ListView p1ResultListView, p2ResultListView;
     private GuessResultAdapter p1GuessResultAdapter, p2GuessResultAdapter;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,9 +178,13 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     public void onSendGuessNumberBtnClick(View view) {
         String guessNumber = inputNumberBtn.getText().toString();
-        if (!guessNumber.isEmpty())
+        try{
+            A1B2NumberValidator.validateNumber(guessNumber);
             inputNumberBtn.setEnabled(false);
             duel1A2BModule.guess(guessNumber);
+        }catch (NumberNotValidException err){
+            Toast.makeText(this, R.string.numberShouldBeInLengthFour, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void inputNumberOnClick(View view) {
@@ -221,10 +229,18 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     @Override
     public void onGameOver(GameOverModel gameOverModel) {
+        Player winner = currentGameRoom.getHost().getId().equals(gameOverModel.getWinnerId()) ?
+                currentGameRoom.getHost() : currentGameRoom.getPlayerStatus().get(0).getPlayer();
+        inputNumberBtn.setEnabled(false);
+        handler.postDelayed(()->createAndShowDialogForWinner(winner), 3000);
+    }
+
+    private void createAndShowDialogForWinner(Player winner){
         new AlertDialog.Builder(DuelActivity.this)
                 .setTitle(R.string.gameOver)
-                .setMessage(gameOverModel.getWinnerId())
+                .setMessage(getString(R.string.theWinnerIs, winner.getName()))
                 .setIcon(R.drawable.logo)
+                .setCancelable(false)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

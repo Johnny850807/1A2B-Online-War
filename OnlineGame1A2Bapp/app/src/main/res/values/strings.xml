@@ -72,5 +72,7 @@
     <string name="yes" >是</string>
     <string name="no" >否</string>
     <string name="secret">****</string>
+    <string name="numberShouldBeInLengthFour">數字須為四位不重複數字。</string>
+    <string name="theWinnerIs" formatted="false">遊戲結束！勝利者為 %s ！</string>
 
 </resources>
