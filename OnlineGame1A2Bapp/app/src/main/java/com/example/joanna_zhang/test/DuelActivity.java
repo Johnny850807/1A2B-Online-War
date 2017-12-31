@@ -2,6 +2,7 @@ package com.example.joanna_zhang.test;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -51,11 +52,14 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     private ListView p1ResultListView, p2ResultListView;
     private GuessResultAdapter p1GuessResultAdapter, p2GuessResultAdapter;
     private Handler handler = new Handler();
+    private MediaPlayer mediaPlayer;
+    private boolean gameStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_duel);
+        mediaPlayer = MediaPlayer.create(this, R.raw.duel);
         init();
         findViews();
         setUpChatWindow();
@@ -70,12 +74,16 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         duel1A2BModule.registerCallback(currentPlayer, currentGameRoom, this);
         duel1A2BModule.enterGame();
         waitOtherPlayersPrepare();
+        if (gameStarted)
+            mediaPlayer.start();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         duel1A2BModule.unregisterCallBack(this);
+        if (gameStarted)
+            mediaPlayer.pause();
     }
 
     @Override
@@ -153,6 +161,8 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     @Override
     public void onGameStarted() {
+        gameStarted = true;
+        mediaPlayer.start();
         progressDialog.dismiss();
         setupAnswer();
     }
