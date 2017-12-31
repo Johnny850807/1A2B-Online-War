@@ -73,10 +73,12 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         super.onResume();
         chatWindowView.onResume();
         duel1A2BModule.registerCallback(currentPlayer, currentGameRoom, this);
-        duel1A2BModule.enterGame();
-        waitOtherPlayersPrepare();
         if (gameStarted)
             mediaPlayer.start();
+        else {
+            duel1A2BModule.enterGame();
+            waitOtherPlayersPrepare();
+        }
     }
 
     @Override
@@ -298,8 +300,8 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
             TextView resultTxt = view.findViewById(android.R.id.text1);
             StringBuilder result = new StringBuilder();
             result.append(resultList.get(i).getGuess())
-                    .append('-')
-                    .append(resultList.get(i).getResult().toString());
+                    .append(' ')
+                    .append(resultList.get(i).getResult().toString().toUpperCase());
             resultTxt.setText(result);
 
             return view;
