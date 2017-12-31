@@ -59,7 +59,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_duel);
-        mediaPlayer = MediaPlayer.create(this, R.raw.rainsongII);
+        mediaPlayer = MediaPlayer.create(this, R.raw.rainsongii);
         init();
         findViews();
         setUpChatWindow();
