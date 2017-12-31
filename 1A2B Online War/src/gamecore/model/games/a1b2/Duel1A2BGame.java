@@ -15,6 +15,7 @@ import gamecore.model.GameMode;
 import gamecore.model.RequestStatus;
 import gamecore.model.games.Game;
 import gamecore.model.games.GameEnteringWaitingBox;
+import gamecore.model.games.ProcessInvalidException;
 import utils.ForServer;
 
 /**

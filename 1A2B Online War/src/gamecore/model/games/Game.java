@@ -22,7 +22,6 @@ import gamecore.model.MockLogger;
 import gamecore.model.RequestStatus;
 import gamecore.model.games.GameEnteringWaitingBox.OnGamePlayersAllEnteredListener;
 import gamecore.model.games.a1b2.GameOverModel;
-import gamecore.model.games.a1b2.ProcessInvalidException;
 import utils.ForServer;
 
 public abstract class Game implements OnGamePlayersAllEnteredListener{

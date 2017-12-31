@@ -34,8 +34,8 @@ public class LaunchGameHandler extends GsonEventHandler<GameRoom, GameRoom>{
 
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
-		gameCore().broadcastClientPlayers(ClientStatus.signedIn, responseProtocol);
 		gameCore().broadcastRoom(roomId, responseProtocol);
+		gameCore().broadcastClientPlayers(ClientStatus.signedIn, responseProtocol);
 	}
 
 }

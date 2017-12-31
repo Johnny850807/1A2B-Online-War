@@ -39,6 +39,7 @@ public class CreateRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 		Player hostPlayer = gameCore().getClientPlayer(room.getHost().getId()).getPlayer();
 		room.initId();
 		room.setLog(new ApacheLoggerAdapter(GameRoom.class));
+		room.setHost(hostPlayer);
 		room.setProtocolFactory(protocolFactory());
 		gameCore().addGameRoom(room);
 		hostPlayer.setUserStatus(ClientStatus.inRoom);

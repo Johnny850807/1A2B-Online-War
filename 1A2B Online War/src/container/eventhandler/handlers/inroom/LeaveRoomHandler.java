@@ -31,7 +31,6 @@ public class LeaveRoomHandler extends GsonEventHandler<PlayerRoomIdModel, Player
 	protected Response onHandling(PlayerRoomIdModel data) {
 		gameRoom = gameCore().getGameRoom(data.getGameRoomId());
 		ClientPlayer clientPlayer = gameCore().getClientPlayer(data.getPlayerId());
-		clientPlayer.getPlayer().setUserStatus(ClientStatus.signedIn);
 		gameCore().removePlayerFromRoomAndBroadcast(clientPlayer.getPlayer(), gameRoom);
 		return success(new PlayerRoomModel(clientPlayer.getPlayer(), gameRoom));
 	}

@@ -1,4 +1,4 @@
-package gamecore.model.games.a1b2;
+package gamecore.model.games;
 
 public class ProcessInvalidException extends IllegalStateException{
 	public ProcessInvalidException(String mgs){

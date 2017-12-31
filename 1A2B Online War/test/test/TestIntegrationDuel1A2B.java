@@ -126,6 +126,12 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		assertTrue(this.gameRoom.ifPlayerInStatusList(this.player));
 		assertEquals(JOIN_ROOM, hostClient.getLastedResponse().getEvent());
 		assertEquals(JOIN_ROOM, playerClient.getLastedResponse().getEvent());
+
+		bindPlayerAndHostFromUpdatedGameroom(gson.fromJson(hostClient.getLastedResponse().getData(), 
+				PlayerRoomModel.class).getGameRoom());
+
+		assertEquals(ClientStatus.inRoom, host.getUserStatus());
+		assertEquals(ClientStatus.inRoom, player.getUserStatus());
 	}
 	
 	public void testChatting(){
@@ -200,10 +206,15 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		assertTrue(playerClient.hasReceivedEvent(ONE_ROUND_OVER));
 		assertTrue(hostClient.hasReceivedEvent(ONE_ROUND_OVER));
 		
-		assertTrue(playerClient.hasReceivedEvent(Games.GAMEOVER));
-		assertTrue(hostClient.hasReceivedEvent(Games.GAMEOVER));
+		assertTrue(playerClient.hasReceivedEvent(GAMEOVER));
+		assertTrue(hostClient.hasReceivedEvent(GAMEOVER));
+		assertEquals(CLOSE_ROOM, playerClient.getLastedResponse().getEvent());
+		assertEquals(CLOSE_ROOM, hostClient.getLastedResponse().getEvent());
+		bindPlayerAndHostFromUpdatedGameroom(gson.fromJson(hostClient.getLastedResponse().getData(), GameRoom.class));
+		assertEquals(ClientStatus.signedIn, player.getUserStatus());
+		assertEquals(ClientStatus.signedIn, host.getUserStatus());
 		
-		GameOverModel gameOverModel = gson.fromJson(hostClient.getLastedResponse().getData(), GameOverModel.class);
+		GameOverModel gameOverModel = gson.fromJson(hostClient.getLastedByEvent(GAMEOVER).getData(), GameOverModel.class);
 		assertEquals(host.getId(), gameOverModel.getWinnerId());
 	}
 	
@@ -212,6 +223,9 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 				gson.toJson(new PlayerRoomIdModel(player.getId(), gameRoom.getId())))).handle();
 		assertEquals(BOOTED, playerClient.getLastedResponse().getEvent());
 		assertEquals(LEAVE_ROOM, hostClient.getLastedResponse().getEvent());
+		player = gson.fromJson(playerClient.getLastedResponse().getData(), PlayerRoomModel.class).getPlayer();
+		assertEquals(ClientStatus.inRoom, host.getUserStatus());
+		assertEquals(ClientStatus.signedIn, player.getUserStatus());
 	}
 	
 	public void testPlayerLeft(){
@@ -219,7 +233,10 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 				gson.toJson(new PlayerRoomIdModel(player.getId(), gameRoom.getId())))).handle();
 		assertEquals(1, gameRoom.getPlayerAmount());
 		assertEquals(LEAVE_ROOM, hostClient.getLastedResponse().getEvent());
+		assertTrue(!playerClient.getLastedResponse().getEvent().equals(LEAVE_ROOM));  // the player should not receive
 		assertEquals(player, gson.fromJson(hostClient.getLastedResponse().getData(), PlayerRoomModel.class).getPlayer());
+		assertEquals(ClientStatus.inRoom, host.getUserStatus());
+		assertEquals(ClientStatus.signedIn, player.getUserStatus());
 	}
 	
 	public void testHostSignOut(){
@@ -236,8 +253,19 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 				gson.toJson(this.gameRoom))).handle();
 		assertEquals(CLOSE_ROOM, hostClient.getLastedResponse().getEvent());
 		assertEquals(CLOSE_ROOM, playerClient.getLastedResponse().getEvent());
+		bindPlayerAndHostFromUpdatedGameroom(gson.fromJson(hostClient.getLastedResponse().getData(), GameRoom.class));
+		
+		assertEquals(ClientStatus.signedIn, host.getUserStatus());
+		assertEquals(ClientStatus.signedIn, player.getUserStatus());
 	}
 	
+	private void bindPlayerAndHostFromUpdatedGameroom(GameRoom newRoom){
+		gameRoom = newRoom;
+		assertEquals(player, gameRoom.getPlayerStatus().get(0).getPlayer());
+		assertEquals(host, gameRoom.getHost());
+		player = gameRoom.getPlayerStatus().get(0).getPlayer();
+		host = gameRoom.getHost();
+	}
 	
 	protected EventHandler createHandler(Client client, Protocol protocol){
 		System.out.println("Sending : " + protocol);

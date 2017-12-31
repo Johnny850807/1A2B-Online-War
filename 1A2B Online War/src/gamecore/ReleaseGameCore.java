@@ -37,6 +37,8 @@ import utils.ForServer;
  * @author Waterball
  * ReleaseGameCore manages all the users, rooms and the client sockets binding to the users. All 
  * methods with the name 'notify' used for sending a response to certain clients.
+ * 
+ * this gamecore handles all game rooms and all client players.
  */
 public class ReleaseGameCore implements GameCore{
 	private static Logger log = LogManager.getLogger(ReleaseGameCore.class);
@@ -129,12 +131,16 @@ public class ReleaseGameCore implements GameCore{
 	
 	@Override
 	public void closeGameRoom(GameRoom room){
-		room = getGameRoom(room.getId());
+		room = getGameRoom(room.getId());  
+		
+		//first change all the player status in the room to signedIn.
+		room.getPlayers().forEach(p -> p.setUserStatus(ClientStatus.signedIn));
 		Protocol protocol = factory.getProtocolFactory().createProtocol(InRoom.CLOSE_ROOM,
 				RequestStatus.success.toString(), gson.toJson(room));
-		broadcastRoom(room.getId(), protocol);
+		
+		/*then broadcast to all the signedIn players, for each player just got out from the room,
+		they will also receive the room closed event*/
 		broadcastClientPlayers(ClientStatus.signedIn, protocol);
-		room.getPlayers().forEach(p -> p.setUserStatus(ClientStatus.signedIn));
 		removeTheRoomSync(room, "Room removed: " + room);
 	}
 	
@@ -145,6 +151,7 @@ public class ReleaseGameCore implements GameCore{
 		if (clientsMap.containsKey(client.getId()))
 			throw new IllegalStateException("The id is duplicated from the new binded clientplayer !");
 		
+		player.setUserStatus(ClientStatus.signedIn);
 		ClientPlayer clientPlayer = new ClientPlayer(client, player);
 		clientsMap.put(clientPlayer.getId(), clientPlayer);
 		log.trace("Client added: " + clientPlayer);
@@ -154,7 +161,6 @@ public class ReleaseGameCore implements GameCore{
 	public void removeClientPlayer(String id) {
 		if (clientsMap.containsKey(id))
 		{
-				
 			ClientPlayer clientPlayer = clientsMap.get(id);
 			log.trace("Client removing: " + clientPlayer);
 			handleThePlayerRemovedEventToRooms(clientPlayer.getPlayer());
@@ -170,7 +176,6 @@ public class ReleaseGameCore implements GameCore{
 	 * (1) the player is a host: close his room and broadcast the close event to the room.
 	 * (2) the player is inside the room but not a host: boot him out from the room and broadcast the leave event to the room.
 	 * @param player removed player
-	 * @return if the player is in any room
 	 */
 	private void handleThePlayerRemovedEventToRooms(Player player){
 		log.trace("Handling the player removed.");
@@ -200,14 +205,16 @@ public class ReleaseGameCore implements GameCore{
 	public void removePlayerFromRoomAndBroadcast(Player player, GameRoom gameRoom){
 		Protocol protocol = factory.getProtocolFactory().createProtocol(InRoom.LEAVE_ROOM, 
 				RequestStatus.success.toString(), gson.toJson(new PlayerRoomModel(player, gameRoom)));
+		ClientPlayer leftPlayer = getClientPlayer(player.getId());
 		gameRoom = getGameRoom(gameRoom.getId());
 		synchronized(gameRoom)
 		{
-			if (gameRoom.containsPlayer(player))
+			if (gameRoom.containsPlayer(leftPlayer.getPlayer()))
 			{
-				gameRoom.removePlayer(player);
-				broadcastClientPlayers(ClientStatus.signedIn, protocol);
+				gameRoom.removePlayer(leftPlayer.getPlayer());
 				broadcastRoom(gameRoom.getId(), protocol);
+				broadcastClientPlayers(ClientStatus.signedIn, protocol);
+				leftPlayer.getPlayer().setUserStatus(ClientStatus.signedIn);
 			}
 		}
 	}
@@ -222,13 +229,16 @@ public class ReleaseGameCore implements GameCore{
 	@Override
 	public void onGameInterrupted(Game game, ClientPlayer noResponsePlayer) {
 		GameRoom room = getGameRoom(game.getRoomId());
-		removeTheRoomSync(room, "Game interrupted, player " + noResponsePlayer.getPlayerName() + " disconntects.");
+		log.trace("Game interrupted, player " + noResponsePlayer.getPlayerName() + " disconntects, closing it.");
+		closeGameRoom(room);
 	}
 
 	@Override
 	public void onGameOver(Game game, GameOverModel gameOverModel) {
 		GameRoom room = getGameRoom(game.getRoomId());
-		removeTheRoomSync(room, "Game over, the room " + room.getName() + " closed.");
+		room.setRoomStatus(RoomStatus.waiting);
+		log.trace("Game over, the room " + room.getName() + " closed, closing it.");
+		closeGameRoom(room);
 	}
 
 	private void removeTheRoomSync(GameRoom room, String logMsg){

@@ -69,4 +69,11 @@ public class MockClient extends Entity implements Client{
 	public boolean hasReceivedEvent(String event){
 		return responses.stream().anyMatch(p -> p.getEvent().equals(event));
 	}
+	
+	public Protocol getLastedByEvent(String event){
+		for (int i = responses.size() - 1 ; i > 0 ; i --)
+			if (responses.get(i).getEvent().equals(event))
+				return responses.get(i);
+		throw new RuntimeException("Event not found");
+	}
 }

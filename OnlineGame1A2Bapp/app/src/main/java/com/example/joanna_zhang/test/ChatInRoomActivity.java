@@ -48,6 +48,7 @@ import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
  */
 public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InRoomModule.Callback, AdapterView.OnItemLongClickListener {
     private static final String TAG = "ChatInRoomActivity";
+    private static final int HOST_POSITION = 0;
     private GameRoom currentGameRoom;
     private Player currentPlayer;
     private ChatWindowView chatWindowView;
@@ -300,7 +301,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
             TextView playerName = view.findViewById(R.id.playerNameTxt);
             View playerReadyOrNot = view.findViewById(R.id.playerReadyOrNotImg);
 
-            if (position == 0) {
+            if (position == HOST_POSITION) {
                 playerName.setText(currentGameRoom.getHost().getName());
                 playerName.setTextColor(Color.BLUE);
                 playerReadyOrNot.setBackgroundResource(R.drawable.green_circle);
@@ -313,4 +314,9 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.v(TAG, "OnDestroy.");
+    }
 }

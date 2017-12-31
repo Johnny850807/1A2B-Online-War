@@ -34,9 +34,7 @@ public class CloseRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 		this.gameRoom = gameCore().getGameRoom(roomId);
 		if (roomId == null)
 			return error(404, new IllegalArgumentException());
-		ClientPlayer hostPlayer = gameCore().getClientPlayer(gameRoom.getHost().getId());
-		hostPlayer.getPlayer().setUserStatus(ClientStatus.signedIn);
-		gameCore().closeGameRoom(room);
+		gameCore().closeGameRoom(gameRoom);
 		return success(gameRoom);
 	}
 

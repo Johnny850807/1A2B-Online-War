@@ -45,6 +45,7 @@ public class GameRoom extends Entity{
 		this.gameMode = gameMode;
 		this.name = name;
 		this.host = host;
+		this.host.setUserStatus(ClientStatus.inRoom);
 	}
 	
 	public void addChatMessage(ChatMessage chatMessage){
@@ -237,12 +238,16 @@ public class GameRoom extends Entity{
 	}
 	
 	private void updateRoomAndPlayerStatusInGame(ClientPlayer hostClient, List<ClientPlayer> playerClients){
-		hostClient.getPlayer().setUserStatus(ClientStatus.inGame);
-		for(ClientPlayer player : playerClients)
-			player.getPlayer().setUserStatus(ClientStatus.inGame);
+		setAllPlayerStatus(ClientStatus.inGame);
 		setRoomStatus(RoomStatus.gamestarted);
 	}
 	
+	private void setAllPlayerStatus(ClientStatus status){
+		for (Player player : getPlayers())
+			player.setUserStatus(status);
+	}
+	
+	@ForServer
 	public Game getGame() {
 		return game;
 	}

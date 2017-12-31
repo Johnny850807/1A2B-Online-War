@@ -12,10 +12,10 @@ import gamecore.model.GameMode;
 import gamecore.model.RequestStatus;
 import gamecore.model.games.Game;
 import gamecore.model.games.GameEnteringWaitingBox;
+import gamecore.model.games.ProcessInvalidException;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.GuessResult;
 import gamecore.model.games.a1b2.NumberNotValidException;
-import gamecore.model.games.a1b2.ProcessInvalidException;
 import utils.ForServer;
 
 /**

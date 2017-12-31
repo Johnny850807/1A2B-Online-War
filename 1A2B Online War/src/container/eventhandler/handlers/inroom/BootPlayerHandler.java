@@ -40,6 +40,7 @@ public class BootPlayerHandler extends GsonEventHandler<PlayerRoomIdModel, Playe
 				gson.toJson(data));
 		new LeaveRoomHandler(client(), protocol, gameCore(), protocolFactory()).handle();
 		
+		
 		//then emit the booted event to the booted player, so he will know he got booted
 		return success(new PlayerRoomModel(bootedPlayer.getPlayer(), room));
 	}

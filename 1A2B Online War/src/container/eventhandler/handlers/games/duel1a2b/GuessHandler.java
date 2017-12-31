@@ -7,6 +7,7 @@ import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
 import gamecore.model.ContentModel;
+import gamecore.model.RoomStatus;
 import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamecore.model.games.a1b2.NumberNotValidException;
 
@@ -16,7 +17,8 @@ import gamecore.model.games.a1b2.NumberNotValidException;
  * Output: (Client) Guess model.
  */
 public class GuessHandler extends GsonEventHandler<ContentModel, ContentModel>{
-
+	private GameRoom gameRoom;
+	
 	public GuessHandler(Client client, Protocol request, GameCore gameCore, ProtocolFactory protocolFactory) {
 		super(client, request, gameCore, protocolFactory);
 	}
@@ -29,8 +31,8 @@ public class GuessHandler extends GsonEventHandler<ContentModel, ContentModel>{
 	@Override
 	protected Response onHandling(ContentModel guessModel) {
 		try{
-			GameRoom room = gameCore().getGameRoom(guessModel.getRoomId());
-			Duel1A2BGame gameModel = (Duel1A2BGame) room.getGame();
+			gameRoom = gameCore().getGameRoom(guessModel.getRoomId());
+			Duel1A2BGame gameModel = (Duel1A2BGame) gameRoom.getGame();
 			gameModel.guess(guessModel.getPlayerId(), guessModel.getContent());
 			return success(guessModel);
 		}catch (NumberNotValidException e) {
@@ -40,7 +42,8 @@ public class GuessHandler extends GsonEventHandler<ContentModel, ContentModel>{
 
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
-		client().broadcast(responseProtocol);
+		if (gameRoom.getRoomStatus() == RoomStatus.gamestarted)
+			client().broadcast(responseProtocol);
 	}
 
 }
