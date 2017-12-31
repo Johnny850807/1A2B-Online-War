@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import container.base.Client;
+import container.waterbot.brain.InRoomBrain;
 import container.waterbot.brain.RoomListBrain;
 import container.waterbot.brain.SignBrain;
 import gamefactory.GameFactory;
@@ -18,13 +19,14 @@ public class WaterBotServer {
 		GameFactory gameFactory = new GameOnlineReleaseFactory();
 		int amount = /*Integer.parseInt(argv[0]);*/1;
 		List<Thread> botWorkers = new ArrayList<>();
-		
-		Brain roomlistBrain = new RoomListBrain(null, gameFactory.getProtocolFactory());
-		Brain brain = new SignBrain(roomlistBrain, gameFactory.getProtocolFactory());
+
+		Brain inroomBrain = new InRoomBrain(null, gameFactory.getProtocolFactory());
+		Brain roomlistBrain = new RoomListBrain(inroomBrain, gameFactory.getProtocolFactory());
+		Brain signBrain = new SignBrain(roomlistBrain, gameFactory.getProtocolFactory());
 		
 		IntStream.range(0, amount).parallel()
 			.forEach(i -> {
-				WaterBot bot = new WaterBot(brain);
+				WaterBot bot = new WaterBot(signBrain);
 				Client client = new WbotClient(bot, gameFactory.getProtocolFactory());
 				botWorkers.add(new Thread(client));
 			});

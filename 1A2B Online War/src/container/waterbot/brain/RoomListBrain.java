@@ -56,6 +56,9 @@ public class RoomListBrain extends ChainBrain{
 			GameRoom room = gson.fromJson(protocol.getData(), GameRoom.class);
 			this.rooms.remove(room);
 			break;
+		case BOOTED:
+			joinToAnotherRoomAfterSeconds(waterBot, client, 20000);
+			break;
 		default:
 			break;
 		}
@@ -86,20 +89,21 @@ public class RoomListBrain extends ChainBrain{
 		else
 		{
 			log.debug(getLogPrefix(waterBot) + "joined to the room unsuccessfully: " + protocol.getData());
-			joinToAnotherRoomAfter10Seconds(waterBot, client);
+			joinToAnotherRoomAfterSeconds(waterBot, client, 10000);
 		}
 	}
 	
-	private void joinToAnotherRoomAfter10Seconds(WaterBot waterBot, Client client){
+	private void joinToAnotherRoomAfterSeconds(WaterBot waterBot, Client client, long delay){
+		log.trace(getLogPrefix(waterBot) + "after " + delay + "ms, the robot will request to join another room." );
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
 				joinToAnyRoom(waterBot, client);
 			}
-		}, TimeUnit.SECONDS.toMillis(10));
+		}, delay);
 	}
 	
-	private void joinToAnyRoom(WaterBot waterBot, Client client) {
+	private synchronized void joinToAnyRoom(WaterBot waterBot, Client client) {
 		if (rooms.size() != 0)
 		{
 			GameRoom room = rooms.get(random.nextInt(rooms.size()));
@@ -115,12 +119,12 @@ public class RoomListBrain extends ChainBrain{
 		return gson.fromJson(data, PlayerRoomModel.class);
 	}
 	
-	private void saveTheGameRoomToMemrory(WaterBot waterBot, PlayerRoomModel joinModel){
+	private synchronized void saveTheGameRoomToMemrory(WaterBot waterBot, PlayerRoomModel joinModel){
 		log.trace(getLogPrefix(waterBot) + "entering the room " + joinModel.getGameRoom().getName());
 		waterBot.getMemory().setRoom(joinModel.getGameRoom());
 	}
 	
-	private void updateTheGameRoomsStatus(WaterBot waterBot, GameRoom room){
+	private synchronized void updateTheGameRoomsStatus(WaterBot waterBot, GameRoom room){
 		rooms.remove(room);
 		rooms.add(room);
 	}
