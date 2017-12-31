@@ -18,8 +18,8 @@ import utils.MyGson;
  * a script used to run any protocol.
  */
 public class RunProtocol {
-	private static final String PLAYERID = "414d440b-6026-4290-9f79-c7bb6f7e259a";
-	private static final String ROOMID = "c9393cda-5f1a-4791-93aa-f3aa06daf668";
+	private static final String PLAYERID = "6d9031d6-a0c1-4f20-975e-975fc0003cc6";
+	private static final String ROOMID = "b8845434-a39f-40a8-ba37-90a948eeed3d";
 	private static final String ANSWER = "5678";
 	private static final String GUESSNUMBER = "1234";
 	private static final Gson gson = MyGson.getGson();
