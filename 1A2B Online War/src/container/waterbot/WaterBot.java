@@ -27,7 +27,7 @@ public class WaterBot{
 		NAMESTACK.push("Lin");
 		NAMESTACK.push("ZonYee");;
 		NAMESTACK.push("¤D·O");
-		NAMESTACK.push("ShuYong");
+		NAMESTACK.push("ShuYon");
 		NAMESTACK.push("JAVA");
 		Collections.shuffle(NAMESTACK);
 		log.trace("Name is all prepared, size: " + NAMESTACK.size());
@@ -51,7 +51,11 @@ public class WaterBot{
 		if (client == null)
 			throw new IllegalStateException("The client should not be null");
 		log.trace("WaterBot " + wid + " receives protocol: " + protocol);
-		brain.react(this, protocol, client);
+		try{
+			brain.react(this, protocol, client);
+		}catch (Exception e) {
+			log.error(getName() + " - error : " + e);
+		}
 	}
 
 	public Brain getBrain() {

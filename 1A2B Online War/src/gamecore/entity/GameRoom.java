@@ -105,6 +105,13 @@ public class GameRoom extends Entity{
 		getPlayerStatusOfPlayer(player).setReady(ready);
 	}
 	
+	public Player getPlayerById(String playerId){
+		for (PlayerStatus playerStatus : playerStatusList)
+			if (playerStatus.getPlayer().getId().equals(playerId))
+				return playerStatus.getPlayer();
+		return null;
+	}
+	
 	/**
 	 * @return all the players including the host at the first position.
 	 */
@@ -199,6 +206,19 @@ public class GameRoom extends Entity{
 		log.trace("Players prepared: " + GamecoreHelper.clientsToString(playerClients));
 		
 		initGame(hostClient, playerClients, listener);
+	}
+	
+	public boolean canStartTheGame(){
+		int playerAmount = getPlayerAmount();
+		return playerAmount >= getMinPlayerAmount() && playerAmount <= getMaxPlayerAmount()
+				&& host != null && areAllPlayerReady();
+	}
+	
+	public boolean areAllPlayerReady(){
+		for (PlayerStatus playerStatus : playerStatusList)
+			if (!playerStatus.isReady())
+				return false;
+		return true;
 	}
 	
 	private void validatePlayerAmount(){

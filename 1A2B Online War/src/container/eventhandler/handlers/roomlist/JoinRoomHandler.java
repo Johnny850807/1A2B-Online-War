@@ -38,7 +38,7 @@ public class JoinRoomHandler extends GsonEventHandler<PlayerRoomIdModel, PlayerR
 				return error(208, new IllegalStateException("The game of the room has been started."));
 			
 			ClientPlayer clientPlayer = gameCore().getClientPlayer(data.getPlayerId());
-			if (hasThePlayerJoinedAnotherRom(clientPlayer.getPlayer()))
+			if (hasThePlayerJoinedAnotherRoom(clientPlayer.getPlayer()))
 				return error(209, new IllegalStateException("The player has joined to another room."));
 			
 			room.addPlayer(clientPlayer.getPlayer());
@@ -50,12 +50,6 @@ public class JoinRoomHandler extends GsonEventHandler<PlayerRoomIdModel, PlayerR
 		}
 	}
 
-	private boolean hasThePlayerJoinedAnotherRom(Player player){
-		for(GameRoom gameRoom : gameCore().getGameRooms())
-			if (gameRoom.containsPlayer(player))
-				return true;
-		return false;
-	}
 	
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {

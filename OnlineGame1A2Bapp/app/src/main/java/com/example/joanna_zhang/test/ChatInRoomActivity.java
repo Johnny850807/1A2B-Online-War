@@ -90,6 +90,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             sureAboutComeBackRoomList();
+            return true;
         }
         return false;
     }
@@ -103,6 +104,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                     public void onClick(DialogInterface dialog, int which) {
                         if (currentPlayer.equals(currentGameRoom.getHost()))
                             inRoomModule.closeRoom();
+                        else
+                            inRoomModule.leaveRoom();
                         finish();
                     }
                 })

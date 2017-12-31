@@ -37,6 +37,8 @@ public class CreateRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 			return error(103, new IllegalArgumentException("The room should be given a game mode."));
 		
 		Player hostPlayer = gameCore().getClientPlayer(room.getHost().getId()).getPlayer();
+		if (hasThePlayerJoinedAnotherRoom(hostPlayer))
+			return error(209, new IllegalStateException("The player has joined to another room."));
 		room.initId();
 		room.setLog(new ApacheLoggerAdapter(GameRoom.class));
 		room.setHost(hostPlayer);

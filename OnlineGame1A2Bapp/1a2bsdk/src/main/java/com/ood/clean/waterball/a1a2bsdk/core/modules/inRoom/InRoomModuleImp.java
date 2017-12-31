@@ -83,6 +83,13 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
         client.broadcast(protocol);
     }
 
+    @Override
+    public void leaveRoom() {
+        Protocol protocol = protocolFactory.createProtocol(LEAVE_ROOM, RequestStatus.request.toString(),
+                gson.toJson(new PlayerRoomIdModel(currentPlayer.getId(), currentGameRoom.getId())));
+        client.broadcast(protocol);
+    }
+
     public class ProxyCallback implements InRoomModule.Callback{
         private InRoomModule.Callback callback;
 

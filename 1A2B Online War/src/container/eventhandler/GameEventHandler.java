@@ -5,6 +5,8 @@ import container.base.ClientBinder;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
+import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
 import gamecore.model.ErrorMessage;
 import gamecore.model.RequestStatus;
 
@@ -136,5 +138,12 @@ public abstract class GameEventHandler<In, Out> implements EventHandler{
 				onRespondingListener.onErrorResponding(response);
 			client().broadcast(response);
 		}
+	}
+	
+	protected boolean hasThePlayerJoinedAnotherRoom(Player player){
+		for(GameRoom gameRoom : gameCore().getGameRooms())
+			if (gameRoom.containsPlayer(player))
+				return true;
+		return false;
 	}
 }

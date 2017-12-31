@@ -36,6 +36,11 @@ public interface InRoomModule extends GameModule{
      */
     public void closeRoom();
 
+    /**
+     * leave from the current room
+     */
+    public void leaveRoom();
+
     public interface Callback extends GameCallBack{
 
         /**
