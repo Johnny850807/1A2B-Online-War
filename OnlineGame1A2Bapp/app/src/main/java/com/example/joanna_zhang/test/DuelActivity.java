@@ -6,7 +6,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,7 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.joanna_zhang.test.Utils.ShowDialogHelper;
+import com.example.joanna_zhang.test.Utils.AppLogoDialogBuilderFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.Duel1A2BModule;
@@ -40,6 +39,8 @@ import gamecore.model.games.a1b2.GameOverModel;
 import gamecore.model.games.a1b2.GuessRecord;
 import gamecore.model.games.a1b2.NumberNotValidException;
 
+import static android.R.string.cancel;
+import static com.example.joanna_zhang.test.R.string.confirm;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
@@ -98,18 +99,17 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     private void showLeftGameDialog() {
-        ShowDialogHelper.showComeBackActivityDialog(
-                R.drawable.logo
-                , R.string.leftGame
-                , R.string.sureToLeftGame
-                , R.string.confirm
-                , R.string.cancel, this
-                , new DialogInterface.OnClickListener() {
+        AppLogoDialogBuilderFactory.create(this)
+                .setTitle(R.string.leftGame)
+                .setMessage(R.string.sureToLeftGame)
+                .setPositiveButton(confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         duel1A2BModule.leaveGame();
                     }
-                });
+                })
+                .setNegativeButton(cancel, null)
+                .show();
     }
 
     @Override
@@ -289,11 +289,10 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     @Override
     public void onOpponentLeft(PlayerRoomModel model) {
-        new AlertDialog.Builder(this)
-                .setIcon(R.drawable.logo)
-                .setTitle(R.string.playerLeft)
+        AppLogoDialogBuilderFactory.create(this)
+                .setTitle(R.string.gameClosed)
                 .setMessage(getString(R.string.playerIsAlreadyLeft, model.getPlayer().getName()))
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                .setPositiveButton(confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
@@ -303,12 +302,11 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     private void createAndShowDialogForWinner(Player winner){
-        new AlertDialog.Builder(DuelActivity.this)
+        AppLogoDialogBuilderFactory.create(this)
                 .setTitle(R.string.gameOver)
                 .setMessage(getString(R.string.theWinnerIs, winner.getName()))
-                .setIcon(R.drawable.logo)
                 .setCancelable(false)
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                .setPositiveButton(confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         finish();
