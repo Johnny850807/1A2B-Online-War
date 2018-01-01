@@ -75,9 +75,10 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         duel1A2BModule.registerCallback(currentPlayer, currentGameRoom, this);
         if (gameStarted)
             mediaPlayer.start();
-        else {
-            duel1A2BModule.enterGame();
+        else
+        {
             waitOtherPlayersPrepare();
+            duel1A2BModule.enterGame();
         }
     }
 

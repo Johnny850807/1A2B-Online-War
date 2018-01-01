@@ -7,47 +7,33 @@ import com.example.joanna_zhang.test.GroupFightActivity;
 import com.example.joanna_zhang.test.R;
 
 import gamecore.model.GameMode;
-import gamecore.model.games.a1b2.boss.Boss1A2BGame;
 
 public class GameModeHelper {
 
     public static String getGameModeText(Context context, GameMode gameMode){
-        String gameModeText = null;
         switch (gameMode){
             case DUEL1A2B:
-                gameModeText = context.getString(R.string.duel);
-                break;
+                return context.getString(R.string.duel);
             case GROUP1A2B:
-                gameModeText = context.getString(R.string.fight);
-                break;
+                return context.getString(R.string.fight);
             case BOSS1A2B:
-                gameModeText = context.getString(R.string.boss);
-                break;
+                return context.getString(R.string.boss);
             case DIXIT:
-                gameModeText = context.getString(R.string.dixit);
-                break;
+                return context.getString(R.string.dixit);
         }
-        return  gameModeText;
+
+        throw new IllegalArgumentException("The gamemode " + gameMode + " is not found.");
     }
 
     public static Class getGameModeActivity(GameMode gameMode){
-        Class activity = null;
         switch (gameMode){
             case DUEL1A2B:
-                activity = DuelActivity.class;
-                break;
+                return DuelActivity.class;
             case GROUP1A2B:
-                activity = GroupFightActivity.class;
-                break;
-            case BOSS1A2B:
-                activity = null;
-                break;
-            case DIXIT:
-                activity = null;
-                break;
+                return GroupFightActivity.class;
         }
 
-        return  activity;
+        throw new IllegalArgumentException("The gamemode " + gameMode + " is not found.");
     }
 
 }
