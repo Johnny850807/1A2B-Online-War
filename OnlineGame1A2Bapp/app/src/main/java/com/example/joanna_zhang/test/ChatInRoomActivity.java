@@ -139,53 +139,12 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                 .show();
     }
 
-<<<<<<< HEAD
-
-    private void init() {
-        currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
-        currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
-        roomPlayerListAdapter = new RoomPlayerListAdapter();
-        inRoomModule = (InRoomModule) CoreGameServer.getInstance().createModule(ModuleName.INROOM);
-    }
-
-    private void setUpPlayerListView() {
-        chatRoomPlayerListView.setAdapter(roomPlayerListAdapter);
-        chatRoomPlayerListView.setOnItemLongClickListener(this);
-    }
-
-    private void setUpGameModeTxt() {
-        String gameModeName = GameModeHelper.getGameModeText(this, currentGameRoom.getGameMode());
-        gameModeTxt.setText(gameModeName);
-    }
-
-    private void setupChatWindow() {
-        chatWindowView = new ChatWindowView.Builder(this, currentGameRoom, currentPlayer)
-                .addOnSendMessageOnClickListener(this)
-                .build();
-    }
-
-    private void findViews() {
-        gameModeTxt = findViewById(R.id.roomModeNameTxt);
-        gameStartBtn = (Button) findViewById(R.id.gameStartBtn);
-        chatRoomPlayerListView = (ListView) findViewById(R.id.chatRoomPlayersLst);
-    }
-
-    @Override
-    public void onChatMessageUpdate(ChatMessage chatMessage) {
-    }
-
     @Override
     public void onMessageSendingFailed(ErrorMessage errorMessage) {
         Toast.makeText(this, R.string.messageSendingFailed, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onChatMessageError(Throwable err) {
-        Toast.makeText(this, R.string.chatMessageError, Toast.LENGTH_SHORT).show();
-    }
 
-=======
->>>>>>> 84faa5054bdb6ada6daf87ff750ead4089287100
     public void gameStartButtonOnClick(View view) {
         if (currentPlayer.equals(currentGameRoom.getHost()) && playerAmountEnoughToLaunchGame() && allPlayersAreReady()) {
             inRoomModule.launchGame();
@@ -287,10 +246,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     public void onChatMessageUpdate(ChatMessage chatMessage) {
     }
 
-    @Override
-    public void onMessageSendingFailed(ChatMessage chatMessage) {
-        Toast.makeText(this, R.string.messageSendingFailed, Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void onChatMessageError(Throwable err) {
