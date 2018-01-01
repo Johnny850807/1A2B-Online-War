@@ -3,7 +3,6 @@ package com.example.joanna_zhang.test;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -98,9 +97,18 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "OnResume.");
         chatWindowView.onResume();
         inRoomModule.registerCallback(currentPlayer, currentGameRoom, this);
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop.");
+        chatWindowView.onStop();
+        inRoomModule.unregisterCallBack(this);
     }
 
     @Override
@@ -128,13 +136,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        chatWindowView.onStop();
-        inRoomModule.unregisterCallBack(this);
     }
 
     public void gameStartButtonOnClick(View view) {
