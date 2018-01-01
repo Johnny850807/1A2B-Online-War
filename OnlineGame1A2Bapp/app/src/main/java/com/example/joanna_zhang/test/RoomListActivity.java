@@ -89,10 +89,10 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     private void findViews() {
-        searchEdt = (EditText) findViewById(R.id.searchEdt);
+        searchEdt = findViewById(R.id.searchEdt);
         searchEdt.addTextChangedListener(new SearchEditTextWatcher());
-        roomListView = (ListView) findViewById(R.id.roomLst);
-        roomModeSpn = (Spinner) findViewById(R.id.modeSpn);
+        roomListView = findViewById(R.id.roomLst);
+        roomModeSpn = findViewById(R.id.modeSpn);
     }
 
     public void setUpSpinner() {

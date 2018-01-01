@@ -1,5 +1,7 @@
 package com.ood.clean.waterball.a1a2bsdk.core.modules.games;
 
+import android.content.Context;
+
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 
 import java.util.List;
@@ -8,13 +10,14 @@ import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
+import gamecore.model.PlayerRoomModel;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
 
 
 public interface Duel1A2BModule extends GameModule {
 
-    void registerCallback(Player currentPlayer, GameRoom currentGameRoom, Duel1A2BModule.Callback callback);
+    void registerCallback(Context context,  Player currentPlayer, GameRoom currentGameRoom, Duel1A2BModule.Callback callback);
     void unregisterCallBack(Duel1A2BModule.Callback callback);
 
     void enterGame();
@@ -28,6 +31,11 @@ public interface Duel1A2BModule extends GameModule {
      * guess the opponent's answer.
      */
     void guess(String guess);
+
+    /**
+     * leave from the current game and the current room.
+     */
+    void leaveGame();
 
     public interface Callback extends OnlineGameModule.Callback{
 
@@ -67,5 +75,10 @@ public interface Duel1A2BModule extends GameModule {
          * @param gameOverModel model contains the winner info.
          */
         void onGameOver(GameOverModel gameOverModel);
+
+        /**
+         * when the opponent left from the game.
+         */
+        void onOpponentLeft(PlayerRoomModel model);
     }
 }
