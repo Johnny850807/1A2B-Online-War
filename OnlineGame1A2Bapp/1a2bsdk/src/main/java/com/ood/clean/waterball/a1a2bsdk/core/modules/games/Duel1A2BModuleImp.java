@@ -161,6 +161,7 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
         @Override
         @BindCallback(event = LEAVE_ROOM, status = RequestStatus.success)
         public void onOpponentLeft(PlayerRoomModel model) {
+            Log.d(TAG, "The Opponent left.");
             if (!model.getPlayer().equals(currentPlayer))
                 callback.onOpponentLeft(model);
         }
