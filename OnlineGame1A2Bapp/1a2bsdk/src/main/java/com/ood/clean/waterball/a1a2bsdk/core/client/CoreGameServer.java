@@ -34,6 +34,7 @@ public final class CoreGameServer{
     private @Inject
     EventBus eventBus;
     private Thread clientThread;
+    private Context appContext;
 
     private CoreGameServer(){
         Component.inject(this);
@@ -53,6 +54,7 @@ public final class CoreGameServer{
      * @param context MainActivity
      */
     public void startEngine(@NonNull Context context){
+        this.appContext = context.getApplicationContext();
         if (clientThread == null)
         {
             Log.d(TAG, "Socket initializing ..., Ip: " + SERVER_ADDRESS + ":" + PORT);
@@ -93,6 +95,7 @@ public final class CoreGameServer{
 
     void onSocketDisconnected() {
         Log.v(TAG, "onSocketDisconnected");
+        clientThread = null;
     }
 
     public void resendUnhandledEvents(){

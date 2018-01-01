@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.RandomNameCreator;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutException;
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
 
     @Override
     public void onSignInFailed() {
-        createAndShowErrorMessage(getString(R.string.signInFailedPlayerNameIsInvalid));
+        AppDialogFactory.errorDialog(this, getString(R.string.signInFailedPlayerNameIsInvalid)).show();
         loginBtn.setEnabled(true);
     }
 
@@ -135,16 +135,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     public void onError(@NonNull Throwable err) {
         loginBtn.setEnabled(true);
         if (err instanceof ConnectionTimedOutException)
-            createAndShowErrorMessage(getString(R.string.signInFailed_pleaseCheckYourNetwork));
-    }
-
-    public void createAndShowErrorMessage(String exceptionMessage) {
-        new AlertDialog.Builder(MainActivity.this)
-                .setTitle(R.string.errorMessage)
-                .setMessage(exceptionMessage)
-                .setIcon(R.drawable.logo)
-                .setPositiveButton(R.string.confirm, null)
-                .show();
+            AppDialogFactory.internetErrorDialog(this).show();
     }
 
     @Override

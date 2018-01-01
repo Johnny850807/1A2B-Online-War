@@ -22,4 +22,16 @@ public class AppDialogFactory {
                 .setPositiveButton(R.string.confirm, (d,p)->activity.finish())
                 .create();
     }
+
+    public static AlertDialog errorDialog(Context context, String errorMessage){
+        return templateBuilder(context)
+                .setTitle(R.string.errorMessage)
+                .setMessage(errorMessage)
+                .setPositiveButton(R.string.confirm, null)
+                .show();
+    }
+
+    public static AlertDialog internetErrorDialog(Context context){
+        return errorDialog(context, context.getString(R.string.internetError));
+    }
 }
