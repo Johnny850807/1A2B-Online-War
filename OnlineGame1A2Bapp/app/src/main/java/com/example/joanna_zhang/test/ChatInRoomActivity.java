@@ -34,12 +34,6 @@ import gamecore.model.PlayerStatus;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
-
-/**
- * TODO:
- * clean your code and organize the methods (put them in the readable order),
- * don't let any garbage be here anymore, such as some 'gray-text' attributes, some 'few-lines' methods.
- */
 public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InRoomModule.Callback, AdapterView.OnItemLongClickListener {
     private static final String TAG = "ChatInRoomActivity";
     private static final int HOST_POSITION = 0;
