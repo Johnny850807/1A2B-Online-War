@@ -289,9 +289,18 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     @Override
     public void onOpponentLeft(PlayerRoomModel model) {
+        createAndShowPlayerLeftNotifyingDialog(model.getPlayer());
+    }
+
+    @Override
+    public void onGameClosed(GameRoom gameRoom) {
+        createAndShowPlayerLeftNotifyingDialog(gameRoom.getHost());
+    }
+
+    private void createAndShowPlayerLeftNotifyingDialog(Player leftPlayeer){
         AppLogoDialogBuilderFactory.create(this)
                 .setTitle(R.string.gameClosed)
-                .setMessage(getString(R.string.playerIsAlreadyLeft, model.getPlayer().getName()))
+                .setMessage(getString(R.string.playerIsAlreadyLeft,leftPlayeer.getName()))
                 .setPositiveButton(confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

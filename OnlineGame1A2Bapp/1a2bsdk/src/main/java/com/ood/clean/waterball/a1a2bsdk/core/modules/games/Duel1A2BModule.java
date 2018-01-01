@@ -80,5 +80,10 @@ public interface Duel1A2BModule extends GameModule {
          * when the opponent left from the game.
          */
         void onOpponentLeft(PlayerRoomModel model);
+
+        /**
+         * when the gameroom closed bt the host
+         */
+        void onGameClosed(GameRoom gameRoom);
     }
 }

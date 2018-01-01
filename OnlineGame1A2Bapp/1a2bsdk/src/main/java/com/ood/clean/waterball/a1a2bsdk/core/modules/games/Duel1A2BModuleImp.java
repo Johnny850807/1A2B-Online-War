@@ -27,6 +27,7 @@ import static container.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
 import static container.Constants.Events.Games.Duel1A2B.SET_ANSWER;
 import static container.Constants.Events.Games.GAMEOVER;
 import static container.Constants.Events.Games.GAMESTARTED;
+import static container.Constants.Events.InRoom.CLOSE_ROOM;
 import static container.Constants.Events.InRoom.LEAVE_ROOM;
 import static container.Constants.Events.RECONNECTED;
 
@@ -164,6 +165,15 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
             Log.d(TAG, "The Opponent left.");
             if (!model.getPlayer().equals(currentPlayer))
                 callback.onOpponentLeft(model);
+        }
+
+        @Override
+        @BindCallback(event = CLOSE_ROOM, status = RequestStatus.success)
+        public void onGameClosed(GameRoom gameRoom) {
+            Log.d(TAG, "The game closed.");
+            if (!gameRoom.equals(currentGameRoom))
+                throw new IllegalStateException("The closed room is not the current room, how did it broadcast to the game?");
+            callback.onGameClosed(gameRoom);
         }
 
         @Override
