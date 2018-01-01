@@ -27,7 +27,7 @@ public final class ReflectionEventBus implements EventBus{
     private static ReflectionEventBus instance;
     private Gson gson = MyGson.getGson();
     private Set<GameCallBack> callBackSet;
-    private LinkedList<Protocol> unhandledProtocols = new LinkedList<>();
+    private final LinkedList<Protocol> unhandledProtocols = new LinkedList<>();
 
     public ReflectionEventBus(){
         callBackSet = new HashSet<>();
