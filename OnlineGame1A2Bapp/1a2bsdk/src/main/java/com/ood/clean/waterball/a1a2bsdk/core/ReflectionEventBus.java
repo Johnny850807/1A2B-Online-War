@@ -10,6 +10,7 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,11 +46,12 @@ public final class ReflectionEventBus implements EventBus{
 
     @Override
     public void resendNonHandledEvent() {
-        synchronized (unhandledProtocols)
-        {
+        try{
             for (Protocol protocol : unhandledProtocols)
                 invoke(protocol);
             unhandledProtocols.clear();
+        }catch (ConcurrentModificationException err){
+
         }
     }
 
