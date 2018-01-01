@@ -301,8 +301,8 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
             TextView resultTxt = view.findViewById(android.R.id.text1);
             StringBuilder result = new StringBuilder();
             result.append(resultList.get(i).getGuess())
-                    .append('-')
-                    .append(resultList.get(i).getResult().toString());
+                    .append(' ')
+                    .append(resultList.get(i).getResult().toString().toUpperCase());
             resultTxt.setText(result);
 
             return view;
