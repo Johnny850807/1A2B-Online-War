@@ -2,7 +2,10 @@ package com.example.joanna_zhang.test;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -42,6 +45,7 @@ import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
 public class DuelActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowView.OnClickListener, Duel1A2BModule.Callback {
 
+    private final static String TAG = "DuelActivity";
     private Duel1A2BModule duel1A2BModule;
     private android.app.AlertDialog progressDialog;
     private List<GuessRecord> p1ResultList, p2ResultList;
@@ -56,6 +60,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     private GuessResultAdapter p1GuessResultAdapter, p2GuessResultAdapter;
     private Handler handler = new Handler();
     private MediaPlayer mediaPlayer;
+    private SoundManager soundManager;
     private boolean gameStarted = false;
 
     @Override
@@ -107,17 +112,18 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
         p1GuessResultAdapter = new GuessResultAdapter();
         p2GuessResultAdapter = new GuessResultAdapter();
+        soundManager = new SoundManager(this);
     }
 
     private void findViews() {
-        inputNumberBtn = (Button) findViewById(R.id.inputNumberBtn);
-        sendGuessBtn = (ImageButton) findViewById(R.id.sendGuessBtn);
-        p1NameTxt = (TextView) findViewById(R.id.p1NameTxt);
-        p2NameTxt = (TextView) findViewById(R.id.p2NameTxt);
-        p1AnswerTxt = (TextView) findViewById(R.id.p1AnswerTxt);
-        p2AnswerTxt = (TextView) findViewById(R.id.p2AnswerTxt);
-        p1ResultListView = (ListView) findViewById(R.id.p1ResultLst);
-        p2ResultListView = (ListView) findViewById(R.id.p2ResultLst);
+        inputNumberBtn = findViewById(R.id.inputNumberBtn);
+        sendGuessBtn = findViewById(R.id.sendGuessBtn);
+        p1NameTxt = findViewById(R.id.p1NameTxt);
+        p2NameTxt = findViewById(R.id.p2NameTxt);
+        p1AnswerTxt = findViewById(R.id.p1AnswerTxt);
+        p2AnswerTxt = findViewById(R.id.p2AnswerTxt);
+        p1ResultListView = findViewById(R.id.p1ResultLst);
+        p2ResultListView = findViewById(R.id.p2ResultLst);
         p1NameTxt.setText(currentPlayer.getName());
         String p2Name = currentGameRoom.getPlayers().get(0).equals(currentPlayer)?
                 currentGameRoom.getPlayers().get(1).getName() : currentGameRoom.getPlayers().get(0).getName();
@@ -153,11 +159,13 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     private void waitOtherPlayersPrepare() {
         progressDialog = new ProgressDialog.Builder(DuelActivity.this)
-                .setCancelable(true)
+                .setCancelable(false)
                 .setTitle(getString(R.string.pleaseWait))
                 .setMessage(getString(R.string.waitOtherPlayersJoin))
                 .show();
     }
+
+
 
     public void updateResultList() {
         p1GuessResultAdapter.setResultList(p1ResultList);
@@ -182,13 +190,19 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     @Override
-    public void onChatMessageUpdate(ChatMessage chatMessage) {}
+    public void onChatMessageUpdate(ChatMessage chatMessage) {
+        Log.d(TAG, "onChatMessageUpdate");
+    }
 
     @Override
-    public void onMessageSendingFailed(ErrorMessage errorMessage) {}
+    public void onMessageSendingFailed(ErrorMessage errorMessage) {
+        Log.d(TAG, "onMessageSendingFailed");
+    }
 
     @Override
-    public void onChatMessageError(Throwable err) {}
+    public void onChatMessageError(Throwable err) {
+        Log.e(TAG, "onChatMessageError", err);
+    }
 
     @Override
     public void onEnterClick(String guessNumber) {
@@ -219,28 +233,30 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     @Override
     public void onSetAnswerUnsuccessfully(ErrorMessage errorMessage) {
-
+        Log.d(TAG, errorMessage.getMessage());
     }
 
     @Override
     public void onGuessSuccessfully(ContentModel guessModel) {
-        Toast.makeText(this, "Your guess number is" + guessModel.getContent(), Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onGuessSuccessfully");
     }
 
     @Override
     public void onGuessUnsuccessfully(ErrorMessage errorMessage) {
-
+        Log.d(TAG, "onGuessUnsuccessfully");
     }
 
     @Override
     public void onGuessingStarted() {
+        Log.d(TAG, "onGuessingStarted");
         inputNumberBtn.setEnabled(true);
         sendGuessBtn.setEnabled(true);
-        Toast.makeText(this, "開始猜", Toast.LENGTH_SHORT).show();
+        soundManager.playDingdong();
     }
 
     @Override
     public void onOneRoundOver(List<Duel1A2BPlayerBarModel> models) {
+        Log.d(TAG, "onOneRoundOver");
         Duel1A2BPlayerBarModel playerBarModel1 = models.get(0);
         Duel1A2BPlayerBarModel playerBarModel2 = models.get(1);
         p1ResultList = playerBarModel1.getPlayerId().equals(currentPlayer.getId()) ? playerBarModel1.getGuessRecords() :
@@ -251,10 +267,12 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         inputNumberBtn.setText(null);
         inputNumberBtn.setEnabled(true);
         sendGuessBtn.setEnabled(true);
+        soundManager.playDingdong();
     }
 
     @Override
     public void onGameOver(GameOverModel gameOverModel) {
+        Log.d(TAG, "onGameOver");
         Player winner = currentGameRoom.getHost().getId().equals(gameOverModel.getWinnerId()) ?
                 currentGameRoom.getHost() : currentGameRoom.getPlayerStatus().get(0).getPlayer();
         inputNumberBtn.setEnabled(false);
