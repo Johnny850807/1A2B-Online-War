@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.RandomNameCreator;
@@ -96,9 +97,14 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     }
 
     public void signInButtonOnClick(View view) {
-        String playerName = nameEd.getText().toString();
-        signingModule.signIn(playerName);
         setLoading(true);
+        if (!CoreGameServer.getInstance().hasConnectedToServer())
+        {
+            Toast.makeText(getApplicationContext(), R.string.tryingToReconnectInternet, Toast.LENGTH_SHORT).show();
+            CoreGameServer.getInstance().startEngine(this);
+        }
+        else
+            signingModule.signIn(nameEd.getText().toString());
     }
 
     private void setLoading(boolean signing){

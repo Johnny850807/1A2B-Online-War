@@ -26,6 +26,7 @@ public class SoundManager {
             return new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
     }
 
+    //TODO use map registration / unregistration instead
     public void playDingdong() {
         if (dingdoig == 0)
             dingdoig = soundPool.load(context, R.raw.dingdong, 1);

@@ -31,10 +31,10 @@ public final class CoreGameServer{
     private static CoreGameServer instance;
     private @Inject Client client;
     private @Inject ProtocolFactory protocolFactory;
-    private @Inject
-    EventBus eventBus;
+    private @Inject EventBus eventBus;
     private Thread clientThread;
     private Context appContext;
+    private boolean connected = false;
 
     private CoreGameServer(){
         Component.inject(this);
@@ -60,6 +60,7 @@ public final class CoreGameServer{
             Log.d(TAG, "Socket initializing ..., Ip: " + SERVER_ADDRESS + ":" + PORT);
             clientThread = new Thread(client);
             clientThread.start();
+            connected = true;
         }
     }
 
@@ -96,10 +97,14 @@ public final class CoreGameServer{
     void onSocketDisconnected() {
         Log.v(TAG, "onSocketDisconnected");
         clientThread = null;
+        connected = false;
     }
 
     public void resendUnhandledEvents(){
         eventBus.resendNonHandledEvent();
     }
 
+    public boolean hasConnectedToServer(){
+        return connected;
+    }
 }
