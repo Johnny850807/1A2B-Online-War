@@ -1,7 +1,5 @@
 package com.ood.clean.waterball.a1a2bsdk.core;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -47,8 +45,12 @@ public final class ReflectionEventBus implements EventBus{
 
     @Override
     public void resendNonHandledEvent() {
-        for (Protocol protocol : unhandledProtocols)
-            invoke(protocol);
+        synchronized (unhandledProtocols)
+        {
+            for (Protocol protocol : unhandledProtocols)
+                invoke(protocol);
+            unhandledProtocols.clear();
+        }
     }
 
     @Override
@@ -60,10 +62,10 @@ public final class ReflectionEventBus implements EventBus{
     /**
      * @since 1.8
      */
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
-    public void invoke(Protocol protocol) {
+    public synchronized void invoke(Protocol protocol) {
         try {
+            Log.v(TAG, "protocol invoked: " + protocol);
             bindMethods(protocol);
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
@@ -97,7 +99,10 @@ public final class ReflectionEventBus implements EventBus{
         if (!eventHasBeenConsumed)
         {
             Log.e(TAG, "No callback consumes the event: " + event);
-            unhandledProtocols.add(protocol);
+            synchronized (unhandledProtocols)
+            {
+                unhandledProtocols.add(protocol);
+            }
         }
     }
 
