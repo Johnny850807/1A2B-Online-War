@@ -294,15 +294,15 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            view = LayoutInflater.from(DuelActivity.this).inflate(android.R.layout.simple_list_item_1, viewGroup, false);
+            view = LayoutInflater.from(DuelActivity.this).inflate(R.layout.duel_list_item, viewGroup, false);
 
-            //TODO optimize view like what we designed
-            TextView resultTxt = view.findViewById(android.R.id.text1);
-            StringBuilder result = new StringBuilder();
-            result.append(resultList.get(i).getGuess())
-                    .append(' ')
-                    .append(resultList.get(i).getResult().toString().toUpperCase());
-            resultTxt.setText(result);
+            TextView guess = view.findViewById(R.id.guessNumber);
+            TextView aNumber = view.findViewById(R.id.aNumber);
+            TextView bNumber = view.findViewById(R.id.bNumber);
+
+            guess.setText(resultList.get(i).getGuess());
+            aNumber.setText(String.valueOf(resultList.get(i).getA()));
+            bNumber.setText(String.valueOf(resultList.get(i).getB()));
 
             return view;
         }
