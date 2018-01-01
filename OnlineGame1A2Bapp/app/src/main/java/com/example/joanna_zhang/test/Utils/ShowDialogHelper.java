@@ -1,14 +1,14 @@
 package com.example.joanna_zhang.test.Utils;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
 public class ShowDialogHelper {
 
-    public static Dialog showComeBackActivityDialog(String title, String message, String confirm, String cancel, Activity activity, DialogInterface.OnClickListener onClickListener){
+    public static AlertDialog showComeBackActivityDialog(int icon, int title, int message, int confirm, int cancel, Activity activity, DialogInterface.OnClickListener onClickListener){
         return new AlertDialog.Builder(activity)
+                .setIcon(icon)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(confirm, onClickListener)

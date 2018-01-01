@@ -76,5 +76,9 @@
     <string name="theWinnerIs" formatted="false">遊戲結束！勝利者為 %s ！</string>
     <string name="signOut">登出</string>
     <string name="sureToSignOut">確定要登出嗎?</string>
+    <string name="leftGame">離開遊戲</string>
+    <string name="sureToLeftGame">確定要離開遊戲?</string>
+    <string name="playerIsAlreadyLeft" formatted="false">玩家 %s 已離開遊戲</string>
+    <string name="playerLeft">玩家離開遊戲通知</string>
 
 </resources>

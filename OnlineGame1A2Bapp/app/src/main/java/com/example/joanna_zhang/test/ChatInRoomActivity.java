@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Utils.GameModeHelper;
+import com.example.joanna_zhang.test.Utils.ShowDialogHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom.InRoomModule;
@@ -69,8 +70,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     private void findViews() {
         gameModeTxt = findViewById(R.id.roomModeNameTxt);
-        gameStartBtn =  findViewById(R.id.gameStartBtn);
-        chatRoomPlayerListView =  findViewById(R.id.chatRoomPlayersLst);
+        gameStartBtn = findViewById(R.id.gameStartBtn);
+        chatRoomPlayerListView = findViewById(R.id.chatRoomPlayersLst);
     }
 
     private void setUpGameModeTxt() {
@@ -116,10 +117,13 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void sureAboutComeBackRoomListDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.comeBackToRoomList)
-                .setMessage(R.string.sureAboutComeBackToRoomList)
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+        ShowDialogHelper.showComeBackActivityDialog(
+                  R.drawable.logo
+                , R.string.comeBackToRoomList
+                , R.string.sureAboutComeBackToRoomList
+                , R.string.confirm
+                , R.string.cancel, this
+                , new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (currentPlayer.equals(currentGameRoom.getHost()))
@@ -128,9 +132,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                             inRoomModule.leaveRoom();
                         finish();
                     }
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .show();
+                });
     }
 
     @Override
@@ -257,7 +259,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                     .setItems(YESORNO, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int yesOrNo) {
-                            switch (yesOrNo){
+                            switch (yesOrNo) {
                                 case YES:
                                     Log.d(TAG, "On booting item long click, position: " + position);
                                     inRoomModule.bootPlayer(currentGameRoom.getPlayers().get(position));

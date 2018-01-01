@@ -139,10 +139,12 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     private void sureAboutSignOutDialog() {
-        ShowDialogHelper.showComeBackActivityDialog(getString(R.string.signOut)
-                , getString(R.string.sureToSignOut), getString(R.string.confirm)
-                , getString(R.string.cancel)
-                , this
+        ShowDialogHelper.showComeBackActivityDialog(
+                  R.drawable.logo
+                , R.string.signOut
+                , R.string.sureToSignOut
+                , R.string.confirm
+                , R.string.cancel, this
                 , new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
