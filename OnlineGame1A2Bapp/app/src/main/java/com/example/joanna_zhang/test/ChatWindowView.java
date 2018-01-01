@@ -12,8 +12,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
+import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModule;
 
 import java.text.SimpleDateFormat;
@@ -25,7 +25,7 @@ import java.util.Locale;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
-
+import gamecore.model.ErrorMessage;
 
 
 public class ChatWindowView implements View.OnClickListener, ChatModule.Callback{
@@ -100,8 +100,8 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
     }
 
     @Override
-    public void onMessageSendingFailed(ChatMessage message) {
-        listener.onMessageSendingFailed(message);
+    public void onMessageSendingFailed(ErrorMessage errorMessage) {
+        listener.onMessageSendingFailed(errorMessage);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
 
     public interface ChatMessageListener {
         void onChatMessageUpdate(ChatMessage chatMessage);
-        void onMessageSendingFailed(ChatMessage chatMessage);
+        void onMessageSendingFailed(ErrorMessage errorMessage);
         void onChatMessageError(Throwable err);
     }
 

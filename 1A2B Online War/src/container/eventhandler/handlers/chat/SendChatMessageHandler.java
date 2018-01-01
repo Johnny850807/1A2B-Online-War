@@ -19,6 +19,7 @@ import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ChangeStatusModel;
+import gamecore.model.ClientPlayer;
 import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.RequestStatus;
 import gamecore.model.RoomStatus;
@@ -42,13 +43,27 @@ public class SendChatMessageHandler extends GsonEventHandler<ChatMessage, ChatMe
 
 	@Override
 	protected Response onHandling(ChatMessage chatMessage) {
-		chatMessage.initId();
-		room = gameCore().getGameRoom(chatMessage.getGameRoomId());
-		room.addChatMessage(chatMessage);
-		checkGmCommand(chatMessage);
-		return success(chatMessage);
+		try{
+			chatMessage.initId();
+			validateMessage(chatMessage);
+			room = gameCore().getGameRoom(chatMessage.getGameRoomId());
+			room.addChatMessage(chatMessage);
+			checkGmCommand(chatMessage);
+			return success(chatMessage);
+		}catch (NullPointerException e) {
+			return error(404, e);
+		}catch (IllegalArgumentException e) {
+			return error(400, e);
+		}
 	}
 
+	private void validateMessage(ChatMessage message){
+		ClientPlayer posterClient = gameCore().getClientPlayer(message.getPoster().getId());
+		GameRoom room = gameCore().getGameRoom(message.getGameRoomId());
+		if (!room.containsPlayer(posterClient.getPlayer()))
+			throw new IllegalArgumentException("The message poster is not in the room.");
+	}
+	
 	private void checkGmCommand(ChatMessage chatMessage){
 		Player player = chatMessage.getPoster();
 		if (player.getName().equals(ServerConstant.GM_ACTUALNAM))

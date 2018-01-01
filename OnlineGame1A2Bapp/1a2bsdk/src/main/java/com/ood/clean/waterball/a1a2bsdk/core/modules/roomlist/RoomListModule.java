@@ -7,6 +7,7 @@ import java.util.List;
 
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
+import gamecore.model.ErrorMessage;
 import gamecore.model.GameMode;
 import gamecore.model.PlayerRoomModel;
 
@@ -38,7 +39,7 @@ public interface RoomListModule extends GameModule{
         /**
          * This method will be called if the room created unsuccessfully by self.
          */
-        void onCreateRoomUnsuccessfully(GameRoom gameRoom);
+        void onCreateRoomUnsuccessfully(ErrorMessage errorMessage);
 
         /**
          * This method will be called if any of the room closed by the online player.
@@ -55,7 +56,7 @@ public interface RoomListModule extends GameModule{
          */
         void onJoinRoomSuccessfully(PlayerRoomModel model);
 
-        void onJoinRoomUnsuccessfully(PlayerRoomModel model);
+        void onJoinRoomUnsuccessfully(ErrorMessage errorMessage);
 
         /**
          * This method will be called when someone joined to any room.

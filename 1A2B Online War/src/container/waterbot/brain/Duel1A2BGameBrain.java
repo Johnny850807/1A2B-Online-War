@@ -6,6 +6,7 @@ import container.protocol.ProtocolFactory;
 import container.waterbot.Brain;
 import container.waterbot.WaterBot;
 import gamecore.entity.Player;
+import gamecore.model.ClientStatus;
 import gamecore.model.ContentModel;
 import gamecore.model.RoomStatus;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
@@ -64,6 +65,7 @@ public class Duel1A2BGameBrain extends BaseChatChainBrain{
 			broadcastRandomGuessAfter2Seconds(waterBot, client);
 			return;
 		case GAMEOVER:
+			waterBot.getMemory().getMe().setUserStatus(ClientStatus.signedIn);
 			waterBot.getMemory().getRoom().setRoomStatus(RoomStatus.waiting);
 			break;
 		default:
@@ -110,7 +112,7 @@ public class Duel1A2BGameBrain extends BaseChatChainBrain{
 			public void run() {
 				if (waterBot.getMemory().getRoom().getRoomStatus() == RoomStatus.gamestarted)
 				{
-					if (guessedTime < 8)
+					if (guessedTime < 2)
 						broadcastRandomGuess(waterBot, client);
 					else
 						broadcastAbsolutelyCorrectGuess(waterBot, client);

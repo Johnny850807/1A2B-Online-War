@@ -28,6 +28,7 @@ import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ChangeStatusModel;
+import gamecore.model.ErrorMessage;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.PlayerStatus;
 
@@ -132,6 +133,12 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                 .show();
     }
 
+    @Override
+    public void onMessageSendingFailed(ErrorMessage errorMessage) {
+        Toast.makeText(this, R.string.messageSendingFailed, Toast.LENGTH_SHORT).show();
+    }
+
+
     public void gameStartButtonOnClick(View view) {
         if (currentPlayer.equals(currentGameRoom.getHost()) && playerAmountEnoughToLaunchGame() && allPlayersAreReady()) {
             inRoomModule.launchGame();
@@ -233,10 +240,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     public void onChatMessageUpdate(ChatMessage chatMessage) {
     }
 
-    @Override
-    public void onMessageSendingFailed(ChatMessage chatMessage) {
-        Toast.makeText(this, R.string.messageSendingFailed, Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void onChatMessageError(Throwable err) {

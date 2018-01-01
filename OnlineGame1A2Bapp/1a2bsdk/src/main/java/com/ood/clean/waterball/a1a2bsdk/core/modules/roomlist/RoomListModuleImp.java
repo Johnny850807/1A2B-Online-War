@@ -12,6 +12,7 @@ import java.util.List;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
+import gamecore.model.ErrorMessage;
 import gamecore.model.GameMode;
 import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.PlayerRoomModel;
@@ -103,9 +104,9 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
 
         @Override
         @BindCallback(event = CREATE_ROOM, status = RequestStatus.failed)
-        public void onCreateRoomUnsuccessfully(GameRoom gameRoom) {
-            Log.d(TAG, "Room created unsuccessfully: " + gameRoom);
-            callback.onCreateRoomUnsuccessfully(gameRoom);
+        public void onCreateRoomUnsuccessfully(ErrorMessage errorMessage) {
+            Log.d(TAG, "Room created unsuccessfully: " + errorMessage);
+            callback.onCreateRoomUnsuccessfully(errorMessage);
         }
 
         @BindCallback(event = CLOSE_ROOM, status = RequestStatus.success)
@@ -129,8 +130,8 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
 
         @Override
         @BindCallback(event = JOIN_ROOM, status = RequestStatus.failed)
-        public void onJoinRoomUnsuccessfully(PlayerRoomModel model) {
-            callback.onJoinRoomUnsuccessfully(model);
+        public void onJoinRoomUnsuccessfully(ErrorMessage errorMessage) {
+            callback.onJoinRoomUnsuccessfully(errorMessage);
         }
 
         @Override

@@ -7,6 +7,7 @@ import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
 import gamecore.model.ClientStatus;
+import gamecore.model.RoomStatus;
 
 /**
  * @author Johnny850807
@@ -26,10 +27,24 @@ public class LaunchGameHandler extends GsonEventHandler<GameRoom, GameRoom>{
 
 	@Override
 	protected Response onHandling(GameRoom data) {
-		roomId = data.getId();
-		GameRoom gameRoom = gameCore().getGameRoom(roomId);
-		gameRoom.launchGame(gameCore(), gameCore());
-		return success(gameRoom);
+		try{
+			roomId = data.getId();
+			GameRoom gameRoom = gameCore().getGameRoom(roomId);
+			validateLaunchingGame(gameRoom);
+			gameRoom.launchGame(gameCore(), gameCore());
+			return success(gameRoom);
+		}catch (NullPointerException e) {
+			return error(404, e);
+		}catch (IllegalStateException|IllegalAccessException e){
+			return error(403, e);
+		}
+	}
+
+	private void validateLaunchingGame(GameRoom gameRoom) throws IllegalAccessException{
+		if (gameRoom.getRoomStatus() == RoomStatus.gamestarted)
+			throw new IllegalStateException("The gameroom has been started.");
+		if (!client().getId().equals(gameRoom.getHost().getId()))
+			throw new IllegalAccessException("You are not the host, how did you launch the game?");
 	}
 
 	@Override

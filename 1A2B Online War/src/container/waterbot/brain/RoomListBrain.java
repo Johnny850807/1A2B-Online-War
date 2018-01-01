@@ -98,8 +98,6 @@ public class RoomListBrain extends ChainBrain{
 			PlayerRoomModel joinModel = parsePlayerRoomModel(protocol.getData());
 			if (joinModel.getPlayer().equals(waterBot.getMemory().getMe()))
 				saveTheGameRoomToMemroryAndEnterRoom(waterBot, joinModel.getGameRoom());
-			else  // other game room has any player left, so update
-				updateTheGameRoomsStatus(waterBot, joinModel.getGameRoom());
 		}
 		else
 			log.debug(getLogPrefix(waterBot) + "joined to the room unsuccessfully: " + protocol.getData());
@@ -129,8 +127,8 @@ public class RoomListBrain extends ChainBrain{
 				GameRoom room = waterBot.getMemory().getRoom();
 				if (me.getUserStatus() == ClientStatus.inRoom && room.getRoomStatus() == RoomStatus.waiting)
 					if (room.getHost().equals(me)) {
-						Protocol protocol = protocolFactory.createProtocol(CLOSE_ROOM, REQUEST, 
-								gson.toJson(room));
+						Protocol protocol = protocolFactory.createProtocol(LEAVE_ROOM, REQUEST, 
+								gson.toJson(new PlayerRoomIdModel(me.getId(), room.getId())));
 						client.broadcast(protocol);
 					}
 			}

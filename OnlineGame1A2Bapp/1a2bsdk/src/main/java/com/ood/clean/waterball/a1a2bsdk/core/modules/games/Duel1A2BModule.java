@@ -7,6 +7,7 @@ import java.util.List;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ContentModel;
+import gamecore.model.ErrorMessage;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
 
@@ -35,7 +36,7 @@ public interface Duel1A2BModule extends GameModule {
          */
         void onSetAnswerSuccessfully(ContentModel setAnswerModel);
 
-        void onSetAnswerUnsuccessfully(ContentModel setAnswerModel);
+        void onSetAnswerUnsuccessfully(ErrorMessage errorMessage);
 
         /**
          * while you guessed successfully.
@@ -45,7 +46,7 @@ public interface Duel1A2BModule extends GameModule {
          */
         void onGuessSuccessfully(ContentModel guessModel);
 
-        void onGuessUnsuccessfully(ContentModel guessModel);
+        void onGuessUnsuccessfully(ErrorMessage errorMessage);
 
         /**
          * when the both answers committed, the guessing phase started.

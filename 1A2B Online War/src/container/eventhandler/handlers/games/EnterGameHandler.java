@@ -9,6 +9,7 @@ import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
+import gamecore.model.ClientPlayer;
 import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.games.Game;
 
@@ -29,10 +30,17 @@ public class EnterGameHandler extends GsonEventHandler<PlayerRoomIdModel, Player
 
 	@Override
 	protected Response onHandling(PlayerRoomIdModel data) {
-		GameRoom gameRoom = gameCore().getGameRoom(data.getGameRoomId());
-		Game game = gameRoom.getGame();
-		game.enterGame(gameCore().getClientPlayer(data.getPlayerId()));
-		return success(data);
+		try{
+			GameRoom gameRoom = gameCore().getGameRoom(data.getGameRoomId());
+			Game game = gameRoom.getGame();
+			ClientPlayer clientPlayer = gameCore().getClientPlayer(data.getPlayerId());
+			if (clientPlayer == null)
+				throw new NullPointerException("The player should not be null.");
+			game.enterGame(clientPlayer);
+			return success(data);
+		}catch (NullPointerException e) {
+			return error(404, e);
+		}
 	}
 
 	@Override

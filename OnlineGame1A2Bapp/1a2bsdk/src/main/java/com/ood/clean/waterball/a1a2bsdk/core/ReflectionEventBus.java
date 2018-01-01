@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +29,7 @@ public final class ReflectionEventBus implements EventBus{
     private static ReflectionEventBus instance;
     private Gson gson = MyGson.getGson();
     private Set<GameCallBack> callBackSet;
+    private LinkedList<Protocol> unhandledProtocols = new LinkedList<>();
 
     public ReflectionEventBus(){
         callBackSet = new HashSet<>();
@@ -41,6 +43,12 @@ public final class ReflectionEventBus implements EventBus{
     @Override
     public void unregisterCallback(GameCallBack gameCallBack) {
         callBackSet.remove(gameCallBack);
+    }
+
+    @Override
+    public void resendNonHandledEvent() {
+        for (Protocol protocol : unhandledProtocols)
+            invoke(protocol);
     }
 
     @Override
@@ -87,7 +95,10 @@ public final class ReflectionEventBus implements EventBus{
         }
 
         if (!eventHasBeenConsumed)
+        {
             Log.e(TAG, "No callback consumes the event: " + event);
+            unhandledProtocols.add(protocol);
+        }
     }
 
     /**
@@ -101,7 +112,6 @@ public final class ReflectionEventBus implements EventBus{
             if (data instanceof List)
                 data = gson.fromJson(protocol.getData(), parseGenericTypeByTheEvent(protocol.getEvent()));
 
-            Log.d(TAG, "Parameter: " + parameters[0].getName() + ", Data: " + data);
             method.invoke(callBack, data);
         }
         else if (parameters.length == 0)

@@ -30,6 +30,7 @@ import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ContentModel;
+import gamecore.model.ErrorMessage;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
@@ -183,7 +184,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     public void onChatMessageUpdate(ChatMessage chatMessage) {}
 
     @Override
-    public void onMessageSendingFailed(ChatMessage chatMessage) {}
+    public void onMessageSendingFailed(ErrorMessage errorMessage) {}
 
     @Override
     public void onChatMessageError(Throwable err) {}
@@ -216,7 +217,9 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     @Override
-    public void onSetAnswerUnsuccessfully(ContentModel setAnswerModel) {}
+    public void onSetAnswerUnsuccessfully(ErrorMessage errorMessage) {
+
+    }
 
     @Override
     public void onGuessSuccessfully(ContentModel guessModel) {
@@ -224,7 +227,9 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     @Override
-    public void onGuessUnsuccessfully(ContentModel guessModel) {}
+    public void onGuessUnsuccessfully(ErrorMessage errorMessage) {
+
+    }
 
     @Override
     public void onGuessingStarted() {

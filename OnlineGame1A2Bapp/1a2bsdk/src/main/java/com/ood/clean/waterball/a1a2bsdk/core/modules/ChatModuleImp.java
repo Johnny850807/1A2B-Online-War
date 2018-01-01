@@ -12,6 +12,7 @@ import container.protocol.Protocol;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
+import gamecore.model.ErrorMessage;
 import gamecore.model.RequestStatus;
 
 import static container.Constants.Events.Chat.SEND_MSG;
@@ -75,9 +76,9 @@ public class ChatModuleImp extends AbstractGameModule implements ChatModule {
 
         @Override
         @BindCallback(event = SEND_MSG, status = RequestStatus.failed)
-        public void onMessageSendingFailed(ChatMessage message) {
-            Log.d(TAG, "message sending unsuccessfully: " + message.getContent());
-            callback.onMessageSendingFailed(message);
+        public void onMessageSendingFailed(ErrorMessage errorMessage) {
+            Log.d(TAG, "message sending unsuccessfully: " + errorMessage);
+            callback.onMessageSendingFailed(errorMessage);
         }
 
         @Override

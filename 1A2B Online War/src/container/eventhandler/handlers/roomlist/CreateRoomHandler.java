@@ -29,25 +29,41 @@ public class CreateRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 
 	@Override
 	protected Response onHandling(GameRoom room) {
-		if (room.getName() == null || room.getName().isEmpty() || room.getName().length() > 9)
-			return error(101, new IllegalArgumentException("The room's name should be in the range(1~9)"));
-		if (room.getHost() == null)
-			return error(102, new IllegalArgumentException("The room should be hosted by a player."));
-		if (room.getGameMode() == null)
-			return error(103, new IllegalArgumentException("The room should be given a game mode."));
-		
-		Player hostPlayer = gameCore().getClientPlayer(room.getHost().getId()).getPlayer();
-		if (hasThePlayerJoinedAnotherRoom(hostPlayer))
-			return error(209, new IllegalStateException("The player has joined to another room."));
-		room.initId();
-		room.setLog(new ApacheLoggerAdapter(GameRoom.class));
-		room.setHost(hostPlayer);
-		room.setProtocolFactory(protocolFactory());
-		gameCore().addGameRoom(room);
-		hostPlayer.setUserStatus(ClientStatus.inRoom);
-		return success(room);
+		try{
+			validateRoom(room);
+			validateHost(room.getHost());
+			Player hostPlayer = gameCore().getClientPlayer(room.getHost().getId()).getPlayer();
+			room.initId();
+			room.setLog(new ApacheLoggerAdapter(GameRoom.class));
+			room.setHost(hostPlayer);
+			room.setProtocolFactory(protocolFactory());
+			gameCore().addGameRoom(room);
+			return success(room);
+		}catch (NullPointerException e) {
+			return error(404, e);
+		}catch (IllegalArgumentException e) {
+			return error(400, e);
+		}catch (IllegalAccessException e) {
+			return error(403, e);
+		}
 	}
 
+	private void validateRoom(GameRoom room){
+		if (room.getName() == null || room.getName().isEmpty() || room.getName().length() > 9)
+			throw new IllegalArgumentException("The room's name should be in the range(1~9)");
+		if (room.getHost() == null)
+			throw new IllegalArgumentException("The room should be hosted by a player.");
+		if (room.getGameMode() == null)
+			throw new IllegalArgumentException("The room should be given a game mode.");
+	}
+	
+	private void validateHost(Player host) throws IllegalAccessException{
+		if (!host.getId().equals(client().getId()))
+			throw new IllegalAccessException("You are not the host, how did you send the request?");
+		if (hasThePlayerJoinedAnotherRoom(host))
+			throw new IllegalArgumentException("The player has joined to another room.");
+	}
+	
 	@Override
 	protected void onRespondSuccessfulProtocol(Protocol responseProtocol) {
 		//the gamecore has handled it.

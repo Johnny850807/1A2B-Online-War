@@ -1,5 +1,8 @@
 package container.eventhandler.handlers.inroom;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import container.base.Client;
 import container.eventhandler.handlers.GsonEventHandler;
 import container.protocol.Protocol;
@@ -17,6 +20,7 @@ import gamecore.model.PlayerRoomModel;
  * Output: (RoomList, InRoom) the model.
  */
 public class LeaveRoomHandler extends GsonEventHandler<PlayerRoomIdModel, PlayerRoomModel>{
+	private static Logger log = LogManager.getLogger(LeaveRoomHandler.class);
 	private GameRoom gameRoom;
 	public LeaveRoomHandler(Client client, Protocol request, GameCore gameCore, ProtocolFactory protocolFactory) {
 		super(client, request, gameCore, protocolFactory);
@@ -29,10 +33,14 @@ public class LeaveRoomHandler extends GsonEventHandler<PlayerRoomIdModel, Player
 
 	@Override
 	protected Response onHandling(PlayerRoomIdModel data) {
-		gameRoom = gameCore().getGameRoom(data.getGameRoomId());
-		ClientPlayer clientPlayer = gameCore().getClientPlayer(data.getPlayerId());
-		gameCore().removePlayerFromRoomAndBroadcast(clientPlayer.getPlayer(), gameRoom);
-		return success(new PlayerRoomModel(clientPlayer.getPlayer(), gameRoom));
+		try{
+			gameRoom = gameCore().getGameRoom(data.getGameRoomId());
+			ClientPlayer clientPlayer = gameCore().getClientPlayer(data.getPlayerId());
+			gameCore().removePlayerFromRoomAndBroadcast(clientPlayer.getPlayer(), gameRoom);
+			return success(new PlayerRoomModel(clientPlayer.getPlayer(), gameRoom));
+		}catch (NullPointerException e) {
+			return error(404, e);
+		}
 	}
 
 	@Override

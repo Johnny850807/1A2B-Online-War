@@ -8,6 +8,7 @@ import gamecore.GameCore;
 import gamecore.entity.GameRoom;
 import gamecore.model.ContentModel;
 import gamecore.model.RoomStatus;
+import gamecore.model.games.ProcessInvalidException;
 import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamecore.model.games.a1b2.NumberNotValidException;
 
@@ -35,7 +36,7 @@ public class GuessHandler extends GsonEventHandler<ContentModel, ContentModel>{
 			Duel1A2BGame gameModel = (Duel1A2BGame) gameRoom.getGame();
 			gameModel.guess(guessModel.getPlayerId(), guessModel.getContent());
 			return success(guessModel);
-		}catch (NumberNotValidException e) {
+		}catch (NumberNotValidException|ProcessInvalidException e) {
 			return error(400, e);
 		}
 	}

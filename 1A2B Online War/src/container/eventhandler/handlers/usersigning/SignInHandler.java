@@ -25,7 +25,7 @@ public class SignInHandler extends GsonEventHandler<Player, Player>{
 		if (name != null && name.equals(ServerConstant.GM_NAME))
 			player.setName(ServerConstant.GM_ACTUALNAM);
 		else if (name == null || name.length() == 0 || name.length() > 6)
-			return error(100, new IllegalArgumentException("The user name's length cannot be out of the range (1~6)."));
+			return error(400, new IllegalArgumentException("The user name's length cannot be out of the range (1~6)."));
 		player.setId(client().getId()); // set the id of the player's corresponding to the socket's
 		gameCore().addBindedClientPlayer(client(), player);
 		return success(player);

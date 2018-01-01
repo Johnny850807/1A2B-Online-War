@@ -38,6 +38,7 @@ import java.util.List;
 
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
+import gamecore.model.ErrorMessage;
 import gamecore.model.GameMode;
 import gamecore.model.PlayerRoomModel;
 
@@ -358,7 +359,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     @Override
-    public void onCreateRoomUnsuccessfully(GameRoom gameRoom) {
+    public void onCreateRoomUnsuccessfully(ErrorMessage errorMessage) {
         Toast.makeText(this, R.string.createRoomFailed, Toast.LENGTH_LONG).show();
     }
 
@@ -381,7 +382,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     @Override
-    public void onJoinRoomUnsuccessfully(PlayerRoomModel model) {
+    public void onJoinRoomUnsuccessfully(ErrorMessage errorMessage) {
         Toast.makeText(this, R.string.theRoomIsFull, Toast.LENGTH_SHORT).show();
     }
 

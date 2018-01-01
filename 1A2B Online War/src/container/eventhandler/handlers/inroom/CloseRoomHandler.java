@@ -30,12 +30,16 @@ public class CloseRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 
 	@Override
 	protected Response onHandling(GameRoom room) {
-		roomId = room.getId();
-		this.gameRoom = gameCore().getGameRoom(roomId);
-		if (roomId == null)
-			return error(404, new IllegalArgumentException());
-		gameCore().closeGameRoom(gameRoom);
-		return success(gameRoom);
+		try{
+			roomId = room.getId();
+			this.gameRoom = gameCore().getGameRoom(roomId);
+			gameCore().closeGameRoom(gameRoom);
+			return success(gameRoom);
+		}catch (NullPointerException e) {
+			return error(404, e);
+		}catch (IllegalArgumentException e) {
+			return error(400, e);
+		}
 	}
 
 	@Override
