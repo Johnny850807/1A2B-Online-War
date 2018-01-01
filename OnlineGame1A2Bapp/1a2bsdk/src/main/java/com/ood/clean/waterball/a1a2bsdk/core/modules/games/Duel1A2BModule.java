@@ -10,6 +10,7 @@ import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
+import gamecore.model.PlayerRoomModel;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
 
@@ -30,6 +31,11 @@ public interface Duel1A2BModule extends GameModule {
      * guess the opponent's answer.
      */
     void guess(String guess);
+
+    /**
+     * leave from the current game and the current room.
+     */
+    void leaveGame();
 
     public interface Callback extends OnlineGameModule.Callback{
 
@@ -69,5 +75,10 @@ public interface Duel1A2BModule extends GameModule {
          * @param gameOverModel model contains the winner info.
          */
         void onGameOver(GameOverModel gameOverModel);
+
+        /**
+         * when the opponent left from the game.
+         */
+        void onOpponentLeft(PlayerRoomModel model);
     }
 }

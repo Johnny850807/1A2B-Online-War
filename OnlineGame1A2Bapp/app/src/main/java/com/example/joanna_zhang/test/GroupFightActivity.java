@@ -46,8 +46,8 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void findViews() {
-        inputNumberBtn = (Button) findViewById(R.id.inputNumberBtn);
-        p1NameTxt = (TextView) findViewById(R.id.p1NameTxt);
+        inputNumberBtn = findViewById(R.id.inputNumberBtn);
+        p1NameTxt = findViewById(R.id.p1NameTxt);
     }
 
     public void setupChatWindow() {

@@ -92,7 +92,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "OnResume.");
+        Log.v(TAG, "OnResume.");
         chatWindowView.onResume();
         inRoomModule.registerCallback(currentPlayer, currentGameRoom, this);
         CoreGameServer.getInstance().resendUnhandledEvents();
@@ -101,7 +101,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop.");
+        Log.v(TAG, "onStop.");
         chatWindowView.onStop();
         inRoomModule.unregisterCallBack(this);
     }

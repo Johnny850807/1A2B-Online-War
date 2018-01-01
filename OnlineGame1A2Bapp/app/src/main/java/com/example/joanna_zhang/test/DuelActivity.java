@@ -110,14 +110,14 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     private void findViews() {
-        inputNumberBtn = (Button) findViewById(R.id.inputNumberBtn);
-        sendGuessBtn = (ImageButton) findViewById(R.id.sendGuessBtn);
-        p1NameTxt = (TextView) findViewById(R.id.p1NameTxt);
-        p2NameTxt = (TextView) findViewById(R.id.p2NameTxt);
-        p1AnswerTxt = (TextView) findViewById(R.id.p1AnswerTxt);
-        p2AnswerTxt = (TextView) findViewById(R.id.p2AnswerTxt);
-        p1ResultListView = (ListView) findViewById(R.id.p1ResultLst);
-        p2ResultListView = (ListView) findViewById(R.id.p2ResultLst);
+        inputNumberBtn = findViewById(R.id.inputNumberBtn);
+        sendGuessBtn = findViewById(R.id.sendGuessBtn);
+        p1NameTxt = findViewById(R.id.p1NameTxt);
+        p2NameTxt = findViewById(R.id.p2NameTxt);
+        p1AnswerTxt = findViewById(R.id.p1AnswerTxt);
+        p2AnswerTxt = findViewById(R.id.p2AnswerTxt);
+        p1ResultListView = findViewById(R.id.p1ResultLst);
+        p2ResultListView = findViewById(R.id.p2ResultLst);
         p1NameTxt.setText(currentPlayer.getName());
         String p2Name = currentGameRoom.getPlayers().get(0).equals(currentPlayer)?
                 currentGameRoom.getPlayers().get(1).getName() : currentGameRoom.getPlayers().get(0).getName();
@@ -153,7 +153,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     private void waitOtherPlayersPrepare() {
         progressDialog = new ProgressDialog.Builder(DuelActivity.this)
-                .setCancelable(true)
+                .setCancelable(false)
                 .setTitle(getString(R.string.pleaseWait))
                 .setMessage(getString(R.string.waitOtherPlayersJoin))
                 .show();
