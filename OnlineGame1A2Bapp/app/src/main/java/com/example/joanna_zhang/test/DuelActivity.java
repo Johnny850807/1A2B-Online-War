@@ -1,11 +1,7 @@
 package com.example.joanna_zhang.test;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.SoundPool;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -66,6 +62,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     private MediaPlayer mediaPlayer;
     private SoundManager soundManager;
     private boolean gameStarted = false;
+    private boolean gameover = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +95,10 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            showLeftGameDialog();
+            if (!gameover)
+                showLeftGameDialog();
+            else
+                finish();
         }
         return false;
     }
@@ -107,12 +107,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         AppLogoDialogBuilderFactory.create(this)
                 .setTitle(R.string.leftGame)
                 .setMessage(R.string.sureToLeftGame)
-                .setPositiveButton(confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        duel1A2BModule.leaveGame();
-                    }
-                })
+                .setPositiveButton(confirm, (d,i) -> duel1A2BModule.leaveGame())
                 .setNegativeButton(cancel, null)
                 .show();
     }
@@ -299,6 +294,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     @Override
     public void onGameOver(GameOverModel gameOverModel) {
         Log.d(TAG, "onGameOver");
+        gameover = true;
         Player winner = currentGameRoom.getHost().getId().equals(gameOverModel.getWinnerId()) ?
                 currentGameRoom.getHost() : currentGameRoom.getPlayerStatus().get(0).getPlayer();
         inputNumberBtn.setEnabled(false);
@@ -319,12 +315,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         AppLogoDialogBuilderFactory.create(this)
                 .setTitle(R.string.gameClosed)
                 .setMessage(getString(R.string.playerIsAlreadyLeft,leftPlayeer.getName()))
-                .setPositiveButton(confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
+                .setPositiveButton(confirm, (d,i) -> finish())
                 .show();
     }
 
@@ -332,13 +323,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         AppLogoDialogBuilderFactory.create(this)
                 .setTitle(R.string.gameOver)
                 .setMessage(getString(R.string.theWinnerIs, winner.getName()))
-                .setCancelable(false)
-                .setPositiveButton(confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                })
+                .setPositiveButton(confirm, (d,i) -> finish())
                 .show();
     }
 

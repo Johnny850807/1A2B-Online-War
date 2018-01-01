@@ -1,5 +1,6 @@
 package com.example.joanna_zhang.test;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -19,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.joanna_zhang.test.Utils.AppLogoDialogBuilderFactory;
 import com.example.joanna_zhang.test.Utils.GameModeHelper;
 import com.example.joanna_zhang.test.Utils.ShowDialogHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
@@ -33,6 +35,9 @@ import gamecore.model.ErrorMessage;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.PlayerStatus;
 
+import static android.icu.text.Normalizer.NO;
+import static android.icu.text.Normalizer.YES;
+import static com.example.joanna_zhang.test.R.id.b;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
@@ -249,29 +254,37 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int bootedPosition, long id) {
+        if (isBootingAvailable(bootedPosition))
+            createAndShowDialogForBootingOptions(bootedPosition);
+        return true;
+    }
+
+    private boolean isBootingAvailable(int bootedPosition){
+        return bootedPosition != HOST_POSITION && currentPlayer.equals(currentGameRoom.getHost());
+    }
+
+    private void createAndShowDialogForBootingOptions(int bootedPosition){
+        String[] YESORNO = new String[]{getString(R.string.yes), getString(R.string.no)};
+        Player bootedPlayer =  currentGameRoom.getPlayers().get(bootedPosition);
+        AppLogoDialogBuilderFactory.create(this)
+                .setTitle(getString(R.string.thePlayerYouWantToBoot, bootedPlayer.getName()))
+                .setItems(YESORNO, (dialog, yesOrNo) -> selectingBootingOptions(dialog, bootedPosition, yesOrNo))
+                .show();
+    }
+
+    private void selectingBootingOptions(DialogInterface dialog, int bootedPosition, int yesOrNo){
         final int YES = 0;
         final int NO = 1;
-        String[] YESORNO = new String[]{getString(R.string.yes), getString(R.string.no)};
-        if (position != HOST_POSITION && currentPlayer.equals(currentGameRoom.getHost()))
-            new AlertDialog.Builder(this)
-                    .setTitle(getString(R.string.thePlayerYouWantToBoot, currentGameRoom.getPlayers().get(position).getName()))
-                    .setItems(YESORNO, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int yesOrNo) {
-                            switch (yesOrNo) {
-                                case YES:
-                                    Log.d(TAG, "On booting item long click, position: " + position);
-                                    inRoomModule.bootPlayer(currentGameRoom.getPlayers().get(position));
-                                    break;
-                                case NO:
-                                    dialog.dismiss();
-                                    break;
-                            }
-                        }
-                    })
-                    .show();
-        return true;
+        switch (yesOrNo) {
+            case YES:
+                Log.d(TAG, "On booting item long click, position: " + bootedPosition);
+                inRoomModule.bootPlayer(currentGameRoom.getPlayers().get(bootedPosition));
+                break;
+            case NO:
+                dialog.dismiss();
+                break;
+        }
     }
 
     private class RoomPlayerListAdapter extends BaseAdapter {
