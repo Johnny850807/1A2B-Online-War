@@ -7,6 +7,7 @@ import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
 import gamecore.model.ContentModel;
+import gamecore.model.games.ProcessInvalidException;
 import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamecore.model.games.a1b2.NumberNotValidException;
 
@@ -32,7 +33,7 @@ public class SetAnswerHandler extends GsonEventHandler<ContentModel, ContentMode
 			Duel1A2BGame gameModel = (Duel1A2BGame) room.getGame();
 			gameModel.commitPlayerAnswer(data.getPlayerId(), data.getContent());
 			return success(data);
-		}catch (NumberNotValidException err) {
+		}catch (NumberNotValidException|ProcessInvalidException err) {
 			return error(400, err);
 		}
 	}

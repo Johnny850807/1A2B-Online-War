@@ -30,10 +30,10 @@ public class GameRoom extends Entity{
 	private transient ProtocolFactory protocolFactory;
 	private transient MyLogger log = new MockLogger();
 	private transient Game game;
+	private transient ArrayList<ChatMessage> chatMessageList = new ArrayList<>();
 	private Player host;
 	private RoomStatus roomStatus = RoomStatus.waiting;
 	private GameMode gameMode;
-	private ArrayList<ChatMessage> chatMessageList = new ArrayList<>();
 	
 	/**
 	 * All the guest player status in the room, except the host.
@@ -48,15 +48,18 @@ public class GameRoom extends Entity{
 		this.host.setUserStatus(ClientStatus.inRoom);
 	}
 	
+	@ForServer
 	public void addChatMessage(ChatMessage chatMessage){
 		assert chatMessage.getId() != null : "ChatMessage's id should be initialized.";
 		chatMessageList.add(chatMessage);
 	}
 	
+	@ForServer
 	public int getChatMessagesSize(){
 		return getChatMessageList().size();
 	}
 	
+	@ForServer
 	public List<ChatMessage> getChatMessageList() {
 		return chatMessageList;
 	} 

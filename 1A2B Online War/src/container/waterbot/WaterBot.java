@@ -54,7 +54,7 @@ public class WaterBot{
 		try{
 			brain.react(this, protocol, client);
 		}catch (Exception e) {
-			log.error(getName() + " - error : " + e);
+			log.error(getName() + " - error", e);
 		}
 	}
 

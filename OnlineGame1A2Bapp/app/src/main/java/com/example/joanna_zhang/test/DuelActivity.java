@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     private ChatWindowView chatWindowView;
     private InputNumberWindowView inputNumberWindowView;
     private Button inputNumberBtn;
+    private ImageButton sendGuessBtn;
     private TextView p1NameTxt, p2NameTxt, p1AnswerTxt, p2AnswerTxt;
     private ListView p1ResultListView, p2ResultListView;
     private GuessResultAdapter p1GuessResultAdapter, p2GuessResultAdapter;
@@ -60,7 +62,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_duel);
-        mediaPlayer = MediaPlayer.create(this, R.raw.rainsongii);
+        mediaPlayer = MediaPlayer.create(this, R.raw.rainsong);
         mediaPlayer.setLooping(true);
         init();
         findViews();
@@ -108,6 +110,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     private void findViews() {
         inputNumberBtn = (Button) findViewById(R.id.inputNumberBtn);
+        sendGuessBtn = (ImageButton) findViewById(R.id.sendGuessBtn);
         p1NameTxt = (TextView) findViewById(R.id.p1NameTxt);
         p2NameTxt = (TextView) findViewById(R.id.p2NameTxt);
         p1AnswerTxt = (TextView) findViewById(R.id.p1AnswerTxt);
@@ -196,6 +199,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         try{
             A1B2NumberValidator.validateNumber(guessNumber);
             inputNumberBtn.setEnabled(false);
+            sendGuessBtn.setEnabled(false);
             duel1A2BModule.guess(guessNumber);
         }catch (NumberNotValidException err){
             Toast.makeText(this, R.string.numberShouldBeInLengthFour, Toast.LENGTH_LONG).show();
@@ -230,6 +234,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     @Override
     public void onGuessingStarted() {
         inputNumberBtn.setEnabled(true);
+        sendGuessBtn.setEnabled(true);
         Toast.makeText(this, "開始猜", Toast.LENGTH_SHORT).show();
     }
 
@@ -244,6 +249,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         updateResultList();
         inputNumberBtn.setText(null);
         inputNumberBtn.setEnabled(true);
+        sendGuessBtn.setEnabled(true);
     }
 
     @Override
@@ -300,15 +306,15 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            view = LayoutInflater.from(DuelActivity.this).inflate(android.R.layout.simple_list_item_1, viewGroup, false);
+            view = LayoutInflater.from(DuelActivity.this).inflate(R.layout.duel_list_item, viewGroup, false);
 
-            //TODO optimize view like what we designed
-            TextView resultTxt = view.findViewById(android.R.id.text1);
-            StringBuilder result = new StringBuilder();
-            result.append(resultList.get(i).getGuess())
-                    .append(' ')
-                    .append(resultList.get(i).getResult().toString().toUpperCase());
-            resultTxt.setText(result);
+            TextView guess = view.findViewById(R.id.guessNumber);
+            TextView aNumber = view.findViewById(R.id.aNumber);
+            TextView bNumber = view.findViewById(R.id.bNumber);
+
+            guess.setText(resultList.get(i).getGuess());
+            aNumber.setText(String.valueOf(resultList.get(i).getA()));
+            bNumber.setText(String.valueOf(resultList.get(i).getB()));
 
             return view;
         }

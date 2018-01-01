@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.validator.ValidateWith;
 
 import com.google.gson.Gson;
 
@@ -55,6 +56,7 @@ public class ReleaseGameCore implements GameCore{
 	@Override
 	public void broadcastRoom(String roomId, Protocol response) {
 		GameRoom room = getGameRoom(roomId);
+		validateNull(room);
 		synchronized (room) {
 			if (roomContainer.containsKey(room.getId()))
 			{
@@ -116,15 +118,16 @@ public class ReleaseGameCore implements GameCore{
 	@Override
 	public void addGameRoom(GameRoom room){
 		if (room.getId() == null || room.getProtocolFactory() == null || room.getHost() == null)
-			log.error("The room is invalid.");
+			throw new NullPointerException("The room is invalid.");
 		Protocol protocol = factory.getProtocolFactory().createProtocol(RoomList.CREATE_ROOM,
 				RequestStatus.success.toString(), gson.toJson(room));
 		
 		if (clientsMap.containsKey(room.getHost().getId()))
 		{
 			broadcastClientPlayers(ClientStatus.signedIn, protocol);
-			broadcastClientPlayer(room.getHost().getId(), protocol);
 			roomContainer.put(room.getId(), room);
+			ClientPlayer hostClient = getClientPlayer(room.getHost().getId());
+			hostClient.getPlayer().setUserStatus(ClientStatus.inRoom);
 		}
 		else
 			log.error("The host of the added room not exists!");
@@ -133,6 +136,7 @@ public class ReleaseGameCore implements GameCore{
 	@Override
 	public void closeGameRoom(GameRoom room){
 		room = getGameRoom(room.getId());  
+		validateNull(room);
 		
 		//first change all the player status in the room to signedIn.
 		room.getPlayers().forEach(p -> p.setUserStatus(ClientStatus.signedIn));
@@ -208,6 +212,7 @@ public class ReleaseGameCore implements GameCore{
 				RequestStatus.success.toString(), gson.toJson(new PlayerRoomModel(player, gameRoom)));
 		ClientPlayer leftPlayer = getClientPlayer(player.getId());
 		gameRoom = getGameRoom(gameRoom.getId());
+		validateNull(leftPlayer, gameRoom);
 		synchronized(gameRoom)
 		{
 			if (gameRoom.containsPlayer(leftPlayer.getPlayer()))
@@ -219,6 +224,7 @@ public class ReleaseGameCore implements GameCore{
 			}
 		}
 	}
+
 
 	@Override
 	public void onGameStarted(Game game) {
@@ -250,5 +256,11 @@ public class ReleaseGameCore implements GameCore{
 				roomContainer.remove(room.getId());
 			}
 		}
+	}
+	
+	private void validateNull(Object ...objs){
+		for (Object object : objs)
+			if (object == null)
+				throw new NullPointerException();
 	}
 }

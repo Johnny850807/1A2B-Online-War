@@ -90,6 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#fff">
+
         <Button
             android:id="@+id/inputNumberBtn"
             android:layout_width="0dp"
@@ -108,9 +109,10 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@android:color/transparent"
+            android:enabled="false"
+            android:onClick="onSendGuessNumberBtnClick"
             android:scaleType="fitCenter"
-            android:src="@drawable/enter"
-            android:onClick="onSendGuessNumberBtnClick"/>
+            android:src="@drawable/enter" />
 
     </LinearLayout>
 

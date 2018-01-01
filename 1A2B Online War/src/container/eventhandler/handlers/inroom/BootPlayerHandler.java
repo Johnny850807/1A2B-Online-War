@@ -31,18 +31,28 @@ public class BootPlayerHandler extends GsonEventHandler<PlayerRoomIdModel, Playe
 
 	@Override
 	protected Response onHandling(PlayerRoomIdModel data) {
-		GameRoom room = gameCore().getGameRoom(data.getGameRoomId());
-		bootedPlayer = gameCore().getClientPlayer(data.getPlayerId());
-		
-		//the leave room handler will emit the leave event to the signed user and the room
-		//so everyone could see the player booted from the room.
-		Protocol protocol = protocolFactory().createProtocol(InRoom.LEAVE_ROOM, RequestStatus.request.toString(),
-				gson.toJson(data));
-		new LeaveRoomHandler(client(), protocol, gameCore(), protocolFactory()).handle();
-		
-		
-		//then emit the booted event to the booted player, so he will know he got booted
-		return success(new PlayerRoomModel(bootedPlayer.getPlayer(), room));
+		try{
+			GameRoom room = gameCore().getGameRoom(data.getGameRoomId());
+			bootedPlayer = gameCore().getClientPlayer(data.getPlayerId());
+			validateBooting(room, bootedPlayer);
+			//the leave room handler will emit the leave event to the signed user and the room
+			//so everyone could see the player booted from the room.
+			Protocol protocol = protocolFactory().createProtocol(InRoom.LEAVE_ROOM, RequestStatus.request.toString(),
+					gson.toJson(data));
+			new LeaveRoomHandler(client(), protocol, gameCore(), protocolFactory()).handle();
+			
+			//then emit the booted event to the booted player, so he will know he got booted
+			return success(new PlayerRoomModel(bootedPlayer.getPlayer(), room));
+		}catch (NullPointerException e) {
+			return error(404, e);
+		}catch (IllegalArgumentException e) {
+			return error(400, e);
+		}
+	}
+
+	private void validateBooting(GameRoom room, ClientPlayer clientPlayer) {
+		if (!room.containsPlayer(clientPlayer.getPlayer()))
+			throw new IllegalArgumentException("The booted player is not in the room.");
 	}
 
 	@Override

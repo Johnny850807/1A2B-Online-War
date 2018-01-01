@@ -1,7 +1,10 @@
 package container.eventhandler;
 
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import container.base.Client;
-import container.base.ClientBinder;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
@@ -11,6 +14,7 @@ import gamecore.model.ErrorMessage;
 import gamecore.model.RequestStatus;
 
 public abstract class GameEventHandler<In, Out> implements EventHandler{
+	private static Logger log = LogManager.getLogger(GameEventHandler.class);
 	private OnRespondingListener onRespondingListener;
 	private ProtocolFactory protocolFactory;
 	private Client client;
@@ -136,6 +140,7 @@ public abstract class GameEventHandler<In, Out> implements EventHandler{
 		public void handleTheResponse() {
 			if (onRespondingListener != null)
 				onRespondingListener.onErrorResponding(response);
+			log.debug("Error responding: " + response);
 			client().broadcast(response);
 		}
 	}

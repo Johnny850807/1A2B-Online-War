@@ -38,6 +38,7 @@ public class InRoomBrain extends BaseChatChainBrain{
 		case LAUNCH_GAME:
 			if (protocol.getStatus().equals(SUCCESS))
 			{
+				log.trace(getLogPrefix(waterBot) + "Launching game event received.");
 				waterBot.getMemory().getMe().setUserStatus(ClientStatus.inGame);
 				waterBot.getMemory().getRoom().setRoomStatus(RoomStatus.gamestarted);
 				enterToTheGame(waterBot, client);
@@ -56,7 +57,7 @@ public class InRoomBrain extends BaseChatChainBrain{
 				PlayerRoomModel leaveModel = gson.fromJson(protocol.getData(), PlayerRoomModel.class);
 				if (leaveModel.getPlayer().equals(waterBot.getMemory().getMe()))
 					waterBot.getMemory().getMe().setUserStatus(ClientStatus.signedIn);
-				else
+				else if (leaveModel.getGameRoom().equals(waterBot.getMemory().getRoom()))
 					waterBot.getMemory().getRoom().removePlayer(leaveModel.getPlayer());
 			}
 			break;
