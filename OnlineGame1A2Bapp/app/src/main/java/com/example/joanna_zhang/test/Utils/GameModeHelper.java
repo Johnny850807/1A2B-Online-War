@@ -2,7 +2,7 @@ package com.example.joanna_zhang.test.Utils;
 
 import android.content.Context;
 
-import com.example.joanna_zhang.test.DuelActivity;
+import com.example.joanna_zhang.test.Duel1A2BActivity;
 import com.example.joanna_zhang.test.GroupFightActivity;
 import com.example.joanna_zhang.test.R;
 
@@ -28,7 +28,7 @@ public class GameModeHelper {
     public static Class getGameModeActivity(GameMode gameMode){
         switch (gameMode){
             case DUEL1A2B:
-                return DuelActivity.class;
+                return Duel1A2BActivity.class;
             case GROUP1A2B:
                 return GroupFightActivity.class;
         }

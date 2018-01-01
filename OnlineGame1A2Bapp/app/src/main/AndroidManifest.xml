@@ -8,9 +8,9 @@
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:screenOrientation="portrait" >
+        android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,10 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RoomListActivity"/>
-        <activity android:name=".DuelActivity" />
-        <activity android:name=".GroupFightActivity"/>
-        <activity android:name=".ChatInRoomActivity"/>
+        <activity android:name=".RoomListActivity" />
+        <activity android:name=".Duel1A2BActivity" />
+        <activity android:name=".GroupFightActivity" />
+        <activity android:name=".ChatInRoomActivity" />
+        <activity android:name=".BossFight1A2BActivity"></activity>
     </application>
 
 </manifest>

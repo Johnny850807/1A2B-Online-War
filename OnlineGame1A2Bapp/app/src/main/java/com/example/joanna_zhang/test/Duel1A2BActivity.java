@@ -43,16 +43,15 @@ import static com.example.joanna_zhang.test.R.string.confirm;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
-public class DuelActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowView.OnClickListener, Duel1A2BModule.Callback {
-
-    private final static String TAG = "DuelActivity";
+public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowDialog.OnClickListener, Duel1A2BModule.Callback {
+    private final static String TAG = "Duel1A2BActivity";
     private Duel1A2BModule duel1A2BModule;
     private android.app.AlertDialog progressDialog;
     private List<GuessRecord> p1ResultList, p2ResultList;
     private GameRoom currentGameRoom;
     private Player currentPlayer;
     private ChatWindowView chatWindowView;
-    private InputNumberWindowView inputNumberWindowView;
+    private InputNumberWindowDialog inputNumberWindowDialog;
     private Button inputNumberBtn;
     private ImageButton sendGuessBtn;
     private TextView p1NameTxt, p2NameTxt, p1AnswerTxt, p2AnswerTxt;
@@ -157,7 +156,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     private void setupAnswer() {
-        new InputNumberWindowView.Builder(this)
+        new InputNumberWindowDialog.Builder(this)
                 .setOnEnterClickListener(answer -> duel1A2BModule.setAnswer(answer))
                 .setCanceledOnTouchOutside(false)
                 .setCancelable(false)
@@ -172,14 +171,14 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     private void setUpInputNumberWindowView() {
-        inputNumberWindowView = new InputNumberWindowView.Builder(this)
+        inputNumberWindowDialog = new InputNumberWindowDialog.Builder(this)
                 .setOnEnterClickListener(this)
                 .setTitle(getString(R.string.pleaseInputGuess))
                 .build();
     }
 
     private void waitOtherPlayersPrepare() {
-        progressDialog = new ProgressDialog.Builder(DuelActivity.this)
+        progressDialog = new ProgressDialog.Builder(Duel1A2BActivity.this)
                 .setCancelable(false)
                 .setTitle(getString(R.string.pleaseWait))
                 .setMessage(getString(R.string.waitOtherPlayersJoin))
@@ -241,7 +240,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     public void inputNumberOnClick(View view) {
-        inputNumberWindowView.show();
+        inputNumberWindowDialog.show();
     }
 
     @Override
@@ -361,7 +360,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            view = LayoutInflater.from(DuelActivity.this).inflate(R.layout.duel_list_item, viewGroup, false);
+            view = LayoutInflater.from(Duel1A2BActivity.this).inflate(R.layout.duel_list_item, viewGroup, false);
 
             TextView guess = view.findViewById(R.id.guessNumber);
             TextView aNumber = view.findViewById(R.id.aNumber);

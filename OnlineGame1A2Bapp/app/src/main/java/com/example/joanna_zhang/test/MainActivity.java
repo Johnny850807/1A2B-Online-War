@@ -20,6 +20,7 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutE
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
+import container.Constants;
 import gamecore.entity.Player;
 import gamecore.model.ServerInformation;
 
@@ -83,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         serverConntected = true;
         signingModule.getServerInformation();
         readPlayerNameFromSharedPreferences();
-        setLoading(false);
     }
 
     private void readPlayerNameFromSharedPreferences() {
@@ -143,6 +143,14 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         int roomAmount = serverInformation.getOnlineRoomAmount();
         int onlineAmount = serverInformation.getOnlineUserAmount();
         serverStatusTxt.setText(getString(R.string.serverStatus, roomAmount, onlineAmount));
+        if (serverInformation.getServerVersion() != Constants.VERSION)
+            createAndShowDialogAskingToDownloadTheLatestVersion(serverInformation);
+        setLoading(false);
+    }
+
+    private void createAndShowDialogAskingToDownloadTheLatestVersion(ServerInformation serverInformation) {
+        Log.d(TAG, "the app version is not matched to the server, asking to download.");
+        //TODO create and show the dialog asking to download the latest version from 'google play'
     }
 
     @Override

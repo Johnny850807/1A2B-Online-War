@@ -10,14 +10,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
-public class InputNumberWindowView extends Dialog implements View.OnClickListener {
+public class InputNumberWindowDialog extends Dialog implements View.OnClickListener {
     private Context context;
     private TextView titleTxt;
     private Button button1, button2, button3, button4, button5, button6, button7, button8, button9, button0, cancelBtn, confirmBtn;
     private EditText answerEd;
     private OnClickListener OnClickListener;
 
-    public InputNumberWindowView(Context context) {
+    public InputNumberWindowDialog(Context context) {
         super(context);
         this.context = context;
         setUpView();
@@ -102,39 +102,39 @@ public class InputNumberWindowView extends Dialog implements View.OnClickListene
     }
 
     public static class Builder {
-        private InputNumberWindowView inputNumberWindowView;
+        private InputNumberWindowDialog inputNumberWindowDialog;
 
         public Builder(Activity activity) {
-            inputNumberWindowView = new InputNumberWindowView(activity);
+            inputNumberWindowDialog = new InputNumberWindowDialog(activity);
         }
 
         public Builder setOnEnterClickListener(OnClickListener onClickListener) {
-            inputNumberWindowView.OnClickListener = onClickListener;
+            inputNumberWindowDialog.OnClickListener = onClickListener;
             return this;
         }
 
         public Builder setTitle(String title) {
-            inputNumberWindowView.titleTxt.setText(title);
+            inputNumberWindowDialog.titleTxt.setText(title);
             return this;
         }
 
         public Builder setCanceledOnTouchOutside(Boolean b) {
-            inputNumberWindowView.setCanceledOnTouchOutside(b);
+            inputNumberWindowDialog.setCanceledOnTouchOutside(b);
             return this;
         }
 
         public Builder setCancelable(Boolean b) {
-            inputNumberWindowView.setCancelable(b);
+            inputNumberWindowDialog.setCancelable(b);
             return this;
         }
 
-        public InputNumberWindowView build() {
-            return inputNumberWindowView;
+        public InputNumberWindowDialog build() {
+            return inputNumberWindowDialog;
         }
 
-        public InputNumberWindowView show() {
-            inputNumberWindowView.show();
-            return inputNumberWindowView;
+        public InputNumberWindowDialog show() {
+            inputNumberWindowDialog.show();
+            return inputNumberWindowDialog;
         }
 
     }
