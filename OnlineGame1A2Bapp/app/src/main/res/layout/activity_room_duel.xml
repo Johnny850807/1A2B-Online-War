@@ -34,7 +34,7 @@
             <TextView
                 android:id="@+id/p1AnswerTxt"
                 android:layout_width="108dp"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:background="@drawable/guessnumber_textview_border"
                 android:gravity="center"
@@ -67,8 +67,8 @@
 
             <TextView
                 android:id="@+id/p2AnswerTxt"
-                android:layout_width="100sp"
-                android:layout_height="26sp"
+                android:layout_width="108dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:background="@drawable/guessnumber_textview_border"
                 android:gravity="center"

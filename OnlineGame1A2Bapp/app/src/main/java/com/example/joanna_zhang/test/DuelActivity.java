@@ -75,7 +75,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     protected void onResume() {
         super.onResume();
         chatWindowView.onResume();
-        duel1A2BModule.registerCallback(currentPlayer, currentGameRoom, this);
+        duel1A2BModule.registerCallback(this, currentPlayer, currentGameRoom, this);
         if (gameStarted)
             mediaPlayer.start();
         else

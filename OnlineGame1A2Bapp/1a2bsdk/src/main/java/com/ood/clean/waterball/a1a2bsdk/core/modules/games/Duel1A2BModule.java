@@ -1,5 +1,7 @@
 package com.ood.clean.waterball.a1a2bsdk.core.modules.games;
 
+import android.content.Context;
+
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 
 import java.util.List;
@@ -14,7 +16,7 @@ import gamecore.model.games.a1b2.GameOverModel;
 
 public interface Duel1A2BModule extends GameModule {
 
-    void registerCallback(Player currentPlayer, GameRoom currentGameRoom, Duel1A2BModule.Callback callback);
+    void registerCallback(Context context,  Player currentPlayer, GameRoom currentGameRoom, Duel1A2BModule.Callback callback);
     void unregisterCallBack(Duel1A2BModule.Callback callback);
 
     void enterGame();

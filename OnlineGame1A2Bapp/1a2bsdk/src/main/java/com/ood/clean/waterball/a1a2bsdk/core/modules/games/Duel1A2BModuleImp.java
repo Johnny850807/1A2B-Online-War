@@ -1,6 +1,7 @@
 package com.ood.clean.waterball.a1a2bsdk.core.modules.games;
 
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -30,11 +31,13 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
     private ProxyCallback proxyCallback;
     protected Player currentPlayer;
     protected GameRoom currentGameRoom;
+    protected Context context;
 
     @Override
-    public void registerCallback(Player currentPlayer, GameRoom currentGameRoom, Duel1A2BModule.Callback callback) {
+    public void registerCallback(Context context, Player currentPlayer, GameRoom currentGameRoom, Duel1A2BModule.Callback callback) {
         validate(currentPlayer);
         validate(currentGameRoom);
+        this.context = context;
         this.currentPlayer = currentPlayer;
         this.currentGameRoom = currentGameRoom;
 
@@ -156,4 +159,5 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
             callback.onError(err);
         }
     }
+
 }
