@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     private ChatWindowView chatWindowView;
     private InputNumberWindowView inputNumberWindowView;
     private Button inputNumberBtn;
+    private ImageButton sendGuessBtn;
     private TextView p1NameTxt, p2NameTxt, p1AnswerTxt, p2AnswerTxt;
     private ListView p1ResultListView, p2ResultListView;
     private GuessResultAdapter p1GuessResultAdapter, p2GuessResultAdapter;
@@ -107,6 +109,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     private void findViews() {
         inputNumberBtn = (Button) findViewById(R.id.inputNumberBtn);
+        sendGuessBtn = (ImageButton) findViewById(R.id.sendGuessBtn);
         p1NameTxt = (TextView) findViewById(R.id.p1NameTxt);
         p2NameTxt = (TextView) findViewById(R.id.p2NameTxt);
         p1AnswerTxt = (TextView) findViewById(R.id.p1AnswerTxt);
@@ -195,6 +198,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         try{
             A1B2NumberValidator.validateNumber(guessNumber);
             inputNumberBtn.setEnabled(false);
+            sendGuessBtn.setEnabled(false);
             duel1A2BModule.guess(guessNumber);
         }catch (NumberNotValidException err){
             Toast.makeText(this, R.string.numberShouldBeInLengthFour, Toast.LENGTH_LONG).show();
@@ -225,6 +229,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     @Override
     public void onGuessingStarted() {
         inputNumberBtn.setEnabled(true);
+        sendGuessBtn.setEnabled(true);
         Toast.makeText(this, "開始猜", Toast.LENGTH_SHORT).show();
     }
 
@@ -239,6 +244,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         updateResultList();
         inputNumberBtn.setText(null);
         inputNumberBtn.setEnabled(true);
+        sendGuessBtn.setEnabled(true);
     }
 
     @Override
