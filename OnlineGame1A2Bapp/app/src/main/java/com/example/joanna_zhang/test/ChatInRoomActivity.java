@@ -95,7 +95,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         Log.d(TAG, "OnResume.");
         chatWindowView.onResume();
         inRoomModule.registerCallback(currentPlayer, currentGameRoom, this);
-
+        CoreGameServer.getInstance().resendUnhandledEvents();
     }
 
     @Override

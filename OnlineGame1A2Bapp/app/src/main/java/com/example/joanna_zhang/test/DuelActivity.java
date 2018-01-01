@@ -83,6 +83,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
             waitOtherPlayersPrepare();
             duel1A2BModule.enterGame();
         }
+        CoreGameServer.getInstance().resendUnhandledEvents();
     }
 
     @Override

@@ -95,7 +95,7 @@ public final class CoreGameServer{
         Log.v(TAG, "onSocketDisconnected");
     }
 
-    void resendUnhandledEvents(){
+    public void resendUnhandledEvents(){
         eventBus.resendNonHandledEvent();
     }
 

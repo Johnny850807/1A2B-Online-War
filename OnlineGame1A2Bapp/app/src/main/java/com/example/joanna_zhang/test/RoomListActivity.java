@@ -78,6 +78,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         super.onResume();
         Log.v(TAG, "OnResume, getting the game room list.");
         roomListModule.getGameRoomList();
+        CoreGameServer.getInstance().resendUnhandledEvents();
     }
 
     @Override

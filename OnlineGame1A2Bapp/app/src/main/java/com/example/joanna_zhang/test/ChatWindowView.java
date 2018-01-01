@@ -56,6 +56,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
     public void onResume() {
         Log.i(TAG, "ChatWindowView onResume");
         chatModule.registerCallback(poster, gameRoom, this);
+        CoreGameServer.getInstance().resendUnhandledEvents();
     }
 
     public void onStop() {
