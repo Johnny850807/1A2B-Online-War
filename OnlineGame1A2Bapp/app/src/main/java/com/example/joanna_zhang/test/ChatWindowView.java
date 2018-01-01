@@ -96,7 +96,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
 
     @Override
     public void onMessageSent(ChatMessage message) {
-
+        Log.d(TAG, "onMessageSent");
     }
 
     @Override
