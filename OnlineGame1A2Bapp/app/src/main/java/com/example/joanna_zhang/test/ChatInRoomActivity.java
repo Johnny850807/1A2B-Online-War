@@ -37,13 +37,7 @@ import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
 /**
  * TODO:
- * (1) the player sets ready - ok
- * (2) the host starts the game and 'make sure you have ensured the player amount is suitable to the game', block the action if not. - ok
- * (3) the host can boot the player by answering yes to the dialog which contains options whether to boot the player
- * created and showed by 'long-clicking' the item contains the player status you want to boot.
- * (4) show the toast if any player left or joined.  - ok
- * (5) replace all 'if game mode == DUEL then ... else Group ...' with the 'switch-case logic helping static method'. - ok
- * (6) clean your code and organize the methods (put them in the readable order),
+ * clean your code and organize the methods (put them in the readable order),
  * don't let any garbage be here anymore, such as some 'gray-text' attributes, some 'few-lines' methods.
  */
 public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InRoomModule.Callback, AdapterView.OnItemLongClickListener {
@@ -71,6 +65,34 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         setUpPlayerListView();
     }
 
+    private void init() {
+        currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
+        currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
+        roomPlayerListAdapter = new RoomPlayerListAdapter();
+        inRoomModule = (InRoomModule) CoreGameServer.getInstance().createModule(ModuleName.INROOM);
+    }
+
+    private void findViews() {
+        gameModeTxt = findViewById(R.id.roomModeNameTxt);
+        gameStartBtn =  findViewById(R.id.gameStartBtn);
+        chatRoomPlayerListView =  findViewById(R.id.chatRoomPlayersLst);
+    }
+
+    private void setUpGameModeTxt() {
+        String gameModeName = GameModeHelper.getGameModeText(this, currentGameRoom.getGameMode());
+        gameModeTxt.setText(gameModeName);
+    }
+
+    private void setupChatWindow() {
+        chatWindowView = new ChatWindowView.Builder(this, currentGameRoom, currentPlayer)
+                .addOnSendMessageOnClickListener(this)
+                .build();
+    }
+
+    private void setUpPlayerListView() {
+        chatRoomPlayerListView.setAdapter(roomPlayerListAdapter);
+        chatRoomPlayerListView.setOnItemLongClickListener(this);
+    }
 
     @Override
     protected void onResume() {
@@ -114,50 +136,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
-    }
-
-
-    private void init() {
-        currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
-        currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
-        roomPlayerListAdapter = new RoomPlayerListAdapter();
-        inRoomModule = (InRoomModule) CoreGameServer.getInstance().createModule(ModuleName.INROOM);
-    }
-
-    private void setUpPlayerListView() {
-        chatRoomPlayerListView.setAdapter(roomPlayerListAdapter);
-        chatRoomPlayerListView.setOnItemLongClickListener(this);
-    }
-
-    private void setUpGameModeTxt() {
-        String gameModeName = GameModeHelper.getGameModeText(this, currentGameRoom.getGameMode());
-        gameModeTxt.setText(gameModeName);
-    }
-
-    private void setupChatWindow() {
-        chatWindowView = new ChatWindowView.Builder(this, currentGameRoom, currentPlayer)
-                .addOnSendMessageOnClickListener(this)
-                .build();
-    }
-
-    private void findViews() {
-        gameModeTxt = findViewById(R.id.roomModeNameTxt);
-        gameStartBtn = (Button) findViewById(R.id.gameStartBtn);
-        chatRoomPlayerListView = (ListView) findViewById(R.id.chatRoomPlayersLst);
-    }
-
-    @Override
-    public void onChatMessageUpdate(ChatMessage chatMessage) {
-    }
-
-    @Override
-    public void onMessageSendingFailed(ChatMessage chatMessage) {
-        Toast.makeText(this, R.string.messageSendingFailed, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onChatMessageError(Throwable err) {
-        Toast.makeText(this, R.string.chatMessageError, Toast.LENGTH_SHORT).show();
     }
 
     public void gameStartButtonOnClick(View view) {
@@ -231,13 +209,13 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     @Override
-    public void onServerReconnected() {
-        //TODO
+    public void onGameLaunchedFailed(GameRoom gameRoom) {
+        Toast.makeText(this, R.string.gameLaunchFailed, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onGameLaunchedFailed(GameRoom gameRoom) {
-        Toast.makeText(this, R.string.gameLaunchFailed, Toast.LENGTH_SHORT).show();
+    public void onServerReconnected() {
+        //TODO
     }
 
     @Override
@@ -258,11 +236,25 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     @Override
+    public void onChatMessageUpdate(ChatMessage chatMessage) {
+    }
+
+    @Override
+    public void onMessageSendingFailed(ChatMessage chatMessage) {
+        Toast.makeText(this, R.string.messageSendingFailed, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onChatMessageError(Throwable err) {
+        Toast.makeText(this, R.string.chatMessageError, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         final int YES = 0;
         final int NO = 1;
         String[] YESORNO = new String[]{getString(R.string.yes), getString(R.string.no)};
-        if (position != 0 && currentPlayer.equals(currentGameRoom.getHost()))
+        if (position != HOST_POSITION && currentPlayer.equals(currentGameRoom.getHost()))
             new AlertDialog.Builder(this)
                     .setTitle(getString(R.string.thePlayerYouWantToBoot, currentGameRoom.getPlayers().get(position).getName()))
                     .setItems(YESORNO, new DialogInterface.OnClickListener() {
@@ -279,7 +271,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                             }
                         }
                     })
-            .show();
+                    .show();
         return true;
     }
 
