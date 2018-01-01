@@ -195,6 +195,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     private void enterGameRoom(GameRoom gameRoom) {
+        Log.v(TAG, "Enter the game room.");
         Intent enterToGameRoom = new Intent(this, ChatInRoomActivity.class);
         enterToGameRoom.putExtra(PLAYER, currentPlayer);
         enterToGameRoom.putExtra(GAMEROOM, gameRoom);

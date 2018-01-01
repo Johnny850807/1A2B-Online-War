@@ -53,7 +53,7 @@ public final class CoreGameServer{
      * @param context MainActivity
      */
     public void startEngine(@NonNull Context context){
-        if (clientThread == null || !clientThread.isAlive())
+        if (clientThread == null)
         {
             Log.d(TAG, "Socket initializing ..., Ip: " + SERVER_ADDRESS + ":" + PORT);
             clientThread = new Thread(client);

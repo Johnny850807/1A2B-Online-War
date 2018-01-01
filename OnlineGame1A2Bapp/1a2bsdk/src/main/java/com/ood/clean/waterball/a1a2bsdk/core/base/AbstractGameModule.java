@@ -30,12 +30,11 @@ public abstract class AbstractGameModule implements GameModule{
 
     protected void validate(Player player){
         if (player == null || player.getName() == null || player.getId() == null)
-            throw new IllegalArgumentException("The player is invalid.");
+            throw new IllegalArgumentException("The player is valid.");
     }
 
     protected void validate(GameRoom room){
-        if (room == null || room.getHost() == null || room.getName() == null || room.getChatMessageList() == null
-                || room.getId() == null)
-            throw new IllegalArgumentException("The room is not invalid.");
+        if (room == null || room.getHost() == null || room.getName() == null || room.getId() == null)
+            throw new IllegalArgumentException("The room is not valid.");
     }
 }
