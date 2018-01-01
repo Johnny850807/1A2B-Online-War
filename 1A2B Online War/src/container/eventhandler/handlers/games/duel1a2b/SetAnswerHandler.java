@@ -30,6 +30,7 @@ public class SetAnswerHandler extends GsonEventHandler<ContentModel, ContentMode
 	protected Response onHandling(ContentModel data) {
 		try{
 			GameRoom room = gameCore().getGameRoom(data.getRoomId());
+			room.pushLeisureTime();
 			Duel1A2BGame gameModel = (Duel1A2BGame) room.getGame();
 			gameModel.commitPlayerAnswer(data.getPlayerId(), data.getContent());
 			return success(data);

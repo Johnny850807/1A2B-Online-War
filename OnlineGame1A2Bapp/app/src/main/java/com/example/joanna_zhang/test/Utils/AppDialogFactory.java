@@ -15,10 +15,10 @@ public class AppDialogFactory {
                 .setTitle(R.string.app_name);
     }
 
-    public static AlertDialog roomTimeExpiredDialog(Activity activity){
+    public static AlertDialog timeExpiredDialog(Activity activity, String message){
         return templateBuilder(activity)
                 .setTitle(R.string.expiredDetection)
-                .setMessage(R.string.roomClosedForExpired)
+                .setMessage(message)
                 .setPositiveButton(R.string.confirm, (d,p)->activity.finish())
                 .create();
     }

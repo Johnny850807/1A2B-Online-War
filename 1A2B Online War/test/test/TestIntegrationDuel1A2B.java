@@ -206,13 +206,12 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		assertTrue(playerClient.hasReceivedEvent(ONE_ROUND_OVER));
 		assertTrue(hostClient.hasReceivedEvent(ONE_ROUND_OVER));
 		
-		assertTrue(playerClient.hasReceivedEvent(GAMEOVER));
-		assertTrue(hostClient.hasReceivedEvent(GAMEOVER));
-		assertEquals(CLOSE_ROOM, playerClient.getLastedResponse().getEvent());
-		assertEquals(CLOSE_ROOM, hostClient.getLastedResponse().getEvent());
-		bindPlayerAndHostFromUpdatedGameroom(gson.fromJson(hostClient.getLastedResponse().getData(), GameRoom.class));
+		assertEquals(GAMEOVER, playerClient.getLastedResponse().getEvent());
+		assertEquals(GAMEOVER, hostClient.getLastedResponse().getEvent());
+		assertEquals(0, factory.getGameCore().getGameRooms().size());
+		/*bindPlayerAndHostFromUpdatedGameroom(gson.fromJson(hostClient.getLastedResponse().getData(), GameRoom.class));
 		assertEquals(ClientStatus.signedIn, player.getUserStatus());
-		assertEquals(ClientStatus.signedIn, host.getUserStatus());
+		assertEquals(ClientStatus.signedIn, host.getUserStatus());*/
 		
 		GameOverModel gameOverModel = gson.fromJson(hostClient.getLastedByEvent(GAMEOVER).getData(), GameOverModel.class);
 		assertEquals(host.getId(), gameOverModel.getWinnerId());

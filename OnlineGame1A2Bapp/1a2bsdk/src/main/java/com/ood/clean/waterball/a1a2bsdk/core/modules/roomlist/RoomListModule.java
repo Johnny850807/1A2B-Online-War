@@ -74,5 +74,11 @@ public interface RoomListModule extends GameModule{
          * You should update the room player amount on the UI.
          */
         void onPlayerLeft(PlayerRoomModel model);
+
+        /**
+         * when the player stay in no-action  in the room list for a given long time,
+         * that means the player is kicked out of the online.
+         */
+        void onPlayerLeisureTimeExpired();
     }
 }

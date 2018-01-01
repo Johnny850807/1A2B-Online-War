@@ -1,5 +1,7 @@
 package container.eventhandler.handlers.roomlist;
 
+import java.util.Date;
+
 import container.ApacheLoggerAdapter;
 import container.base.Client;
 
@@ -34,6 +36,7 @@ public class CreateRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 			validateHost(room.getHost());
 			Player hostPlayer = gameCore().getClientPlayer(room.getHost().getId()).getPlayer();
 			room.initId();
+			room.setCreatedTime(new Date());
 			room.setLog(new ApacheLoggerAdapter(GameRoom.class));
 			room.setHost(hostPlayer);
 			room.setProtocolFactory(protocolFactory());

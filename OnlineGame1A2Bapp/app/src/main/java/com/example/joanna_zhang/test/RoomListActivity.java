@@ -27,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.GameModeHelper;
 import com.example.joanna_zhang.test.Utils.ShowDialogHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
@@ -401,6 +402,11 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onPlayerLeft(PlayerRoomModel model) {
         onRoomUpdated(model.getGameRoom());
+    }
+
+    @Override
+    public void onPlayerLeisureTimeExpired() {
+        AppDialogFactory.timeExpiredDialog(this, getString(R.string.playerTimeExpired)).show();
     }
 
     @Override

@@ -20,7 +20,7 @@ public class WaterBotServer {
 		if (argv.length > 1)
 			System.out.println("The argument should be only 1 for the bot amount.");
 		System.setProperty("log4j.configurationFile","configuration.xml");
-		int amount = Integer.parseInt("8");
+		int amount = Integer.parseInt("1");
 		List<Thread> botWorkers = new ArrayList<>();
 
 		IntStream.range(0, amount).parallel()

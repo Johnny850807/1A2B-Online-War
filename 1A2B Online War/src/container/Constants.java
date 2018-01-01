@@ -8,6 +8,7 @@ public final class Constants {
 		public final static class Signing{
 			public final static String SIGNIN = "SignIn";
 			public final static  String SIGNOUT = "SignOut";
+			public final static  String SIGNOUT_TIME_EXPIRED = "SignOutTimeExpired";
 			public final static  String GETINFO = "GetServerInformation";
 		}
 		public final static class RoomList{
@@ -17,6 +18,7 @@ public final class Constants {
 		}
 		public final static class InRoom{
 			public final static String CLOSE_ROOM = "CloseRoom";
+			public final static String CLOSE_ROOM_TIME_EXPIRED = "CloseRoomTimeExpired";
 			public final static String LEAVE_ROOM = "LeaveRoom";
 			public final static String BOOTED = "Booted";
 			public final static String CHANGE_STATUS = "ChangeStatus";

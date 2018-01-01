@@ -311,7 +311,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
     @Override
     public void onRoomExpired() {
-        AppDialogFactory.roomTimeExpiredDialog(this).show();
+        AppDialogFactory.timeExpiredDialog(this, getString(R.string.roomClosedForExpired)).show();
     }
 
     private void createAndShowPlayerLeftNotifyingDialog(Player leftPlayeer){

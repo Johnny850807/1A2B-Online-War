@@ -38,6 +38,7 @@ public class EnterGameHandler extends GsonEventHandler<PlayerRoomIdModel, Player
 			ClientPlayer clientPlayer = gameCore().getClientPlayer(data.getPlayerId());
 			validateEntering(gameRoom, clientPlayer.getPlayer());
 			game.enterGame(clientPlayer);
+			gameRoom.pushLeisureTime();
 			return success(data);
 		}catch (NullPointerException e) {
 			return error(404, e);

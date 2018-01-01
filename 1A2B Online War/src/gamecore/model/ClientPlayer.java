@@ -1,14 +1,20 @@
 package gamecore.model;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import container.base.Client;
 import container.protocol.Protocol;
+import gamecore.entity.LeisureTimeChallengeable;
 import gamecore.entity.Player;
 import utils.ForServer;
 
-public class ClientPlayer implements Serializable{
+public class ClientPlayer implements Serializable, LeisureTimeChallengeable{
+	private static final long LEISURE_TIME_EXPIRE = TimeUnit.MINUTES.toMillis(1);
 	private transient Client client;
+	private transient Date createdTime = new Date();
+	private transient Date latestLeisureTime = new Date();
 	private Player player;
 	
 	public ClientPlayer(Client client, Player player) {
@@ -54,7 +60,28 @@ public class ClientPlayer implements Serializable{
 	
 	@ForServer
 	public void broadcast(Protocol protocol){
-		client.broadcast(protocol);
+		/**
+		 * if the player is in the room list, the leisure time start counted,
+		 * so that he should choose any room to join or create self room in the expired time given.
+		 * Until he is not in the room list, the status will be changed, then any broadcast will help him to
+		 * push the latest leisure time.
+		 */
+		if (getPlayer().getUserStatus() != ClientStatus.signedIn)
+			pushLeisureTime();
+		getClient().broadcast(protocol);
+	}
+	
+	@Override
+	@ForServer
+	public synchronized boolean isLeisureTimeExpired(){
+		long diffTime = System.currentTimeMillis() - latestLeisureTime.getTime();
+		return diffTime >= LEISURE_TIME_EXPIRE;
+	}
+
+	@Override
+	@ForServer
+	public void pushLeisureTime(){
+		latestLeisureTime = new Date();
 	}
 	
 	@Override

@@ -82,5 +82,6 @@
     <string name="gameClosed">遊戲關閉</string>
     <string name="roomClosedForExpired">房間閒置時間已超過三分鐘，遭系統關閉。</string>
     <string name="expiredDetection">超時偵測</string>
+    <string name="playerTimeExpired">玩家閒置時間過久，登出伺服器。</string>
 
 </resources>

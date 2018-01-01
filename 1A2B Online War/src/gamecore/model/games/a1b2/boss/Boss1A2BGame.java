@@ -7,6 +7,7 @@ import java.util.List;
 import static container.Constants.Events.Games.Boss1A2B.*;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
+import gamecore.entity.Player;
 import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.RequestStatus;
@@ -109,4 +110,5 @@ public class Boss1A2BGame extends Game{
 	public Monster getBoss() {
 		return boss;
 	}
+
 }

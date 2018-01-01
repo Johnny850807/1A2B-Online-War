@@ -1,6 +1,5 @@
 package gamecore.model.games.a1b2;
 
-import gamecore.entity.Player;
 import gamecore.model.GameMode;
 
 public class GameOverModel {

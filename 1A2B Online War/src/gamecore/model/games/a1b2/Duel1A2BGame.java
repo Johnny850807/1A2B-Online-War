@@ -14,7 +14,6 @@ import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.RequestStatus;
 import gamecore.model.games.Game;
-import gamecore.model.games.GameEnteringWaitingBox;
 import gamecore.model.games.ProcessInvalidException;
 import utils.ForServer;
 
@@ -161,7 +160,7 @@ public class Duel1A2BGame extends Game{
 	public Player getWinner() {
 		return winner.getPlayer();
 	}
-
+	
 	@ForServer
 	public void broadcastToAll(Protocol protocol){
 		hostClient.broadcast(protocol);
@@ -180,5 +179,5 @@ public class Duel1A2BGame extends Game{
 	public String getPlayerName(String playerId){
 		return getClientPlayer(playerId).getPlayerName();
 	}
-	
+
 }

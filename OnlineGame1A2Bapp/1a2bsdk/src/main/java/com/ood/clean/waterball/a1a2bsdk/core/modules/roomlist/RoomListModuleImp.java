@@ -25,6 +25,7 @@ import static container.Constants.Events.RECONNECTED;
 import static container.Constants.Events.RoomList.CREATE_ROOM;
 import static container.Constants.Events.RoomList.GET_ROOMS;
 import static container.Constants.Events.RoomList.JOIN_ROOM;
+import static container.Constants.Events.Signing.SIGNOUT_TIME_EXPIRED;
 
 
 public class RoomListModuleImp extends AbstractGameModule implements RoomListModule {
@@ -153,6 +154,13 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
         public void onPlayerLeft(PlayerRoomModel model) {
             Log.d(TAG, "Player " + model.getPlayer().getName() + " left from the room " + model.getGameRoom());
             callback.onPlayerLeft(model);
+        }
+
+        @Override
+        @BindCallback(event = SIGNOUT_TIME_EXPIRED, status = RequestStatus.success)
+        public void onPlayerLeisureTimeExpired() {
+            Log.d(TAG, "The player leisure time is expired.");
+            callback.onPlayerLeisureTimeExpired();
         }
 
         @Override
