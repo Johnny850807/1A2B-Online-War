@@ -109,6 +109,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         duel1A2BModule.leaveGame();
+                        finish();
                     }
                 });
     }
