@@ -31,6 +31,7 @@ import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
+import gamecore.model.PlayerRoomModel;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
@@ -259,6 +260,11 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
                 currentGameRoom.getHost() : currentGameRoom.getPlayerStatus().get(0).getPlayer();
         inputNumberBtn.setEnabled(false);
         handler.postDelayed(()->createAndShowDialogForWinner(winner), 3000);
+    }
+
+    @Override
+    public void onOpponentLeft(PlayerRoomModel model) {
+
     }
 
     private void createAndShowDialogForWinner(Player winner){
