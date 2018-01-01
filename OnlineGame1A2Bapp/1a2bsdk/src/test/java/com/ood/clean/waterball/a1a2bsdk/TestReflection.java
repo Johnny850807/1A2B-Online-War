@@ -59,6 +59,11 @@ public class TestReflection implements UserSigningModule.Callback{
     }
 
     @Override
+    public void onServerReconnected() {
+
+    }
+
+    @Override
     public void onError(@NonNull Throwable err) {
         fail();
     }

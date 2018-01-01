@@ -159,17 +159,19 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {}
 
-    //TODO clean your codes
     public void createRoomBtnOnClick(View view) {
-        AlertDialog.Builder createRoomDialogBuilder = new AlertDialog.Builder(RoomListActivity.this);
         view = LayoutInflater.from(RoomListActivity.this).inflate(R.layout.create_room_dialog, null);
         EditText roomNameEd = view.findViewById(R.id.roomNameEd);
         Spinner gameModeSpn = view.findViewById(R.id.createRoomModeSpn);
         ArrayAdapter<CharSequence> gameModeAdapter = new ArrayAdapter<CharSequence>(RoomListActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.roomMode));
         gameModeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         gameModeSpn.setAdapter(gameModeAdapter);
+        showCreateRoomDialog(view, roomNameEd, gameModeSpn);
+    }
 
-        createRoomDialogBuilder.setTitle(R.string.create_room)
+    private void showCreateRoomDialog(View view, EditText roomNameEd, Spinner gameModeSpn) {
+        new AlertDialog.Builder(RoomListActivity.this)
+                .setTitle(R.string.create_room)
                 .setIcon(R.drawable.logo)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
