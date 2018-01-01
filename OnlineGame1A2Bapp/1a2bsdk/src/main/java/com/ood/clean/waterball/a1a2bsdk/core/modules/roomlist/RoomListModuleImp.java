@@ -19,6 +19,7 @@ import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
 
 import static container.Constants.Events.InRoom.CLOSE_ROOM;
+import static container.Constants.Events.InRoom.LAUNCH_GAME;
 import static container.Constants.Events.InRoom.LEAVE_ROOM;
 import static container.Constants.Events.RECONNECTED;
 import static container.Constants.Events.RoomList.CREATE_ROOM;
@@ -107,6 +108,13 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
         public void onCreateRoomUnsuccessfully(ErrorMessage errorMessage) {
             Log.d(TAG, "Room created unsuccessfully: " + errorMessage);
             callback.onCreateRoomUnsuccessfully(errorMessage);
+        }
+
+        @Override
+        @BindCallback(event = LAUNCH_GAME, status = RequestStatus.success)
+        public void onRoomLaunched(GameRoom gameRoom) {
+            Log.d(TAG,"Room launched: " + gameRoom);
+            callback.onRoomLaunched(gameRoom);
         }
 
         @BindCallback(event = CLOSE_ROOM, status = RequestStatus.success)

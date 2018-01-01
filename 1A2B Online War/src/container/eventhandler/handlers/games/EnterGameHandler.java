@@ -9,8 +9,10 @@ import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
+import gamecore.entity.Player;
 import gamecore.model.ClientPlayer;
 import gamecore.model.PlayerRoomIdModel;
+import gamecore.model.RoomStatus;
 import gamecore.model.games.Game;
 
 /**
@@ -34,13 +36,19 @@ public class EnterGameHandler extends GsonEventHandler<PlayerRoomIdModel, Player
 			GameRoom gameRoom = gameCore().getGameRoom(data.getGameRoomId());
 			Game game = gameRoom.getGame();
 			ClientPlayer clientPlayer = gameCore().getClientPlayer(data.getPlayerId());
-			if (clientPlayer == null)
-				throw new NullPointerException("The player should not be null.");
+			validateEntering(gameRoom, clientPlayer.getPlayer());
 			game.enterGame(clientPlayer);
 			return success(data);
 		}catch (NullPointerException e) {
 			return error(404, e);
+		}catch (IllegalStateException e) {
+			return error(403, e);
 		}
+	}
+	
+	private void validateEntering(GameRoom room, Player player){
+		if (!room.containsPlayer(player))
+			throw new IllegalStateException("You are not in the room.");
 	}
 
 	@Override

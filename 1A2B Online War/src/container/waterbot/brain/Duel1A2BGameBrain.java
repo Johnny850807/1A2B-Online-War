@@ -11,6 +11,7 @@ import gamecore.model.ContentModel;
 import gamecore.model.RoomStatus;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
+import utils.MyGson;
 import utils.RandomString;
 
 import static container.Constants.Events.InRoom.*;
@@ -18,6 +19,7 @@ import static container.Constants.Events.RoomList.*;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Timer;
 import java.util.TimerTask;
 
 import com.google.gson.reflect.TypeToken;
@@ -34,30 +36,18 @@ public class Duel1A2BGameBrain extends BaseChatChainBrain{
 	}
 	
 	@Override
-	public synchronized void react(WaterBot waterBot, Protocol protocol, Client client) {
-		super.react(waterBot, protocol, client);
-		
+	protected void onReceiveSuccessProtocol(WaterBot waterBot, Protocol protocol, Client client) {
 		switch (protocol.getEvent()) {
 		case GAMESTARTED:
-			if (protocol.getStatus().equals(SUCCESS))
-				broadcastSetAnswer(waterBot, client);
+			broadcastSetAnswer(waterBot, client);
 			break;
 		case SET_ANSWER:
-			if (protocol.getStatus().equals(SUCCESS))
-				sendMessageRequest(waterBot, waterBot.getMemory().getRoom(), client, "我設定好答案囉！");
-			else
-				log.error(getLogPrefix(waterBot) + " set answer failed.");
+			sendMessageRequest(waterBot, waterBot.getMemory().getRoom(), client, "我設定好答案囉！");
 			return;
 		case GUESSING_STARTED:
 			guessedTime = 0;
 			opponentAnswer = "";
 			broadcastRandomGuess(waterBot, client);
-			return;
-		case GUESS:
-			if (protocol.getStatus().equals(SUCCESS))
-				;
-			else
-				log.error(getLogPrefix(waterBot) + " guess failed.");
 			return;
 		case ONE_ROUND_OVER:
 			if (++guessedTime == 1)
@@ -65,8 +55,8 @@ public class Duel1A2BGameBrain extends BaseChatChainBrain{
 			broadcastRandomGuessAfter2Seconds(waterBot, client);
 			return;
 		case GAMEOVER:
-			waterBot.getMemory().getMe().setUserStatus(ClientStatus.signedIn);
-			waterBot.getMemory().getRoom().setRoomStatus(RoomStatus.waiting);
+			waterBot.getMe().setUserStatus(ClientStatus.signedIn);
+			waterBot.getGameRoom().setRoomStatus(RoomStatus.waiting);
 			break;
 		default:
 			break;
@@ -76,9 +66,8 @@ public class Duel1A2BGameBrain extends BaseChatChainBrain{
 	}
 
 	private void parseOpponentAnswer(WaterBot waterBot, Protocol protocol) {
-		Player me = waterBot.getMemory().getMe();
-		Type type = new TypeToken<List<Duel1A2BPlayerBarModel>>(){}.getType();
-		List<Duel1A2BPlayerBarModel> bars = gson.fromJson(protocol.getData(), type);
+		Player me = waterBot.getMe();
+		List<Duel1A2BPlayerBarModel> bars = MyGson.parseDuel1A2BPlayerBarModels(protocol.getData());
 		Duel1A2BPlayerBarModel opponentModel = bars.get(0).getPlayerId().equals(me.getId()) ? 
 				bars.get(1) : bars.get(0);
 		this.opponentAnswer = opponentModel.getAnswer();
@@ -86,8 +75,8 @@ public class Duel1A2BGameBrain extends BaseChatChainBrain{
 
 	private void broadcastSetAnswer(WaterBot waterBot, Client client){
 		Protocol protocol = protocolFactory.createProtocol(SET_ANSWER, REQUEST,
-				gson.toJson(new ContentModel(waterBot.getMemory().getMe().getId(), 
-						waterBot.getMemory().getRoom().getId(), RandomString.nextNonDuplicatedNumber(4))));
+				gson.toJson(new ContentModel(waterBot.getMe().getId(), 
+						waterBot.getGameRoom().getId(), RandomString.nextNonDuplicatedNumber(4))));
 		client.broadcast(protocol);
 	}
 	
@@ -107,10 +96,10 @@ public class Duel1A2BGameBrain extends BaseChatChainBrain{
 	}
 	
 	private void broadcastRandomGuessAfter2Seconds(WaterBot waterBot, Client client){
-		timer.schedule(new TimerTask() {
+		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if (waterBot.getMemory().getRoom().getRoomStatus() == RoomStatus.gamestarted)
+				if (waterBot.getGameRoom() != null && waterBot.getGameRoom().getRoomStatus() == RoomStatus.gamestarted)
 				{
 					if (guessedTime < 2)
 						broadcastRandomGuess(waterBot, client);

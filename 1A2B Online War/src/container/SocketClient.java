@@ -3,6 +3,8 @@ package container;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.channels.NetworkChannel;
+import java.util.LinkedList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,9 +68,18 @@ public class SocketClient extends Entity implements Client{
 			String content = dataInput.readUTF();
 			Protocol protocol = protocolFactory.createProtocol(content);
 			log.info("Request: " + protocol);
-			EventHandler handler = gameEventHandlerFactory.createGameEventHandler(this, protocol);
-			handler.handle();
+			createThreadToHandleRequest(protocol);
 		}
+	}
+	
+	private void createThreadToHandleRequest(final Protocol protocol){
+		new Thread(){
+			@Override
+			public void run() {
+				EventHandler handler = gameEventHandlerFactory.createGameEventHandler(SocketClient.this, protocol);
+				handler.handle();
+			}
+		}.start();
 	}
 	
 	@Override

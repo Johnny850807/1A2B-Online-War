@@ -10,9 +10,9 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.ConcurrentModificationException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +28,7 @@ public final class ReflectionEventBus implements EventBus{
     private static ReflectionEventBus instance;
     private Gson gson = MyGson.getGson();
     private Set<GameCallBack> callBackSet;
-    private final LinkedList<Protocol> unhandledProtocols = new LinkedList<>();
+    private final List<Protocol> unhandledProtocols = Collections.synchronizedList(new ArrayList<Protocol>());
 
     public ReflectionEventBus(){
         callBackSet = new HashSet<>();
@@ -46,13 +46,9 @@ public final class ReflectionEventBus implements EventBus{
 
     @Override
     public void resendNonHandledEvent() {
-        try{
-            for (Protocol protocol : unhandledProtocols)
+        for (Protocol protocol : new ArrayList<>(unhandledProtocols))
                 invoke(protocol);
-            unhandledProtocols.clear();
-        }catch (ConcurrentModificationException err){
-
-        }
+        unhandledProtocols.clear();
     }
 
     @Override
@@ -101,10 +97,7 @@ public final class ReflectionEventBus implements EventBus{
         if (!eventHasBeenConsumed)
         {
             Log.e(TAG, "No callback consumes the event: " + event);
-            synchronized (unhandledProtocols)
-            {
-                unhandledProtocols.add(protocol);
-            }
+            unhandledProtocols.add(protocol);
         }
     }
 

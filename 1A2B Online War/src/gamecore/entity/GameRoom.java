@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.logging.log4j.Logger;
+
 import container.ApacheLoggerAdapter;
 import container.base.ClientBinder;
 import container.base.MyLogger;
@@ -50,8 +52,7 @@ public class GameRoom extends Entity{
 	
 	@ForServer
 	public void addChatMessage(ChatMessage chatMessage){
-		assert chatMessage.getId() != null : "ChatMessage's id should be initialized.";
-		chatMessageList.add(chatMessage);
+		getChatMessageList().add(chatMessage);
 	}
 	
 	@ForServer
@@ -61,7 +62,7 @@ public class GameRoom extends Entity{
 	
 	@ForServer
 	public List<ChatMessage> getChatMessageList() {
-		return chatMessageList;
+		return chatMessageList == null ? chatMessageList = new ArrayList<>() : chatMessageList;
 	} 
 	
 	public void setLog(MyLogger log) {
@@ -83,16 +84,23 @@ public class GameRoom extends Entity{
 	public Player getHost() {
 		return host;
 	}
+	
+	public boolean isHost(Player player){
+		return player.equals(getHost());
+	}
 
 	public void setHost(Player host) {
 		this.host = host;
 	}
 
 	public RoomStatus getRoomStatus() {
+		validate();
 		return roomStatus;
 	}
 
 	public void setRoomStatus(RoomStatus roomStatus) {
+		System.out.println("Set room status: " + roomStatus);
+		validate();
 		this.roomStatus = roomStatus;
 	}
 
@@ -173,6 +181,11 @@ public class GameRoom extends Entity{
 		return (host != null && host.equals(player)) || ifPlayerInStatusList(player);
 	}
 	
+	public void validate(){
+		if (getId() == null)
+			throw new IllegalStateException("The game room's id is null.");
+	}
+	
 	public boolean ifPlayerInStatusList(Player player){
 		try{
 			getPlayerStatusOfPlayer(player);
@@ -189,6 +202,11 @@ public class GameRoom extends Entity{
 	
 	public ProtocolFactory getProtocolFactory() {
 		return protocolFactory;
+	}
+	
+	@ForServer
+	public void onGameRoomClosed(){
+		
 	}
 	
 	/**
@@ -222,6 +240,11 @@ public class GameRoom extends Entity{
 			if (!playerStatus.isReady())
 				return false;
 		return true;
+	}
+	
+	public boolean isAvailableToJoin(){
+		return getPlayerAmount() != getMaxPlayerAmount() && 
+				getRoomStatus() != RoomStatus.gamestarted;
 	}
 	
 	private void validatePlayerAmount(){

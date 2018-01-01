@@ -52,11 +52,10 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
 
  	@ForServer
  	public void enterGame(ClientPlayer clientPlayer){
+ 		if (gameStarted)
+ 			throw new IllegalStateException("The game is started.");
  		log.trace("The player " + clientPlayer.getPlayerName() + " entered.");
- 		if (enteringWaitingBox != null)
- 			enteringWaitingBox.enter(clientPlayer);
- 		else
- 			throw new IllegalStateException("The entering waiting box is not initialized.");
+ 		enteringWaitingBox.enter(clientPlayer);
  	}
  	
  	public void setEnteringWaitingBox(GameEnteringWaitingBox enteringWaitingBox) {
@@ -76,6 +75,9 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
  		startTimer();
  	}
 
+ 	public void onGameClosed(){
+ 		
+ 	}
  	
  	public void setLog(MyLogger log) {
 		this.log = log;

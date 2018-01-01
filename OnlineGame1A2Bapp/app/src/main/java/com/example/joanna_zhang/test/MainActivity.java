@@ -3,7 +3,6 @@ package com.example.joanna_zhang.test;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,16 +11,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.joanna_zhang.test.Domain.NameCreator.NameCreator;
 import com.example.joanna_zhang.test.Domain.NameCreator.RandomNameCreator;
-import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutException;
+import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
-
-import java.util.concurrent.TimeUnit;
 
 import gamecore.entity.Player;
 import gamecore.model.ServerInformation;
@@ -39,9 +37,10 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     private EditText nameEd;
     private CheckBox autoSignInCheckbox;
     private TextView serverStatusTxt;
+    private ProgressBar progressBar;
     private SharedPreferences sharedPreferences;
     private NameCreator nameCreator = new RandomNameCreator();
-    private Handler handler = new Handler();
+    private boolean serverConntected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +56,11 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     }
 
     private void findViews() {
-        nameEd = (EditText) findViewById(R.id.inputName);
-        loginBtn = (Button) findViewById(R.id.loginButton);
-        autoSignInCheckbox = (CheckBox) findViewById(R.id.checkbox);
-        serverStatusTxt = (TextView) findViewById(R.id.serverStatus);
+        nameEd = findViewById(R.id.inputName);
+        loginBtn = findViewById(R.id.loginButton);
+        autoSignInCheckbox = findViewById(R.id.checkbox);
+        serverStatusTxt = findViewById(R.id.serverStatus);
+        progressBar = findViewById(R.id.progressbar);
     }
 
     @Override
@@ -75,15 +75,17 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         Log.v(TAG, "onResume, registering.");
         signingModule.registerCallback(this);
         CoreGameServer.getInstance().startEngine(this);
+        if (serverConntected)
+            signingModule.getServerInformation();
     }
 
     @Override
     public void onServerReconnected() {
         Log.v(TAG, "onServerReconnected.");
+        serverConntected = true;
         signingModule.getServerInformation();
         readPlayerNameFromSharedPreferences();
-        //loadServerInformationIn10Secs();
-        loginBtn.setEnabled(true);
+        setLoading(false);
     }
 
     private void readPlayerNameFromSharedPreferences() {
@@ -95,17 +97,15 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         }
     }
 
-    private void loadServerInformationIn10Secs(){
-        handler.postDelayed(()->{
-            signingModule.getServerInformation();
-            loadServerInformationIn10Secs();
-        }, TimeUnit.SECONDS.toMillis(10));
-    }
-
-    public void loginButtonOnClick(View view) {
+    public void signInButtonOnClick(View view) {
         String playerName = nameEd.getText().toString();
         signingModule.signIn(playerName);
-        loginBtn.setEnabled(false);
+        setLoading(true);
+    }
+
+    private void setLoading(boolean signing){
+        loginBtn.setEnabled(!signing);
+        progressBar.setVisibility(signing ? View.VISIBLE : View.INVISIBLE);
     }
 
     public void randomNameButtonOnClick(View view) {
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
 
     @Override
     public void onSignInSuccessfully(@NonNull Player player) {
-        loginBtn.setEnabled(true);
+        setLoading(false);
         savePlayerNameToSharedPreferences(autoSignInCheckbox.isChecked() ? nameEd.getText().toString() : "");
         Intent intent = new Intent(this, RoomListActivity.class);
         intent.putExtra(PLAYER, player);
@@ -160,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     protected void onStop() {
         super.onStop();
         Log.v(TAG, "OnStop.");
-        handler.removeCallbacks(null);
         signingModule.unregisterCallBack(this);
     }
 

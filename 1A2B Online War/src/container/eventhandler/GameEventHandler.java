@@ -102,7 +102,6 @@ public abstract class GameEventHandler<In, Out> implements EventHandler{
 		return new ErrorMessage(code, exception.getMessage());
 	}
 
-	
 	protected interface Response{
 		Protocol getResponse();
 		void handleTheResponse();

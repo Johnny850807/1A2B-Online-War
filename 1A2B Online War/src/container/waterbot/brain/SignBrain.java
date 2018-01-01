@@ -8,6 +8,7 @@ import container.waterbot.WaterBot;
 import gamecore.entity.Player;
 import gamecore.model.RequestStatus;
 import gamecore.model.ServerInformation;
+import utils.MyGson;
 
 import static container.Constants.*;
 import static container.Constants.Events.*;
@@ -15,6 +16,10 @@ import static container.Constants.Events.Signing.*;
 
 import org.junit.runner.Request;
 
+
+/**
+ * handle the sign in operation and the holding the server info
+ */
 public class SignBrain extends ChainBrain{
 	private Player player;
 	private ServerInformation serverInfo;
@@ -24,43 +29,23 @@ public class SignBrain extends ChainBrain{
 	}
 
 	@Override
-	public synchronized void react(WaterBot waterBot, Protocol protocol, Client client) {
-		super.react(waterBot, protocol, client);
-		
+	protected  void onReceiveSuccessProtocol(WaterBot waterBot, Protocol protocol, Client client) {
 		switch (protocol.getEvent()) {
 		case SIGNIN:
-			parseAndSavePlayerToMemory(waterBot, protocol, client);
-			requestServerInfo(client);
+			waterBot.setMe(MyGson.parsePlayer(protocol.getData()));
+			broadcastGetServerInfo(client);
 			break;
 		case GETINFO:
-			saveServerInfo(waterBot, protocol, client);
+			this.serverInfo = MyGson.parse(protocol.getData(), ServerInformation.class);
 			break;
-		case SIGNOUT:
-			log.error("Sign out????");
-			return;
 		}
 		nextIfNotNull(waterBot, protocol, client);
 	}
 
-	private void parseAndSavePlayerToMemory(WaterBot waterBot, Protocol protocol, Client client){
-		if (protocol.getStatus().equals(SUCCESS))
-		{
-			Player player = gson.fromJson(protocol.getData(), Player.class);
-			waterBot.getMemory().setMe(player);
-		}
-		else {
-			log.error("Sign in unsuccessfully ! : " + protocol.getData());
-		}
-	}
 	
-	private void requestServerInfo(Client client){
+	private void broadcastGetServerInfo(Client client){
 		Protocol protocol = protocolFactory.createProtocol(GETINFO, REQUEST, null);
 		client.broadcast(protocol);
-	}
-	
-	private void saveServerInfo(WaterBot waterBot, Protocol protocol, Client client){
-		this.serverInfo = gson.fromJson(protocol.getData(), ServerInformation.class);
-		log.trace(getLogPrefix(waterBot) + "Server info got: " + serverInfo);
 	}
 	
 }

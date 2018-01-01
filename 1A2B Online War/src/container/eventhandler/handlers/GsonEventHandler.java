@@ -1,16 +1,14 @@
 package container.eventhandler.handlers;
 
-import java.util.Date;
-
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import container.base.Client;
 import container.eventhandler.GameEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.GameCore;
-import utils.DateDeserializer;
+import gamecore.model.ErrorMessage;
+import gamecore.model.RequestStatus;
 import utils.MyGson;
 
 /**
@@ -42,5 +40,17 @@ public abstract class GsonEventHandler<In, Out> extends GameEventHandler<In, Out
 		return gson.toJson(data);
 	}
 	
-
+	/**
+	 * If you invoke this method, first the error will be converted as a protocol message thereby sent to the client as default.
+	 * @param code the code stands for a thrown exception
+	 * @param exception the exception
+	 */
+	@Override
+	protected Response error(int code, Exception exception){
+		ErrorMessage errorMessage = createErrorMessage(code, exception);
+		Protocol response = protocolFactory().createProtocol(request().getEvent(), RequestStatus.failed.toString(), 
+				gson.toJson(errorMessage));
+		return new ErrorResponse(response);
+	}
+	
 }

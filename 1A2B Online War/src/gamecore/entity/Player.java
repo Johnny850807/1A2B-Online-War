@@ -27,6 +27,7 @@ public class Player extends Entity{
 	}
 
 	public void setUserStatus(ClientStatus userStatus) {
+		System.out.println("Set player " + getUserStatus() + " status: " + userStatus);
 		this.userStatus = userStatus;
 	}
 	

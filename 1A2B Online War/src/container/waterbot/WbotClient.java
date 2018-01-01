@@ -5,8 +5,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.Time;
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
@@ -57,6 +59,7 @@ public class WbotClient implements Client{
 			dataOutputStream = new DataOutputStream(socket.getOutputStream());
 			connected = true;
 			log.trace("Robot " + waterBot.getName() + " has setup his socket connection.");
+			waterBot.start();
 			signInAfterFiveSeconds();
 			listeningInput();
 		} catch (IOException e) {
@@ -74,7 +77,6 @@ public class WbotClient implements Client{
 			}
 		}, TimeUnit.SECONDS.toMillis(5));
 	}
-
 	private void listeningInput(){
 		while(connected)
 		{
@@ -91,7 +93,7 @@ public class WbotClient implements Client{
 	@Override
 	public void broadcast(Protocol protocol) {
 		try {
-			log.trace("Robot " + waterBot.getName() + " responding: " + protocol);
+			log.trace("Robot " + waterBot.getName() + " broadcasting: " + protocol);
 			dataOutputStream.writeUTF(protocol.toString());
 			dataOutputStream.flush();
 		} catch (IOException e) {

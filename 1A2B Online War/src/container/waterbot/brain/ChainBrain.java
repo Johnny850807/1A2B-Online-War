@@ -6,6 +6,7 @@ import java.util.Timer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 import com.google.gson.Gson;
 
@@ -26,7 +27,6 @@ public abstract class ChainBrain implements Brain{
 	protected static String REQUEST = RequestStatus.request.toString();
 	protected static String SUCCESS = RequestStatus.success.toString();
 	protected static String FAILED = RequestStatus.failed.toString();
-	protected static Timer timer = new Timer();
 	protected Brain next;
 	protected ProtocolFactory protocolFactory;
 	
@@ -36,17 +36,29 @@ public abstract class ChainBrain implements Brain{
 	}
 	
 	@Override
-	public synchronized void react(WaterBot waterBot, Protocol protocol, Client client) {
+	public void react(WaterBot waterBot, Protocol protocol, Client client) {
+		if (protocol.getStatus().equals(SUCCESS))
+			onReceiveSuccessProtocol(waterBot, protocol, client);
+		else if (protocol.getStatus().equals(FAILED))
+			onReceiveFailedProtocol(waterBot, protocol, client);
+		else 
+			throw new IllegalStateException(getLogPrefix(waterBot) + "WTF that the status is not SUCCESS or even FAILED?");
+	}
+	
+	protected abstract void onReceiveSuccessProtocol(WaterBot waterBot, Protocol protocol, Client client);
+	
+	protected synchronized void onReceiveFailedProtocol(WaterBot waterBot, Protocol protocol, Client client){
+		log.error(getLogPrefix(waterBot) + "Failed protocol received: " + protocol);
 	}
 	
 	protected void nextIfNotNull(WaterBot waterBot, Protocol protocol, Client client){
 		if (next != null)
 		{
-			log.trace(getLogPrefix(waterBot) + "end thinking, propogate to the next chain node: " + next.getClass().getSimpleName());
+			//log.trace(getLogPrefix(waterBot) + "end thinking, propogate to the next chain node: " + next.getClass().getSimpleName());
 			next.react(waterBot, protocol, client);
 		}
 		else
-			log.trace(getLogPrefix(waterBot) + "end thinking, the chain reachs the end.");
+			/*log.trace(getLogPrefix(waterBot) + "end thinking, the chain reachs the end.")*/;
 	}
 	
 	protected String getLogPrefix(WaterBot bot){

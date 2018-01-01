@@ -42,6 +42,11 @@ public interface RoomListModule extends GameModule{
         void onCreateRoomUnsuccessfully(ErrorMessage errorMessage);
 
         /**
+         * This method will be called if any of the room launched by the online player.
+         */
+        void onRoomLaunched(GameRoom gameRoom);
+
+        /**
          * This method will be called if any of the room closed by the online player.
          */
         void onRoomClosed(GameRoom gameRoom);

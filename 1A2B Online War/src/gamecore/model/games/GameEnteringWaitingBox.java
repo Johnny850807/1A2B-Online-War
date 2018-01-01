@@ -42,11 +42,8 @@ public class GameEnteringWaitingBox {
 	
 	public void enter(ClientPlayer clientPlayer){
 		unenteredPlayerIds.remove(clientPlayer.getId());
-		if (unenteredPlayerIds.isEmpty() && !hasEmittedEnterGame)
-		{
+		if (unenteredPlayerIds.isEmpty())
 			listener.onAllPlayerEntered();
-			hasEmittedEnterGame = true;
-		}
 	}
 	
 	public interface OnGamePlayersAllEnteredListener{

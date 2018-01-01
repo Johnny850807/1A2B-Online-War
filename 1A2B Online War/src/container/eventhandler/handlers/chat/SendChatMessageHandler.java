@@ -54,6 +54,8 @@ public class SendChatMessageHandler extends GsonEventHandler<ChatMessage, ChatMe
 			return error(404, e);
 		}catch (IllegalArgumentException e) {
 			return error(400, e);
+		}catch (Exception e) {
+			return error(500, e);
 		}
 	}
 

@@ -13,6 +13,7 @@ import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.RoomStatus;
 import utils.GamecoreHelper;
+import utils.MyGson;
 
 import static container.Constants.*;
 import static container.Constants.Events.*;
@@ -25,12 +26,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import com.google.gson.reflect.TypeToken;
 
 
+/**
+ * handle:
+ * 	(1) updates the room list every 20 seconds
+ *  (2) choose to join or create any room. ('set the game room reference if successfully.')
+ */
 public class RoomListBrain extends ChainBrain{
 	private List<GameRoom> rooms;
 	private static Random random = new Random();
@@ -40,158 +47,146 @@ public class RoomListBrain extends ChainBrain{
 	}
 
 	@Override
-	public synchronized void react(WaterBot waterBot, Protocol protocol, Client client) {
-		super.react(waterBot, protocol, client);
-		
+	protected void onReceiveSuccessProtocol(WaterBot waterBot, Protocol protocol, Client client) {
 		switch (protocol.getEvent()) {
 		case SIGNIN:
-			if (protocol.getStatus().equals(SUCCESS)) 
-				requestRoomListEvery20Seconds(waterBot, client);
+			broadcastGetRoomListInRandomSeconds(waterBot, client);
 			break;
 		case GET_ROOMS:
-			if (protocol.getStatus().equals(SUCCESS)) 
-			{
-				saveGameRoomList(waterBot, protocol, client);
-				joinToAnyRoomOrCreateRoomIfNotInRoom(waterBot, client);
-			}
+			this.rooms = MyGson.parseGameRooms(protocol.getData());
+			chooseToJoinOrCreate(waterBot, client);
 			break;
 		case CREATE_ROOM:
-			parseAndHandleCreateRoomEvent(waterBot, protocol, client);
+			enterAndSaveCreatedRoomIfMine(waterBot, protocol, client);
 			break;
 		case JOIN_ROOM:
-			parseAndHandleJoinEvent(waterBot, protocol, client);
-			break;
-		case CLOSE_ROOM:
-			GameRoom room = gson.fromJson(protocol.getData(), GameRoom.class);
-			this.rooms.remove(room);
+			enterAndSaveJoinedRoomIfMine(waterBot, protocol, client);
 			break;
 		case BOOTED:
-			waterBot.getMemory().getMe().setUserStatus(ClientStatus.signedIn);
+			updateStatusAndClearGameRoom(waterBot);
 			break;
 		default:
 			break;
 		}
 		nextIfNotNull(waterBot, protocol, client);
 	}
-
-	private void requestRoomListEvery20Seconds(WaterBot waterBot, Client client) {
-		timer.schedule(new TimerTask() {
+	
+	private void broadcastGetRoomListInRandomSeconds(WaterBot waterBot, Client client) {
+		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				log.trace(getLogPrefix(waterBot) + "requesting game roomlist...");
-				Protocol protocol = protocolFactory.createProtocol(GET_ROOMS, REQUEST, null);
-				client.broadcast(protocol);
-			}
-		}, 10000, 20000);
-	}
-	
-	private void saveGameRoomList(WaterBot waterBot, Protocol protocol, Client client) {
-		Type type = new TypeToken<List<GameRoom>>(){}.getType();
-		this.rooms = gson.fromJson(protocol.getData(), type);
-		log.trace(getLogPrefix(waterBot) + "Game room list got: " + GamecoreHelper.roomsToString(rooms));
-	}
-	
-	private void parseAndHandleJoinEvent(WaterBot waterBot, Protocol protocol, Client client)
-	{
-		if (protocol.getStatus().equals(SUCCESS))
-		{
-			PlayerRoomModel joinModel = parsePlayerRoomModel(protocol.getData());
-			if (joinModel.getPlayer().equals(waterBot.getMemory().getMe()))
-				saveTheGameRoomToMemroryAndEnterRoom(waterBot, joinModel.getGameRoom());
-		}
-		else
-			log.debug(getLogPrefix(waterBot) + "joined to the room unsuccessfully: " + protocol.getData());
-	}
-	
-	private void parseAndHandleCreateRoomEvent(WaterBot waterBot, Protocol protocol, Client client) {
-		if (protocol.getStatus().equals(SUCCESS))
-		{
-			GameRoom gameRoom = gson.fromJson(protocol.getData(), GameRoom.class);
-			waterBot.getMemory().setRoom(gameRoom);
-			if (gameRoom.getHost().equals(waterBot.getMemory().getMe()))
-			{
-				log.trace(getLogPrefix(waterBot) + "created room successfully!");
-				saveTheGameRoomToMemroryAndEnterRoom(waterBot, gameRoom);
-				closeRoomIfGameNotStartedIn5Minutes(waterBot, client);
-			}
-		}
-		else
-			log.error(getLogPrefix(waterBot) + "create room failed.");
-	}
-	
-	private void closeRoomIfGameNotStartedIn5Minutes(WaterBot waterBot, Client client){
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				Player me = waterBot.getMemory().getMe();
-				GameRoom room = waterBot.getMemory().getRoom();
-				if (me.getUserStatus() == ClientStatus.inRoom && room.getRoomStatus() == RoomStatus.waiting)
-					if (room.getHost().equals(me)) {
-						Protocol protocol = protocolFactory.createProtocol(LEAVE_ROOM, REQUEST, 
-								gson.toJson(new PlayerRoomIdModel(me.getId(), room.getId())));
-						client.broadcast(protocol);
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						if (waterBot.getMe().getUserStatus() == ClientStatus.signedIn)
+						{
+							log.trace(getLogPrefix(waterBot) + "requesting game roomlist...");
+							Protocol protocol = protocolFactory.createProtocol(GET_ROOMS, REQUEST, null);
+							client.broadcast(protocol);
+						}
 					}
+				}, random.nextInt(10000)+1000);  //delay of each round
 			}
-		}, TimeUnit.MINUTES.toMillis(5));
+		}, 10000, 10000);  //loop
 	}
 	
-	private synchronized void joinToAnyRoomOrCreateRoomIfNotInRoom(WaterBot waterBot, Client client) {
-		Player me = waterBot.getMemory().getMe();
-		boolean hasAvailableRoom = hasAvailableRoom();
-		if (hasAvailableRoom && me.getUserStatus() == ClientStatus.signedIn )
-			broadcastJoinRequest(waterBot, client);
-		else if (!hasAvailableRoom && me.getUserStatus() == ClientStatus.signedIn)
+	private void enterAndSaveJoinedRoomIfMine(WaterBot waterBot, Protocol protocol, Client client)
+	{
+		PlayerRoomModel joinModel = MyGson.parse(protocol.getData(), PlayerRoomModel.class);
+		if (joinModel.getPlayer().equals(waterBot.getMe()))
 		{
-			broadcastCreateRoomRequest(waterBot, client);
-			log.trace(getLogPrefix(waterBot) + " there is no room online.");
+			log.trace(getLogPrefix(waterBot) + "joins the room successfully!");
+			saveTheGameRoomToMemrory(waterBot, joinModel.getGameRoom());
 		}
 	}
+	
+	private void enterAndSaveCreatedRoomIfMine(WaterBot waterBot, Protocol protocol, Client client) {
+		GameRoom gameRoom = MyGson.parseGameRoom(protocol.getData());
+		if (gameRoom.isHost(waterBot.getMe()))
+		{
+			log.trace(getLogPrefix(waterBot) + "creates a room successfully!");
+			saveTheGameRoomToMemrory(waterBot, gameRoom);
+			closeRoomIfGameNotStartedIn10Minutes(waterBot, client);
+		}
+	}
+	
+	private void saveTheGameRoomToMemrory(WaterBot waterBot, GameRoom gameRoom){
+		log.trace(getLogPrefix(waterBot) + "entering the room " + gameRoom.getName());
+		waterBot.getMe().setUserStatus(ClientStatus.inRoom);
+		waterBot.setGameRoom(gameRoom);
+	}
+	
+	private void closeRoomIfGameNotStartedIn10Minutes(WaterBot waterBot, Client client){
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				Player me = waterBot.getMe();
+				GameRoom room = waterBot.getGameRoom();
+				if (waterBot.imTheHost() && room.getRoomStatus() == RoomStatus.waiting &&
+						me.getUserStatus() == ClientStatus.inRoom)
+				{
+					log.trace(getLogPrefix(waterBot) + "the room has long time not been started, so close it.");
+					broadcastLeaveRoom(me, room, client);
+				}
+			}
+		}, TimeUnit.MINUTES.toMillis(10));
+	}
+	
+	private void broadcastLeaveRoom(Player player, GameRoom gameRoom, Client client){
+		Protocol protocol = protocolFactory.createProtocol(LEAVE_ROOM, REQUEST, 
+				gson.toJson(new PlayerRoomIdModel(player.getId(), gameRoom.getId())));
+		client.broadcast(protocol);
+	}
+	
+	private void chooseToJoinOrCreate(WaterBot waterBot, Client client) {
+		Player me = waterBot.getMe();
+		boolean hasAvailableRoom = hasAvailableRoom();
+		
+		if (me.getUserStatus() == ClientStatus.signedIn)
+		{
+			if (hasAvailableRoom)
+				broadcastJoinRequest(waterBot, client);
+			else
+			{
+				log.debug(getLogPrefix(waterBot) + " there is no available room online, so create one.");
+				broadcastCreateRoomRequest(waterBot, client);
+			}
+		}
+		else
+			log.trace(getLogPrefix(waterBot) + "is in any room or game.");
+	}
 
-	private boolean hasAvailableRoom(){
-		for (GameRoom gameRoom : rooms)
-			if (gameRoom.getPlayerAmount() != gameRoom.getMaxPlayerAmount() && 
-			gameRoom.getRoomStatus() != RoomStatus.gamestarted)
-				return true;
-		return false;
-	}
-	
-	private GameRoom getNextAvailableRoom(){
-		List<GameRoom> availables = new ArrayList<>();
-		for (GameRoom gameRoom : rooms)
-			if (gameRoom.getPlayerAmount() != gameRoom.getMaxPlayerAmount() && 
-			gameRoom.getRoomStatus() != RoomStatus.gamestarted)
-				availables.add(gameRoom);
-		return availables.get(random.nextInt(availables.size()));
-	}
-	
 	private void broadcastJoinRequest(WaterBot waterBot, Client client){
-		GameRoom room = getNextAvailableRoom();
-		PlayerRoomIdModel playerRoomIdModel = new PlayerRoomIdModel(
-				waterBot.getMemory().getMe().getId(), room.getId());
+		GameRoom room = getNextRandomAvailableRoom();
+		PlayerRoomIdModel playerRoomIdModel = new PlayerRoomIdModel(waterBot.getMe().getId(), room.getId());
 		Protocol protocol = protocolFactory.createProtocol(JOIN_ROOM, REQUEST, gson.toJson(playerRoomIdModel));
 		client.broadcast(protocol);
-		log.trace(getLogPrefix(waterBot) + " sends the join request to the room " + room.getName());
 	}
 	
 	//TODO only duel mode now
 	private void broadcastCreateRoomRequest(WaterBot waterBot, Client client){
 		Protocol protocol = protocolFactory.createProtocol(CREATE_ROOM, REQUEST,
-				gson.toJson(new GameRoom(GameMode.DUEL1A2B, "AI©Ð", waterBot.getMemory().getMe())));
+				gson.toJson(new GameRoom(GameMode.DUEL1A2B, "AI¶}©Ð^_^", waterBot.getMe())));
 		client.broadcast(protocol);
 	}
 	
-	private PlayerRoomModel parsePlayerRoomModel(String data){
-		return gson.fromJson(data, PlayerRoomModel.class);
+	private void updateStatusAndClearGameRoom(WaterBot waterBot){
+		log.debug(getLogPrefix(waterBot) + "got booted.");
+		waterBot.getMe().setUserStatus(ClientStatus.signedIn);
+		waterBot.setGameRoom(null);
 	}
 	
-	private synchronized void saveTheGameRoomToMemroryAndEnterRoom(WaterBot waterBot, GameRoom gameRoom){
-		log.trace(getLogPrefix(waterBot) + "entering the room " + gameRoom.getName());
-		waterBot.getMemory().getMe().setUserStatus(ClientStatus.inRoom);
-		waterBot.getMemory().setRoom(gameRoom);
+	private boolean hasAvailableRoom(){
+		return getNextRandomAvailableRoom() != null;
 	}
 	
-	private synchronized void updateTheGameRoomsStatus(WaterBot waterBot, GameRoom room){
-		rooms.remove(room);
-		rooms.add(room);
+	private GameRoom getNextRandomAvailableRoom(){
+		List<GameRoom> availables = new ArrayList<>();
+		for (GameRoom gameRoom : rooms)
+			if (gameRoom.isAvailableToJoin())
+				availables.add(gameRoom);
+		if (availables.size() == 0)
+			return null;
+		return availables.get(random.nextInt(availables.size()));
 	}
 }

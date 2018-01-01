@@ -2,6 +2,7 @@ package container.waterbot.brain;
 
 import static container.Constants.Events.Chat.SEND_MSG;
 
+import java.util.Timer;
 import java.util.TimerTask;
 
 import container.base.Client;
@@ -21,18 +22,21 @@ public abstract class BaseChatChainBrain extends ChainBrain{
 	}
 	
 	protected void sendMessageRequest(WaterBot waterBot, GameRoom room, Client client, String mgs){
-		Player me = waterBot.getMemory().getMe();
-		ChatMessage message = new ChatMessage(room, me, mgs);
-		Protocol protocol = protocolFactory.createProtocol(SEND_MSG, REQUEST, gson.toJson(message));
-		client.broadcast(protocol);
+		if (waterBot.getGameRoom().equals(room))  //i'm still in that room
+		{
+			Player me = waterBot.getMemory().getMe();
+			ChatMessage message = new ChatMessage(room, me, mgs);
+			Protocol protocol = protocolFactory.createProtocol(SEND_MSG, REQUEST, gson.toJson(message));
+			client.broadcast(protocol);
+		}
 	}
 	
 	protected void sendMessagDelayedWithStatusCondition(WaterBot waterBot, GameRoom room, 
 			Client client, String msg, long delay, ClientStatus condition){
-		timer.schedule(new TimerTask() {
+		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if (waterBot.getMemory().getMe().getUserStatus() == condition)
+				if (waterBot.getMe().getUserStatus() == condition)
 					sendMessageRequest(waterBot, room, client, msg);
 			}
 		}, delay);
@@ -40,7 +44,7 @@ public abstract class BaseChatChainBrain extends ChainBrain{
 	
 	protected void sendMessagDelayed(WaterBot waterBot, GameRoom room, 
 			Client client, String msg, long delay){
-		timer.schedule(new TimerTask() {
+		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
 				sendMessageRequest(waterBot, room, client, msg);

@@ -75,15 +75,28 @@
             android:text="@string/recordName"
             android:textSize="22sp" />
 
-        <Button
-            android:id="@+id/loginButton"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/corner"
-            android:onClick="loginButtonOnClick"
-            android:text="@string/login"
-            android:textSize="24sp"
-            android:enabled="false"/>
+            android:orientation="horizontal"
+            android:layout_marginStart="28dp">
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/corner"
+                android:onClick="signInButtonOnClick"
+                android:text="@string/login"
+                android:textSize="24sp"
+                android:enabled="false"/>
+            <ProgressBar
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="7dp"
+                android:id="@+id/progressbar"
+                android:visibility="invisible"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
     </LinearLayout>
 
 
@@ -93,7 +106,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_gravity="end"
         android:layout_marginTop="70dp" />
 
