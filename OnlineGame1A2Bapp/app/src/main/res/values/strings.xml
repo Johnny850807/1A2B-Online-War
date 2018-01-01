@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">1A2B</string>
+    <string name="app_name">線上 1A2B</string>
     <string name="login">登入</string>
     <string name="recordName">記住名稱</string>
     <string name="inputName">輸入名稱</string>
@@ -79,6 +79,6 @@
     <string name="leftGame">離開遊戲</string>
     <string name="sureToLeftGame">確定要離開遊戲?</string>
     <string name="playerIsAlreadyLeft" formatted="false">玩家 %s 已離開遊戲</string>
-    <string name="playerLeft">玩家離開遊戲通知</string>
+    <string name="gameClosed">遊戲關閉</string>
 
 </resources>

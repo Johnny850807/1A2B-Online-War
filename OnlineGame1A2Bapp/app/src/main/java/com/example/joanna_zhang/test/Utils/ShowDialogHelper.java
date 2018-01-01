@@ -12,7 +12,7 @@ public class ShowDialogHelper {
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(confirm, onClickListener)
-                .setNegativeButton(cancel,null)
+                .setNegativeButton(cancel, null)
                 .show();
     }
 
