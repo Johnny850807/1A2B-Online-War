@@ -17,6 +17,7 @@ import java.util.List;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
+import gamecore.model.ErrorMessage;
 
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
@@ -67,7 +68,7 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
     }
 
     @Override
-    public void onMessageSendingFailed(ChatMessage chatMessage) {
+    public void onMessageSendingFailed(ErrorMessage errorMessage) {
 
     }
 

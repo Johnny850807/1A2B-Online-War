@@ -28,6 +28,7 @@ import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ChangeStatusModel;
+import gamecore.model.ErrorMessage;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.PlayerStatus;
 
@@ -151,7 +152,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     @Override
-    public void onMessageSendingFailed(ChatMessage chatMessage) {
+    public void onMessageSendingFailed(ErrorMessage errorMessage) {
         Toast.makeText(this, R.string.messageSendingFailed, Toast.LENGTH_SHORT).show();
     }
 

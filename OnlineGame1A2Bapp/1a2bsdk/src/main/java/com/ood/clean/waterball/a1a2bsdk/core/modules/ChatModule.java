@@ -7,6 +7,7 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
+import gamecore.model.ErrorMessage;
 
 public interface ChatModule extends GameModule{
     void registerCallback(Player currentPlayer, GameRoom currentRoom, ChatModule.Callback callback);
@@ -28,8 +29,7 @@ public interface ChatModule extends GameModule{
 
         /**
          * the message cannot be sent by some errors.
-         * @param message the sending message
          */
-        public void onMessageSendingFailed(ChatMessage message);
+        public void onMessageSendingFailed(ErrorMessage errorMessage);
     }
 }

@@ -13,6 +13,7 @@ import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ContentModel;
+import gamecore.model.ErrorMessage;
 import gamecore.model.RequestStatus;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
@@ -104,9 +105,9 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
 
         @Override
         @BindCallback(event = SET_ANSWER, status = RequestStatus.failed)
-        public void onSetAnswerUnsuccessfully(ContentModel setAnswerModel) {
-            Log.d(TAG, "answer set unsuccessfully: " + setAnswerModel.getContent());
-            callback.onSetAnswerUnsuccessfully(setAnswerModel);
+        public void onSetAnswerUnsuccessfully(ErrorMessage errorMessage) {
+            Log.d(TAG, "answer set unsuccessfully: " + errorMessage);
+            callback.onSetAnswerUnsuccessfully(errorMessage);
         }
 
         @Override
@@ -118,9 +119,9 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
 
         @Override
         @BindCallback(event = GUESS, status = RequestStatus.failed)
-        public void onGuessUnsuccessfully(ContentModel guessModel) {
-            Log.d(TAG, "guessing unsuccessfully : " + guessModel.getContent());
-            callback.onGuessUnsuccessfully(guessModel);
+        public void onGuessUnsuccessfully(ErrorMessage errorMessage) {
+            Log.d(TAG, "guessing unsuccessfully : " + errorMessage);
+            callback.onGuessUnsuccessfully(errorMessage);
         }
 
         @Override

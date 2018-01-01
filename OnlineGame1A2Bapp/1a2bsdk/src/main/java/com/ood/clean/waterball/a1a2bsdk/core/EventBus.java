@@ -8,6 +8,7 @@ import container.protocol.Protocol;
 public interface EventBus {
     void registerCallback(GameCallBack gameCallBack);
     void unregisterCallback(GameCallBack gameCallBack);
+    void resendNonHandledEvent();
     void error(Exception err);
     void invoke(Protocol protocol);
 }
