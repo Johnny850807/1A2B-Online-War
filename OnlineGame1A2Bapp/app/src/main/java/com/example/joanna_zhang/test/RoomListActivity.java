@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Utils.GameModeHelper;
+import com.example.joanna_zhang.test.Utils.ShowDialogHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
@@ -73,35 +74,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         roomListView.setOnItemClickListener(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.v(TAG, "OnResume, getting the game room list.");
-        roomListModule.getGameRoomList();
-        CoreGameServer.getInstance().resendUnhandledEvents();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.v(TAG, "onStart, registering.");
-        roomListModule.registerCallback(currentPlayer, this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.v(TAG, "onStop, unregistering.");
-        roomListModule.unregisterCallBack(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.v(TAG, "onDestroy, signing out.");
-        signingModule.signOut(currentPlayer);
-    }
-
     private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
         currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
@@ -130,26 +102,53 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         roomModeSpn.setOnItemSelectedListener(this);
     }
 
+    public void selectAndUpdateRoomList() {
+        roomListOfQuery = getRoomsByKeyNameAndGameMode(roomList);
+        enableLoadingRoomListAnimation = true;
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.v(TAG, "OnResume, getting the game room list.");
+        roomListModule.getGameRoomList();
+        CoreGameServer.getInstance().resendUnhandledEvents();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v(TAG, "onStart, registering.");
+        roomListModule.registerCallback(currentPlayer, this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.v(TAG, "onStop, unregistering.");
+        roomListModule.unregisterCallBack(this);
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK){
-            sureAboutSignOut();
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            sureAboutSignOutDialog();
         }
         return false;
     }
 
-    private void sureAboutSignOut() {
-        new AlertDialog.Builder(this)
-                .setTitle("登出")
-                .setMessage("確定要登出嗎?")
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+    private void sureAboutSignOutDialog() {
+        ShowDialogHelper.showComeBackActivityDialog(getString(R.string.signOut)
+                , getString(R.string.sureToSignOut), getString(R.string.confirm)
+                , getString(R.string.cancel)
+                , this
+                , new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
                     }
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .show();
+                });
     }
 
     @Override
@@ -159,7 +158,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {}
+    public void onNothingSelected(AdapterView<?> adapterView) {
+    }
 
     public void createRoomBtnOnClick(View view) {
         view = LayoutInflater.from(RoomListActivity.this).inflate(R.layout.create_room_dialog, null);
@@ -191,8 +191,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     public void fastJoinRoomBtnOnClick(View view) {
         if (roomList.isEmpty())
             Toast.makeText(this, R.string.noRoomCanJoin, Toast.LENGTH_LONG).show();
-        else
-        {
+        else {
             int randomNumber = (int) (Math.random() * roomList.size());
             roomListModule.joinRoom(roomList.get(randomNumber));
         }
@@ -238,11 +237,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         return getRoomsByKeyName(results);
     }
 
-    public void selectAndUpdateRoomList() {
-        roomListOfQuery = getRoomsByKeyNameAndGameMode(roomList);
-        enableLoadingRoomListAnimation = true;
-        adapter.notifyDataSetChanged();
-    }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -251,7 +245,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onError(@NonNull Throwable err) {
-        Toast.makeText(this, R.string.errorHappened, Toast.LENGTH_SHORT).show();
+        Log.e(TAG, "exception is " + err.getMessage());
     }
 
     public class MyAdapter extends BaseAdapter {
@@ -333,13 +327,17 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     private class SearchEditTextWatcher implements TextWatcher {
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             selectAndUpdateRoomList();
         }
+
         @Override
-        public void afterTextChanged(Editable editable) {}
+        public void afterTextChanged(Editable editable) {
+        }
     }
 
     @Override
@@ -406,6 +404,13 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onServerReconnected() {
         //TODO
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.v(TAG, "onDestroy, signing out.");
+        signingModule.signOut(currentPlayer);
     }
 
 }

@@ -109,13 +109,13 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            sureAboutComeBackRoomList();
+            sureAboutComeBackRoomListDialog();
             return true;
         }
         return false;
     }
 
-    private void sureAboutComeBackRoomList() {
+    private void sureAboutComeBackRoomListDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.comeBackToRoomList)
                 .setMessage(R.string.sureAboutComeBackToRoomList)
@@ -137,7 +137,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     public void onMessageSendingFailed(ErrorMessage errorMessage) {
         Toast.makeText(this, R.string.messageSendingFailed, Toast.LENGTH_SHORT).show();
     }
-
 
     public void gameStartButtonOnClick(View view) {
         if (currentPlayer.equals(currentGameRoom.getHost()) && playerAmountEnoughToLaunchGame() && allPlayersAreReady()) {
@@ -233,17 +232,18 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     @Override
     public void onError(@NonNull Throwable err) {
-        Toast.makeText(this, R.string.errorHappened, Toast.LENGTH_LONG).show();
+        Log.e(TAG, "exception is " + err.getMessage());
     }
 
     @Override
     public void onChatMessageUpdate(ChatMessage chatMessage) {
+        Log.v(TAG, "chat Message is update");
     }
 
 
     @Override
     public void onChatMessageError(Throwable err) {
-        Toast.makeText(this, R.string.chatMessageError, Toast.LENGTH_SHORT).show();
+        Log.v(TAG, "chat message error: " + err.getMessage());
     }
 
     @Override

@@ -53,7 +53,7 @@
     <string name="isJoined">加入房間!</string>
     <string name="boss">Boss戰</string>
     <string name="dixit">Dixit戰</string>
-    <string name="messageSendingFailed">訊息傳送錯誤</string>
+    <string name="messageSendingFailed">訊息傳送失敗</string>
     <string name="chatMessageError">傳送訊息發生錯誤</string>
     <string name="gameOver">遊戲結束</string>
     <string name="pleaseInputGuess">請輸入答案</string>
@@ -74,5 +74,7 @@
     <string name="secret">\????</string>
     <string name="numberShouldBeInLengthFour">數字須為四位不重複數字。</string>
     <string name="theWinnerIs" formatted="false">遊戲結束！勝利者為 %s ！</string>
+    <string name="signOut">登出</string>
+    <string name="sureToSignOut">確定要登出嗎?</string>
 
 </resources>
