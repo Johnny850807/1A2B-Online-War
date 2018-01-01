@@ -1,10 +1,12 @@
-package com.example.joanna_zhang.test;
+package com.example.joanna_zhang.test.Utils;
 
 
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
+
+import com.example.joanna_zhang.test.R;
 
 public class SoundManager {
 
