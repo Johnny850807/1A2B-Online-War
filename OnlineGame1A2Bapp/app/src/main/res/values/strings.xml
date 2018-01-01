@@ -80,5 +80,7 @@
     <string name="sureToLeftGame">確定要離開遊戲?</string>
     <string name="playerIsAlreadyLeft" formatted="false">玩家 %s 已離開遊戲</string>
     <string name="gameClosed">遊戲關閉</string>
+    <string name="roomClosedForExpired">房間閒置時間已超過三分鐘，遭系統關閉。</string>
+    <string name="expiredDetection">超時偵測</string>
 
 </resources>

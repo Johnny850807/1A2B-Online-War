@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.joanna_zhang.test.Utils.AppLogoDialogBuilderFactory;
+import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.Duel1A2BModule;
@@ -104,7 +104,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     private void showLeftGameDialog() {
-        AppLogoDialogBuilderFactory.create(this)
+        AppDialogFactory.templateBuilder(this)
                 .setTitle(R.string.leftGame)
                 .setMessage(R.string.sureToLeftGame)
                 .setPositiveButton(confirm, (d,i) -> duel1A2BModule.leaveGame())
@@ -185,8 +185,6 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
                 .setMessage(getString(R.string.waitOtherPlayersJoin))
                 .show();
     }
-
-
 
     public void updateResultList() {
         p1GuessResultAdapter.setResultList(p1ResultList);
@@ -311,8 +309,13 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         createAndShowPlayerLeftNotifyingDialog(gameRoom.getHost());
     }
 
+    @Override
+    public void onRoomExpired() {
+        AppDialogFactory.roomTimeExpiredDialog(this).show();
+    }
+
     private void createAndShowPlayerLeftNotifyingDialog(Player leftPlayeer){
-        AppLogoDialogBuilderFactory.create(this)
+        AppDialogFactory.templateBuilder(this)
                 .setTitle(R.string.gameClosed)
                 .setMessage(getString(R.string.playerIsAlreadyLeft,leftPlayeer.getName()))
                 .setPositiveButton(confirm, (d,i) -> finish())
@@ -320,7 +323,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     private void createAndShowDialogForWinner(Player winner){
-        AppLogoDialogBuilderFactory.create(this)
+        AppDialogFactory.templateBuilder(this)
                 .setTitle(R.string.gameOver)
                 .setMessage(getString(R.string.theWinnerIs, winner.getName()))
                 .setPositiveButton(confirm, (d,i) -> finish())

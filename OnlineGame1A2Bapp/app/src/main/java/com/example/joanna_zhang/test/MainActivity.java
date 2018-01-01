@@ -14,8 +14,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.joanna_zhang.test.Domain.NameCreator.NameCreator;
-import com.example.joanna_zhang.test.Domain.NameCreator.RandomNameCreator;
+import com.example.joanna_zhang.test.Utils.RandomNameCreator;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutException;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     private TextView serverStatusTxt;
     private ProgressBar progressBar;
     private SharedPreferences sharedPreferences;
-    private NameCreator nameCreator = new RandomNameCreator();
     private boolean serverConntected = false;
 
     @Override
@@ -109,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     }
 
     public void randomNameButtonOnClick(View view) {
-        nameEd.setText(nameCreator.createRandomName());
+        nameEd.setText(RandomNameCreator.createRandomName());
     }
 
     @Override

@@ -28,6 +28,7 @@ import static container.Constants.Events.Games.Duel1A2B.SET_ANSWER;
 import static container.Constants.Events.Games.GAMEOVER;
 import static container.Constants.Events.Games.GAMESTARTED;
 import static container.Constants.Events.InRoom.CLOSE_ROOM;
+import static container.Constants.Events.InRoom.CLOSE_ROOM_TIME_EXPIRED;
 import static container.Constants.Events.InRoom.LEAVE_ROOM;
 import static container.Constants.Events.RECONNECTED;
 
@@ -174,6 +175,13 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
             if (!gameRoom.equals(currentGameRoom))
                 throw new IllegalStateException("The closed room is not the current room, how did it broadcast to the game?");
             callback.onGameClosed(gameRoom);
+        }
+
+        @Override
+        @BindCallback(event = CLOSE_ROOM_TIME_EXPIRED, status = RequestStatus.success)
+        public void onRoomExpired() {
+            Log.d(TAG, "Room expired.");
+            callback.onRoomExpired();
         }
 
         @Override

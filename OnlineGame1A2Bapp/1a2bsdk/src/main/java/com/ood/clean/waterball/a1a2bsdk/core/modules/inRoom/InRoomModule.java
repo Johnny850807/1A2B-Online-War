@@ -78,5 +78,10 @@ public interface InRoomModule extends GameModule{
          * when the room got closed.
          */
         public void onRoomClosed();
+
+        /**
+         * when the room is expired.
+         */
+        public void onRoomExpired();
     }
 }

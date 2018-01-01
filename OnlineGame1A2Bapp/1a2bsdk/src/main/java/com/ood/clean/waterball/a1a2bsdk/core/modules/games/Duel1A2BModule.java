@@ -85,5 +85,10 @@ public interface Duel1A2BModule extends GameModule {
          * when the gameroom closed bt the host
          */
         void onGameClosed(GameRoom gameRoom);
+
+        /**
+         * when the room is expired.
+         */
+        public void onRoomExpired();
     }
 }

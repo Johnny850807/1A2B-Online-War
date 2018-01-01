@@ -19,6 +19,7 @@ import gamecore.model.RequestStatus;
 import static container.Constants.Events.InRoom.BOOTED;
 import static container.Constants.Events.InRoom.CHANGE_STATUS;
 import static container.Constants.Events.InRoom.CLOSE_ROOM;
+import static container.Constants.Events.InRoom.CLOSE_ROOM_TIME_EXPIRED;
 import static container.Constants.Events.InRoom.LAUNCH_GAME;
 import static container.Constants.Events.InRoom.LEAVE_ROOM;
 import static container.Constants.Events.RECONNECTED;
@@ -137,6 +138,13 @@ public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{
         public void onRoomClosed() {
             Log.d(TAG, "Room closed.");
             callback.onRoomClosed();
+        }
+
+        @Override
+        @BindCallback(event = CLOSE_ROOM_TIME_EXPIRED, status = RequestStatus.success)
+        public void onRoomExpired() {
+            Log.d(TAG, "Room expired.");
+            callback.onRoomExpired();
         }
 
         @Override
