@@ -37,6 +37,7 @@ public class LeaveRoomHandler extends GsonEventHandler<PlayerRoomIdModel, Player
 			gameRoom = gameCore().getGameRoom(data.getGameRoomId());
 			ClientPlayer clientPlayer = gameCore().getClientPlayer(data.getPlayerId());
 			gameCore().removePlayerFromRoomAndBroadcast(clientPlayer.getPlayer(), gameRoom);
+			clientPlayer.pushLeisureTime();
 			return success(new PlayerRoomModel(clientPlayer.getPlayer(), gameRoom));
 		}catch (NullPointerException e) {
 			return error(404, e);

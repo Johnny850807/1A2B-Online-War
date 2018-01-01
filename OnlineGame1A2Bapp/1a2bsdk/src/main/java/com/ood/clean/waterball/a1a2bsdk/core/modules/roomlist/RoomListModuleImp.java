@@ -19,6 +19,7 @@ import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
 
 import static container.Constants.Events.InRoom.CLOSE_ROOM;
+import static container.Constants.Events.InRoom.CLOSE_ROOM_TIME_EXPIRED;
 import static container.Constants.Events.InRoom.LAUNCH_GAME;
 import static container.Constants.Events.InRoom.LEAVE_ROOM;
 import static container.Constants.Events.RECONNECTED;
@@ -118,11 +119,18 @@ public class RoomListModuleImp extends AbstractGameModule implements RoomListMod
             callback.onRoomLaunched(gameRoom);
         }
 
-        @BindCallback(event = CLOSE_ROOM, status = RequestStatus.success)
         @Override
+        @BindCallback(event = CLOSE_ROOM, status = RequestStatus.success)
         public void onRoomClosed(GameRoom gameRoom) {
             Log.d(TAG, "Room closed: " + gameRoom);
             callback.onRoomClosed(gameRoom);
+        }
+
+        @Override
+        @BindCallback(event = CLOSE_ROOM_TIME_EXPIRED, status = RequestStatus.success)
+        public void onRoomClosedForExpired(GameRoom gameRoom) {
+            Log.d(TAG, "Room expired: " + gameRoom);
+            callback.onRoomClosedForExpired(gameRoom);
         }
 
         @Override

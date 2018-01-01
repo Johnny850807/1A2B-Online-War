@@ -94,7 +94,7 @@
                 android:layout_height="30dp"
                 android:layout_marginStart="7dp"
                 android:id="@+id/progressbar"
-                android:visibility="invisible"
+                android:visibility="visible"
                 android:layout_gravity="center_vertical" />
         </LinearLayout>
     </LinearLayout>

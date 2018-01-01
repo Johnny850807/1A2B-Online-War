@@ -11,7 +11,7 @@ import gamecore.entity.Player;
 import utils.ForServer;
 
 public class ClientPlayer implements Serializable, LeisureTimeChallengeable{
-	private static final long LEISURE_TIME_EXPIRE = TimeUnit.MINUTES.toMillis(1);
+	private static final long LEISURE_TIME_EXPIRE = TimeUnit.MINUTES.toMillis(3);
 	private transient Client client;
 	private transient Date createdTime = new Date();
 	private transient Date latestLeisureTime = new Date();

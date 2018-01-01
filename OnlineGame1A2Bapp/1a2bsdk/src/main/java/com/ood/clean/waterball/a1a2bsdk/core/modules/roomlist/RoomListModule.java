@@ -51,10 +51,17 @@ public interface RoomListModule extends GameModule{
          */
         void onRoomClosed(GameRoom gameRoom);
 
+
+        /**
+         * when the room is expired.
+         */
+        void onRoomClosedForExpired(GameRoom gameRoom);
+
         /**
          * This method will be called if any of the room's info modified by the host.
          */
         void onRoomUpdated(GameRoom gameRoom);
+
 
         /**
          * This method will be called when you join to the room successfully.

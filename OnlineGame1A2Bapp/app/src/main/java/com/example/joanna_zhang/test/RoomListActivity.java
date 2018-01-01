@@ -378,6 +378,12 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     @Override
+    public void onRoomClosedForExpired(GameRoom gameRoom) {
+        roomList.remove(gameRoom);
+        selectAndUpdateRoomList();
+    }
+
+    @Override
     public void onRoomUpdated(GameRoom gameRoom) {
         roomList.remove(gameRoom);
         roomList.add(gameRoom);
