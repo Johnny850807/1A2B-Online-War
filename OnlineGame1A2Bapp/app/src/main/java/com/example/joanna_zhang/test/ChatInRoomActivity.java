@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Utils.GameModeHelper;
+import com.example.joanna_zhang.test.Utils.ShowDialogHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom.InRoomModule;
@@ -69,8 +70,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     private void findViews() {
         gameModeTxt = findViewById(R.id.roomModeNameTxt);
-        gameStartBtn =  findViewById(R.id.gameStartBtn);
-        chatRoomPlayerListView =  findViewById(R.id.chatRoomPlayersLst);
+        gameStartBtn = findViewById(R.id.gameStartBtn);
+        chatRoomPlayerListView = findViewById(R.id.chatRoomPlayersLst);
     }
 
     private void setUpGameModeTxt() {
@@ -92,7 +93,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "OnResume.");
+        Log.v(TAG, "OnResume.");
         chatWindowView.onResume();
         inRoomModule.registerCallback(currentPlayer, currentGameRoom, this);
         CoreGameServer.getInstance().resendUnhandledEvents();
@@ -101,7 +102,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop.");
+        Log.v(TAG, "onStop.");
         chatWindowView.onStop();
         inRoomModule.unregisterCallBack(this);
     }
@@ -109,17 +110,20 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            sureAboutComeBackRoomList();
+            sureAboutComeBackRoomListDialog();
             return true;
         }
         return false;
     }
 
-    private void sureAboutComeBackRoomList() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.comeBackToRoomList)
-                .setMessage(R.string.sureAboutComeBackToRoomList)
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+    private void sureAboutComeBackRoomListDialog() {
+        ShowDialogHelper.showComeBackActivityDialog(
+                  R.drawable.logo
+                , R.string.comeBackToRoomList
+                , R.string.sureAboutComeBackToRoomList
+                , R.string.confirm
+                , R.string.cancel, this
+                , new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (currentPlayer.equals(currentGameRoom.getHost()))
@@ -128,16 +132,13 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                             inRoomModule.leaveRoom();
                         finish();
                     }
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .show();
+                });
     }
 
     @Override
     public void onMessageSendingFailed(ErrorMessage errorMessage) {
         Toast.makeText(this, R.string.messageSendingFailed, Toast.LENGTH_SHORT).show();
     }
-
 
     public void gameStartButtonOnClick(View view) {
         if (currentPlayer.equals(currentGameRoom.getHost()) && playerAmountEnoughToLaunchGame() && allPlayersAreReady()) {
@@ -233,17 +234,18 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     @Override
     public void onError(@NonNull Throwable err) {
-        Toast.makeText(this, R.string.errorHappened, Toast.LENGTH_LONG).show();
+        Log.e(TAG, "exception is " + err.getMessage());
     }
 
     @Override
     public void onChatMessageUpdate(ChatMessage chatMessage) {
+        Log.v(TAG, "chat Message is update");
     }
 
 
     @Override
     public void onChatMessageError(Throwable err) {
-        Toast.makeText(this, R.string.chatMessageError, Toast.LENGTH_SHORT).show();
+        Log.v(TAG, "chat message error: " + err.getMessage());
     }
 
     @Override
@@ -257,7 +259,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                     .setItems(YESORNO, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int yesOrNo) {
-                            switch (yesOrNo){
+                            switch (yesOrNo) {
                                 case YES:
                                     Log.d(TAG, "On booting item long click, position: " + position);
                                     inRoomModule.bootPlayer(currentGameRoom.getPlayers().get(position));

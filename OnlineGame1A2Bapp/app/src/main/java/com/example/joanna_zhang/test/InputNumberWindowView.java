@@ -101,7 +101,6 @@ public class InputNumberWindowView extends Dialog implements View.OnClickListene
             answerEd.setText(str + number);
     }
 
-
     public static class Builder {
         private InputNumberWindowView inputNumberWindowView;
 

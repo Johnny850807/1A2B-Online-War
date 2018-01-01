@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +23,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.joanna_zhang.test.Utils.ShowDialogHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.Duel1A2BModule;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom.InRoomModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +37,7 @@ import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
+import gamecore.model.PlayerRoomModel;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
@@ -80,7 +84,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     protected void onResume() {
         super.onResume();
         chatWindowView.onResume();
-        duel1A2BModule.registerCallback(currentPlayer, currentGameRoom, this);
+        duel1A2BModule.registerCallback(this, currentPlayer, currentGameRoom, this);
         if (gameStarted)
             mediaPlayer.start();
         else
@@ -89,6 +93,29 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
             duel1A2BModule.enterGame();
         }
         CoreGameServer.getInstance().resendUnhandledEvents();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            showLeftGameDialog();
+        }
+        return false;
+    }
+
+    private void showLeftGameDialog() {
+        ShowDialogHelper.showComeBackActivityDialog(
+                R.drawable.logo
+                , R.string.leftGame
+                , R.string.sureToLeftGame
+                , R.string.confirm
+                , R.string.cancel, this
+                , new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        duel1A2BModule.leaveGame();
+                    }
+                });
     }
 
     @Override
@@ -277,6 +304,21 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
                 currentGameRoom.getHost() : currentGameRoom.getPlayerStatus().get(0).getPlayer();
         inputNumberBtn.setEnabled(false);
         handler.postDelayed(()->createAndShowDialogForWinner(winner), 3000);
+    }
+
+    @Override
+    public void onOpponentLeft(PlayerRoomModel model) {
+        new AlertDialog.Builder(this)
+                .setIcon(R.drawable.logo)
+                .setTitle(R.string.playerLeft)
+                .setMessage(getString(R.string.playerIsAlreadyLeft, model.getPlayer().getName()))
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .show();
     }
 
     private void createAndShowDialogForWinner(Player winner){

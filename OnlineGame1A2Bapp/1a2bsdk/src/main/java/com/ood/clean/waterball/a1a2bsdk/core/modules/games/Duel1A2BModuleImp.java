@@ -1,6 +1,7 @@
 package com.ood.clean.waterball.a1a2bsdk.core.modules.games;
 
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -14,6 +15,8 @@ import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
+import gamecore.model.PlayerRoomIdModel;
+import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
@@ -24,17 +27,20 @@ import static container.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
 import static container.Constants.Events.Games.Duel1A2B.SET_ANSWER;
 import static container.Constants.Events.Games.GAMEOVER;
 import static container.Constants.Events.Games.GAMESTARTED;
+import static container.Constants.Events.InRoom.LEAVE_ROOM;
 import static container.Constants.Events.RECONNECTED;
 
 public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1A2BModule {
     private ProxyCallback proxyCallback;
     protected Player currentPlayer;
     protected GameRoom currentGameRoom;
+    protected Context context;
 
     @Override
-    public void registerCallback(Player currentPlayer, GameRoom currentGameRoom, Duel1A2BModule.Callback callback) {
+    public void registerCallback(Context context, Player currentPlayer, GameRoom currentGameRoom, Duel1A2BModule.Callback callback) {
         validate(currentPlayer);
         validate(currentGameRoom);
+        this.context = context;
         this.currentPlayer = currentPlayer;
         this.currentGameRoom = currentGameRoom;
 
@@ -68,6 +74,13 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
         Protocol protocol = protocolFactory.createProtocol(GUESS,
                 RequestStatus.request.toString(), gson.toJson(new ContentModel(
                         currentPlayer.getId(), currentGameRoom.getId(), guess)));
+        client.broadcast(protocol);
+    }
+
+    @Override
+    public void leaveGame() {
+        Protocol protocol = protocolFactory.createProtocol(LEAVE_ROOM, RequestStatus.request.toString(),
+                gson.toJson(new PlayerRoomIdModel(currentPlayer.getId(), currentGameRoom.getId())));
         client.broadcast(protocol);
     }
 
@@ -146,6 +159,14 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
         }
 
         @Override
+        @BindCallback(event = LEAVE_ROOM, status = RequestStatus.success)
+        public void onOpponentLeft(PlayerRoomModel model) {
+            Log.d(TAG, "The Opponent left.");
+            if (!model.getPlayer().equals(currentPlayer))
+                callback.onOpponentLeft(model);
+        }
+
+        @Override
         @BindCallback(event = RECONNECTED, status = RequestStatus.success)
         public void onServerReconnected() {
             callback.onServerReconnected();
@@ -156,4 +177,5 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
             callback.onError(err);
         }
     }
+
 }
