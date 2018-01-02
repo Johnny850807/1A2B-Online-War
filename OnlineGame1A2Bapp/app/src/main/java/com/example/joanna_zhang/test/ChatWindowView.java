@@ -6,8 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,7 +36,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
     private ChatModule chatModule;
     private GameRoom gameRoom;
     private Player poster;
-    private EditText inputMessageEdt;
+    private AutoCompleteTextView inputMessageEdt;
     private ListView chatWindowLst;
     private ImageButton sendMessageImgBtn;
     private List<ChatMessage> chatMessages = new ArrayList<>();
@@ -54,6 +55,18 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
         sendMessageImgBtn = activity.findViewById(R.id.sendMessageBtn);
         sendMessageImgBtn.setOnClickListener(this);
         chatWindowLst.setAdapter(adapter);
+        setupAutoCompletedInputMessageEditText();
+    }
+
+    private void setupAutoCompletedInputMessageEditText(){
+        String[] chatUtils = activity.getResources().getStringArray(R.array.chatUtils);
+        String[] showTexts = new String[chatUtils.length];
+        for (int i = 0 ; i < chatUtils.length ; i ++)
+            showTexts[i] = "(" + (i+1) + ") " + chatUtils[i];  //for example: (1) OK
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1,
+                showTexts);
+        inputMessageEdt.setAdapter(adapter);
+        inputMessageEdt.setOnClickListener(v -> inputMessageEdt.showDropDown());
     }
 
     public void onResume() {

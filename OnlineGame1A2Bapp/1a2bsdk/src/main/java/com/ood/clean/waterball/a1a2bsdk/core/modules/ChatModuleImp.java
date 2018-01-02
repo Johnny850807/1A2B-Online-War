@@ -84,39 +84,40 @@ public class ChatModuleImp extends AbstractGameModule implements ChatModule {
 
         private void parseMessageContent(ChatMessage message) {
             try{
-                int value = Integer.parseInt(message.getContent().trim());
-                switch (value)
+                char num = message.getContent().trim().charAt(1);  //for example: (1) ok
+                switch (num)
                 {
-                    case 1:
+                    case '1':
                         onOkMessage(message);
                         break;
-                    case 2:
+                    case '2':
                         onNoMessage(message);
                         break;
-                    case 3:
+                    case '3':
                         onAwesomeMessage(message);
                         break;
-                    case 4:
+
+                    case '4':
                         onQuicklyMessage(message);
                         break;
-                    case 5:
+                    case '5':
                         onDamnMessage(message);
                         break;
-                    case 6:
+                    case '6':
                         onGoodGameMessage(message);
                         break;
-                    case 7:
+                    case '7':
                         onPleaseSetReadyMessage(message);
                         break;
-                    case 8:
+                    case '8':
                         onPleaseStartMessage(message);
                         break;
-                    case 9:
+                    case '9':
                         onSorryMessage(message);
                         break;
                 }
-            }catch (NumberFormatException err){
-                Log.d(TAG, "the message '" + message.getContent() + "' doesn't contain a number.");
+            }catch (Exception err){
+                Log.d(TAG, "the message '" + message.getContent() + "' is not the default chat util.");
             }
         }
 

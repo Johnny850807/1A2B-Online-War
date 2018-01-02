@@ -21,7 +21,7 @@
         android:paddingRight="4dp"
         android:paddingStart="8dp">
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/inputChattingTxt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
