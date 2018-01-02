@@ -8,7 +8,7 @@ public class HurtMyselfAttackAction extends AbstractMonsterAction{
 
 	@Override
 	public void execute(Monster monster, Boss1A2BGame game) {
-		PlayerSpirit targetPlayer = getTargetPlayer(game);
+		PlayerSpirit targetPlayer = getRandomTargetPlayer(game);
 		String guess = getGuess();
 		AttackResult attackResult = targetPlayer.getAttacked(monster, guess, AttackType.MAGIC,getHurtMyselfDamageParser(monster));
 		AttackActionModel model = new AttackActionModel(getCostMp(), monster);
@@ -22,14 +22,14 @@ public class HurtMyselfAttackAction extends AbstractMonsterAction{
 		return 200;
 	}
 
-	public DamageParser getHurtMyselfDamageParser(Monster monster){
+	public DamageParser getHurtMyselfDamageParser(Monster monster) {
 		return new DamageParser() {
 			
 			@Override
 			public int parsingDamage(GuessResult guessResult) {
-			
 				int OneThirdOfHp =monster.getHp() / 3;
 				monster.costHp(OneThirdOfHp);
+				monster.costMp(getCostMp());
 				return (monster.getHp() / 50)+100;
 			}
 		};
