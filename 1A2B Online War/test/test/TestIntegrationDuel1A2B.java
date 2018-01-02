@@ -53,6 +53,7 @@ import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
 import gamecore.model.games.a1b2.boss.AttackActionModel;
+import gamecore.model.games.a1b2.boss.NextTurnModel;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
 import mock.MockClient;
@@ -246,6 +247,9 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		//host's turn
 		assertEquals(Boss1A2B.NEXT_TURN, hostClient.getLastedResponse().getEvent());
 		assertEquals(Boss1A2B.NEXT_TURN, playerClient.getLastedResponse().getEvent());
+		validateNextTurn(hostClient.getLastedResponse(), hostClient);
+		validateNextTurn(playerClient.getLastedResponse(), hostClient);
+		
 		createHandler(hostClient, protocolFactory.createProtocol(Boss1A2B.ATTACK,
 				REQUEST, gson.toJson(new ContentModel(host.getId(), gameRoom.getId(), "1234"))));
 		validateLatestAttackResults("1234", host.getId(), hostClient);
@@ -254,8 +258,17 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		//player's turn
 		assertEquals(Boss1A2B.NEXT_TURN, hostClient.getLastedResponse().getEvent());
 		assertEquals(Boss1A2B.NEXT_TURN, playerClient.getLastedResponse().getEvent());
+		validateNextTurn(hostClient.getLastedResponse(), playerClient);
+		validateNextTurn(playerClient.getLastedResponse(), playerClient);
+		
 		createHandler(playerClient, protocolFactory.createProtocol(Boss1A2B.ATTACK,
-				REQUEST, gson.toJson(new ContentModel(player.getId(), gameRoom.getId(), "1234"))));
+				REQUEST, gson.toJson(new ContentModel(player.getId(), gameRoom.getId(), "5678"))));
+		
+		//the boss will attack any player after the player attacks
+		validateLatestAttackerIsBoss(hostClient);
+		validateLatestAttackerIsBoss(playerClient);
+		validateLatestAttackResults("5678", host.getId(), hostClient);
+		validateLatestAttackResults("5678", host.getId(), playerClient);
 	}
 	
 	private void validateLatestAttackResults(String expectedGuess, String attackerId, MockClient client){
@@ -265,8 +278,15 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		assertEquals(model.getAttacker().getId(), attackerId);
 	}
 	
-	private void validateNextTurn(Protocol protocol){
-		
+	private void validateLatestAttackerIsBoss(MockClient client){
+		Protocol latestPtc = client.getLastedByEvent(Boss1A2B.ATTACK_RESULTS);
+		AttackActionModel model = gson.fromJson(latestPtc.getData(), AttackActionModel.class);
+		assertEquals(model.getAttacker().getName().toLowerCase(), "boss");
+	}
+	
+	private void validateNextTurn(Protocol protocol, Client whosTurn){
+		NextTurnModel model = gson.fromJson(protocol.getData(), NextTurnModel.class);
+		assertEquals(model.getWhosTurnId(), whosTurn.getId());
 	}
 	
 	public void testBootingPlayer(){

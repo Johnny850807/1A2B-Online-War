@@ -75,8 +75,12 @@ public abstract class AbstractSpirit implements Spirit{
 		return new Random().nextInt(max+1) + min;
 	}
 	
-	protected void costHp(int damage){
+	void costHp(int damage){
 		hp = hp - damage < 0 ? 0 : hp - damage;
+	}
+	
+	void costMp(int cost){
+		mp = mp - cost < 0 ? 0 : mp - cost;
 	}
 	
 	protected void onDamaging(AttackResult attackResult){

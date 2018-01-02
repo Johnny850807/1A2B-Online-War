@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import container.Constants.Events.Games.Boss1A2B;
+import container.eventhandler.handlers.games.boss1a2b.SetAnswerHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.model.ClientPlayer;
@@ -26,6 +28,7 @@ public class Boss1A2BGame extends Game{
 	private List<PlayerSpirit> playerSpirits = Collections.synchronizedList(new ArrayList<>());
 	private List<AttackResult> attackResults = new ArrayList<>();
 	private int whosTurn = 0; //the index from the clientPlayer showing who's turn.
+	private boolean attackingStarted = false;
 	
 	public Boss1A2BGame(ProtocolFactory protocolFactory, Monster boss, List<ClientPlayer> clientPlayers, String roomId) {
 		super(protocolFactory, GameMode.BOSS1A2B, roomId);
@@ -38,6 +41,40 @@ public class Boss1A2BGame extends Game{
 	public void startGame() {
 		super.startGame();
 		boss.init(this);
+	}
+
+	@ForServer
+	public void setPlayerAnswer(String playerId, String answer) throws NumberNotValidException{
+		validateSetAnswerOperation(answer);
+		PlayerSpirit playerSpirit = getPlayerSpirit(playerId);
+		playerSpirit.setAnswer(answer);
+		
+		if (hasAllAnswerBeenCommitted())
+			startAttackingAndBroadcast();
+	}
+	
+	@ForServer
+	public boolean hasAllAnswerBeenCommitted(){
+		if (boss.getAnswer() == null)
+			throw new IllegalStateException("The boss has not committed the answer, why?");
+		for (PlayerSpirit playerSpirit : getPlayerSpirits())
+			if (playerSpirit.getAnswer() == null)
+				return false;
+		return true;
+	}
+	
+	private void validateSetAnswerOperation(String answer) throws NumberNotValidException{
+		validateGameStarted();
+		A1B2NumberValidator.validateNumber(answer);
+		if (attackingStarted)
+			throw new ProcessInvalidException("The attacking phase is started, you cannot set the answer anymore.");
+	}
+	
+	private void startAttackingAndBroadcast(){
+		attackingStarted = true;
+		Protocol protocol = protocolFactory.createProtocol(Boss1A2B.ATTACKING_STARTED,
+				RequestStatus.success.toString(), null);
+		broadcastToAll(protocol);
 	}
 	
 	@ForServer
