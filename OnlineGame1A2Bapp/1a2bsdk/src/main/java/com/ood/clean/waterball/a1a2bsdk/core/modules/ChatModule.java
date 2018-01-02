@@ -31,5 +31,50 @@ public interface ChatModule extends GameModule{
          * the message cannot be sent by some errors.
          */
         public void onMessageSendingFailed(ErrorMessage errorMessage);
+
+        /**
+         * '1'
+         */
+        public void onOkMessage(ChatMessage message);
+
+        /**
+         * '2'
+         */
+        public void onNoMessage(ChatMessage message);
+
+        /**
+         * '3'
+         */
+        public void onAwesomeMessage(ChatMessage message);
+
+        /**
+         * '4'
+         */
+        public void onQuicklyMessage(ChatMessage message);
+
+        /**
+         * '5'
+         */
+        public void onDamnMessage(ChatMessage message);
+
+        /**
+         * '6'
+         */
+        public void onGoodGameMessage(ChatMessage message);
+
+        /**
+         * '7'
+         */
+        public void onPleaseSetReadyMessage(ChatMessage message);
+
+        /**
+         * '8'
+         */
+        public void onPleaseStartMessage(ChatMessage message);
+
+        /**
+         * '9'
+         */
+        public void onSorryMessage(ChatMessage message);
     }
 }

@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModule;
@@ -40,11 +41,13 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
     private List<ChatMessage> chatMessages = new ArrayList<>();
     private ChatMessageListener listener;
     private ChatWindowAdapter adapter = new ChatWindowAdapter();
+    private SoundManager soundManager;
 
     private ChatWindowView(Activity activity, GameRoom gameRoom, Player poster) {
         this.activity = activity;
         this.gameRoom = gameRoom;
         this.poster = poster;
+        this.soundManager = new SoundManager(activity);
         chatModule = (ChatModule) CoreGameServer.getInstance().createModule(ModuleName.CHAT);
         inputMessageEdt = activity.findViewById(R.id.inputChattingTxt);
         chatWindowLst = activity.findViewById(R.id.chatwindowLst);
@@ -102,6 +105,60 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
     @Override
     public void onMessageSendingFailed(ErrorMessage errorMessage) {
         listener.onMessageSendingFailed(errorMessage);
+    }
+
+    @Override
+    public void onOkMessage(ChatMessage message) {
+        message.setContent(activity.getString(R.string.ok));
+        soundManager.playSound(R.raw.ok);
+    }
+
+    @Override
+    public void onNoMessage(ChatMessage message) {
+        message.setContent(activity.getString(R.string.notWell));
+        soundManager.playSound(R.raw.no);
+    }
+
+    @Override
+    public void onAwesomeMessage(ChatMessage message) {
+        message.setContent(activity.getString(R.string.awesome));
+        soundManager.playSound(R.raw.awesome);
+    }
+
+    @Override
+    public void onQuicklyMessage(ChatMessage message) {
+        message.setContent(activity.getString(R.string.quickly));
+        soundManager.playSound(R.raw.quickly);
+    }
+
+    @Override
+    public void onDamnMessage(ChatMessage message) {
+        message.setContent(activity.getString(R.string.damnit));
+        soundManager.playSound(R.raw.damn);
+    }
+
+    @Override
+    public void onGoodGameMessage(ChatMessage message) {
+        message.setContent(activity.getString(R.string.goodGame));
+        soundManager.playSound(R.raw.gg);
+    }
+
+    @Override
+    public void onPleaseSetReadyMessage(ChatMessage message) {
+        message.setContent(activity.getString(R.string.pleaseSetReady));
+        soundManager.playSound(R.raw.please_ready);
+    }
+
+    @Override
+    public void onPleaseStartMessage(ChatMessage message) {
+        message.setContent(activity.getString(R.string.pleaseStartGame));
+        soundManager.playSound(R.raw.please_start);
+    }
+
+    @Override
+    public void onSorryMessage(ChatMessage message) {
+        message.setContent(activity.getString(R.string.sorry));
+        soundManager.playSound(R.raw.sorry);
     }
 
     @Override

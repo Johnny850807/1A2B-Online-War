@@ -270,7 +270,7 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
         Log.d(TAG, "onGuessingStarted");
         inputNumberBtn.setEnabled(true);
         sendGuessBtn.setEnabled(true);
-        soundManager.playDingdong();
+        soundManager.playSound(R.raw.dong);
     }
 
     @Override
@@ -286,7 +286,7 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
         inputNumberBtn.setText(null);
         inputNumberBtn.setEnabled(true);
         sendGuessBtn.setEnabled(true);
-        soundManager.playDingdong();
+        soundManager.playSound(R.raw.dong);
     }
 
     @Override

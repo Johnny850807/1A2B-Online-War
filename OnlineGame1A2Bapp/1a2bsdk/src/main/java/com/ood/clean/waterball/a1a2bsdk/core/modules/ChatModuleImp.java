@@ -60,15 +60,6 @@ public class ChatModuleImp extends AbstractGameModule implements ChatModule {
         }
 
         @Override
-        @BindCallback(event = SEND_MSG, status = RequestStatus.success)
-        public void onMessageReceived(ChatMessage message) {
-            Log.d(TAG, "message received: " + message.getContent());
-            if(message.getPoster().equals(currentPlayer))
-                this.onMessageSent(message);
-            callback.onMessageReceived(message);
-        }
-
-        @Override
         public void onMessageSent(ChatMessage message) {
             Log.d(TAG, "message sent: " + message.getContent());
             callback.onMessageSent(message);
@@ -79,6 +70,99 @@ public class ChatModuleImp extends AbstractGameModule implements ChatModule {
         public void onMessageSendingFailed(ErrorMessage errorMessage) {
             Log.d(TAG, "message sending unsuccessfully: " + errorMessage);
             callback.onMessageSendingFailed(errorMessage);
+        }
+
+        @Override
+        @BindCallback(event = SEND_MSG, status = RequestStatus.success)
+        public void onMessageReceived(ChatMessage message) {
+            Log.d(TAG, "message received: " + message.getContent());
+            if(message.getPoster().equals(currentPlayer))
+                this.onMessageSent(message);
+            parseMessageContent(message);
+            callback.onMessageReceived(message);
+        }
+
+        private void parseMessageContent(ChatMessage message) {
+            try{
+                int value = Integer.parseInt(message.getContent().trim());
+                switch (value)
+                {
+                    case 1:
+                        onOkMessage(message);
+                        break;
+                    case 2:
+                        onNoMessage(message);
+                        break;
+                    case 3:
+                        onAwesomeMessage(message);
+                        break;
+                    case 4:
+                        onQuicklyMessage(message);
+                        break;
+                    case 5:
+                        onDamnMessage(message);
+                        break;
+                    case 6:
+                        onGoodGameMessage(message);
+                        break;
+                    case 7:
+                        onPleaseSetReadyMessage(message);
+                        break;
+                    case 8:
+                        onPleaseStartMessage(message);
+                        break;
+                    case 9:
+                        onSorryMessage(message);
+                        break;
+                }
+            }catch (NumberFormatException err){
+                Log.d(TAG, "the message '" + message.getContent() + "' doesn't contain a number.");
+            }
+        }
+
+        @Override
+        public void onOkMessage(ChatMessage message) {
+            callback.onOkMessage(message);
+        }
+
+        @Override
+        public void onNoMessage(ChatMessage message) {
+            callback.onNoMessage(message);
+        }
+
+        @Override
+        public void onAwesomeMessage(ChatMessage message) {
+            callback.onAwesomeMessage(message);
+        }
+
+        @Override
+        public void onQuicklyMessage(ChatMessage message) {
+            callback.onQuicklyMessage(message);
+        }
+
+        @Override
+        public void onDamnMessage(ChatMessage message) {
+            callback.onDamnMessage(message);
+        }
+
+        @Override
+        public void onGoodGameMessage(ChatMessage message) {
+            callback.onGoodGameMessage(message);
+        }
+
+        @Override
+        public void onPleaseSetReadyMessage(ChatMessage message) {
+            callback.onPleaseSetReadyMessage(message);
+        }
+
+        @Override
+        public void onPleaseStartMessage(ChatMessage message) {
+            callback.onPleaseStartMessage(message);
+        }
+
+        @Override
+        public void onSorryMessage(ChatMessage message) {
+            callback.onSorryMessage(message);
         }
 
         @Override

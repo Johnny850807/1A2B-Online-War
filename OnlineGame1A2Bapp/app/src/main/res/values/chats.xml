@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ok">好</string>
+    <string name="notWell">不好</string>
+    <string name="awesome">酷斃了</string>
+    <string name="quickly">快一點</string>
+    <string name="damnit">可惡</string>
+    <string name="goodGame">祝您玩得愉快</string>
+    <string name="pleaseSetReady">請玩家準備</string>
+    <string name="pleaseStartGame">請開始遊戲</string>
+    <string name="sorry">對不起</string>
+</resources>
