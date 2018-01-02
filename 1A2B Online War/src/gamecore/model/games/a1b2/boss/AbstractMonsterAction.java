@@ -7,7 +7,7 @@ import utils.RandomString;
 public abstract class AbstractMonsterAction implements MonsterAction{
 	
 	
-	protected PlayerSpirit getTargetPlayer(Boss1A2BGame game){
+	protected PlayerSpirit getRandomTargetPlayer(Boss1A2BGame game){
 		List<PlayerSpirit> playerSpirits = game.getPlayerSpirits();
 		return playerSpirits.get(random.nextInt(playerSpirits.size()));
 	}

@@ -5,7 +5,6 @@ import java.util.Random;
 
 import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
-import utils.RandomString;
 
 public abstract class Monster extends AbstractSpirit{
 	protected List<MonsterAction> actions;

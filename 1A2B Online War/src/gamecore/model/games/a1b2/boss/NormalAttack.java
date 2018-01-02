@@ -13,7 +13,7 @@ public class NormalAttack extends AbstractMonsterAction{
 	
 	@Override
 	public void execute(Monster monster, Boss1A2BGame game) {
-		PlayerSpirit targetPlayer = getTargetPlayer(game);
+		PlayerSpirit targetPlayer = getRandomTargetPlayer(game);
 		String guess = getGuess();
 		AttackResult attackResult = targetPlayer.getAttacked(monster, guess, AttackType.NORMAL);
 		AttackActionModel model = new AttackActionModel(getCostMp(), monster);
