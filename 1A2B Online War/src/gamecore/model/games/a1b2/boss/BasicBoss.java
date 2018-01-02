@@ -1,33 +1,24 @@
 package gamecore.model.games.a1b2.boss;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import container.Constants.Events.Chat;
 import container.base.MyLogger;
+import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
+import gamecore.entity.ChatMessage;
+import gamecore.entity.Player;
+import gamecore.model.RequestStatus;
 
 public class BasicBoss extends Monster{
-	protected Boss1A2BGame context;
+	private Player player;
 	
 	public BasicBoss(MyLogger log, ProtocolFactory protocolFactory) {
 		super(UUID.randomUUID().toString(), "Boss", log, protocolFactory);
+		player = new Player(getName());
 	}
-
-	@Override
-	public void init(Boss1A2BGame context) {
-		this.context = context;
-	}
-	
-	
-	@Override
-	public void setAnswer(String answer) {
-		
-	}
-
-	@Override
-	public void action() {
-		
-	}
-
 
 	@Override
 	public Type getType() {
@@ -46,7 +37,7 @@ public class BasicBoss extends Monster{
 
 	@Override
 	protected void onAnswerGuessed4A(AttackResult attackResult) {
-		
+		//change the answer of the boss and broadcast
 	}
 
 	@Override
@@ -59,4 +50,17 @@ public class BasicBoss extends Monster{
 		
 	}
 
+	@Override
+	protected List<MonsterAction> createMonsterActions() {
+		List<MonsterAction> actions = new ArrayList<>();
+		actions.add(new NormalAttack());
+		return actions;
+	}
+
+	protected void sendChatMessageToAllPlayers(String msg){
+		Protocol protocol = protocolFactory.createProtocol(Chat.SEND_MSG, RequestStatus.success.toString(), 
+				gson.toJson(new ChatMessage(game.getRoomId(), new Player(getName()), msg)));
+		for (PlayerSpirit playerSpirit : game.getPlayerSpirits())
+			playerSpirit.broadcast(protocol);
+	}
 }

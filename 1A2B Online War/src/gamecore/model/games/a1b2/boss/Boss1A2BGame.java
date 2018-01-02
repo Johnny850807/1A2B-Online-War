@@ -1,22 +1,21 @@
 package gamecore.model.games.a1b2.boss;
 
+import static container.Constants.Events.Games.Boss1A2B.NEXT_TURN;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static container.Constants.Events.Games.Boss1A2B.*;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
-import gamecore.entity.Player;
 import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.RequestStatus;
 import gamecore.model.games.Game;
-import gamecore.model.games.GameEnteringWaitingBox;
 import gamecore.model.games.ProcessInvalidException;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
-import gamecore.model.games.a1b2.GuessResult;
 import gamecore.model.games.a1b2.NumberNotValidException;
+import gamecore.model.games.a1b2.boss.AttackResult.AttackType;
 import utils.ForServer;
 
 /**
@@ -26,7 +25,7 @@ public class Boss1A2BGame extends Game{
 	private Monster boss;
 	private List<PlayerSpirit> playerSpirits = Collections.synchronizedList(new ArrayList<>());
 	private List<AttackResult> attackResults = new ArrayList<>();
-	private int whosTurn = 0; // the index from the clientPlayer showing who's turn.
+	private int whosTurn = 0; //the index from the clientPlayer showing who's turn.
 	
 	public Boss1A2BGame(ProtocolFactory protocolFactory, Monster boss, List<ClientPlayer> clientPlayers, String roomId) {
 		super(protocolFactory, GameMode.BOSS1A2B, roomId);
@@ -46,24 +45,23 @@ public class Boss1A2BGame extends Game{
 		validateAttackingOperation(playerId);
 		A1B2NumberValidator.validateNumber(guess);
 		PlayerSpirit attacker = getPlayerSpirit(playerId);
-		AttackResult attackResult = boss.attack(attacker, guess);
+		AttackResult attackResult = boss.getAttacked(attacker, guess, AttackType.NORMAL);
 		attackResults.add(attackResult);
 		
 		if (allPlayerTurnsOver())
 			boss.action();
 		whosTurn = whosTurn + 1 > playerSpirits.size() ? 0 : whosTurn + 1;
-		broadcastNextTurn();
+		if (isTheGameOver())
+			broadcastGameOver();
+		else 
+			broadcastNextTurn();
 	}
 
 	private void validateAttackingOperation(String playerId) {
-		validGameStarted();
+		validateGameStarted();
 		PlayerSpirit who = playerSpirits.get(whosTurn);
 		if (!who.getId().equals(playerId))
 			throw new ProcessInvalidException("Not your turn.");
-	}
-	
-	private void startBossAction() {
-		
 	}
 	
 	private boolean allPlayerTurnsOver(){
@@ -77,6 +75,15 @@ public class Boss1A2BGame extends Game{
 		broadcastToAll(protocol);
 	}
 	
+	private boolean isTheGameOver(){
+		if (boss.isDead())
+			return true;
+		for (PlayerSpirit playerSpirit : playerSpirits)
+			if (playerSpirit.isDead())
+				return true;
+		return false;
+	}
+	
 	public PlayerSpirit getPlayerSpirit(String playerId){
 		for (PlayerSpirit player : playerSpirits)
 			if (player.getId().equals(playerId))
@@ -84,6 +91,10 @@ public class Boss1A2BGame extends Game{
 		throw new IllegalArgumentException("playerId " + playerId + " not exists");
 	}
 
+	private void broadcastGameOver(){
+		
+	}
+	
 	public void broadcastToAll(Protocol protocol){
 		for (PlayerSpirit player : playerSpirits)
 			player.broadcast(protocol);
@@ -92,6 +103,13 @@ public class Boss1A2BGame extends Game{
 	@ForServer
 	public void addAttackResult(AttackResult attackResult){
 		this.attackResults.add(attackResult);
+	}
+	
+	@ForServer
+	public void broadcastAttackActionModel(AttackActionModel model){
+		for (AttackResult attackResult : model)
+			addAttackResult(attackResult);
+		//TODO broadcast
 	}
 	
 	public void removeAttackResult(AttackResult attackResult){

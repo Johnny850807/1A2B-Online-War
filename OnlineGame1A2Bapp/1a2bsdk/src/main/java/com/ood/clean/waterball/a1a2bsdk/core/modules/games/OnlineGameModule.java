@@ -17,6 +17,11 @@ public interface OnlineGameModule extends GameModule{
      */
     void enterGame();
 
+    /**
+     * leave from the current game and the current room.
+     */
+    void leaveGame();
+
     public interface Callback extends GameCallBack, RoomExpiredCallback {
         void onGameStarted();
 

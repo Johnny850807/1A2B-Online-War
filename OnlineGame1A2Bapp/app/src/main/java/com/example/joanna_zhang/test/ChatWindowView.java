@@ -13,13 +13,13 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.joanna_zhang.test.Utils.MaxSizeLinkedList;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModule;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +32,7 @@ import gamecore.model.ErrorMessage;
 
 public class ChatWindowView implements View.OnClickListener, ChatModule.Callback{
     private static final String TAG = "ChatWindowView";
+    private List<ChatMessage> chatMessages = new MaxSizeLinkedList<ChatMessage>(30);
     private Activity activity;
     private ChatModule chatModule;
     private GameRoom gameRoom;
@@ -39,7 +40,6 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
     private AutoCompleteTextView inputMessageEdt;
     private ListView chatWindowLst;
     private ImageButton sendMessageImgBtn;
-    private List<ChatMessage> chatMessages = new ArrayList<>();
     private ChatMessageListener listener;
     private ChatWindowAdapter adapter = new ChatWindowAdapter();
     private SoundManager soundManager;
@@ -62,9 +62,8 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
         String[] chatUtils = activity.getResources().getStringArray(R.array.chatUtils);
         String[] showTexts = new String[chatUtils.length];
         for (int i = 0 ; i < chatUtils.length ; i ++)
-            showTexts[i] = "(" + (i+1) + ") " + chatUtils[i];  //for example: (1) OK
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1,
-                showTexts);
+            showTexts[i] = (i+1) + ") " + chatUtils[i];  //for example: (1) OK
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, showTexts);
         inputMessageEdt.setAdapter(adapter);
         inputMessageEdt.setOnClickListener(v -> inputMessageEdt.showDropDown());
     }
@@ -108,6 +107,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
     @Override
     public void onMessageReceived(ChatMessage message) {
         update(message);
+        soundManager.playSound(R.raw.bo);
     }
 
     @Override

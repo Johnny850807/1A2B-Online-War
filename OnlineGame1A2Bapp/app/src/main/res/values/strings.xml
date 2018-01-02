@@ -19,21 +19,13 @@
     <string name="game_mode">遊玩模式:</string>
     <string name="joinQuickly">快速加入</string>
     <string name="create_room">創建房間</string>
-    <string name="duel">1A2B 對決</string>
-    <string name="fight">爭奪戰</string>
-    <string name="boss1a2b">1A2B 王團戰</string>
-    <string name="dixit">Dixit戰</string>
     <string name="inputNumber">輸入數字</string>
     <string name="inputMessage">輸入訊息 (點擊選擇預設訊息)</string>
     <string name="inputAnswer">輸入答案</string>
     <string name="back">清除</string>
     <string name="enter">送出</string>
 
-    <array name="roomMode">
-        <item>模式選擇</item>
-        <item>@string/duel</item>
-        <item>@string/boss1a2b</item>
-    </array>
+
 
     <string name="searchRoomNameOrNickname">搜尋房名或暱稱</string>
 

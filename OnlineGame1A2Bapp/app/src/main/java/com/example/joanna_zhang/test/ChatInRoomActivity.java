@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.GameModeHelper;
 import com.example.joanna_zhang.test.Utils.ShowDialogHelper;
+import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom.InRoomModule;
@@ -47,6 +48,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     private ListView chatRoomPlayerListView;
     private InRoomModule inRoomModule;
     private BaseAdapter roomPlayerListAdapter;
+    private SoundManager soundManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
         currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
         roomPlayerListAdapter = new RoomPlayerListAdapter();
+        soundManager = new SoundManager(this);
         inRoomModule = (InRoomModule) CoreGameServer.getInstance().createModule(ModuleName.INROOM);
     }
 
@@ -169,6 +172,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         currentGameRoom.addPlayer(model.getPlayer());
         roomPlayerListAdapter.notifyDataSetChanged();
         Toast.makeText(this, model.getPlayer().getName() + getString(R.string.isJoined), Toast.LENGTH_SHORT).show();
+        soundManager.playSound(R.raw.dodo);
     }
 
     @Override
@@ -192,6 +196,8 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
             finish();
         } else
             roomPlayerListAdapter.notifyDataSetChanged();
+
+        soundManager.playSound(R.raw.dong);
         Toast.makeText(this, model.getPlayer().getName() + getString(R.string.isLeft), Toast.LENGTH_SHORT).show();
     }
 
@@ -218,6 +224,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     @Override
     public void onYouAreBooted() {
         Toast.makeText(this, R.string.youAreBooted, Toast.LENGTH_SHORT).show();
+        soundManager.playSound(R.raw.punch);
         finish();
     }
 

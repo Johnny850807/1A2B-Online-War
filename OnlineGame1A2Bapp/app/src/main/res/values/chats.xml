@@ -18,6 +18,7 @@
         <item>@string/damnit</item>
         <item>@string/goodGame</item>
         <item>@string/ok</item>
+        <item>@string/pleaseSetReady</item>
         <item>@string/pleaseStartGame</item>
         <item>@string/sorry</item>
     </string-array>

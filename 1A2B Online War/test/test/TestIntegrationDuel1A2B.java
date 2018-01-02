@@ -92,6 +92,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		testCreateRoomAndJoin();
 		testChatting();
 		testPlayingDuel1A2B();  //if enable this, the game room will be closed after game completed
+		testPlayingBoss1A2B();
 		//testBootingPlayer();
 		//testPlayerLeft();
 		testHostSignOut();  //select one in host sign out or close room
@@ -99,7 +100,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		long after = System.currentTimeMillis();
 		System.out.println("Time cost: " + (after - before) + "ms");
 	}
-	
+
 	public void testSignIn(){
 		createHandler(hostClient, protocolFactory.createProtocol(SIGNIN, 
 				REQUEST, gson.toJson(host))).handle();
@@ -215,6 +216,10 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		
 		GameOverModel gameOverModel = gson.fromJson(hostClient.getLastedByEvent(GAMEOVER).getData(), GameOverModel.class);
 		assertEquals(host.getId(), gameOverModel.getWinnerId());
+	}
+	
+	private void testPlayingBoss1A2B() {
+		
 	}
 	
 	public void testBootingPlayer(){

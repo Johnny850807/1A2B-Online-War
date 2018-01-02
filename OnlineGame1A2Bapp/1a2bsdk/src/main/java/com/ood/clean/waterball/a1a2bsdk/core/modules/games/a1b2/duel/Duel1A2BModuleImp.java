@@ -1,4 +1,4 @@
-package com.ood.clean.waterball.a1a2bsdk.core.modules.games;
+package com.ood.clean.waterball.a1a2bsdk.core.modules.games.a1b2.duel;
 
 
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.BindCallback;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.CallbackException;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.games.AbstractOnlineGameModule;
 
 import java.util.List;
 

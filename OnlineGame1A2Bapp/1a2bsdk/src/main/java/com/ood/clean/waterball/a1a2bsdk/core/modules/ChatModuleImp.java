@@ -84,7 +84,7 @@ public class ChatModuleImp extends AbstractGameModule implements ChatModule {
 
         private void parseMessageContent(ChatMessage message) {
             try{
-                char num = message.getContent().trim().charAt(1);  //for example: (1) ok
+                char num = message.getContent().trim().charAt(0);  //for example: 1) ok
                 switch (num)
                 {
                     case '1':

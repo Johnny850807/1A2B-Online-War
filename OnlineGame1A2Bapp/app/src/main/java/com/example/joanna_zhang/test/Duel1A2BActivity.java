@@ -1,7 +1,6 @@
 package com.example.joanna_zhang.test;
 
 import android.app.ProgressDialog;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -22,7 +21,7 @@ import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.games.Duel1A2BModule;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.games.a1b2.duel.Duel1A2BModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,6 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
     private ListView p1ResultListView, p2ResultListView;
     private GuessResultAdapter p1GuessResultAdapter, p2GuessResultAdapter;
     private Handler handler = new Handler();
-    private MediaPlayer mediaPlayer;
     private SoundManager soundManager;
     private boolean gameStarted = false;
     private boolean gameover = false;
@@ -68,8 +66,6 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_duel);
-        mediaPlayer = MediaPlayer.create(this, R.raw.rainsong);
-        mediaPlayer.setLooping(true);
         init();
         findViews();
         setUpChatWindow();
@@ -82,9 +78,7 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
         super.onResume();
         chatWindowView.onResume();
         duel1A2BModule.registerCallback(this, currentPlayer, currentGameRoom, this);
-        if (gameStarted)
-            mediaPlayer.start();
-        else
+        if (!gameStarted)
         {
             waitOtherPlayersPrepare();
             duel1A2BModule.enterGame();
@@ -107,7 +101,10 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
         AppDialogFactory.templateBuilder(this)
                 .setTitle(R.string.leftGame)
                 .setMessage(R.string.sureToLeftGame)
-                .setPositiveButton(confirm, (d,i) -> duel1A2BModule.leaveGame())
+                .setPositiveButton(confirm, (d,i) -> {
+                    duel1A2BModule.leaveGame();
+                    finish();
+                })
                 .setNegativeButton(cancel, null)
                 .show();
     }
@@ -116,8 +113,6 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
     protected void onStop() {
         super.onStop();
         duel1A2BModule.unregisterCallBack(this);
-        if (gameStarted)
-            mediaPlayer.pause();
     }
 
     @Override
@@ -198,9 +193,9 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
     @Override
     public void onGameStarted() {
         gameStarted = true;
-        mediaPlayer.start();
         progressDialog.dismiss();
         setupAnswer();
+        soundManager.playSound(R.raw.dingdong);
     }
 
     @Override
@@ -295,6 +290,8 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
         gameover = true;
         Player winner = currentGameRoom.getHost().getId().equals(gameOverModel.getWinnerId()) ?
                 currentGameRoom.getHost() : currentGameRoom.getPlayerStatus().get(0).getPlayer();
+        if (!winner.equals(currentPlayer))
+            soundManager.playSound(R.raw.lose);
         inputNumberBtn.setEnabled(false);
         handler.postDelayed(()->createAndShowDialogForWinner(winner), 3000);
     }

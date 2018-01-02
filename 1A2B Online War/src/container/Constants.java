@@ -41,7 +41,12 @@ public final class Constants {
 			}
 			
 			public final static class Boss1A2B{
+				public final static String SET_ANSWER = "SetAnswerBoss1A2B";
+				public final static String ATTACKING_STARTED = "AttackingStartedBoss1A2B";
 				public final static String NEXT_TURN = "NextTurnBoss1A2B";
+				public final static String ATTACK = "AttackBoss1A2B";
+				public final static String ATTACK_RESULTS = "AttackResultsBoss1A2B";
+				public final static String BOSS_CHANGE_ANSWER = "AttackBoss1A2B";
 			}
 		}
 	}

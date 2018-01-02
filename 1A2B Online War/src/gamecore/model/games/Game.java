@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 
 import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
+import gamecore.entity.GameRoom;
 import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.MockLogger;
@@ -24,6 +25,7 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
 	protected transient Timer timer;
 	protected transient GameLifecycleListener listener;
 	protected transient GameEnteringWaitingBox enteringWaitingBox;
+	protected transient GameRoom gameRoom;
 	private transient Map<Integer, TimeListener> timeListeners = new TreeMap<>();
 	protected GameMode gameMode;
 	protected Date launchDate = new Date();
@@ -84,7 +86,7 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
 	}
 	
 	
-	public void validGameStarted(){
+	public void validateGameStarted(){
 		if (!isGameStarted())
 			throw new ProcessInvalidException("The game is not started.");
 	}

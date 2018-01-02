@@ -55,7 +55,7 @@ public class Duel1A2BGame extends Game{
 	}
  	
  	private void validateCommittingAnswerOperation(String playerId) throws ProcessInvalidException{
- 		validGameStarted();
+ 		validateGameStarted();
  		if (playerModels.get(playerId).getAnswer() != null)
  			throw new ProcessInvalidException("The player has already committed the answer.");
  	}
@@ -83,7 +83,7 @@ public class Duel1A2BGame extends Game{
 	}
  	
  	private void validateGuessingRequest(String playerId) throws ProcessInvalidException{
- 		validGameStarted();
+ 		validateGameStarted();
 		if(!guessingStarted)
 			throw new ProcessInvalidException("Guessing has not started, but a player is guessing.");
 		if (playerModels.get(playerId).getGuessingTimes() == guessingRound)
@@ -98,20 +98,18 @@ public class Duel1A2BGame extends Game{
 		return result;
  	}
  	
- 	private void handleTheResult(String playerId, GuessResult result){
- 		synchronized (this) {
-			if (result.getA() == 4 && winner == null)
-			{
-				log.trace("Room: " + roomId + ", The winner exists " + getPlayerName(playerId) + ".");
-				winner = getClientPlayer(playerId);
-			}
+ 	private synchronized void handleTheResult(String playerId, GuessResult result){
+		if (result.getA() == 4 && winner == null)
+		{
+			log.trace("Room: " + roomId + ", The winner exists " + getPlayerName(playerId) + ".");
+			winner = getClientPlayer(playerId);
+		}
 			
-			if (isThisRoundOver())
-			{
-				broadcastOneRoundOver();
-				if (winner != null)
-					broadcastWinnerEvent();
-			}
+		if (isThisRoundOver())
+		{
+			broadcastOneRoundOver();
+			if (winner != null)
+				broadcastWinnerEvent();
 		}
  	}
 

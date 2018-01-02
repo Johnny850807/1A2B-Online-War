@@ -48,12 +48,15 @@ import static com.example.joanna_zhang.test.R.array.roomMode;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
+/**
+ * TODO UX
+ */
 public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener, RoomListModule.Callback, ListView.OnItemClickListener {
     private final static String TAG = "RoomListActivity";
     private Player currentPlayer;
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
-    private GameMode[] gameModes = {null, GameMode.GROUP1A2B, GameMode.DUEL1A2B};
+    private GameMode[] gameModes = {null, GameMode.DUEL1A2B, GameMode.BOSS1A2B};  //TODO don't write it here, please handle all the static gamemode infos inside the gamemodes.xml
     private List<GameRoom> roomListOfQuery = new ArrayList<>();
     private EditText searchEdt;
     private ListView roomListView;

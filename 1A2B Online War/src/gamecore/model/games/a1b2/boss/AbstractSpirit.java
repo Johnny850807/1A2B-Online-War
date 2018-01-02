@@ -2,6 +2,8 @@ package gamecore.model.games.a1b2.boss;
 
 import java.util.Random;
 
+import com.google.gson.Gson;
+
 import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
@@ -9,10 +11,12 @@ import gamecore.model.games.a1b2.GuessRecord;
 import gamecore.model.games.a1b2.GuessResult;
 import gamecore.model.games.a1b2.boss.AttackResult.AttackType;
 import utils.ForServer;
+import utils.MyGson;
 
 public abstract class AbstractSpirit implements Spirit{
 	protected transient ProtocolFactory protocolFactory;
 	protected transient MyLogger log;
+	protected transient static final Gson gson = MyGson.getGson();
 	protected int hp;
 	protected int mp;
 	protected int maxHp;
@@ -38,11 +42,11 @@ public abstract class AbstractSpirit implements Spirit{
 	
 	@Override
 	@ForServer
-	public AttackResult attack(AbstractSpirit attacker, String guess) {
+	public AttackResult getAttacked(AbstractSpirit attacker, String guess, AttackType attackType) {
 		GuessResult guessResult = A1B2NumberValidator.getGuessResult(answer, guess);
 		int damage = onParsingDamage(guessResult);
 		GuessRecord guessRecord = new GuessRecord(guess, guessResult);
-		AttackResult attackResult =  new AttackResult(damage, AttackType.NORMAL, guessRecord, attacker, this);
+		AttackResult attackResult =  new AttackResult(damage, attackType, guessRecord, attacker, this);
 		onDamaging(attackResult);
 		return attackResult;
 	}
@@ -57,14 +61,17 @@ public abstract class AbstractSpirit implements Spirit{
 		return new Random().nextInt(max+1) + min;
 	}
 	
+	protected void costHp(int damage){
+		hp = hp - damage < 0 ? 0 : hp - damage;
+	}
+	
 	protected void onDamaging(AttackResult attackResult){
-		hp = hp - attackResult.getDamage() < 0 ? 0 : hp - attackResult.getDamage();
-		if (hp == 0)
+		costHp(attackResult.getDamage());
+		if (isDead())
 			onDie(attackResult);
 		else if (attackResult.getA() == 4)
 			onAnswerGuessed4A(attackResult);
-		else
-			onSurvivedFromAttack(attackResult);
+		onSurvivedFromAttack(attackResult);
 	}
 	
 	/**
@@ -90,4 +97,21 @@ public abstract class AbstractSpirit implements Spirit{
 	public String getName() {
 		return name;
 	}
+
+	public int getHp() {
+		return hp;
+	}
+
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+	
+	public boolean isDead(){
+		return getHp() <= 0;
+	}
+	
 }
