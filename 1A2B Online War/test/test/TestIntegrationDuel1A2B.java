@@ -91,12 +91,16 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		testSignIn();
 		testCreateRoomAndJoin();
 		testChatting();
-		testPlayingDuel1A2B();  //if enable this, the game room will be closed after game completed
+		
+		//choose only one of the testing method below alternatively
+		//testPlayingDuel1A2B();  //if enable this, the game room will be closed after game completed
 		testPlayingBoss1A2B();
 		//testBootingPlayer();
 		//testPlayerLeft();
-		testHostSignOut();  //select one in host sign out or close room
 		//testCloseRoom();
+		
+		testHostSignOut(); 
+		
 		long after = System.currentTimeMillis();
 		System.out.println("Time cost: " + (after - before) + "ms");
 	}
@@ -158,7 +162,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 			assertEquals(expecteds[i].getContent(), actuals.get(i).getContent());
 	}
 	
-	public void testPlayingDuel1A2B(){
+	private void launchGameAndEnterGame() {
 		createHandler(hostClient, protocolFactory.createProtocol(LAUNCH_GAME, REQUEST, 
 				gson.toJson(this.gameRoom))).handle();
 		assertTrue(gameRoom.getRoomStatus() == RoomStatus.gamestarted);
@@ -169,7 +173,10 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 				gson.toJson(new PlayerRoomIdModel(player.getId(), gameRoom.getId())))).handle();
 		assertEquals(GAMESTARTED, hostClient.getLastedResponse().getEvent());
 		assertEquals(GAMESTARTED, playerClient.getLastedResponse().getEvent());
-		
+	}
+	
+	public void testPlayingDuel1A2B(){
+		launchGameAndEnterGame();
 		ContentModel hostSetAnswer = new ContentModel(host.getId(), gameRoom.getId(), "1234");
 		ContentModel playerSetAnswer = new ContentModel(player.getId(), gameRoom.getId(), "5678");
 		createHandler(hostClient, protocolFactory.createProtocol(SET_ANSWER, REQUEST, 
@@ -219,6 +226,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	}
 	
 	private void testPlayingBoss1A2B() {
+		launchGameAndEnterGame();
 		
 	}
 	
