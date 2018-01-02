@@ -9,6 +9,13 @@ public class AttackActionModel implements Iterable<AttackResult>{
 	private int mpCost;
 	private List<AttackResult> attackResults = new ArrayList<>();
 	
+	public AttackActionModel(int mpCost, AbstractSpirit attacker, AttackResult ...results) {
+		this.attacker = attacker;
+		this.mpCost = mpCost;
+		for (AttackResult result : results)
+			addAttackResult(result);
+	}
+	
 	public AttackActionModel(int mpCost, AbstractSpirit attacker) {
 		this.attacker = attacker;
 		this.mpCost = mpCost;

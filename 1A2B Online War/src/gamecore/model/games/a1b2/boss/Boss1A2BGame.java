@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import container.Constants.Events.Games;
 import container.Constants.Events.Games.Boss1A2B;
 import container.eventhandler.handlers.games.boss1a2b.SetAnswerHandler;
 import container.protocol.Protocol;
@@ -16,6 +17,7 @@ import gamecore.model.RequestStatus;
 import gamecore.model.games.Game;
 import gamecore.model.games.ProcessInvalidException;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
+import gamecore.model.games.a1b2.GameOverModel;
 import gamecore.model.games.a1b2.NumberNotValidException;
 import gamecore.model.games.a1b2.boss.AttackResult.AttackType;
 import utils.ForServer;
@@ -44,7 +46,7 @@ public class Boss1A2BGame extends Game{
 	}
 
 	@ForServer
-	public void setPlayerAnswer(String playerId, String answer) throws NumberNotValidException{
+	public synchronized void setPlayerAnswer(String playerId, String answer) throws NumberNotValidException{
 		validateSetAnswerOperation(answer);
 		PlayerSpirit playerSpirit = getPlayerSpirit(playerId);
 		playerSpirit.setAnswer(answer);
@@ -78,47 +80,64 @@ public class Boss1A2BGame extends Game{
 	}
 	
 	@ForServer
-	public void attack(String playerId, String guess) throws NumberNotValidException{
-		validateAttackingOperation(playerId);
-		A1B2NumberValidator.validateNumber(guess);
+	public synchronized void attack(String playerId, String guess) throws NumberNotValidException{
+		validateAttackingOperation(playerId, guess);
 		PlayerSpirit attacker = getPlayerSpirit(playerId);
-		AttackResult attackResult = boss.getAttacked(attacker, guess, AttackType.NORMAL);
-		attackResults.add(attackResult);
+		handleAttacking(attacker, guess);
 		
-		if (allPlayerTurnsOver())
-			boss.action();
-		whosTurn = whosTurn + 1 > playerSpirits.size() ? 0 : whosTurn + 1;
-		if (isTheGameOver())
+		if (boss.isDead())
 			broadcastGameOver();
-		else 
-			broadcastNextTurn();
+		else
+		{
+			if (allPlayerTurnsOver())
+			{
+				boss.action();
+				if (allPlayersAreDead())
+					broadcastGameOver();
+				else
+					switchIndexToNextAndBroadcastNextTurn();
+			}
+			else
+				switchIndexToNextAndBroadcastNextTurn();
+		}
 	}
 
-	private void validateAttackingOperation(String playerId) {
+	private void validateAttackingOperation(String playerId, String guess) throws NumberNotValidException{
 		validateGameStarted();
 		PlayerSpirit who = playerSpirits.get(whosTurn);
 		if (!who.getId().equals(playerId))
 			throw new ProcessInvalidException("Not your turn.");
+		A1B2NumberValidator.validateNumber(guess);
 	}
 	
-	private boolean allPlayerTurnsOver(){
-		return whosTurn == playerSpirits.size() - 1;
+	private void handleAttacking(PlayerSpirit attacker, String guess){
+		AttackResult attackResult = boss.getAttacked(attacker, guess, AttackType.NORMAL);
+		AttackActionModel actionModel = new AttackActionModel(0, attacker, attackResult);
+		log.trace("Attack action: " + actionModel);
+		addAllResultsAndbroadcastAttackActionModel(actionModel);
 	}
 	
-	private void broadcastNextTurn(){
+	private void switchIndexToNextAndBroadcastNextTurn(){
+		this.whosTurn = this.whosTurn + 1 > playerSpirits.size() ? 0 : this.whosTurn + 1;
 		PlayerSpirit who = playerSpirits.get(whosTurn);
 		Protocol protocol = protocolFactory.createProtocol(NEXT_TURN, RequestStatus.success.toString(), 
 				gson.toJson(who.getClientPlayer().getPlayer()));
 		broadcastToAll(protocol);
 	}
 	
-	private boolean isTheGameOver(){
-		if (boss.isDead())
-			return true;
-		for (PlayerSpirit playerSpirit : playerSpirits)
-			if (playerSpirit.isDead())
-				return true;
-		return false;
+	private boolean allPlayerTurnsOver(){
+		return whosTurn == playerSpirits.size() - 1;
+	}
+
+	public boolean isTheBossGameOver(){
+		return boss.isDead() || allPlayersAreDead() ;
+	}
+	
+	public boolean allPlayersAreDead(){
+		for (PlayerSpirit playerSpirit : getPlayerSpirits())
+			if (!playerSpirit.isDead())
+				return false;
+		return true;
 	}
 	
 	public PlayerSpirit getPlayerSpirit(String playerId){
@@ -129,12 +148,11 @@ public class Boss1A2BGame extends Game{
 	}
 
 	private void broadcastGameOver(){
-		
-	}
-	
-	public void broadcastToAll(Protocol protocol){
-		for (PlayerSpirit player : playerSpirits)
-			player.broadcast(protocol);
+		String winnerId = boss.isDead() ? Boss1A2B.WinnerId.PLAYERS_WIN : Boss1A2B.WinnerId.BOSS_WIN;
+		GameOverModel gameOverModel = new GameOverModel(winnerId, roomId, gameMode, gameDuration);
+		Protocol protocol = protocolFactory.createProtocol(Games.GAMEOVER, RequestStatus.success.toString(),
+				gson.toJson(gameOverModel));
+		broadcastToAll(protocol);
 	}
 
 	@ForServer
@@ -143,10 +161,12 @@ public class Boss1A2BGame extends Game{
 	}
 	
 	@ForServer
-	public void broadcastAttackActionModel(AttackActionModel model){
+	public void addAllResultsAndbroadcastAttackActionModel(AttackActionModel model){
 		for (AttackResult attackResult : model)
 			addAttackResult(attackResult);
-		//TODO broadcast
+		Protocol protocol = protocolFactory.createProtocol(Boss1A2B.ATTACK_RESULTS,
+				RequestStatus.success.toString(), gson.toJson(model));
+		broadcastToAll(protocol);
 	}
 	
 	public void removeAttackResult(AttackResult attackResult){
@@ -166,4 +186,8 @@ public class Boss1A2BGame extends Game{
 		return boss;
 	}
 
+	public void broadcastToAll(Protocol protocol){
+		for (PlayerSpirit player : playerSpirits)
+			player.broadcast(protocol);
+	}
 }

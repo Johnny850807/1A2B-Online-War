@@ -17,7 +17,7 @@ public class NormalAttack implements MonsterAction{
 		AttackResult attackResult = targetPlayer.getAttacked(monster, guess, AttackType.NORMAL);
 		AttackActionModel model = new AttackActionModel(0, monster);
 		model.addAttackResult(attackResult);
-		game.broadcastAttackActionModel(model);
+		game.addAllResultsAndbroadcastAttackActionModel(model);
 	}
 
 	protected PlayerSpirit getTargetPlayer(Boss1A2BGame game){

@@ -47,6 +47,11 @@ public final class Constants {
 				public final static String ATTACK = "AttackBoss1A2B";
 				public final static String ATTACK_RESULTS = "AttackResultsBoss1A2B";
 				public final static String BOSS_CHANGE_ANSWER = "AttackBoss1A2B";
+				
+				public final static class WinnerId{
+					public final static String PLAYERS_WIN = "PlayersWinBoss1A2B";
+					public final static String BOSS_WIN = "BossWinsBoss1A2B";
+				}
 			}
 		}
 	}

@@ -85,6 +85,12 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
 		}, 2000, 1000);
 	}
 	
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		log.trace("Game with the room id: " + roomId + " finalized.");
+		timer.cancel();
+	}
 	
 	public void validateGameStarted(){
 		if (!isGameStarted())
