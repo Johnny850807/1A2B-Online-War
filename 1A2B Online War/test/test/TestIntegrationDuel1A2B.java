@@ -52,6 +52,7 @@ import gamecore.model.games.Game;
 import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
+import gamecore.model.games.a1b2.boss.AttackActionModel;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
 import mock.MockClient;
@@ -71,6 +72,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	protected Player player = new Player("Player");
 	protected MockClient hostClient = new MockClient(); 
 	protected MockClient playerClient = new MockClient();
+	protected GameMode gameMode = GameMode.DUEL1A2B;
 	protected GameRoom gameRoom;
 	protected int signInCount = 0;
 	protected List<Duel1A2BPlayerBarModel> duelModels;
@@ -92,7 +94,9 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		testCreateRoomAndJoin();
 		testChatting();
 		
-		//choose only one of the testing method below alternatively
+		/***choose only one of the testing method below alternatively.***/
+		/***the game mode selected should be equal to the testing game method.***/
+		
 		//testPlayingDuel1A2B();  //if enable this, the game room will be closed after game completed
 		testPlayingBoss1A2B();
 		//testBootingPlayer();
@@ -100,7 +104,6 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		//testCloseRoom();
 		
 		testHostSignOut(); 
-		
 		long after = System.currentTimeMillis();
 		System.out.println("Time cost: " + (after - before) + "ms");
 	}
@@ -116,7 +119,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	}
 	
 	public void testCreateRoomAndJoin(){
-		GameRoom room = new GameRoom(GameMode.DUEL1A2B, "Game", host);
+		GameRoom room = new GameRoom(gameMode, "Game", host);
 		createHandler(hostClient, protocolFactory.createProtocol(CREATE_ROOM, REQUEST, 
 				gson.toJson(room))).handle();
 		assertNotNull(this.gameRoom.getId());  //the game room should be initialized with id after handling.
@@ -227,6 +230,42 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	
 	private void testPlayingBoss1A2B() {
 		launchGameAndEnterGame();
+		
+		//setting answer
+		createHandler(hostClient, protocolFactory.createProtocol(Boss1A2B.SET_ANSWER,
+				REQUEST, gson.toJson(new ContentModel(host.getId(), gameRoom.getId(), "1234"))));
+		assertEquals(Boss1A2B.SET_ANSWER,  hostClient.getLastedResponse().getEvent());
+		createHandler(playerClient, protocolFactory.createProtocol(Boss1A2B.SET_ANSWER,
+				REQUEST, gson.toJson(new ContentModel(player.getId(), gameRoom.getId(), "5678"))));
+		assertTrue(playerClient.hasReceivedEvent(Boss1A2B.SET_ANSWER));
+		
+		//attacking started
+		assertEquals(Boss1A2B.ATTACKING_STARTED, hostClient.getLastedResponse().getEvent());
+		assertEquals(Boss1A2B.ATTACKING_STARTED, playerClient.getLastedResponse().getEvent());
+		
+		//host's turn
+		assertEquals(Boss1A2B.NEXT_TURN, hostClient.getLastedResponse().getEvent());
+		assertEquals(Boss1A2B.NEXT_TURN, playerClient.getLastedResponse().getEvent());
+		createHandler(hostClient, protocolFactory.createProtocol(Boss1A2B.ATTACK,
+				REQUEST, gson.toJson(new ContentModel(host.getId(), gameRoom.getId(), "1234"))));
+		validateLatestAttackResults("1234", host.getId(), hostClient);
+		validateLatestAttackResults("1234", host.getId(), playerClient);
+		
+		//player's turn
+		assertEquals(Boss1A2B.NEXT_TURN, hostClient.getLastedResponse().getEvent());
+		assertEquals(Boss1A2B.NEXT_TURN, playerClient.getLastedResponse().getEvent());
+		createHandler(playerClient, protocolFactory.createProtocol(Boss1A2B.ATTACK,
+				REQUEST, gson.toJson(new ContentModel(player.getId(), gameRoom.getId(), "1234"))));
+	}
+	
+	private void validateLatestAttackResults(String expectedGuess, String attackerId, MockClient client){
+		Protocol latestPtc = client.getLastedByEvent(Boss1A2B.ATTACK_RESULTS);
+		AttackActionModel model = gson.fromJson(latestPtc.getData(), AttackActionModel.class);
+		assertEquals(model.getAttackResults().get(0).getGuessRecord().getGuess(), expectedGuess);
+		assertEquals(model.getAttacker().getId(), attackerId);
+	}
+	
+	private void validateNextTurn(Protocol protocol){
 		
 	}
 	

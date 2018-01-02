@@ -40,24 +40,38 @@ public abstract class AbstractSpirit implements Spirit{
 	public abstract int getMp();
 	public abstract int getMaxHp();
 	
+	public interface DamageParser{
+		int parsingDamage(GuessResult guessResult);
+	}
+
+	protected transient static final DamageParser defaultDamageParser = new DamageParser(){
+		@Override
+		public int parsingDamage(GuessResult guessResult) {
+			// formula (r = random number): (28+r)*(a+b) - ((7+r)*b) 
+			int a = guessResult.getA(), b = guessResult.getB();
+			return (28+getRandom(5, 13))*(a+b) - (7+getRandom(1, 6))*b + getRandom(1, 15) + (a==4?80:0);
+		}
+	};
+	
 	@Override
 	@ForServer
 	public AttackResult getAttacked(AbstractSpirit attacker, String guess, AttackType attackType) {
+		return getAttacked(attacker, guess, attackType, defaultDamageParser);
+	}
+	
+	@Override
+	@ForServer
+	public AttackResult getAttacked(AbstractSpirit attacker, String guess, AttackType attackType, DamageParser damageParser) {
 		GuessResult guessResult = A1B2NumberValidator.getGuessResult(answer, guess);
-		int damage = onParsingDamage(guessResult);
+		int damage = damageParser.parsingDamage(guessResult);
 		GuessRecord guessRecord = new GuessRecord(guess, guessResult);
 		AttackResult attackResult =  new AttackResult(damage, attackType, guessRecord, attacker, this);
 		onDamaging(attackResult);
 		return attackResult;
 	}
 
-	protected int onParsingDamage(GuessResult guessResult){
-		// formula (r = random number): (28+r)*(a+b) - ((7+r)*b) 
-		int a = guessResult.getA(), b = guessResult.getB();
-		return (28+getRandom(5, 13))*(a+b) - (7+getRandom(1, 6))*b + getRandom(1, 15) + (a==4?80:0);
-	}
 	
-	private int getRandom(int min, int max){
+	private static int getRandom(int min, int max){
 		return new Random().nextInt(max+1) + min;
 	}
 	
