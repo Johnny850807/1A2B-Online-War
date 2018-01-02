@@ -4,6 +4,9 @@ import gamecore.model.games.a1b2.boss.AbstractSpirit.DamageParser;
 
 import gamecore.model.games.a1b2.boss.AttackResult.AttackType;
 
+/**
+ * @author ShuYong
+ */
 public class HurtMyselfAttackAction extends AbstractMonsterAction{
 
 	@Override
@@ -14,7 +17,6 @@ public class HurtMyselfAttackAction extends AbstractMonsterAction{
 		AttackActionModel model = new AttackActionModel(getCostMp(), monster);
 		model.addAttackResult(attackResult);
 		game.addAllResultsAndbroadcastAttackActionModel(model);
-		
 	}
 
 	@Override
@@ -24,16 +26,12 @@ public class HurtMyselfAttackAction extends AbstractMonsterAction{
 
 	public DamageParser getHurtMyselfDamageParser(Monster monster){
 		return new DamageParser() {
-			
 			@Override
 			public int parsingDamage(GuessResult guessResult) {
-			
-				int OneThirdOfHp =monster.getHp() / 3;
+				int OneThirdOfHp = monster.getHp() / 3;
 				monster.costHp(OneThirdOfHp);
 				return (monster.getHp() / 50)+100;
 			}
 		};
-			
 	}
-
 }

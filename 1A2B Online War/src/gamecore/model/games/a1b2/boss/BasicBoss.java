@@ -36,18 +36,21 @@ public class BasicBoss extends Monster{
 		return 3000;
 	}
 	
-	
+	@Override
+	protected String produceAnswer() {
+		return RandomString.nextNonDuplicatedNumber(4);
+	}
 
 	@Override
 	protected void onAnswerGuessed4A(AttackResult attackResult) {
 		//change the answer of the boss and broadcast
-		setAnswer(RandomString.nextNonDuplicatedNumber(4));
-		sendChatMessageToAllPlayers("不用得意，我還在讓!(改變密碼中...)");
+		setAnswer(produceAnswer());
+		sendChatMessageToAllPlayers("不用得意，我還在讓！(改變密碼中...)");
 	}
 
 	@Override
 	protected void onDie(AttackResult attackResult) {
-		
+		sendChatMessageToAllPlayers("可惡....");
 	}
 
 	@Override

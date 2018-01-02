@@ -19,10 +19,11 @@ public abstract class Monster extends AbstractSpirit{
 	public void init(Boss1A2BGame game){
 		this.actions = createMonsterActions();
 		this.game = game;
-		this.setAnswer(RandomString.nextNonDuplicatedNumber(4));
+		this.setAnswer(produceAnswer());
 	}
 
 	protected abstract List<MonsterAction> createMonsterActions();
+	protected abstract String produceAnswer();
 	
 	@Override
 	public void action() {

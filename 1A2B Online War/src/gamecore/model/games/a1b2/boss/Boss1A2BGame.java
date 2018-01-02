@@ -52,7 +52,10 @@ public class Boss1A2BGame extends Game{
 		playerSpirit.setAnswer(answer);
 		
 		if (hasAllAnswerBeenCommitted())
+		{
 			startAttackingAndBroadcast();
+			broadcastNextTurn(whosTurn);
+		}
 	}
 	
 	@ForServer
@@ -89,16 +92,20 @@ public class Boss1A2BGame extends Game{
 			broadcastGameOver();
 		else
 		{
-			if (allPlayerTurnsOver())
+			whosTurn = findNextAlivePlayerIndexForward();
+			if (whosTurn == -1) //if all alive player turns are over
 			{
 				boss.action();
-				if (allPlayersAreDead())
+				if (areAllPlayersDead())
 					broadcastGameOver();
 				else
-					switchIndexToNextAndBroadcastNextTurn();
+				{
+					whosTurn = findNextAlivePlayerIndexForward();  //find the next alive player from -1
+					broadcastNextTurn(whosTurn);
+				}
 			}
-			else
-				switchIndexToNextAndBroadcastNextTurn();
+			else 
+				broadcastNextTurn(whosTurn);
 		}
 	}
 
@@ -117,23 +124,35 @@ public class Boss1A2BGame extends Game{
 		addAllResultsAndbroadcastAttackActionModel(actionModel);
 	}
 	
-	private void switchIndexToNextAndBroadcastNextTurn(){
-		this.whosTurn = this.whosTurn + 1 > playerSpirits.size() ? 0 : this.whosTurn + 1;
-		PlayerSpirit who = playerSpirits.get(whosTurn);
+	private void broadcastNextTurn(int nextTurn){
+		PlayerSpirit who = playerSpirits.get(nextTurn);
 		Protocol protocol = protocolFactory.createProtocol(NEXT_TURN, RequestStatus.success.toString(), 
 				gson.toJson(who.getClientPlayer().getPlayer()));
 		broadcastToAll(protocol);
 	}
 	
-	private boolean allPlayerTurnsOver(){
-		return whosTurn == playerSpirits.size() - 1;
-	}
 
-	public boolean isTheBossGameOver(){
-		return boss.isDead() || allPlayersAreDead() ;
+	/**
+	 * find the next alive player's index from now whosTurn forward to the end.
+	 * @return the next player's index, return -1 if all alive player turns are over.
+	 * @exception IllegalStateException all players are dead
+	 */
+	public int findNextAlivePlayerIndexForward(){
+		if (areAllPlayersDead())
+			throw new IllegalStateException("All players are dead, why should we find out the next alive player index?");
+		int index = whosTurn;
+		do {
+			if (++index >= playerSpirits.size())
+				return -1;
+		} while (playerSpirits.get(index).isDead());
+		return index;
 	}
 	
-	public boolean allPlayersAreDead(){
+	public boolean isTheBossGameOver(){
+		return boss.isDead() || areAllPlayersDead() ;
+	}
+	
+	public boolean areAllPlayersDead(){
 		for (PlayerSpirit playerSpirit : getPlayerSpirits())
 			if (!playerSpirit.isDead())
 				return false;
@@ -167,10 +186,6 @@ public class Boss1A2BGame extends Game{
 		Protocol protocol = protocolFactory.createProtocol(Boss1A2B.ATTACK_RESULTS,
 				RequestStatus.success.toString(), gson.toJson(model));
 		broadcastToAll(protocol);
-	}
-	
-	public void removeAttackResult(AttackResult attackResult){
-		this.attackResults.remove(attackResult);
 	}
 	
 	public List<PlayerSpirit> getPlayerSpirits() {
