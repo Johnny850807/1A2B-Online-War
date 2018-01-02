@@ -17,8 +17,6 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingEnd="4dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="4dp"
         android:paddingStart="8dp">
 
         <AutoCompleteTextView

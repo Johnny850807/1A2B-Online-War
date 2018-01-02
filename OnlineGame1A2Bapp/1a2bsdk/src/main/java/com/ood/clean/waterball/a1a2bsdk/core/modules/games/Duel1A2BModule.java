@@ -10,7 +10,6 @@ import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
-import gamecore.model.PlayerRoomModel;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
 
@@ -76,19 +75,10 @@ public interface Duel1A2BModule extends GameModule {
          */
         void onGameOver(GameOverModel gameOverModel);
 
-        /**
-         * when the opponent left from the game.
-         */
-        void onOpponentLeft(PlayerRoomModel model);
 
         /**
          * when the gameroom closed bt the host
          */
         void onGameClosed(GameRoom gameRoom);
-
-        /**
-         * when the room is expired.
-         */
-        public void onRoomExpired();
     }
 }

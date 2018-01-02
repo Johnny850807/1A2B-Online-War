@@ -56,7 +56,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
         findViews();
         setUpGameModeTxt();
         if (currentPlayer.equals(currentGameRoom.getHost()))
-            gameStartBtn.setText(R.string.game_start);
+            gameStartBtn.setText(R.string.gameStart);
         setupChatWindow();
         setUpPlayerListView();
     }

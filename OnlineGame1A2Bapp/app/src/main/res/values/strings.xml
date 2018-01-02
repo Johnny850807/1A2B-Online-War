@@ -19,29 +19,27 @@
     <string name="game_mode">遊玩模式:</string>
     <string name="joinQuickly">快速加入</string>
     <string name="create_room">創建房間</string>
-    <string name="duel">對決戰</string>
+    <string name="duel">1A2B 對決</string>
     <string name="fight">爭奪戰</string>
+    <string name="boss1a2b">1A2B 王團戰</string>
+    <string name="dixit">Dixit戰</string>
     <string name="inputNumber">輸入數字</string>
     <string name="inputMessage">輸入訊息 (點擊選擇預設訊息)</string>
     <string name="inputAnswer">輸入答案</string>
     <string name="back">清除</string>
     <string name="enter">送出</string>
+
     <array name="roomMode">
         <item>模式選擇</item>
-        <item>爭奪戰</item>
-        <item>對決戰</item>
+        <item>@string/duel</item>
+        <item>@string/boss1a2b</item>
     </array>
-    <string name="title_activity_chat_window_test">ChatWindowTest</string>
-    <string name="game_start">開始遊戲</string>
 
-    <string name="seach_roomname_or_nickname">搜尋房名或暱稱</string>
+    <string name="searchRoomNameOrNickname">搜尋房名或暱稱</string>
 
-
-    <string name="setAnswerFrist">請先設定答案</string>
+    <string name="setAnswerFirst">請先設定答案</string>
     <string name="createRoomFailed">創建房間失敗</string>
     <string name="noRoomCanJoin">抱歉，沒有房間可以加入...</string>
-
-    <string name="roomHostName">Host: </string>
     <string name="gameStart">開始遊戲</string>
     <string name="youAreBooted">您被房主踢除了!!</string>
     <string name="ready">準備</string>
@@ -51,16 +49,12 @@
     <string name="theHostLeftRoomClosed">房主已離開, 將關閉房間</string>
     <string name="isLeft">已離開!</string>
     <string name="isJoined">加入房間!</string>
-    <string name="boss">Boss戰</string>
-    <string name="dixit">Dixit戰</string>
     <string name="messageSendingFailed">訊息傳送失敗</string>
     <string name="chatMessageError">傳送訊息發生錯誤</string>
     <string name="gameOver">遊戲結束</string>
     <string name="pleaseInputGuess">請輸入答案</string>
-    <string name="errorHappened">發生錯誤</string>
     <string name="bootPlayer">剔除玩家</string>
     <string name="sureAboutBootThisPlayer">確定要剔除此玩家嗎?</string>
-    <string name="modeName">1A2B</string>
     <string name="waitOtherPlayersJoin">等待對手加入..</string>
     <string name="pleaseWait">請稍後</string>
     <string name="playerAmountNotEnoughToLuanchGame">人數不足</string>

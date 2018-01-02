@@ -291,8 +291,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
             GameRoom gameroom = roomListOfQuery.get(position);
 
-            String modeName = getString(R.string.modeName);
-            modeName += GameModeHelper.getGameModeText(RoomListActivity.this, gameroom.getGameMode());
+            String modeName = GameModeHelper.getGameModeText(RoomListActivity.this, gameroom.getGameMode());
 
             viewHolder.roomNameTxt.setText(gameroom.getName());
             viewHolder.roomModeTxt.setText(modeName);

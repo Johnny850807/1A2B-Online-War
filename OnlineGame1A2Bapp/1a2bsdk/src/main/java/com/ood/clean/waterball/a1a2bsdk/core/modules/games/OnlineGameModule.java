@@ -2,6 +2,9 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules.games;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.RoomExpiredCallback;
+
+import gamecore.model.PlayerRoomModel;
 
 public interface OnlineGameModule extends GameModule{
 
@@ -14,7 +17,12 @@ public interface OnlineGameModule extends GameModule{
      */
     void enterGame();
 
-    public interface Callback extends GameCallBack{
+    public interface Callback extends GameCallBack, RoomExpiredCallback {
         void onGameStarted();
+
+        /**
+         * when the opponent left from the game.
+         */
+        void onPlayerLeft(PlayerRoomModel model);
     }
 }

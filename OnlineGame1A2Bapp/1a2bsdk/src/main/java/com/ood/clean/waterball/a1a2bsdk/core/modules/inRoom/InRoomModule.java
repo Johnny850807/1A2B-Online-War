@@ -3,6 +3,7 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules.inRoom;
 
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.RoomExpiredCallback;
 
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
@@ -16,13 +17,11 @@ public interface InRoomModule extends GameModule{
     /**
      * the player changes his status to the game.
      * @param model if the player wants to prepare.
-     * @exception HostCannotPrepareException if you are a host, you shouldn't be able to change the status.
      */
     public void changeStatus(ChangeStatusModel model);
 
     /**
      * the host launches the game.
-     * @exception PlayerNotPreparedException the players should prepare before you launch the game.
      */
     public void launchGame();
 
@@ -41,7 +40,7 @@ public interface InRoomModule extends GameModule{
      */
     public void leaveRoom();
 
-    public interface Callback extends GameCallBack{
+    public interface Callback extends GameCallBack, RoomExpiredCallback {
 
         /**
          * when any new player accesses the room.
@@ -78,10 +77,5 @@ public interface InRoomModule extends GameModule{
          * when the room got closed.
          */
         public void onRoomClosed();
-
-        /**
-         * when the room is expired.
-         */
-        public void onRoomExpired();
     }
 }

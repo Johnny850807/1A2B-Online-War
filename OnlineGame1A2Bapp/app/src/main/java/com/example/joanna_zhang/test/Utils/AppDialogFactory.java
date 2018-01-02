@@ -19,6 +19,7 @@ public class AppDialogFactory {
         return templateBuilder(activity)
                 .setTitle(R.string.expiredDetection)
                 .setMessage(message)
+                .setCancelable(false)
                 .setPositiveButton(R.string.confirm, (d,p)->activity.finish())
                 .create();
     }
@@ -27,6 +28,7 @@ public class AppDialogFactory {
         return templateBuilder(context)
                 .setTitle(R.string.errorMessage)
                 .setMessage(errorMessage)
+                .setCancelable(false)
                 .setPositiveButton(R.string.confirm, null)
                 .show();
     }

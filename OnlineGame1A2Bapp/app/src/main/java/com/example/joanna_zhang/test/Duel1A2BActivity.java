@@ -161,7 +161,7 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
                 .setOnEnterClickListener(answer -> duel1A2BModule.setAnswer(answer))
                 .setCanceledOnTouchOutside(false)
                 .setCancelable(false)
-                .setTitle(getString(R.string.setAnswerFrist))
+                .setTitle(getString(R.string.setAnswerFirst))
                 .show();
     }
 
@@ -300,7 +300,7 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
     }
 
     @Override
-    public void onOpponentLeft(PlayerRoomModel model) {
+    public void onPlayerLeft(PlayerRoomModel model) {
         createAndShowPlayerLeftNotifyingDialog(model.getPlayer());
     }
 
