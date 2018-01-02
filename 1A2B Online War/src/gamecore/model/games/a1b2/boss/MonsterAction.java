@@ -9,4 +9,6 @@ public interface MonsterAction {
 	 * to damage the player or do anything you want in the boss turn!!
 	 */
 	void execute(Monster monster, Boss1A2BGame game);
+	
+	int getCostMp();
 }

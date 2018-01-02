@@ -11,6 +11,7 @@ import container.protocol.ProtocolFactory;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.Player;
 import gamecore.model.RequestStatus;
+import utils.RandomString;
 
 public class BasicBoss extends Monster{
 	private Player player;
@@ -34,10 +35,14 @@ public class BasicBoss extends Monster{
 	public int getMaxHp() {
 		return 3000;
 	}
+	
+	
 
 	@Override
 	protected void onAnswerGuessed4A(AttackResult attackResult) {
 		//change the answer of the boss and broadcast
+		setAnswer(RandomString.nextNonDuplicatedNumber(4));
+		sendChatMessageToAllPlayers("不用得意，我還在讓!(改變密碼中...)");
 	}
 
 	@Override

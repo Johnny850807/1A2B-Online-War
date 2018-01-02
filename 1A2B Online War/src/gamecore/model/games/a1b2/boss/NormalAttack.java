@@ -8,24 +8,24 @@ import utils.RandomString;
 /**
  * @author ShuYong
  */
-public class NormalAttack implements MonsterAction{
+public class NormalAttack extends AbstractMonsterAction{
+	
 	
 	@Override
 	public void execute(Monster monster, Boss1A2BGame game) {
 		PlayerSpirit targetPlayer = getTargetPlayer(game);
 		String guess = getGuess();
 		AttackResult attackResult = targetPlayer.getAttacked(monster, guess, AttackType.NORMAL);
-		AttackActionModel model = new AttackActionModel(0, monster);
+		AttackActionModel model = new AttackActionModel(getCostMp(), monster);
 		model.addAttackResult(attackResult);
 		game.broadcastAttackActionModel(model);
 	}
 
-	protected PlayerSpirit getTargetPlayer(Boss1A2BGame game){
-		List<PlayerSpirit> playerSpirits = game.getPlayerSpirits();
-		return playerSpirits.get(random.nextInt(playerSpirits.size()));
+	@Override
+	public int getCostMp() {
+		
+		return 0;
 	}
-	
-	protected String getGuess(){
-		return RandomString.nextNonDuplicatedNumber(4);
-	}
+
+
 }
