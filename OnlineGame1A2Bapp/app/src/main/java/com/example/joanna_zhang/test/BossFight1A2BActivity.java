@@ -50,8 +50,8 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     }
 
     private void init() {
-//        currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
-//        currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
+        currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
+        currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
     }
 
     private void findViews() {
