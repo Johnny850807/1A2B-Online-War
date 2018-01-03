@@ -29,7 +29,6 @@ import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.GameModeHelper;
-import com.example.joanna_zhang.test.Utils.ShowDialogHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
@@ -56,7 +55,6 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private Player currentPlayer;
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
-    private GameMode[] gameModes = {null, GameMode.DUEL1A2B, GameMode.BOSS1A2B};  //TODO don't write it here, please handle all the static gamemode infos inside the gamemodes.xml
     private List<GameRoom> roomListOfQuery = new ArrayList<>();
     private EditText searchEdt;
     private ListView roomListView;
@@ -64,7 +62,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private RoomListModule roomListModule;
     private UserSigningModule signingModule;
     private BaseAdapter adapter = new MyAdapter();
-    private GameMode selectedMode = gameModes[0];
+    private GameMode selectedMode = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,24 +141,30 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     private void sureAboutSignOutDialog() {
-        ShowDialogHelper.showComeBackActivityDialog(
-                  R.drawable.logo
-                , R.string.signOut
-                , R.string.sureToSignOut
-                , R.string.confirm
-                , R.string.cancel, this
-                , new DialogInterface.OnClickListener() {
+        AppDialogFactory.templateBuilder(this)
+                .setTitle(R.string.signOut)
+                .setMessage(R.string.sureToSignOut)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
                     }
-                });
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-        selectedMode = gameModes[position];
+        String[] roomModes = getResources().getStringArray(R.array.roomMode);
+        selectedMode = getGameModeByString(roomModes[position]);
         selectAndUpdateRoomList();
+    }
+
+    private GameMode getGameModeByString(String roomMode) {
+        if (roomMode.equals(getString(R.string.duel)))
+            return GameMode.DUEL1A2B;
+        return roomMode.equals(getString(R.string.boss1a2b)) ? GameMode.BOSS1A2B : null;
     }
 
     @Override
@@ -185,7 +189,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String modeName = gameModeSpn.getSelectedItem().toString();
-                        GameMode gameModeToCreateRoom = modeName.equals(getString(R.string.duel)) ? GameMode.DUEL1A2B : GameMode.GROUP1A2B;
+                        GameMode gameModeToCreateRoom = getGameModeByString(modeName);
                         roomListModule.createRoom(roomNameEd.getText().toString(), gameModeToCreateRoom);
                     }
                 })
@@ -218,7 +222,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     private List<GameRoom> getRoomsByGameMode(List<GameRoom> rooms) {
         List<GameRoom> results = new ArrayList<>();
-        if (selectedMode == gameModes[0])
+        if (selectedMode == null)
             return rooms;
         for (GameRoom gameRoom : rooms)
             if (gameRoom.getGameMode() == selectedMode)

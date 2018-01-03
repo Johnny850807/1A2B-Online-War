@@ -11,4 +11,12 @@
         <item>@string/duel</item>
         <item>@string/boss1a2b</item>
     </array>
+
+
+
+    <array name="gameMode">
+        <item>null</item>
+        <item></item>
+    </array>
+
 </resources>

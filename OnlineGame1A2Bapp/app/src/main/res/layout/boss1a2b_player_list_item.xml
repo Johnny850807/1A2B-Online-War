@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp"
+    android:layout_height="83dp"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="@drawable/boss1a2b_player_background">
+
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:id="@+id/playerHpProgressBar"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/boss1a2bPlayerTxt"
+        android:textSize="20sp"
+        android:text="林宗億"
+        android:textColor="#000"
+        android:layout_weight="3"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/boss1a2bPlayerHPTxt"
+        android:textColor= "#2104f7"
+        android:text="2000"
+        android:layout_weight="1"
+        android:gravity="center"/>
+
+</LinearLayout>

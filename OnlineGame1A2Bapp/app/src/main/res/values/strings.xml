@@ -51,7 +51,7 @@
     <string name="pleaseWait">請稍後</string>
     <string name="playerAmountNotEnoughToLuanchGame">人數不足</string>
     <string name="someoneDidntReady">尚有玩家未準備完成</string>
-    <string name="comeBackToRoomList">返回遊戲大廳</string>
+    <string name="leaveThisRoom">離開房間</string>
     <string name="sureAboutComeBackToRoomList">確定要返回遊戲大廳?</string>
     <string name="selectWhichPlayerYouWantToBoot">請選擇欲剔除玩家</string>
     <string name="thePlayerYouWantToBoot" formatted="false">是否要踢 %s 玩家 ?</string>

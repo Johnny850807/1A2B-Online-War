@@ -18,9 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.GameModeHelper;
-import com.example.joanna_zhang.test.Utils.ShowDialogHelper;
+import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
@@ -120,13 +119,10 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void sureAboutComeBackRoomListDialog() {
-        ShowDialogHelper.showComeBackActivityDialog(
-                  R.drawable.logo
-                , R.string.comeBackToRoomList
-                , R.string.sureAboutComeBackToRoomList
-                , R.string.confirm
-                , R.string.cancel, this
-                , new DialogInterface.OnClickListener() {
+        AppDialogFactory.templateBuilder(this)
+                .setTitle(R.string.leaveThisRoom)
+                .setMessage(R.string.sureAboutComeBackToRoomList)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (currentPlayer.equals(currentGameRoom.getHost()))
@@ -135,7 +131,9 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
                             inRoomModule.leaveRoom();
                         finish();
                     }
-                });
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     @Override
