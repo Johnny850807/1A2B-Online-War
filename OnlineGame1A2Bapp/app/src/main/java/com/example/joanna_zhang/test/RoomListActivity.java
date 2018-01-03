@@ -169,6 +169,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
+        Log.v(TAG, "game mode spinner nothing have selected");
     }
 
     public void createRoomBtnOnClick(View view) {
@@ -182,9 +183,8 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     private void showCreateRoomDialog(View view, EditText roomNameEd, Spinner gameModeSpn) {
-        new AlertDialog.Builder(RoomListActivity.this)
+        AppDialogFactory.templateBuilder(this)
                 .setTitle(R.string.create_room)
-                .setIcon(R.drawable.logo)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -199,12 +199,14 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     public void fastJoinRoomBtnOnClick(View view) {
-        if (roomList.isEmpty())
-            Toast.makeText(this, R.string.noRoomCanJoin, Toast.LENGTH_LONG).show();
-        else {
-            int randomNumber = (int) (Math.random() * roomList.size());
-            roomListModule.joinRoom(roomList.get(randomNumber));
-        }
+        Intent intent = new Intent(this, BossFight1A2BActivity.class);
+        startActivity(intent);
+//        if (roomList.isEmpty())
+//            Toast.makeText(this, R.string.noRoomCanJoin, Toast.LENGTH_LONG).show();
+//        else {
+//            int randomNumber = (int) (Math.random() * roomList.size());
+//            roomListModule.joinRoom(roomList.get(randomNumber));
+//        }
     }
 
     private void enterGameRoom(GameRoom gameRoom) {

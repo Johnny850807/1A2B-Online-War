@@ -10,11 +10,14 @@
 
 
     <ProgressBar
+        android:id="@+id/bossHpProgressBar"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:padding="10dp"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:progressTint="#1aff00"/>
+        android:layout_marginTop="10dp"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:progressTint="#1aff00"
+        android:maxHeight="30dip"/>
 
     <ImageView
         android:id="@+id/imageView2"
