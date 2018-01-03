@@ -11,9 +11,10 @@ import com.google.gson.reflect.TypeToken;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
-import gamecore.model.games.Game;
-import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
+import gamecore.model.games.a1b2.boss.AbstractSpirit;
+import gamecore.model.games.a1b2.boss.Monster;
+import gamecore.model.games.a1b2.boss.PlayerSpirit;
 
 /**
  * @author Waterball
@@ -23,9 +24,10 @@ public class MyGson {
 	private static Gson gson;
 	
 	static{
-		RuntimeTypeAdapterFactory<Game> runtimeTypeAdapterFactory = RuntimeTypeAdapterFactory
-			    .of(Game.class, "gameMode")
-			    .registerSubtype(Duel1A2BGame.class, "DUEL1A2B");
+		RuntimeTypeAdapterFactory<AbstractSpirit> runtimeTypeAdapterFactory = RuntimeTypeAdapterFactory
+			    .of(AbstractSpirit.class, "type")
+			    .registerSubtype(PlayerSpirit.class, AbstractSpirit.Type.PLAYER.toString())
+			    .registerSubtype(Monster.class, AbstractSpirit.Type.MONSTER.toString());
 		
 		gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         		.registerTypeAdapter(Date.class, new DateDeserializer())

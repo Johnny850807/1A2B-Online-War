@@ -17,7 +17,7 @@
         android:layout_marginTop="10dp"
         android:maxHeight="30dip"
         android:padding="10dp"
-        android:progressTint="#1aff00" />
+        android:progressTint="#1aff00" /><!--todo yellow warning-->
 
     <ImageView
         android:id="@+id/imageView2"
@@ -37,14 +37,13 @@
         android:background="@android:color/transparent"
         android:fillViewport="true"
         android:gravity="center"
-        android:paddingStart="@dimen/fab_margin"
-        android:paddingEnd="0dp">
+        android:paddingEnd="0dp"
+        android:paddingStart="@dimen/fab_margin">
 
         <android.support.v7.widget.RecyclerView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
             android:id="@+id/boss1a2bPlayerRecyclerView"
-            >
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
         </android.support.v7.widget.RecyclerView>
     </HorizontalScrollView>

@@ -10,12 +10,12 @@ import gamecore.model.games.a1b2.GuessResult;
 
 public class AttackResult implements Serializable{
 	private int damage;
-	private AttackType attackType;
+	private AttackName attackType;
 	private GuessRecord guessRecord;
 	private AbstractSpirit attacker;
 	private AbstractSpirit attacked;
 	
-	public AttackResult(int damage, AttackType attackType, GuessRecord guessRecord, AbstractSpirit attacker, AbstractSpirit attacked) {
+	public AttackResult(int damage, AttackName attackType, GuessRecord guessRecord, AbstractSpirit attacker, AbstractSpirit attacked) {
 		this.damage = damage;
 		this.attackType = attackType;
 		this.guessRecord = guessRecord;
@@ -23,10 +23,10 @@ public class AttackResult implements Serializable{
 		this.attacked = attacked;
 	}
 	
-	public AttackType getAttackType() {
+	public AttackName getAttackType() {
 		return attackType;
 	}
-	public void setAttackType(AttackType attackType) {
+	public void setAttackType(AttackName attackType) {
 		this.attackType = attackType;
 	}
 	public int getDamage() {
@@ -62,7 +62,10 @@ public class AttackResult implements Serializable{
 		return this.getGuessRecord().getB();
 	}
 	
-	public enum AttackType{
+	/**
+	 * The attack name, it's important for the client-side detecting how to render the attacking effect
+	 */
+	public enum AttackName{
 		NORMAL, MAGIC, ASSISTIVE
 	}
 }

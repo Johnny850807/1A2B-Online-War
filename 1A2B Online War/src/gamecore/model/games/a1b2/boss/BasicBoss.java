@@ -14,16 +14,11 @@ import gamecore.model.RequestStatus;
 import utils.RandomString;
 
 public class BasicBoss extends Monster{
-	private Player player;
+	private transient Player bossPlayer;
 	
 	public BasicBoss(MyLogger log, ProtocolFactory protocolFactory) {
 		super(UUID.randomUUID().toString(), "Boss", log, protocolFactory);
-		player = new Player(getName());
-	}
-
-	@Override
-	public Type getType() {
-		return Type.MONSTER;
+		bossPlayer = new Player(getName());
 	}
 
 	@Override
@@ -35,16 +30,11 @@ public class BasicBoss extends Monster{
 	public int getMaxHp() {
 		return 3000;
 	}
-	
-	@Override
-	protected String produceAnswer() {
-		return RandomString.nextNonDuplicatedNumber(4);
-	}
 
 	@Override
 	protected void onAnswerGuessed4A(AttackResult attackResult) {
 		//change the answer of the boss and broadcast
-		setAnswer(produceAnswer());
+		setAnswer(onProduceAnswer());
 		sendChatMessageToAllPlayers("不用得意，我還在讓！(改變密碼中...)");
 	}
 
@@ -53,21 +43,10 @@ public class BasicBoss extends Monster{
 		sendChatMessageToAllPlayers("可惡....");
 	}
 
-	@Override
-	protected void onSurvivedFromAttack(AttackResult attackResult) {
-		
-	}
-
-	@Override
-	protected List<MonsterAction> createMonsterActions() {
-		List<MonsterAction> actions = new ArrayList<>();
-		actions.add(new NormalAttack());
-		return actions;
-	}
 
 	protected void sendChatMessageToAllPlayers(String msg){
 		Protocol protocol = protocolFactory.createProtocol(Chat.SEND_MSG, RequestStatus.success.toString(), 
-				gson.toJson(new ChatMessage(game.getRoomId(), new Player(getName()), msg)));
+				gson.toJson(new ChatMessage(game.getRoomId(), bossPlayer, msg)));
 		for (PlayerSpirit playerSpirit : game.getPlayerSpirits())
 			playerSpirit.broadcast(protocol);
 	}

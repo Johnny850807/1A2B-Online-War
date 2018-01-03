@@ -41,16 +41,14 @@ public class Duel1A2BGame extends Game{
 	}
 	
  	@ForServer
-	public void commitPlayerAnswer(String playerId, String answer) throws NumberNotValidException, ProcessInvalidException{
+	public synchronized void commitPlayerAnswer(String playerId, String answer) throws NumberNotValidException, ProcessInvalidException{
  		validateCommittingAnswerOperation(playerId);
 		playerModels.get(playerId).setAnswer(answer);
-		synchronized (playerModels) {
-			log.trace("Room: " + roomId + ", Player: " + getPlayerName(playerId) + ", Set answer: " + answer);
-			if (hasBothAnswersCommitted())
-			{
-				guessingStarted = true;
-				broadcastGuessingStarted();
-			}
+		log.trace("Room: " + roomId + ", Player: " + getPlayerName(playerId) + ", Set answer: " + answer);
+		if (hasBothAnswersCommitted())
+		{
+			guessingStarted = true;
+			broadcastGuessingStarted();
 		}
 	}
  	
@@ -60,7 +58,7 @@ public class Duel1A2BGame extends Game{
  			throw new ProcessInvalidException("The player has already committed the answer.");
  	}
  	
-	public boolean hasBothAnswersCommitted(){
+	public synchronized boolean hasBothAnswersCommitted(){
 		for (Duel1A2BPlayerBarModel model : playerModels.values())
 			if (model.getAnswer() == null)
 				return false;
@@ -75,7 +73,7 @@ public class Duel1A2BGame extends Game{
 	}
 
  	@ForServer
-	public void guess(String playerId, String guess) throws NumberNotValidException, ProcessInvalidException{
+	public synchronized void guess(String playerId, String guess) throws NumberNotValidException, ProcessInvalidException{
  		validateGuessingRequest(playerId);
 		GuessResult result = guessAndGetResult(playerId, guess);
 		playerModels.get(playerId).addRecord(new GuessRecord(guess, result));

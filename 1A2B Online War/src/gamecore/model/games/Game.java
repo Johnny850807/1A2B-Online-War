@@ -46,7 +46,7 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
 	}
 
  	@ForServer
- 	public void enterGame(ClientPlayer clientPlayer){
+ 	public final synchronized void enterGame(ClientPlayer clientPlayer){
  		if (gameStarted)
  			throw new IllegalStateException("The game is started.");
  		log.trace("The player " + clientPlayer.getPlayerName() + " entered.");
@@ -58,18 +58,21 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
 	}
  	
  	@Override
- 	public void onAllPlayerEntered() {
+ 	public final synchronized void onAllPlayerEntered() {
  		listener.onGameStarted(this);
  		startGame();
  	}
  	
  	@ForServer
- 	public void startGame(){
+ 	public final synchronized void startGame(){
  		log.trace("Game " + gameMode.toString() + " started.");
  		gameStarted = true;
+ 		onGameStarted();
  		startTimer();
  	}
 
+ 	protected void onGameStarted(){/*hook method*/};
+ 	
  	public void setLog(MyLogger log) {
 		this.log = log;
 	}
@@ -92,7 +95,7 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
 		timer.cancel();
 	}
 	
-	public void validateGameStarted(){
+	protected synchronized void validateGameStarted(){
 		if (!isGameStarted())
 			throw new ProcessInvalidException("The game is not started.");
 	}

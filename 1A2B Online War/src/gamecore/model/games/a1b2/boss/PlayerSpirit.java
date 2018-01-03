@@ -29,12 +29,6 @@ public class PlayerSpirit extends AbstractSpirit{
 	}
 	
 	@Override
-	@ForServer
-	public void action() {
-		
-	}
-	
-	@Override
 	public Type getType() {
 		return Type.PLAYER;
 	}
@@ -53,6 +47,7 @@ public class PlayerSpirit extends AbstractSpirit{
 	@ForServer
 	public void setAnswer(String answer) {
 		log.trace("The player " + getName() + " set answer: " + answer);
+		this.answer = answer;
 	}
 	
 	@Override
@@ -69,4 +64,16 @@ public class PlayerSpirit extends AbstractSpirit{
 	protected void onSurvivedFromAttack(AttackResult attackResult) {
 		
 	}
+	
+	
+	@Override
+	public int hashCode() {
+		return player.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return player.equals(obj);
+	}
+
 }

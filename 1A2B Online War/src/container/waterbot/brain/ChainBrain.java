@@ -1,12 +1,7 @@
 package container.waterbot.brain;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Timer;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omg.CORBA.PUBLIC_MEMBER;
 
 import com.google.gson.Gson;
 
@@ -15,9 +10,6 @@ import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import container.waterbot.Brain;
 import container.waterbot.WaterBot;
-import gamecore.entity.ChatMessage;
-import gamecore.entity.GameRoom;
-import gamecore.entity.Player;
 import gamecore.model.RequestStatus;
 import utils.MyGson;
 
