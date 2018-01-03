@@ -27,7 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.joanna_zhang.test.Utils.AppLogoDialogBuilderFactory;
+import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.GameModeHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
@@ -47,12 +47,14 @@ import static com.example.joanna_zhang.test.R.array.roomMode;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
+/**
+ * TODO UX
+ */
 public class RoomListActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener, RoomListModule.Callback, ListView.OnItemClickListener {
     private final static String TAG = "RoomListActivity";
     private Player currentPlayer;
     private boolean enableLoadingRoomListAnimation = true;
     private List<GameRoom> roomList = new ArrayList<>();
-    private GameMode[] gameModes = {null, GameMode.GROUP1A2B, GameMode.DUEL1A2B};
     private List<GameRoom> roomListOfQuery = new ArrayList<>();
     private EditText searchEdt;
     private ListView roomListView;
@@ -60,7 +62,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     private RoomListModule roomListModule;
     private UserSigningModule signingModule;
     private BaseAdapter adapter = new MyAdapter();
-    private GameMode selectedMode = gameModes[0];
+    private GameMode selectedMode = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,9 +141,9 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     private void sureAboutSignOutDialog() {
-        AppLogoDialogBuilderFactory.create(this)
-                .setTitle(R.string.comeBackToRoomList)
-                .setMessage(R.string.sureAboutComeBackToRoomList)
+        AppDialogFactory.templateBuilder(this)
+                .setTitle(R.string.signOut)
+                .setMessage(R.string.sureToSignOut)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -154,8 +156,15 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-        selectedMode = gameModes[position];
+        String[] roomModes = getResources().getStringArray(R.array.roomMode);
+        selectedMode = getGameModeByString(roomModes[position]);
         selectAndUpdateRoomList();
+    }
+
+    private GameMode getGameModeByString(String roomMode) {
+        if (roomMode.equals(getString(R.string.duel)))
+            return GameMode.DUEL1A2B;
+        return roomMode.equals(getString(R.string.boss1a2b)) ? GameMode.BOSS1A2B : null;
     }
 
     @Override
@@ -180,7 +189,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String modeName = gameModeSpn.getSelectedItem().toString();
-                        GameMode gameModeToCreateRoom = modeName.equals(getString(R.string.duel)) ? GameMode.DUEL1A2B : GameMode.GROUP1A2B;
+                        GameMode gameModeToCreateRoom = getGameModeByString(modeName);
                         roomListModule.createRoom(roomNameEd.getText().toString(), gameModeToCreateRoom);
                     }
                 })
@@ -213,7 +222,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     private List<GameRoom> getRoomsByGameMode(List<GameRoom> rooms) {
         List<GameRoom> results = new ArrayList<>();
-        if (selectedMode == gameModes[0])
+        if (selectedMode == null)
             return rooms;
         for (GameRoom gameRoom : rooms)
             if (gameRoom.getGameMode() == selectedMode)
@@ -289,8 +298,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
             GameRoom gameroom = roomListOfQuery.get(position);
 
-            String modeName = getString(R.string.modeName);
-            modeName += GameModeHelper.getGameModeText(RoomListActivity.this, gameroom.getGameMode());
+            String modeName = GameModeHelper.getGameModeText(RoomListActivity.this, gameroom.getGameMode());
 
             viewHolder.roomNameTxt.setText(gameroom.getName());
             viewHolder.roomModeTxt.setText(modeName);
@@ -376,6 +384,12 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     @Override
+    public void onRoomClosedForExpired(GameRoom gameRoom) {
+        roomList.remove(gameRoom);
+        selectAndUpdateRoomList();
+    }
+
+    @Override
     public void onRoomUpdated(GameRoom gameRoom) {
         roomList.remove(gameRoom);
         roomList.add(gameRoom);
@@ -400,6 +414,11 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     @Override
     public void onPlayerLeft(PlayerRoomModel model) {
         onRoomUpdated(model.getGameRoom());
+    }
+
+    @Override
+    public void onPlayerLeisureTimeExpired() {
+        AppDialogFactory.timeExpiredDialog(this, getString(R.string.playerTimeExpired)).show();
     }
 
     @Override

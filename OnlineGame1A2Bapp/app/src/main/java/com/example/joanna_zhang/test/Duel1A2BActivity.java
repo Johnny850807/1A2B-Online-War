@@ -1,11 +1,6 @@
 package com.example.joanna_zhang.test;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.SoundPool;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -22,10 +17,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.joanna_zhang.test.Utils.AppLogoDialogBuilderFactory;
+import com.example.joanna_zhang.test.Utils.AppDialogFactory;
+import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
-import com.ood.clean.waterball.a1a2bsdk.core.modules.games.Duel1A2BModule;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.games.a1b2.duel.Duel1A2BModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,32 +43,29 @@ import static com.example.joanna_zhang.test.R.string.confirm;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
-public class DuelActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowView.OnClickListener, Duel1A2BModule.Callback {
-
-    private final static String TAG = "DuelActivity";
+public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowDialog.OnClickListener, Duel1A2BModule.Callback {
+    private final static String TAG = "Duel1A2BActivity";
     private Duel1A2BModule duel1A2BModule;
     private android.app.AlertDialog progressDialog;
     private List<GuessRecord> p1ResultList, p2ResultList;
     private GameRoom currentGameRoom;
     private Player currentPlayer;
     private ChatWindowView chatWindowView;
-    private InputNumberWindowView inputNumberWindowView;
+    private InputNumberWindowDialog inputNumberWindowDialog;
     private Button inputNumberBtn;
     private ImageButton sendGuessBtn;
     private TextView p1NameTxt, p2NameTxt, p1AnswerTxt, p2AnswerTxt;
     private ListView p1ResultListView, p2ResultListView;
     private GuessResultAdapter p1GuessResultAdapter, p2GuessResultAdapter;
     private Handler handler = new Handler();
-    private MediaPlayer mediaPlayer;
     private SoundManager soundManager;
     private boolean gameStarted = false;
+    private boolean gameover = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_duel);
-        mediaPlayer = MediaPlayer.create(this, R.raw.rainsong);
-        mediaPlayer.setLooping(true);
         init();
         findViews();
         setUpChatWindow();
@@ -85,9 +78,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         super.onResume();
         chatWindowView.onResume();
         duel1A2BModule.registerCallback(this, currentPlayer, currentGameRoom, this);
-        if (gameStarted)
-            mediaPlayer.start();
-        else
+        if (!gameStarted)
         {
             waitOtherPlayersPrepare();
             duel1A2BModule.enterGame();
@@ -98,21 +89,21 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            showLeftGameDialog();
+            if (!gameover)
+                showLeftGameDialog();
+            else
+                finish();
         }
         return false;
     }
 
     private void showLeftGameDialog() {
-        AppLogoDialogBuilderFactory.create(this)
+        AppDialogFactory.templateBuilder(this)
                 .setTitle(R.string.leftGame)
                 .setMessage(R.string.sureToLeftGame)
-                .setPositiveButton(confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        duel1A2BModule.leaveGame();
-                        finish();
-                    }
+                .setPositiveButton(confirm, (d,i) -> {
+                    duel1A2BModule.leaveGame();
+                    finish();
                 })
                 .setNegativeButton(cancel, null)
                 .show();
@@ -122,8 +113,6 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     protected void onStop() {
         super.onStop();
         duel1A2BModule.unregisterCallBack(this);
-        if (gameStarted)
-            mediaPlayer.pause();
     }
 
     @Override
@@ -163,11 +152,11 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     private void setupAnswer() {
-        new InputNumberWindowView.Builder(this)
+        new InputNumberWindowDialog.Builder(this)
                 .setOnEnterClickListener(answer -> duel1A2BModule.setAnswer(answer))
                 .setCanceledOnTouchOutside(false)
                 .setCancelable(false)
-                .setTitle(getString(R.string.setAnswerFrist))
+                .setTitle(getString(R.string.setAnswerFirst))
                 .show();
     }
 
@@ -178,21 +167,19 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     private void setUpInputNumberWindowView() {
-        inputNumberWindowView = new InputNumberWindowView.Builder(this)
+        inputNumberWindowDialog = new InputNumberWindowDialog.Builder(this)
                 .setOnEnterClickListener(this)
                 .setTitle(getString(R.string.pleaseInputGuess))
                 .build();
     }
 
     private void waitOtherPlayersPrepare() {
-        progressDialog = new ProgressDialog.Builder(DuelActivity.this)
+        progressDialog = new ProgressDialog.Builder(Duel1A2BActivity.this)
                 .setCancelable(false)
                 .setTitle(getString(R.string.pleaseWait))
                 .setMessage(getString(R.string.waitOtherPlayersJoin))
                 .show();
     }
-
-
 
     public void updateResultList() {
         p1GuessResultAdapter.setResultList(p1ResultList);
@@ -206,9 +193,9 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     @Override
     public void onGameStarted() {
         gameStarted = true;
-        mediaPlayer.start();
         progressDialog.dismiss();
         setupAnswer();
+        soundManager.playSound(R.raw.dingdong);
     }
 
     @Override
@@ -249,7 +236,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
     }
 
     public void inputNumberOnClick(View view) {
-        inputNumberWindowView.show();
+        inputNumberWindowDialog.show();
     }
 
     @Override
@@ -278,7 +265,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         Log.d(TAG, "onGuessingStarted");
         inputNumberBtn.setEnabled(true);
         sendGuessBtn.setEnabled(true);
-        soundManager.playDingdong();
+        soundManager.playSound(R.raw.dong);
     }
 
     @Override
@@ -294,20 +281,23 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         inputNumberBtn.setText(null);
         inputNumberBtn.setEnabled(true);
         sendGuessBtn.setEnabled(true);
-        soundManager.playDingdong();
+        soundManager.playSound(R.raw.dong);
     }
 
     @Override
     public void onGameOver(GameOverModel gameOverModel) {
         Log.d(TAG, "onGameOver");
+        gameover = true;
         Player winner = currentGameRoom.getHost().getId().equals(gameOverModel.getWinnerId()) ?
                 currentGameRoom.getHost() : currentGameRoom.getPlayerStatus().get(0).getPlayer();
+        if (!winner.equals(currentPlayer))
+            soundManager.playSound(R.raw.lose);
         inputNumberBtn.setEnabled(false);
         handler.postDelayed(()->createAndShowDialogForWinner(winner), 3000);
     }
 
     @Override
-    public void onOpponentLeft(PlayerRoomModel model) {
+    public void onPlayerLeft(PlayerRoomModel model) {
         createAndShowPlayerLeftNotifyingDialog(model.getPlayer());
     }
 
@@ -316,30 +306,24 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
         createAndShowPlayerLeftNotifyingDialog(gameRoom.getHost());
     }
 
+    @Override
+    public void onRoomExpired() {
+        AppDialogFactory.timeExpiredDialog(this, getString(R.string.roomClosedForExpired)).show();
+    }
+
     private void createAndShowPlayerLeftNotifyingDialog(Player leftPlayeer){
-        AppLogoDialogBuilderFactory.create(this)
+        AppDialogFactory.templateBuilder(this)
                 .setTitle(R.string.gameClosed)
                 .setMessage(getString(R.string.playerIsAlreadyLeft,leftPlayeer.getName()))
-                .setPositiveButton(confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
+                .setPositiveButton(confirm, (d,i) -> finish())
                 .show();
     }
 
     private void createAndShowDialogForWinner(Player winner){
-        AppLogoDialogBuilderFactory.create(this)
+        AppDialogFactory.templateBuilder(this)
                 .setTitle(R.string.gameOver)
                 .setMessage(getString(R.string.theWinnerIs, winner.getName()))
-                .setCancelable(false)
-                .setPositiveButton(confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                })
+                .setPositiveButton(confirm, (d,i) -> finish())
                 .show();
     }
 
@@ -374,7 +358,7 @@ public class DuelActivity extends AppCompatActivity implements ChatWindowView.Ch
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            view = LayoutInflater.from(DuelActivity.this).inflate(R.layout.duel_list_item, viewGroup, false);
+            view = LayoutInflater.from(Duel1A2BActivity.this).inflate(R.layout.duel_list_item, viewGroup, false);
 
             TextView guess = view.findViewById(R.id.guessNumber);
             TextView aNumber = view.findViewById(R.id.aNumber);

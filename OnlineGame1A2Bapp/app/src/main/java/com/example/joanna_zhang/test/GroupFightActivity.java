@@ -21,14 +21,14 @@ import gamecore.model.ErrorMessage;
 
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
-public class GroupFightActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowView.OnClickListener {
+public class GroupFightActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowDialog.OnClickListener {
 
     //private Duel1A2BGameModule duel1A2BGameModule;
     //private List<GuessRecord> p1ResultList, p2ResultList;
     private GameRoom gameRoom;
     private Player currentPlayer;
     private ChatWindowView chatWindowView;
-    private InputNumberWindowView inputNumberWindowView;
+    private InputNumberWindowDialog inputNumberWindowDialog;
     private Button inputNumberBtn;
     private TextView p1NameTxt, p2NameTxt, p3NameTxt, p4NameTxt, p5NameTxt, p6NameTxt;
     private ListView p1ResultListView, p2ResultListView;
@@ -57,7 +57,7 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void setupInputNumberWindowView() {
-        inputNumberWindowView = new InputNumberWindowView.Builder(this)
+        inputNumberWindowDialog = new InputNumberWindowDialog.Builder(this)
                 .setOnEnterClickListener(this)
                 .build();
     }

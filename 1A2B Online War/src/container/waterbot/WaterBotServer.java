@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import container.base.Client;
-import container.waterbot.brain.ChainBrain;
 import container.waterbot.brain.Duel1A2BGameBrain;
 import container.waterbot.brain.InRoomBrain;
 import container.waterbot.brain.RoomListBrain;
 import container.waterbot.brain.SignBrain;
-import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
 
@@ -20,7 +18,7 @@ public class WaterBotServer {
 		if (argv.length > 1)
 			System.out.println("The argument should be only 1 for the bot amount.");
 		System.setProperty("log4j.configurationFile","configuration.xml");
-		int amount = Integer.parseInt("8");
+		int amount = Integer.parseInt("1");
 		List<Thread> botWorkers = new ArrayList<>();
 
 		IntStream.range(0, amount).parallel()

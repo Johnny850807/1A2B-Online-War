@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="boss1a2b">1A2B 王團戰</string>
+    <string name="dixit">Dixit 說書人</string>
+    <string name="duel">1A2B 對決</string>
+    <string name="fight">1A2B 爭奪戰</string>
+
+    <array name="roomMode">
+        <item>模式選擇</item>
+        <item>@string/duel</item>
+        <item>@string/boss1a2b</item>
+    </array>
+
+
+
+    <array name="gameMode">
+        <item>null</item>
+        <item></item>
+    </array>
+
+</resources>

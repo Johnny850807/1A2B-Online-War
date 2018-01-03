@@ -5,10 +5,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
-
-import gamecore.model.games.a1b2.A1B2NumberValidator;
-import gamecore.model.games.a1b2.NumberNotValidException;
 
 public class RandomString {
 	public static String next(int length){
@@ -43,15 +39,4 @@ public class RandomString {
 		return strb.toString();
 	}
 	
-	public static void main(String[] argv){
-		IntStream.range(0, 10000).parallel().parallel().forEach(i -> {
-			String rand = nextNonDuplicatedNumberWith(2, new Integer[]{6, 9});
-			try {
-				A1B2NumberValidator.validateNumber(rand);
-			} catch (NumberNotValidException e) {
-				e.printStackTrace();
-			}
-		});
-		System.out.println("Successfully");
-	}
 }

@@ -51,10 +51,17 @@ public interface RoomListModule extends GameModule{
          */
         void onRoomClosed(GameRoom gameRoom);
 
+
+        /**
+         * when the room is expired.
+         */
+        void onRoomClosedForExpired(GameRoom gameRoom);
+
         /**
          * This method will be called if any of the room's info modified by the host.
          */
         void onRoomUpdated(GameRoom gameRoom);
+
 
         /**
          * This method will be called when you join to the room successfully.
@@ -74,5 +81,11 @@ public interface RoomListModule extends GameModule{
          * You should update the room player amount on the UI.
          */
         void onPlayerLeft(PlayerRoomModel model);
+
+        /**
+         * when the player stay in no-action  in the room list for a given long time,
+         * that means the player is kicked out of the online.
+         */
+        void onPlayerLeisureTimeExpired();
     }
 }

@@ -29,5 +29,6 @@ public interface GameCore extends ClientBinder, Game.GameLifecycleListener{
 	void removeClientPlayer(String id);
 	void addGameRoom(GameRoom room);
 	void closeGameRoom(GameRoom room);
+	void closeGameRoom(GameRoom room, Protocol protocol);
 	void removePlayerFromRoomAndBroadcast(Player player, GameRoom gameRoom);
 }

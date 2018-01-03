@@ -1,10 +1,10 @@
 package gamecore.entity;
 
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.logging.log4j.Logger;
+import java.util.concurrent.TimeUnit;
 
 import container.ApacheLoggerAdapter;
 import container.base.ClientBinder;
@@ -21,18 +21,21 @@ import gamecore.model.games.GameEnteringWaitingBox;
 import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamecore.model.games.a1b2.boss.BasicBoss;
 import gamecore.model.games.a1b2.boss.Boss1A2BGame;
-import utils.GamecoreHelper;
 import utils.ForServer;
+import utils.GamecoreHelper;
 
 /**
  * GameRoom contains only the info and the status the room should present. The game of the room will be
  * created by a GameMode.
  */
-public class GameRoom extends Entity{
+public class GameRoom extends Entity implements LeisureTimeChallengeable{
 	private transient ProtocolFactory protocolFactory;
 	private transient MyLogger log = new MockLogger();
 	private transient Game game;
 	private transient ArrayList<ChatMessage> chatMessageList = new ArrayList<>();
+	public static final long LEISURE_TIME_EXPIRE = TimeUnit.MINUTES.toMillis(3);
+	private Date createdTime;
+	private Date latestLeisureTime;
 	private Player host;
 	private RoomStatus roomStatus = RoomStatus.waiting;
 	private GameMode gameMode;
@@ -53,6 +56,7 @@ public class GameRoom extends Entity{
 	@ForServer
 	public void addChatMessage(ChatMessage chatMessage){
 		getChatMessageList().add(chatMessage);
+		pushLeisureTime();
 	}
 	
 	@ForServer
@@ -64,6 +68,25 @@ public class GameRoom extends Entity{
 	public List<ChatMessage> getChatMessageList() {
 		return chatMessageList == null ? chatMessageList = new ArrayList<>() : chatMessageList;
 	} 
+	
+	@ForServer
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+		this.latestLeisureTime = createdTime;
+	}
+	
+	@Override
+	@ForServer
+	public synchronized boolean isLeisureTimeExpired(){
+		long diffTime = System.currentTimeMillis() - latestLeisureTime.getTime();
+		return diffTime >= LEISURE_TIME_EXPIRE;
+	}
+
+	@Override
+	@ForServer
+	public void pushLeisureTime(){
+		latestLeisureTime = new Date();
+	}
 	
 	public void setLog(MyLogger log) {
 		this.log = log;
@@ -93,30 +116,31 @@ public class GameRoom extends Entity{
 		this.host = host;
 	}
 
-	public RoomStatus getRoomStatus() {
-		validate();
+	public synchronized RoomStatus getRoomStatus() {
+		validateIdNull();
 		return roomStatus;
 	}
 
-	public void setRoomStatus(RoomStatus roomStatus) {
+	public synchronized void setRoomStatus(RoomStatus roomStatus) {
 		System.out.println("Set room status: " + roomStatus);
-		validate();
+		validateIdNull();
 		this.roomStatus = roomStatus;
 	}
 
-	public List<PlayerStatus> getPlayerStatus() {
+	public synchronized List<PlayerStatus> getPlayerStatus() {
 		return playerStatusList;
 	}
 	
-	public int getPlayerAmount(){
+	public synchronized int getPlayerAmount(){
 		return getPlayers().size(); 
 	}
 	
-	public void changePlayerStatus(Player player, boolean ready){
+	public synchronized void changePlayerStatus(Player player, boolean ready){
 		getPlayerStatusOfPlayer(player).setReady(ready);
+		pushLeisureTime();
 	}
 	
-	public Player getPlayerById(String playerId){
+	public synchronized Player getPlayerById(String playerId){
 		for (PlayerStatus playerStatus : playerStatusList)
 			if (playerStatus.getPlayer().getId().equals(playerId))
 				return playerStatus.getPlayer();
@@ -126,7 +150,7 @@ public class GameRoom extends Entity{
 	/**
 	 * @return all the players including the host at the first position.
 	 */
-	public List<Player> getPlayers(){
+	public synchronized List<Player> getPlayers(){
 		List<Player> players = new ArrayList<>();
 		if (host != null)
 			players.add(host);
@@ -135,13 +159,12 @@ public class GameRoom extends Entity{
 		return players;
 	}
 
-	public void addPlayer(Player player){
-		synchronized (this) {
-			player.setUserStatus(ClientStatus.inRoom);
-			PlayerStatus playerStatus = new PlayerStatus(player);
-			validateNewPlayer(playerStatus);
-			playerStatusList.add(playerStatus);
-		}
+	public synchronized void addPlayer(Player player){
+		player.setUserStatus(ClientStatus.inRoom);
+		PlayerStatus playerStatus = new PlayerStatus(player);
+		validateNewPlayer(playerStatus);
+		playerStatusList.add(playerStatus);
+		pushLeisureTime();
 	}
 	
 	private void validateNewPlayer(PlayerStatus playerStatus){
@@ -151,14 +174,14 @@ public class GameRoom extends Entity{
 			throw new IllegalStateException("The Player amount is out of the maximum amount.");
 	}
 	
-	public void removePlayer(Player player){
+	public synchronized void removePlayer(Player player){
 		if (player.equals(host))
 			host = null;
 		else
 			playerStatusList.remove(getPlayerStatusOfPlayer(player));
 	}
 	
-	public PlayerStatus getPlayerStatusOfPlayer(Player player){
+	public synchronized PlayerStatus getPlayerStatusOfPlayer(Player player){
 		for (PlayerStatus playerStatus : playerStatusList)
 			if(playerStatus.getPlayer().equals(player))
 				return playerStatus;
@@ -169,24 +192,24 @@ public class GameRoom extends Entity{
 		this.name = name;
 	}
 	
-	public int getMaxPlayerAmount(){
+	public synchronized int getMaxPlayerAmount(){
 		return gameMode.getMaxPlayerAmount();
 	}
 	
-	public int getMinPlayerAmount(){
+	public synchronized int getMinPlayerAmount(){
 		return gameMode.getMinPlayerAmount();
 	}
 	
-	public boolean containsPlayer(Player player){
+	public synchronized boolean containsPlayer(Player player){
 		return (host != null && host.equals(player)) || ifPlayerInStatusList(player);
 	}
 	
-	public void validate(){
+	public void validateIdNull(){
 		if (getId() == null)
 			throw new IllegalStateException("The game room's id is null.");
 	}
 	
-	public boolean ifPlayerInStatusList(Player player){
+	public synchronized boolean ifPlayerInStatusList(Player player){
 		try{
 			getPlayerStatusOfPlayer(player);
 			return true;
@@ -204,17 +227,13 @@ public class GameRoom extends Entity{
 		return protocolFactory;
 	}
 	
-	@ForServer
-	public void onGameRoomClosed(){
-		
-	}
 	
 	/**
 	 * launch the game and send all the client players into the game.
 	 * @param clientBinder binding interface which allows the game access the client player without coupling to the game core.
 	 */
 	@ForServer
-	public void launchGame(ClientBinder clientBinder, Game.GameLifecycleListener listener){
+	public synchronized void launchGame(ClientBinder clientBinder, Game.GameLifecycleListener listener){
 		log.trace("Room: " + id + ", launcing the " + gameMode.toString() + " game.");
 		validatePlayerAmount();
 		
@@ -227,22 +246,23 @@ public class GameRoom extends Entity{
 		log.trace("Players prepared: " + GamecoreHelper.clientsToString(playerClients));
 		
 		initGame(hostClient, playerClients, listener);
+		pushLeisureTime();
 	}
 	
-	public boolean canStartTheGame(){
+	public synchronized boolean canStartTheGame(){
 		int playerAmount = getPlayerAmount();
 		return playerAmount >= getMinPlayerAmount() && playerAmount <= getMaxPlayerAmount()
 				&& host != null && areAllPlayerReady();
 	}
 	
-	public boolean areAllPlayerReady(){
+	public synchronized boolean areAllPlayerReady(){
 		for (PlayerStatus playerStatus : playerStatusList)
 			if (!playerStatus.isReady())
 				return false;
 		return true;
 	}
 	
-	public boolean isAvailableToJoin(){
+	public synchronized boolean isAvailableToJoin(){
 		return getPlayerAmount() != getMaxPlayerAmount() && 
 				getRoomStatus() != RoomStatus.gamestarted;
 	}
@@ -288,7 +308,7 @@ public class GameRoom extends Entity{
 		setRoomStatus(RoomStatus.gamestarted);
 	}
 	
-	private void setAllPlayerStatus(ClientStatus status){
+	public void setAllPlayerStatus(ClientStatus status){
 		for (Player player : getPlayers())
 			player.setUserStatus(status);
 	}

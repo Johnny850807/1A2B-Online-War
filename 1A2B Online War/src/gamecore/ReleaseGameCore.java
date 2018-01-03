@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 import container.Constants.Events.Games;
 import container.Constants.Events.InRoom;
 import container.Constants.Events.RoomList;
+import container.Constants.Events.Signing;
 import container.base.Client;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
@@ -44,6 +46,7 @@ import utils.MyGson;
  */
 public class ReleaseGameCore implements GameCore{
 	private static Logger log = LogManager.getLogger(ReleaseGameCore.class);
+	private Challenger challenger = new Challenger();
 	private GameFactory factory;
 	private Gson gson = MyGson.getGson();
 	private Map<String, GameRoom> roomContainer = Collections.synchronizedMap(new LinkedHashMap<String, GameRoom>()); // <id, GameRoom>
@@ -51,6 +54,7 @@ public class ReleaseGameCore implements GameCore{
 	
 	public ReleaseGameCore(GameFactory factory) {
 		this.factory = factory;
+		challenger.start();
 	}
 
 	@Override
@@ -134,25 +138,29 @@ public class ReleaseGameCore implements GameCore{
 	}
 	
 	@Override
-	public void closeGameRoom(GameRoom room){
+	public void closeGameRoom(GameRoom room) {
+		closeGameRoom(room, factory.getProtocolFactory().createProtocol(InRoom.CLOSE_ROOM,
+				RequestStatus.success.toString(), gson.toJson(room)));
+	}
+	
+	@Override
+	public void closeGameRoom(GameRoom room, Protocol protocol){
 		room = getGameRoom(room.getId());  
 		validateNull(room);
 		
 		//first change all the player status in the room to signedIn.
-		room.getPlayers().forEach(p -> p.setUserStatus(ClientStatus.signedIn));
-		Protocol protocol = factory.getProtocolFactory().createProtocol(InRoom.CLOSE_ROOM,
-				RequestStatus.success.toString(), gson.toJson(room));
+		room.setAllPlayerStatus(ClientStatus.signedIn);
 		
 		/*then broadcast to all the signedIn players, for each player just got out from the room,
 		they will also receive the room closed event*/
 		broadcastClientPlayers(ClientStatus.signedIn, protocol);
-		removeTheRoomSync(room, "Room removed: " + room);
+		removeTheRoomFromMapSync(room, "Room removed: " + room);
 	}
 	
 	@Override
 	public void addBindedClientPlayer(Client client, Player player){
 		if (player.getId() == null)
-			throw new IllegalStateException("The player's id has not been initialized.");
+			throw new NullPointerException("The player's id has not been initialized.");
 		if (clientsMap.containsKey(client.getId()))
 			throw new IllegalStateException("The id is duplicated from the new binded clientplayer !");
 		
@@ -167,10 +175,16 @@ public class ReleaseGameCore implements GameCore{
 		if (clientsMap.containsKey(id))
 		{
 			ClientPlayer clientPlayer = clientsMap.get(id);
-			log.trace("Client removing: " + clientPlayer);
-			handleThePlayerRemovedEventToRooms(clientPlayer.getPlayer());
-			clientsMap.remove(id);
-			log.trace("Remove the player from the clientsMap.");
+			synchronized (clientPlayer) 
+			{
+				if (clientsMap.containsKey(id))
+				{
+					log.trace("Client removing: " + clientPlayer);
+					handleThePlayerRemovedEventToRooms(clientPlayer.getPlayer());
+					clientsMap.remove(id);
+					log.trace("Remove the player from the clientsMap.");
+				}
+			}
 		}
 		else
 			log.error("The client didn't sign.");
@@ -182,7 +196,7 @@ public class ReleaseGameCore implements GameCore{
 	 * (2) the player is inside the room but not a host: boot him out from the room and broadcast the leave event to the room.
 	 * @param player removed player
 	 */
-	private void handleThePlayerRemovedEventToRooms(Player player){
+	private void handleThePlayerRemovedEventToRooms(final Player player){
 		log.trace("Handling the player removed.");
 		getGameRooms().parallelStream().forEach(gameRoom -> {
 			synchronized (gameRoom) {
@@ -193,7 +207,7 @@ public class ReleaseGameCore implements GameCore{
 	}
 
 	private void removeThePlayerFromTheRoomOrCloseHisRoom(Player player, GameRoom gameRoom){
-		if (gameRoom.getHost().equals(player))
+		if (gameRoom.isHost(player))
 		{
 			log.trace("The player is the host from the room: " + gameRoom.getName() + ", closing his room.");
 			closeGameRoom(gameRoom);
@@ -225,7 +239,6 @@ public class ReleaseGameCore implements GameCore{
 		}
 	}
 
-
 	@Override
 	public void onGameStarted(Game game) {
 		Protocol protocol = factory.getProtocolFactory().createProtocol(Games.GAMESTARTED,
@@ -237,18 +250,21 @@ public class ReleaseGameCore implements GameCore{
 	public void onGameInterrupted(Game game, ClientPlayer noResponsePlayer) {
 		GameRoom room = getGameRoom(game.getRoomId());
 		log.trace("Game interrupted, player " + noResponsePlayer.getPlayerName() + " disconntects, closing it.");
-		closeGameRoom(room);
+		room.setAllPlayerStatus(ClientStatus.signedIn);
+		room.setRoomStatus(RoomStatus.waiting);
+		removeTheRoomFromMapSync(room, "The game is over.");
 	}
 
 	@Override
 	public void onGameOver(Game game, GameOverModel gameOverModel) {
 		GameRoom room = getGameRoom(game.getRoomId());
-		room.setRoomStatus(RoomStatus.waiting);
 		log.trace("Game over, the room " + room.getName() + " closed, closing it.");
-		closeGameRoom(room);
+		room.setAllPlayerStatus(ClientStatus.signedIn);
+		room.setRoomStatus(RoomStatus.waiting);
+		removeTheRoomFromMapSync(room, "The game is over.");
 	}
 
-	private void removeTheRoomSync(GameRoom room, String logMsg){
+	private void removeTheRoomFromMapSync(GameRoom room, String logMsg){
 		synchronized (room) {
 			if (roomContainer.containsKey(room.getId()))
 			{
@@ -258,9 +274,71 @@ public class ReleaseGameCore implements GameCore{
 		}
 	}
 	
+	private void removeTheClientPlayerFromMapSync(ClientPlayer clientPlayer){
+		synchronized (clientPlayer) {
+			if (clientsMap.containsKey(clientPlayer.getId()))
+				clientsMap.remove(clientPlayer.getId());
+		}
+	}
+	
 	private void validateNull(Object ...objs){
 		for (Object object : objs)
 			if (object == null)
 				throw new NullPointerException();
+	}
+	
+	/**
+	 * The challenger to challenge each game room. Close the room if it has been so much time on waiting.
+	 */
+	private class Challenger extends TimerTask{
+		private Timer timer = new Timer();
+		private static final long DELAY = 20000;
+		private static final long PERIOD = 20000;
+		
+		public void start(){
+			timer.schedule(this, DELAY, PERIOD);
+		}
+		
+		@Override
+		public void run() {
+			log.trace("Now Thread count:" + Thread.activeCount());
+			log.trace("Challenger challening.");
+			challengingRooms();
+			challengingClientPlayers();
+			log.trace("Challenger challened.");
+		}
+		
+		private void challengingRooms(){
+			getGameRooms().parallelStream()
+			.forEach(room -> {
+				if (room.isLeisureTimeExpired())
+					shutdownTheRoomForExpired(room);
+			});
+		}
+		
+		private void shutdownTheRoomForExpired(GameRoom room){
+			log.trace("Challenging- shut down the room: " + room);
+			Protocol protocol = factory.getProtocolFactory().createProtocol(InRoom.CLOSE_ROOM_TIME_EXPIRED,
+					RequestStatus.success.toString(), gson.toJson(room));
+			closeGameRoom(room, protocol);
+		}
+		
+		private void challengingClientPlayers(){
+			getClientPlayers().parallelStream()
+			.forEach(clientPlayer -> {
+				if (clientPlayer.isLeisureTimeExpired() 
+							&& clientPlayer.getPlayerStatus() == ClientStatus.signedIn)
+					signOutThePlayer(clientPlayer);
+			});
+		}
+		
+		private void signOutThePlayer(ClientPlayer clientPlayer){
+			log.trace("Challenging- sign out the player: " + clientPlayer);
+			Protocol protocol = factory.getProtocolFactory().createProtocol(Signing.SIGNOUT_TIME_EXPIRED,
+					RequestStatus.success.toString(), null);
+			clientPlayer.broadcast(protocol);
+			removeTheClientPlayerFromMapSync(clientPlayer);
+		}
+		
 	}
 }

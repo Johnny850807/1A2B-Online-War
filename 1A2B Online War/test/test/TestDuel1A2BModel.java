@@ -30,7 +30,7 @@ public class TestDuel1A2BModel {
 		player.initId();
 		ClientPlayer hostClient = new ClientPlayer(new MockClient(host.getId()), host);
 		ClientPlayer playerClient = new ClientPlayer(new MockClient(player.getId()), player);
-		game = new Duel1A2BGame(protocolFactory, "testid", hostClient, playerClient);
+		game = new Duel1A2BGame(protocolFactory, null, hostClient, playerClient);
 	}
 	
 	@Test(expected = NumberNotValidException.class)

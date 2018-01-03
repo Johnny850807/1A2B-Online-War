@@ -52,7 +52,7 @@ public class PlayerSpirit extends AbstractSpirit{
 	@Override
 	@ForServer
 	public void setAnswer(String answer) {
-		log.trace("");
+		log.trace("The player " + getName() + " set answer: " + answer);
 	}
 	
 	@Override

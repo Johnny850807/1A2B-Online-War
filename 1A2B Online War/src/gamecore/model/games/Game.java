@@ -1,25 +1,19 @@
 package gamecore.model.games;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.google.gson.Gson;
 
-import container.Constants.Events.Games;
 import container.base.MyLogger;
-import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
+import gamecore.entity.GameRoom;
 import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.MockLogger;
-import gamecore.model.RequestStatus;
 import gamecore.model.games.GameEnteringWaitingBox.OnGamePlayersAllEnteredListener;
 import gamecore.model.games.a1b2.GameOverModel;
 import utils.ForServer;
@@ -31,6 +25,7 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
 	protected transient Timer timer;
 	protected transient GameLifecycleListener listener;
 	protected transient GameEnteringWaitingBox enteringWaitingBox;
+	protected transient GameRoom gameRoom;
 	private transient Map<Integer, TimeListener> timeListeners = new TreeMap<>();
 	protected GameMode gameMode;
 	protected Date launchDate = new Date();
@@ -75,10 +70,6 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
  		startTimer();
  	}
 
- 	public void onGameClosed(){
- 		
- 	}
- 	
  	public void setLog(MyLogger log) {
 		this.log = log;
 	}
@@ -94,8 +85,14 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
 		}, 2000, 1000);
 	}
 	
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		log.trace("Game with the room id: " + roomId + " finalized.");
+		timer.cancel();
+	}
 	
-	public void validGameStarted(){
+	public void validateGameStarted(){
 		if (!isGameStarted())
 			throw new ProcessInvalidException("The game is not started.");
 	}
@@ -109,7 +106,6 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
 		public void onGameInterrupted(Game game, ClientPlayer noResponsePlayer);
 		public void onGameOver(Game game, GameOverModel gameOverModel);
 	}
-
 
 	public Date getLaunchDate() {
 		return launchDate;

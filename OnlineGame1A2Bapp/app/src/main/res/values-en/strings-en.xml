@@ -9,9 +9,9 @@
     <string name="signInWelcomeMessage">Welcome Back!!</string>
     <string name="errorMessage">Error Message</string>
     <string name="signInMessage">Sign In Message</string>
-    <string name="signInFailed_pleaseCheckYourNetwork">Sign in failed: Please check your Internet</string>
+    <string name="internetError">Sign in failed: Please check your Internet</string>
     <string name="signInFailedPlayerNameIsInvalid">Sign in failed: Player name is invalid</string>
-    <string name="default_room_name">Join us!</string>
+    <string name="defaultRoomName">Join us!</string>
     <string name="create">Create</string>
     <string name="gameMode">Mode</string>
     <string name="cancel">Cancel</string>
@@ -34,7 +34,7 @@
     </array>
     <string name="title_activity_chat_window_test">ChatWindowTest</string>
     <string name="game_start">Game Start</string>
-    <string name="setAnswerFrist">Please set the answer first.</string>
+    <string name="setAnswerFirst">Please set the answer first.</string>
     <string name="createRoomFailed">Create room failed.</string>
     <string name="noRoomCanJoin">Sorry! No room can join.</string>
 

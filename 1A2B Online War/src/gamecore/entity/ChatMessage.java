@@ -4,7 +4,7 @@ package gamecore.entity;
 import java.util.Date;
 
 /**
- * @author AndroidWork
+ * @author Waterball
  * ChatMessages in the chat.
  */
 public class ChatMessage extends Entity {

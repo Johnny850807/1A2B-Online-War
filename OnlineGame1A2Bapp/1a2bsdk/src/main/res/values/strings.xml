@@ -1,3 +1,4 @@
 <resources>
 
+    <string name="cannotFindInternetConnected">找不到網路連接，請連接網路或重啟APP。</string>
 </resources>

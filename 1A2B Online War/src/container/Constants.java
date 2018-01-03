@@ -8,6 +8,7 @@ public final class Constants {
 		public final static class Signing{
 			public final static String SIGNIN = "SignIn";
 			public final static  String SIGNOUT = "SignOut";
+			public final static  String SIGNOUT_TIME_EXPIRED = "SignOutTimeExpired";
 			public final static  String GETINFO = "GetServerInformation";
 		}
 		public final static class RoomList{
@@ -17,6 +18,7 @@ public final class Constants {
 		}
 		public final static class InRoom{
 			public final static String CLOSE_ROOM = "CloseRoom";
+			public final static String CLOSE_ROOM_TIME_EXPIRED = "CloseRoomTimeExpired";
 			public final static String LEAVE_ROOM = "LeaveRoom";
 			public final static String BOOTED = "Booted";
 			public final static String CHANGE_STATUS = "ChangeStatus";
@@ -39,7 +41,17 @@ public final class Constants {
 			}
 			
 			public final static class Boss1A2B{
+				public final static String SET_ANSWER = "SetAnswerBoss1A2B";
+				public final static String ATTACKING_STARTED = "AttackingStartedBoss1A2B";
 				public final static String NEXT_TURN = "NextTurnBoss1A2B";
+				public final static String ATTACK = "AttackBoss1A2B";
+				public final static String ATTACK_RESULTS = "AttackResultsBoss1A2B";
+				public final static String BOSS_CHANGE_ANSWER = "AttackBoss1A2B";
+				
+				public final static class WinnerId{
+					public final static String PLAYERS_WIN = "PlayersWinBoss1A2B";
+					public final static String BOSS_WIN = "BossWinsBoss1A2B";
+				}
 			}
 		}
 	}

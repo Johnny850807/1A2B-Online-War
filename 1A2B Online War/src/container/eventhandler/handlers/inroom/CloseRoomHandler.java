@@ -34,6 +34,7 @@ public class CloseRoomHandler extends GsonEventHandler<GameRoom, GameRoom>{
 			roomId = room.getId();
 			this.gameRoom = gameCore().getGameRoom(roomId);
 			gameCore().closeGameRoom(gameRoom);
+			gameCore().getClientPlayer(client().getId()).pushLeisureTime();
 			return success(gameRoom);
 		}catch (NullPointerException e) {
 			return error(404, e);

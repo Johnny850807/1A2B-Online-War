@@ -11,8 +11,6 @@ import com.google.gson.reflect.TypeToken;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
-import gamecore.model.ChangeStatusModel;
-import gamecore.model.ServerInformation;
 import gamecore.model.games.Game;
 import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
