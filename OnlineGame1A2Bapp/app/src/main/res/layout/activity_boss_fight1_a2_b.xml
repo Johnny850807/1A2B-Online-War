@@ -17,7 +17,7 @@
         android:layout_marginTop="10dp"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:progressTint="#1aff00"
-        android:maxHeight="30dip"/>
+        android:maxHeight="30dip"/><!--todo yellow warning-->
 
     <ImageView
         android:id="@+id/imageView2"

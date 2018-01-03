@@ -98,8 +98,8 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		/***choose only one of the testing method below alternatively.***/
 		/***the game mode selected should be equal to the testing game method.***/
 		
-		//testPlayingDuel1A2B();  //if enable this, the game room will be closed after game completed
-		testPlayingBoss1A2B();
+		testPlayingDuel1A2B();  //if enable this, the game room will be closed after game completed
+		//testPlayingBoss1A2B();
 		//testBootingPlayer();
 		//testPlayerLeft();
 		//testCloseRoom();

@@ -312,9 +312,14 @@ public class GameRoom extends Entity implements LeisureTimeChallengeable{
 		for (Player player : getPlayers())
 			player.setUserStatus(status);
 	}
-	
+
+	/**
+	 * only the operations to the game will invoke getGame() method by the handler,
+	 * so getGame() will push the room's leisure time. 
+	 */
 	@ForServer
 	public Game getGame() {
+		pushLeisureTime();
 		return game;
 	}
 	

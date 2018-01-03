@@ -14,11 +14,11 @@ import gamecore.model.RequestStatus;
 import utils.RandomString;
 
 public class BasicBoss extends Monster{
-	private Player player;
+	private transient Player bossPlayer;
 	
 	public BasicBoss(MyLogger log, ProtocolFactory protocolFactory) {
 		super(UUID.randomUUID().toString(), "Boss", log, protocolFactory);
-		player = new Player(getName());
+		bossPlayer = new Player(getName());
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class BasicBoss extends Monster{
 
 	protected void sendChatMessageToAllPlayers(String msg){
 		Protocol protocol = protocolFactory.createProtocol(Chat.SEND_MSG, RequestStatus.success.toString(), 
-				gson.toJson(new ChatMessage(game.getRoomId(), new Player(getName()), msg)));
+				gson.toJson(new ChatMessage(game.getRoomId(), bossPlayer, msg)));
 		for (PlayerSpirit playerSpirit : game.getPlayerSpirits())
 			playerSpirit.broadcast(protocol);
 	}

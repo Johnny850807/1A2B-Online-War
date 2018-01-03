@@ -19,14 +19,14 @@ import gamecore.model.games.ProcessInvalidException;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.GameOverModel;
 import gamecore.model.games.a1b2.NumberNotValidException;
-import gamecore.model.games.a1b2.boss.AttackResult.AttackType;
+import gamecore.model.games.a1b2.boss.AttackResult.AttackName;
 import utils.ForServer;
 
 /**
  * @author Waterball
  */
 public class Boss1A2BGame extends Game{
-	private Monster boss;
+	private transient Monster boss;
 	private List<PlayerSpirit> playerSpirits = Collections.synchronizedList(new ArrayList<>());
 	private List<AttackResult> attackResults = new ArrayList<>();
 	private int whosTurn = 0; //the index from the clientPlayer showing who's turn.
@@ -38,41 +38,40 @@ public class Boss1A2BGame extends Game{
 		for (ClientPlayer clientPlayer : clientPlayers)
 			playerSpirits.add(new PlayerSpirit(clientPlayer, log, protocolFactory));
 	}
-	
+
 	@Override
-	public void startGame() {
-		super.startGame();
+	protected void onGameStarted() {
 		boss.init(this);
 	}
-
+	
 	@ForServer
 	public synchronized void setPlayerAnswer(String playerId, String answer) throws NumberNotValidException{
-		validateSetAnswerOperation(answer);
+		validateSettingAnswerOperation(answer);
 		PlayerSpirit playerSpirit = getPlayerSpirit(playerId);
 		playerSpirit.setAnswer(answer);
 		
-		if (hasAllAnswerBeenCommitted())
+		if (areAllAnswersBeenCommitted())
 		{
 			startAttackingAndBroadcast();
 			broadcastNextTurn(whosTurn);
 		}
 	}
 	
+	private void validateSettingAnswerOperation(String answer) throws NumberNotValidException{
+		validateGameStarted();
+		A1B2NumberValidator.validateNumber(answer);
+		if (attackingStarted)
+			throw new ProcessInvalidException("The attacking phase is started, you cannot set the answer anymore.");
+	}
+	
 	@ForServer
-	public boolean hasAllAnswerBeenCommitted(){
+	public boolean areAllAnswersBeenCommitted(){
 		if (boss.getAnswer() == null)
 			throw new IllegalStateException("The boss has not committed the answer, why?");
 		for (PlayerSpirit playerSpirit : getPlayerSpirits())
 			if (playerSpirit.getAnswer() == null)
 				return false;
 		return true;
-	}
-	
-	private void validateSetAnswerOperation(String answer) throws NumberNotValidException{
-		validateGameStarted();
-		A1B2NumberValidator.validateNumber(answer);
-		if (attackingStarted)
-			throw new ProcessInvalidException("The attacking phase is started, you cannot set the answer anymore.");
 	}
 	
 	private void startAttackingAndBroadcast(){
@@ -86,16 +85,20 @@ public class Boss1A2BGame extends Game{
 	public synchronized void attack(String playerId, String guess) throws NumberNotValidException{
 		validateAttackingOperation(playerId, guess);
 		PlayerSpirit attacker = getPlayerSpirit(playerId);
-		handleAttacking(attacker, guess);
+		attackingBoss(attacker, guess);
+		log.info(getPlayerSpiritsStatus());
 		
 		if (boss.isDead())
 			broadcastGameOver();
 		else
 		{
 			whosTurn = findNextAlivePlayerIndexForward();
-			if (whosTurn == -1) //if all alive player turns are over
+			if (whosTurn != -1) //if any next player's turn has not been over
+				broadcastNextTurn(whosTurn);
+			else 
 			{
 				boss.action();
+				log.info(getPlayerSpiritsStatus());
 				if (areAllPlayersDead())
 					broadcastGameOver();
 				else
@@ -104,8 +107,6 @@ public class Boss1A2BGame extends Game{
 					broadcastNextTurn(whosTurn);
 				}
 			}
-			else 
-				broadcastNextTurn(whosTurn);
 		}
 	}
 
@@ -113,24 +114,31 @@ public class Boss1A2BGame extends Game{
 		validateGameStarted();
 		PlayerSpirit who = playerSpirits.get(whosTurn);
 		if (!who.getId().equals(playerId))
-			throw new ProcessInvalidException("Not your turn.");
+			throw new ProcessInvalidException("The turn now is " + whosTurn + ", not your turn.");
 		A1B2NumberValidator.validateNumber(guess);
 	}
 	
-	private void handleAttacking(PlayerSpirit attacker, String guess){
-		AttackResult attackResult = boss.getAttacked(attacker, guess, AttackType.NORMAL);
+	private void attackingBoss(PlayerSpirit attacker, String guess){
+		log.trace("the player "+ attacker.getName() + " is attacking the boss.");
+		AttackResult attackResult = boss.getAttacked(attacker, guess, AttackName.NORMAL);
 		AttackActionModel actionModel = new AttackActionModel(0, attacker, attackResult);
-		log.trace("Attack action: " + actionModel);
 		addAllResultsAndbroadcastAttackActionModel(actionModel);
 	}
 	
-	private void broadcastNextTurn(int nextTurn){
-		PlayerSpirit who = playerSpirits.get(nextTurn);
-		Protocol protocol = protocolFactory.createProtocol(NEXT_TURN, RequestStatus.success.toString(), 
-				gson.toJson(who.getClientPlayer().getPlayer()));
+	@ForServer
+	public void addAllResultsAndbroadcastAttackActionModel(AttackActionModel model){
+		log.trace("Adding the attack action: " + model);
+		for (AttackResult attackResult : model)
+			addAttackResult(attackResult);
+		Protocol protocol = protocolFactory.createProtocol(Boss1A2B.ATTACK_RESULTS,
+				RequestStatus.success.toString(), gson.toJson(model));
 		broadcastToAll(protocol);
 	}
 	
+	@ForServer
+	public void addAttackResult(AttackResult attackResult){
+		this.attackResults.add(attackResult);
+	}
 
 	/**
 	 * find the next alive player's index from now whosTurn forward to the end.
@@ -173,24 +181,27 @@ public class Boss1A2BGame extends Game{
 				gson.toJson(gameOverModel));
 		broadcastToAll(protocol);
 	}
-
-	@ForServer
-	public void addAttackResult(AttackResult attackResult){
-		this.attackResults.add(attackResult);
-	}
 	
-	@ForServer
-	public void addAllResultsAndbroadcastAttackActionModel(AttackActionModel model){
-		for (AttackResult attackResult : model)
-			addAttackResult(attackResult);
-		Protocol protocol = protocolFactory.createProtocol(Boss1A2B.ATTACK_RESULTS,
-				RequestStatus.success.toString(), gson.toJson(model));
+	private void broadcastNextTurn(int nextTurn){
+		log.trace(getPlayerSpirits().get(nextTurn).getName() + "'s turn.");
+		PlayerSpirit who = playerSpirits.get(nextTurn);
+		Protocol protocol = protocolFactory.createProtocol(NEXT_TURN, RequestStatus.success.toString(), 
+				gson.toJson(who.getClientPlayer().getPlayer()));
 		broadcastToAll(protocol);
 	}
 	
 	public List<PlayerSpirit> getPlayerSpirits() {
 		return playerSpirits;
 	}
+	
+	public List<PlayerSpirit> getAlivePlayerSpirits() {
+		List<PlayerSpirit> alivePlayerSpirits = new ArrayList<>();
+		for (PlayerSpirit playerSpirit : getPlayerSpirits())
+			if (!playerSpirit.isDead())
+				alivePlayerSpirits.add(playerSpirit);
+		return alivePlayerSpirits;
+	} 
+	
 	
 	public int getWhosTurn() {
 		return whosTurn;
@@ -204,5 +215,15 @@ public class Boss1A2BGame extends Game{
 	public void broadcastToAll(Protocol protocol){
 		for (PlayerSpirit player : playerSpirits)
 			player.broadcast(protocol);
+	}
+	
+	private String getPlayerSpiritsStatus(){
+		StringBuilder strb = new StringBuilder();
+		strb.append("========Status========\n");
+		for (PlayerSpirit playerSpirit : getPlayerSpirits())
+			strb.append(playerSpirit).append("\n");
+		strb.append(boss).append("\n");
+		strb.append("\n========Status========");
+		return strb.toString();
 	}
 }

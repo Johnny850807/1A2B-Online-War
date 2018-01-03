@@ -7,9 +7,9 @@ import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
 
 public abstract class Monster extends AbstractSpirit{
-	protected List<MonsterAction> actions;
-	protected Boss1A2BGame game;
-	protected Random random = new Random();
+	protected transient static Random random = new Random();
+	protected transient List<MonsterAction> actions;
+	protected transient Boss1A2BGame game;
 	
 	public Monster(String id, String name, MyLogger log, ProtocolFactory protocolFactory) {
 		super(id, name, log, protocolFactory);
@@ -23,14 +23,21 @@ public abstract class Monster extends AbstractSpirit{
 
 	protected abstract List<MonsterAction> createMonsterActions();
 	protected abstract String produceAnswer();
-	
-	@Override
+
 	public void action() {
-		MonsterAction action = getMonsterAction();
+		log.trace("Boss' turn, the boss is choosing his action.");
+		MonsterAction action = chooseNextMonsterAction();
+		if (action.getCostMp() > getMp())
+			throw new IllegalStateException("The boss does not have enough mp to execute the action, please override the chooseNextMonsterActiob() method to write your own desicion method.");
+		log.trace("the action chosen: " + action.getAttackName());
+		costMp(action.getCostMp());
 		action.execute(this, game);
 	}
 	
-	protected MonsterAction getMonsterAction(){
+	/**
+	 * how the boss choose his action in each turn.
+	 */
+	protected MonsterAction chooseNextMonsterAction(){
 		return actions.get(random.nextInt(actions.size()));
 	}
 }
