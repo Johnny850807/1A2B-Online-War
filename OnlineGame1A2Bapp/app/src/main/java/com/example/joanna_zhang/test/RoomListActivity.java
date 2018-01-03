@@ -169,7 +169,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        Log.v(TAG, "game mode spinner nothing have selected");
+        Log.v(TAG, "game mode spinner nothing have been selected");
     }
 
     public void createRoomBtnOnClick(View view) {
