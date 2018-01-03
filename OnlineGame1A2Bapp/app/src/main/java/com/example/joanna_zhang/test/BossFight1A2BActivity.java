@@ -198,7 +198,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         }
     }
 
-    public class playerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    private class playerListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -222,11 +222,11 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         }
     }
 
-    public class myViewHolder extends RecyclerView.ViewHolder {
+    private class myViewHolder extends RecyclerView.ViewHolder {
         ProgressBar playerHpBar;
         TextView playerName;
         TextView playerHp;
-        public myViewHolder(View view) {
+        myViewHolder(View view) {
             super(view);
             playerHpBar = view.findViewById(R.id.boss1a2bPlayerHpProgressBar);
             playerName = view.findViewById(R.id.boss1a2bPlayerNameTxt);
