@@ -11,7 +11,7 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".BossFight1A2BActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,8 +22,8 @@
         <activity android:name=".Duel1A2BActivity" />
         <activity android:name=".GroupFightActivity" />
         <activity android:name=".ChatInRoomActivity" />
+        <activity android:name=".BossFight1A2BActivity">
 
-        <activity android:name=".MainActivity">
         </activity>
     </application>
 
