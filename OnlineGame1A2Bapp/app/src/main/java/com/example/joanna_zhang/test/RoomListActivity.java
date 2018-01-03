@@ -27,8 +27,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.joanna_zhang.test.Utils.AppLogoDialogBuilderFactory;
 import com.example.joanna_zhang.test.Utils.GameModeHelper;
-import com.example.joanna_zhang.test.Utils.ShowDialogHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.roomlist.RoomListModule;
@@ -139,18 +139,17 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
     }
 
     private void sureAboutSignOutDialog() {
-        ShowDialogHelper.showComeBackActivityDialog(
-                  R.drawable.logo
-                , R.string.signOut
-                , R.string.sureToSignOut
-                , R.string.confirm
-                , R.string.cancel, this
-                , new DialogInterface.OnClickListener() {
+        AppLogoDialogBuilderFactory.create(this)
+                .setTitle(R.string.comeBackToRoomList)
+                .setMessage(R.string.sureAboutComeBackToRoomList)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
                     }
-                });
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     @Override
