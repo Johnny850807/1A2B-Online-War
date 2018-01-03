@@ -1,12 +1,14 @@
 package gamecore.model.games.a1b2.boss;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
+import utils.RandomString;
 
-public abstract class Monster extends AbstractSpirit{
+public class Monster extends AbstractSpirit{
 	protected transient static Random random = new Random();
 	protected transient List<MonsterAction> actions;
 	protected transient Boss1A2BGame game;
@@ -16,13 +18,20 @@ public abstract class Monster extends AbstractSpirit{
 	}
 	
 	public void init(Boss1A2BGame game){
-		this.actions = createMonsterActions();
+		this.actions = onCreateMonsterActions();
 		this.game = game;
-		this.setAnswer(produceAnswer());
+		this.setAnswer(onProduceAnswer());
 	}
 
-	protected abstract List<MonsterAction> createMonsterActions();
-	protected abstract String produceAnswer();
+	protected List<MonsterAction> onCreateMonsterActions(){
+		List<MonsterAction> actions = new ArrayList<>();
+		actions.add(new NormalAttack());
+		return actions;
+	}
+	
+	protected String onProduceAnswer() {
+		return RandomString.nextNonDuplicatedNumber(4);
+	}
 
 	public void action() {
 		log.trace("Boss' turn, the boss is choosing his action.");
@@ -40,4 +49,28 @@ public abstract class Monster extends AbstractSpirit{
 	protected MonsterAction chooseNextMonsterAction(){
 		return actions.get(random.nextInt(actions.size()));
 	}
+
+	@Override
+	public Type getType() {
+		return Type.MONSTER;
+	}
+
+	@Override
+	public int getMp() {
+		return 200;
+	}
+
+	@Override
+	public int getMaxHp() {
+		return 500;
+	}
+
+	@Override
+	protected void onAnswerGuessed4A(AttackResult attackResult) {/*hook*/}
+
+	@Override
+	protected void onDie(AttackResult attackResult) {/*hook*/}
+
+	@Override
+	protected void onSurvivedFromAttack(AttackResult attackResult) {/*hook*/}
 }

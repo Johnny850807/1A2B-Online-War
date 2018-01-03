@@ -17,22 +17,10 @@ public class TestingBoss extends Monster{
 	}
 
 	@Override
-	protected List<MonsterAction> createMonsterActions() {
-		List<MonsterAction> actions = new ArrayList<>();
-		actions.add(new NormalAttack());
-		return actions;
-	}
-
-	@Override
-	protected String produceAnswer() {
+	protected String onProduceAnswer() {
 		return ANSWER;
 	}
-
-	@Override
-	public Type getType() {
-		return Type.MONSTER;
-	}
-
+	
 	@Override
 	public int getMp() {
 		return 200000;
@@ -45,7 +33,7 @@ public class TestingBoss extends Monster{
 
 	@Override
 	protected void onAnswerGuessed4A(AttackResult attackResult) {
-		setAnswer(produceAnswer());
+		setAnswer(onProduceAnswer());
 		log.trace(getName() + " got guessed correctly.");
 	}
 
@@ -54,8 +42,4 @@ public class TestingBoss extends Monster{
 		log.trace(getName() + " dies.");
 	}
 
-	@Override
-	protected void onSurvivedFromAttack(AttackResult attackResult) {
-		
-	}
 }

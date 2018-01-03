@@ -31,6 +31,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import container.Constants.Events.Games;
+import container.Constants.Events.InRoom;
 import container.base.Client;
 import container.eventhandler.EventHandler;
 import container.eventhandler.GameEventHandlerFactory;
@@ -53,6 +54,7 @@ import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
 import gamecore.model.games.a1b2.boss.AttackActionModel;
+import gamecore.model.games.a1b2.boss.AttackResult;
 import gamecore.model.games.a1b2.boss.NextTurnModel;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
@@ -73,7 +75,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	protected Player player = new Player("Player");
 	protected MockClient hostClient = new MockClient(); 
 	protected MockClient playerClient = new MockClient();
-	protected GameMode gameMode = GameMode.DUEL1A2B;
+	protected GameMode gameMode = GameMode.BOSS1A2B;
 	protected GameRoom gameRoom;
 	protected int signInCount = 0;
 	protected List<Duel1A2BPlayerBarModel> duelModels;
@@ -98,8 +100,8 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		/***choose only one of the testing method below alternatively.***/
 		/***the game mode selected should be equal to the testing game method.***/
 		
-		testPlayingDuel1A2B();  //if enable this, the game room will be closed after game completed
-		//testPlayingBoss1A2B();
+		//testPlayingDuel1A2B();  //if enable this, the game room will be closed after game completed
+		testPlayingBoss1A2B();
 		//testBootingPlayer();
 		//testPlayerLeft();
 		//testCloseRoom();
@@ -234,41 +236,55 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		
 		//setting answer
 		createHandler(hostClient, protocolFactory.createProtocol(Boss1A2B.SET_ANSWER,
-				REQUEST, gson.toJson(new ContentModel(host.getId(), gameRoom.getId(), "1234"))));
+				REQUEST, gson.toJson(new ContentModel(host.getId(), gameRoom.getId(), "1234")))).handle();
 		assertEquals(Boss1A2B.SET_ANSWER,  hostClient.getLastedResponse().getEvent());
 		createHandler(playerClient, protocolFactory.createProtocol(Boss1A2B.SET_ANSWER,
-				REQUEST, gson.toJson(new ContentModel(player.getId(), gameRoom.getId(), "5678"))));
-		assertTrue(playerClient.hasReceivedEvent(Boss1A2B.SET_ANSWER));
+				REQUEST, gson.toJson(new ContentModel(player.getId(), gameRoom.getId(), "5678")))).handle();
+		assertEquals(Boss1A2B.SET_ANSWER, playerClient.getLastedResponse().getEvent());
 		
 		//attacking started
-		assertEquals(Boss1A2B.ATTACKING_STARTED, hostClient.getLastedResponse().getEvent());
-		assertEquals(Boss1A2B.ATTACKING_STARTED, playerClient.getLastedResponse().getEvent());
+		assertTrue(hostClient.hasReceivedEvent(Boss1A2B.ATTACKING_STARTED));
+		assertTrue(playerClient.hasReceivedEvent(Boss1A2B.ATTACKING_STARTED));
 		
 		//host's turn
-		assertEquals(Boss1A2B.NEXT_TURN, hostClient.getLastedResponse().getEvent());
-		assertEquals(Boss1A2B.NEXT_TURN, playerClient.getLastedResponse().getEvent());
-		validateNextTurn(hostClient.getLastedResponse(), hostClient);
-		validateNextTurn(playerClient.getLastedResponse(), hostClient);
+		validateNextTurn(hostClient.getLastedByEvent(Boss1A2B.NEXT_TURN), hostClient);
+		validateNextTurn(playerClient.getLastedByEvent(Boss1A2B.NEXT_TURN), hostClient);
 		
 		createHandler(hostClient, protocolFactory.createProtocol(Boss1A2B.ATTACK,
-				REQUEST, gson.toJson(new ContentModel(host.getId(), gameRoom.getId(), "1234"))));
+				REQUEST, gson.toJson(new ContentModel(host.getId(), gameRoom.getId(), "1234")))).handle();
 		validateLatestAttackResults("1234", host.getId(), hostClient);
 		validateLatestAttackResults("1234", host.getId(), playerClient);
 		
 		//player's turn
-		assertEquals(Boss1A2B.NEXT_TURN, hostClient.getLastedResponse().getEvent());
-		assertEquals(Boss1A2B.NEXT_TURN, playerClient.getLastedResponse().getEvent());
-		validateNextTurn(hostClient.getLastedResponse(), playerClient);
-		validateNextTurn(playerClient.getLastedResponse(), playerClient);
+		validateNextTurn(hostClient.getLastedByEvent(Boss1A2B.NEXT_TURN), playerClient);
+		validateNextTurn(playerClient.getLastedByEvent(Boss1A2B.NEXT_TURN), playerClient);
 		
 		createHandler(playerClient, protocolFactory.createProtocol(Boss1A2B.ATTACK,
-				REQUEST, gson.toJson(new ContentModel(player.getId(), gameRoom.getId(), "5678"))));
+				REQUEST, gson.toJson(new ContentModel(player.getId(), gameRoom.getId(), "5678")))).handle();
 		
 		//the boss will attack any player after the player attacks
 		validateLatestAttackerIsBoss(hostClient);
 		validateLatestAttackerIsBoss(playerClient);
-		validateLatestAttackResults("5678", host.getId(), hostClient);
-		validateLatestAttackResults("5678", host.getId(), playerClient);
+		
+		//assert that the boss has attacked some one
+		Protocol bossAttack = hostClient.getLastedByEvent(Boss1A2B.ATTACK_RESULTS);
+		AttackActionModel attackActionModel = gson.fromJson(bossAttack.getData(), AttackActionModel.class);
+		boolean somebodyGotHurted = false;
+		for (AttackResult attackResult : attackActionModel)
+			if (attackResult.getAttacked().getId().equals(host.getId()) ||
+					attackResult.getAttacked().getId().equals(player.getId()))
+				somebodyGotHurted = true;
+		assertTrue(somebodyGotHurted);
+		
+
+		//host's turn
+		validateNextTurn(hostClient.getLastedByEvent(Boss1A2B.NEXT_TURN), hostClient);
+		validateNextTurn(playerClient.getLastedByEvent(Boss1A2B.NEXT_TURN), hostClient);
+		
+		//the player left
+		createHandler(playerClient, protocolFactory.createProtocol(InRoom.LEAVE_ROOM,
+				REQUEST, gson.toJson(new PlayerRoomIdModel(player.getId(), gameRoom.getId())))).handle();
+		assertEquals(LEAVE_ROOM, hostClient.getLastedResponse().getEvent());
 	}
 	
 	private void validateLatestAttackResults(String expectedGuess, String attackerId, MockClient client){

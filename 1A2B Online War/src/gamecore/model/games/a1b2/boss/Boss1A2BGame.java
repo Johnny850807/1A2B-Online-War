@@ -186,7 +186,7 @@ public class Boss1A2BGame extends Game{
 		log.trace(getPlayerSpirits().get(nextTurn).getName() + "'s turn.");
 		PlayerSpirit who = playerSpirits.get(nextTurn);
 		Protocol protocol = protocolFactory.createProtocol(NEXT_TURN, RequestStatus.success.toString(), 
-				gson.toJson(who.getClientPlayer().getPlayer()));
+				gson.toJson(new NextTurnModel(who)));
 		broadcastToAll(protocol);
 	}
 	

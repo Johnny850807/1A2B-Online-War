@@ -18,21 +18,12 @@ public class OnePunchBoss extends Monster{
 	}
 
 	@Override
-	protected List<MonsterAction> createMonsterActions() {
+	protected List<MonsterAction> onCreateMonsterActions() {
 		List<MonsterAction> actions = new ArrayList<>();
 		actions.add(new PowerfulPunch());
 		return actions;
 	}
 
-	@Override
-	protected String produceAnswer() {
-		return RandomString.nextNonDuplicatedNumber(4);
-	}
-
-	@Override
-	public Type getType() {
-		return Type.MONSTER;
-	}
 
 	@Override
 	public int getMp() {
@@ -43,14 +34,5 @@ public class OnePunchBoss extends Monster{
 	public int getMaxHp() {
 		return Integer.MAX_VALUE;
 	}
-
-	@Override
-	protected void onAnswerGuessed4A(AttackResult attackResult) {}
-
-	@Override
-	protected void onDie(AttackResult attackResult) {}
-
-	@Override
-	protected void onSurvivedFromAttack(AttackResult attackResult) {}
 
 }
