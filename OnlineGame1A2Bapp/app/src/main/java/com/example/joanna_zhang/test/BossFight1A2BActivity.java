@@ -122,9 +122,16 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-//            view = LayoutInflater.from(BossFight1A2BActivity.this).inflate(, viewGroup, false);
+            view = LayoutInflater.from(BossFight1A2BActivity.this).inflate(R.layout.boss_result_list_item, viewGroup, false);
+
+            TextView player = view.findViewById(R.id.playerNameTxt);
+            TextView guess = view.findViewById(R.id.guessNumberTxt);
+            TextView result = view.findViewById(R.id.bNumber);
 
 
+//            player.setText();
+//            guess.setText();
+//            result.setText();
 
             return view;
         }

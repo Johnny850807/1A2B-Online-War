@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="4dp">
+
+    <TextView
+        android:id="@+id/playerNameTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="name"
+        android:textColor="#0095ff"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/guessNumberTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="1234"
+        android:textColor="#008927"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/resultTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="1A2B -> name"
+        android:textColor="#d00000"
+        android:textSize="16sp"/>
+
+
+</LinearLayout>
