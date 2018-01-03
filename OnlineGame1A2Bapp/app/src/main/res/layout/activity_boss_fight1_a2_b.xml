@@ -55,25 +55,30 @@
         android:paddingEnd="4dp"
         android:paddingStart="8dp">
 
-        <TextView
-            android:id="@+id/inputNameTxt"
+        <Button
+            android:id="@+id/inputNumberBtn"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="1"
-            android:hint="@string/inputAnswer"
-            android:inputType="text"
+            android:background="#f9f9f9"
+            android:enabled="false"
+            android:gravity="fill"
+            android:hint="@string/inputNumber"
+            android:onClick="inputNumberOnClick"
+            android:padding="8dp"
             android:textSize="16sp" />
 
         <ImageButton
-            android:id="@+id/inputNumberBtn"
+            android:id="@+id/sendGuessBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@android:color/transparent"
+            android:enabled="false"
+            android:onClick="onSendGuessNumberBtnClick"
             android:scaleType="fitCenter"
             android:src="@drawable/enter" />
 
     </LinearLayout>
-
 
 
 </LinearLayout>
