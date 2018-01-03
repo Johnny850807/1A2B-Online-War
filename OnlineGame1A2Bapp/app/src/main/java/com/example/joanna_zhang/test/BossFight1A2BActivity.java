@@ -1,6 +1,8 @@
 package com.example.joanna_zhang.test;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.a1b2.boss.Boss1A2BModule;
@@ -35,6 +38,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     private Button inputNumberBtn;
     private ImageButton sendGuessBtn;
     private GuessResultAdapter guessResultAdapter;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +46,8 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         setContentView(R.layout.activity_boss_fight1_a2_b);
         init();
         findViews();
+        setupLayout();
     }
-
 
     private void init() {
         currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
@@ -54,6 +58,14 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         inputNumberBtn = findViewById(R.id.inputNumberBtn);
         sendGuessBtn = findViewById(R.id.sendGuessBtn);
         guessResultAdapter = new GuessResultAdapter();
+        progressBar = findViewById(R.id.bossHpProgressBar);
+    }
+
+
+    private void setupLayout() {
+        progressBar.getProgressDrawable().setColorFilter(
+                Color.GREEN, PorterDuff.Mode.DARKEN);
+        progressBar.setScaleY(3f);
     }
 
     public void inputNumberOnClick(View view) {
