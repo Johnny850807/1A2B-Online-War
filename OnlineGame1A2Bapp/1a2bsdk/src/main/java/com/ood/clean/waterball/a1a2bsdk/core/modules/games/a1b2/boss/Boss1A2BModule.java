@@ -20,12 +20,39 @@ public interface Boss1A2BModule extends OnlineGameModule{
     public void attack(String guess);
 
     public interface Callback extends OnlineGameModule.Callback{
+        /**
+         * when then player sets the answer successfully
+         */
         public void onSetAnswerSuccessfully(ContentModel contentModel);
+
+        /**
+         * when then player sets the answer unsuccessfully
+         */
         public void onSetAnswerUnsuccessfully(ErrorMessage errorMessage);
+
+        /**
+         * when then player attacks the boss and produce the attack results successfully
+         */
         public void onAttackSuccessfully(ContentModel contentModel);
+
+        /**
+         * when then player sets the answer unsuccessfully
+         */
         public void onAttackUnsuccessfully(ErrorMessage errorMessage);
-        public void onNexAttackAction(AttackActionModel attackActionModel);
+
+        /**
+         * when any spirit finishes his attack action.
+         */
+        public void onNextAttackAction(AttackActionModel attackActionModel);
+
+        /**
+         * when then player sets the answer successfully
+         */
         public void onYourTurn(NextTurnModel nextTurnModel);
+
+        /**
+         * when then player sets the answer successfully
+         */
         public void onGameOver(GameOverModel gameOverModel);
     }
 
