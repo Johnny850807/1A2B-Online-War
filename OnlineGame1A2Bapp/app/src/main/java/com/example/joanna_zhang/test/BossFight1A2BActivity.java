@@ -47,6 +47,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         init();
         findViews();
         setupLayout();
+        setupAnswer();
     }
 
     private void init() {
@@ -61,6 +62,13 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         progressBar = findViewById(R.id.bossHpProgressBar);
     }
 
+    private void setupAnswer() {
+        new InputNumberWindowDialog.Builder(this)
+                .setCanceledOnTouchOutside(false)
+                .setCancelable(false)
+                .setTitle(getString(R.string.setAnswerFirst))
+                .show();
+    }
 
     private void setupLayout() {
         progressBar.getProgressDrawable().setColorFilter(
