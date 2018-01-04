@@ -15,8 +15,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
+import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
+import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.a1b2.boss.Boss1A2BModule;
 
 import java.util.ArrayList;
@@ -25,7 +28,9 @@ import java.util.List;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.PlayerRoomModel;
+import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.GuessRecord;
+import gamecore.model.games.a1b2.NumberNotValidException;
 
 import static com.example.joanna_zhang.test.R.string.confirm;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
@@ -54,20 +59,22 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         findViews();
         mockPlayers(); //Test
         setupLayout();
-        setupAnswer();
+        setUpInputNumberWindowView();
     }
 
     private void init() {
+        CoreGameServer server = CoreGameServer.getInstance();
+        //boss1A2BModule = (Boss1A2BModule) server.createModule(ModuleName.);
         currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
         currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
         guessResultAdapter = new GuessResultAdapter();
     }
 
     private void findViews() {
-        inputNumberBtn = (Button) findViewById(R.id.inputNumberBtn);
-        sendGuessBtn = (ImageButton) findViewById(R.id.sendGuessBtn);
-        progressBar = (ProgressBar) findViewById(R.id.bossHpProgressBar);
-        playerRecyclerView = (RecyclerView) findViewById(R.id.boss1a2bPlayerRecyclerView);
+        inputNumberBtn =  findViewById(R.id.inputNumberBtn);
+        sendGuessBtn =  findViewById(R.id.sendGuessBtn);
+        progressBar =  findViewById(R.id.bossHpProgressBar);
+        playerRecyclerView =  findViewById(R.id.boss1a2bPlayerRecyclerView);
     }
 
 
@@ -82,6 +89,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     private void setupLayout() {
         setupProgressBar();
         setupPlayerRecyclerView();
+
     }
 
     private void setupProgressBar() {
@@ -97,10 +105,27 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         playerRecyclerView.setAdapter(playerListAdapter);
     }
 
+    private void setUpInputNumberWindowView() {
+        inputNumberWindowDialog = new InputNumberWindowDialog.Builder(this)
+                .setOnEnterClickListener(this)
+                .setTitle(getString(R.string.pleaseInputGuess))
+                .build();
+    }
+
     public void inputNumberOnClick(View view) {
+        inputNumberWindowDialog.show();
     }
 
     public void onSendGuessNumberBtnClick(View view) {
+        String guessNumber = inputNumberBtn.getText().toString();
+        try {
+            A1B2NumberValidator.validateNumber(guessNumber);
+            inputNumberBtn.setEnabled(false);
+            sendGuessBtn.setEnabled(false);
+
+        }catch (NumberNotValidException err){
+            Toast.makeText(this, R.string.numberShouldBeInLengthFour, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -210,7 +235,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            Player player = players.get(position);
+            Player player = currentGameRoom.getPlayers().get(position);
             ((myViewHolder)holder).playerHpBar.getProgressDrawable().setColorFilter(
                     Color.GREEN, PorterDuff.Mode.DARKEN);
             ((myViewHolder)holder).playerHpBar.setScaleY(3f);
