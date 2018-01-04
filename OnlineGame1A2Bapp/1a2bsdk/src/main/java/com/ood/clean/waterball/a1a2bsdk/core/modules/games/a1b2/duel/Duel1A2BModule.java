@@ -11,7 +11,6 @@ import gamecore.entity.Player;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
 import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
-import gamecore.model.games.a1b2.GameOverModel;
 
 
 public interface Duel1A2BModule extends OnlineGameModule{
@@ -62,18 +61,6 @@ public interface Duel1A2BModule extends OnlineGameModule{
          */
         void onOneRoundOver(List<Duel1A2BPlayerBarModel> models);
 
-        /**
-         * when the winner came out, the game will be over.
-         * while this method invoked, you should show out the result on a dialog, closing the dialog and
-         * finish the game being activity while the positive button of the dialog got clicked.
-         * @param gameOverModel model contains the winner info.
-         */
-        void onGameOver(GameOverModel gameOverModel);
 
-
-        /**
-         * when the gameroom closed bt the host
-         */
-        void onGameClosed(GameRoom gameRoom);
     }
 }

@@ -1,5 +1,4 @@
-package com.ood.clean.waterball.a1a2bsdk.core.modules.games.a1b2.duel;
-
+package com.ood.clean.waterball.a1a2bsdk.core.modules.games.a1b2.boss;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,8 +8,6 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.BindCallback;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.CallbackException;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.AbstractOnlineGameModule;
 
-import java.util.List;
-
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
@@ -18,13 +15,12 @@ import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
-import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
 import gamecore.model.games.a1b2.GameOverModel;
+import gamecore.model.games.a1b2.boss.AttackActionModel;
+import gamecore.model.games.a1b2.boss.NextTurnModel;
 
-import static container.Constants.Events.Games.Duel1A2B.GUESS;
-import static container.Constants.Events.Games.Duel1A2B.GUESSING_STARTED;
-import static container.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
-import static container.Constants.Events.Games.Duel1A2B.SET_ANSWER;
+import static container.Constants.Events.Games.Boss1A2B.ATTACK;
+import static container.Constants.Events.Games.Boss1A2B.SET_ANSWER;
 import static container.Constants.Events.Games.GAMEOVER;
 import static container.Constants.Events.Games.GAMESTARTED;
 import static container.Constants.Events.InRoom.CLOSE_ROOM;
@@ -32,14 +28,14 @@ import static container.Constants.Events.InRoom.CLOSE_ROOM_TIME_EXPIRED;
 import static container.Constants.Events.InRoom.LEAVE_ROOM;
 import static container.Constants.Events.RECONNECTED;
 
-public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1A2BModule {
+public class Boss1A2BModuleImp extends AbstractOnlineGameModule implements Boss1A2BModule {
     private ProxyCallback proxyCallback;
     protected Player currentPlayer;
     protected GameRoom currentGameRoom;
     protected Context context;
 
     @Override
-    public void registerCallback(Context context, Player currentPlayer, GameRoom currentGameRoom, Duel1A2BModule.Callback callback) {
+    public void registerCallback(Context context, Player currentPlayer, GameRoom currentGameRoom, Boss1A2BModule.Callback callback) {
         validate(currentPlayer);
         validate(currentGameRoom);
         this.context = context;
@@ -48,12 +44,12 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
 
         if (this.proxyCallback != null)
             callback.onError(new CallbackException());
-        this.proxyCallback = new Duel1A2BModuleImp.ProxyCallback(callback);
+        this.proxyCallback = new Boss1A2BModuleImp.ProxyCallback(callback);
         eventBus.registerCallback(proxyCallback);
     }
 
     @Override
-    public void unregisterCallBack(Duel1A2BModule.Callback callback) {
+    public void unregisterCallBack(Boss1A2BModule.Callback callback) {
         if (this.proxyCallback == null || this.proxyCallback.callback != callback)
             callback.onError(new CallbackException());
         eventBus.unregisterCallback(proxyCallback);
@@ -64,16 +60,17 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
 
     @Override
     public void setAnswer(String answer) {
+        Log.d(TAG, "Setting the answer: " + answer);
         Protocol protocol = protocolFactory.createProtocol(SET_ANSWER,
                 RequestStatus.request.toString(), gson.toJson(new ContentModel(
                         currentPlayer.getId(), currentGameRoom.getId(), answer)));
         client.broadcast(protocol);
-
     }
 
     @Override
-    public void guess(String guess) {
-        Protocol protocol = protocolFactory.createProtocol(GUESS,
+    public void attack(String guess) {
+        Log.d(TAG, "Attacking: " + guess);
+        Protocol protocol = protocolFactory.createProtocol(ATTACK,
                 RequestStatus.request.toString(), gson.toJson(new ContentModel(
                         currentPlayer.getId(), currentGameRoom.getId(), guess)));
         client.broadcast(protocol);
@@ -89,10 +86,11 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
         return currentGameRoom;
     }
 
-    public class ProxyCallback implements Duel1A2BModule.Callback{
-        private Duel1A2BModule.Callback callback;
 
-        public ProxyCallback(Duel1A2BModule.Callback callback) {
+    public class ProxyCallback implements Boss1A2BModule.Callback{
+    private Boss1A2BModule.Callback callback;
+
+        public ProxyCallback(Boss1A2BModule.Callback callback) {
             this.callback = callback;
         }
 
@@ -102,6 +100,7 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
             Log.d(TAG, "the game " + currentGameRoom.getGameMode() + " started.");
             callback.onGameStarted();
         }
+
         @Override
         @BindCallback(event = GAMEOVER, status = RequestStatus.success)
         public void onGameOver(GameOverModel gameOverModel) {
@@ -145,47 +144,40 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
         }
 
         @Override
-        @BindCallback(event = SET_ANSWER, status = RequestStatus.success)
-        public void onSetAnswerSuccessfully(ContentModel setAnswerModel) {
-            Log.d(TAG, "answer set: " + setAnswerModel.getContent());
-            callback.onSetAnswerSuccessfully(setAnswerModel);
+        public void onSetAnswerSuccessfully(ContentModel contentModel) {
+            Log.d(TAG, "Set answer successfully: " + contentModel.getContent());
+            callback.onSetAnswerSuccessfully(contentModel);
         }
 
         @Override
-        @BindCallback(event = SET_ANSWER, status = RequestStatus.failed)
         public void onSetAnswerUnsuccessfully(ErrorMessage errorMessage) {
-            Log.d(TAG, "answer set unsuccessfully: " + errorMessage);
+            Log.d(TAG, "Set answer unsuccessfully: " + errorMessage.getMessage());
             callback.onSetAnswerUnsuccessfully(errorMessage);
         }
 
         @Override
-        @BindCallback(event = GUESS, status = RequestStatus.success)
-        public void onGuessSuccessfully(ContentModel guessModel) {
-            Log.d(TAG, "guessed : " + guessModel.getContent());
-            callback.onGuessSuccessfully(guessModel);
+        public void onAttackSuccessfully(ContentModel contentModel) {
+            Log.d(TAG, "Attack successfully: " + contentModel.getContent());
+            callback.onAttackSuccessfully(contentModel);
         }
 
         @Override
-        @BindCallback(event = GUESS, status = RequestStatus.failed)
-        public void onGuessUnsuccessfully(ErrorMessage errorMessage) {
-            Log.d(TAG, "guessing unsuccessfully : " + errorMessage);
-            callback.onGuessUnsuccessfully(errorMessage);
+        public void onAttackUnsuccessfully(ErrorMessage errorMessage) {
+            Log.d(TAG, "Attack unsuccessfully: " + errorMessage.getMessage());
+            callback.onAttackUnsuccessfully(errorMessage);
         }
 
         @Override
-        @BindCallback(event = GUESSING_STARTED, status = RequestStatus.success)
-        public void onGuessingStarted() {
-            Log.d(TAG, "guessing phase started.");
-            callback.onGuessingStarted();
+        public void onNexAttackAction(AttackActionModel attackActionModel) {
+            Log.d(TAG, "On next attack action model received: " + attackActionModel);
+            callback.onNexAttackAction(attackActionModel);
         }
 
         @Override
-        @BindCallback(event = ONE_ROUND_OVER, status = RequestStatus.success)
-        public void onOneRoundOver(List<Duel1A2BPlayerBarModel> models) {
-            Log.d(TAG, "One round over.");
-            callback.onOneRoundOver(models);
+        public void onYourTurn(NextTurnModel nextTurnModel) {
+            Log.d(TAG, "Turn changed: " + nextTurnModel.getWhosTurn().getName());
+            callback.onYourTurn(nextTurnModel);
         }
 
     }
-
 }
