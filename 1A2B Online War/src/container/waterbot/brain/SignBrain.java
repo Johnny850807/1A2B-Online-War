@@ -32,7 +32,6 @@ public class SignBrain extends ChainBrain{
 	protected  void onReceiveSuccessProtocol(WaterBot waterBot, Protocol protocol, Client client) {
 		switch (protocol.getEvent()) {
 		case SIGNIN:
-			waterBot.setMe(MyGson.parsePlayer(protocol.getData()));
 			broadcastGetServerInfo(client);
 			break;
 		case GETINFO:

@@ -12,6 +12,7 @@ import container.protocol.Protocol;
 import container.waterbot.brain.SharedMemory;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
+import gamecore.model.ClientStatus;
 
 public class WaterBot{
 	private static Logger log = LogManager.getLogger(WaterBot.class);
@@ -123,11 +124,20 @@ public class WaterBot{
 	}
 	
 	public void setMe(Player me){
+		log.trace(getName() + " signs in. Status -> " + ClientStatus.signedIn);
 		getMemory().setMe(me);
 	}
 	
 	public void setGameRoom(GameRoom gameRoom){
+		log.trace(getName() + " holds the game room. Status -> " + ClientStatus.inRoom);
+		getMe().setUserStatus(ClientStatus.inRoom);
 		getMemory().setRoom(gameRoom);
+	}
+	
+	public void clearGameRoom(){
+		log.trace(getName() + " clears the game room. Status -> " + ClientStatus.signedIn);
+		getMe().setUserStatus(ClientStatus.signedIn);
+		getMemory().setRoom(null);
 	}
 	
 	/**

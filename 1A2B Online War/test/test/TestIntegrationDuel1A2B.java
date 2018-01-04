@@ -269,12 +269,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		//assert that the boss has attacked some one
 		Protocol bossAttack = hostClient.getLastedByEvent(Boss1A2B.ATTACK_RESULTS);
 		AttackActionModel attackActionModel = gson.fromJson(bossAttack.getData(), AttackActionModel.class);
-		boolean somebodyGotHurted = false;
-		for (AttackResult attackResult : attackActionModel)
-			if (attackResult.getAttacked().getId().equals(host.getId()) ||
-					attackResult.getAttacked().getId().equals(player.getId()))
-				somebodyGotHurted = true;
-		assertTrue(somebodyGotHurted);
+		assertTrue(hasSomeoneGotHurted(attackActionModel));
 		
 
 		//host's turn
@@ -285,6 +280,14 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		createHandler(playerClient, protocolFactory.createProtocol(InRoom.LEAVE_ROOM,
 				REQUEST, gson.toJson(new PlayerRoomIdModel(player.getId(), gameRoom.getId())))).handle();
 		assertEquals(LEAVE_ROOM, hostClient.getLastedResponse().getEvent());
+	}
+	
+	private boolean hasSomeoneGotHurted(AttackActionModel attackActionModel){
+		for (AttackResult attackResult : attackActionModel)
+			if (attackResult.getAttacked().getId().equals(host.getId()) ||
+					attackResult.getAttacked().getId().equals(player.getId()))
+				return true;
+		return false;
 	}
 	
 	private void validateLatestAttackResults(String expectedGuess, String attackerId, MockClient client){
