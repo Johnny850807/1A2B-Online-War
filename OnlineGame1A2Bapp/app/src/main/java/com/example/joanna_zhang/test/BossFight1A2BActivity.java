@@ -54,6 +54,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         findViews();
         mockPlayers(); //Test
         setupLayout();
+        setupAnswer();
     }
 
     private void init() {
@@ -63,11 +64,12 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     }
 
     private void findViews() {
-        inputNumberBtn = findViewById(R.id.inputNumberBtn);
-        sendGuessBtn = findViewById(R.id.sendGuessBtn);
-        progressBar = findViewById(R.id.bossHpProgressBar);
-        playerRecyclerView = findViewById(R.id.boss1a2bPlayerRecyclerView);
+        inputNumberBtn = (Button) findViewById(R.id.inputNumberBtn);
+        sendGuessBtn = (ImageButton) findViewById(R.id.sendGuessBtn);
+        progressBar = (ProgressBar) findViewById(R.id.bossHpProgressBar);
+        playerRecyclerView = (RecyclerView) findViewById(R.id.boss1a2bPlayerRecyclerView);
     }
+
 
     //Test
     private void mockPlayers(){
