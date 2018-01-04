@@ -4,7 +4,9 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.GameCallBack;
 import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.RoomExpiredCallback;
 
+import gamecore.entity.GameRoom;
 import gamecore.model.PlayerRoomModel;
+import gamecore.model.games.a1b2.GameOverModel;
 
 public interface OnlineGameModule extends GameModule{
 
@@ -23,11 +25,25 @@ public interface OnlineGameModule extends GameModule{
     void leaveGame();
 
     public interface Callback extends GameCallBack, RoomExpiredCallback {
+        /**
+         * when everybody enters the game, the game started.
+         */
         void onGameStarted();
+
+        /**
+         * when the winner came out, the game will be over.
+         * @param gameOverModel model contains the winner info.
+         */
+        void onGameOver(GameOverModel gameOverModel);
 
         /**
          * when the opponent left from the game.
          */
         void onPlayerLeft(PlayerRoomModel model);
+
+        /**
+         * when the gameroom closed bt the host
+         */
+        void onGameClosed(GameRoom gameRoom);
     }
 }
