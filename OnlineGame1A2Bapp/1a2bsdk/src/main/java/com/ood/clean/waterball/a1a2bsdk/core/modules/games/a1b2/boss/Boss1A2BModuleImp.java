@@ -168,9 +168,9 @@ public class Boss1A2BModuleImp extends AbstractOnlineGameModule implements Boss1
         }
 
         @Override
-        public void onNexAttackAction(AttackActionModel attackActionModel) {
+        public void onNextAttackAction(AttackActionModel attackActionModel) {
             Log.d(TAG, "On next attack action model received: " + attackActionModel);
-            callback.onNexAttackAction(attackActionModel);
+            callback.onNextAttackAction(attackActionModel);
         }
 
         @Override
