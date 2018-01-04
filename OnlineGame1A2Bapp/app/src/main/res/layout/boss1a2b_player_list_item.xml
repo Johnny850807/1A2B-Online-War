@@ -13,8 +13,7 @@
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:id="@+id/boss1a2bPlayerHpProgressBar"
         android:layout_weight="1"
-        android:layout_gravity="center"
-        />
+        android:layout_gravity="center"/>
 
     <TextView
         android:layout_width="match_parent"

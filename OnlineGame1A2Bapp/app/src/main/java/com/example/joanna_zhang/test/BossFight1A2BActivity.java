@@ -27,10 +27,15 @@ import java.util.List;
 
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
+import gamecore.model.ContentModel;
+import gamecore.model.ErrorMessage;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.GuessRecord;
 import gamecore.model.games.a1b2.NumberNotValidException;
+import gamecore.model.games.a1b2.GameOverModel;
+import gamecore.model.games.a1b2.boss.AttackActionModel;
+import gamecore.model.games.a1b2.boss.NextTurnModel;
 
 import static com.example.joanna_zhang.test.R.string.confirm;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
@@ -143,20 +148,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
     }
 
-    @Override
-    public void onNextPlayerTurn() {
-
-    }
-
-    @Override
-    public void onAttackingSuccessfully() {
-
-    }
-
-    @Override
-    public void onGameOver() {
-
-    }
 
     @Override
     public void onGameStarted() {
@@ -177,6 +168,11 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         createAndShowPlayerLeftNotifyingDialog(model.getPlayer());
     }
 
+    @Override
+    public void onGameClosed(GameRoom gameRoom) {
+
+    }
+
     private void createAndShowPlayerLeftNotifyingDialog(Player leftPlayeer){
         AppDialogFactory.templateBuilder(this)
                 .setTitle(R.string.gameClosed)
@@ -187,6 +183,41 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
     @Override
     public void onEnterClick(String guessNumber) {
+
+    }
+
+    @Override
+    public void onSetAnswerSuccessfully(ContentModel contentModel) {
+
+    }
+
+    @Override
+    public void onSetAnswerUnsuccessfully(ErrorMessage errorMessage) {
+
+    }
+
+    @Override
+    public void onAttackSuccessfully(ContentModel contentModel) {
+
+    }
+
+    @Override
+    public void onAttackUnsuccessfully(ErrorMessage errorMessage) {
+
+    }
+
+    @Override
+    public void onNextAttackAction(AttackActionModel attackActionModel) {
+
+    }
+
+    @Override
+    public void onYourTurn(NextTurnModel nextTurnModel) {
+
+    }
+
+    @Override
+    public void onGameOver(GameOverModel gameOverModel) {
 
     }
 
