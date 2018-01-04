@@ -174,9 +174,9 @@ public class Boss1A2BModuleImp extends AbstractOnlineGameModule implements Boss1
         }
 
         @Override
-        public void onYourTurn(NextTurnModel nextTurnModel) {
+        public void onNextTurn(NextTurnModel nextTurnModel) {
             Log.d(TAG, "Turn changed: " + nextTurnModel.getWhosTurn().getName());
-            callback.onYourTurn(nextTurnModel);
+            callback.onNextTurn(nextTurnModel);
         }
 
     }

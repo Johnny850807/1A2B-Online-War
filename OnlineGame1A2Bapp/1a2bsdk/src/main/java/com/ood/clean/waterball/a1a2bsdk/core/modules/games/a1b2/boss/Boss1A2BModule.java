@@ -48,7 +48,7 @@ public interface Boss1A2BModule extends OnlineGameModule{
         /**
          * when then player sets the answer successfully
          */
-        public void onYourTurn(NextTurnModel nextTurnModel);
+        public void onNextTurn(NextTurnModel nextTurnModel);
 
         /**
          * when then player sets the answer successfully

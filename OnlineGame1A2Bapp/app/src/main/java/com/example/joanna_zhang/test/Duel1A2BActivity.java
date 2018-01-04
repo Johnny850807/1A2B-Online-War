@@ -314,7 +314,7 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
     private void createAndShowPlayerLeftNotifyingDialog(Player leftPlayeer){
         AppDialogFactory.templateBuilder(this)
                 .setTitle(R.string.gameClosed)
-                .setMessage(getString(R.string.playerIsAlreadyLeft,leftPlayeer.getName()))
+                .setMessage(getString(R.string.playerIsAlreadyLeft, leftPlayeer.getName()))
                 .setPositiveButton(confirm, (d,i) -> finish())
                 .show();
     }
