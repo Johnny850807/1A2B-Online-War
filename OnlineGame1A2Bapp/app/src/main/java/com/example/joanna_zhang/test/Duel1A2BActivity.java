@@ -132,14 +132,14 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
     }
 
     private void findViews() {
-        inputNumberBtn = findViewById(R.id.inputNumberBtn);
-        sendGuessBtn = findViewById(R.id.sendGuessBtn);
-        p1NameTxt = findViewById(R.id.p1NameTxt);
-        p2NameTxt = findViewById(R.id.p2NameTxt);
-        p1AnswerTxt = findViewById(R.id.p1AnswerTxt);
-        p2AnswerTxt = findViewById(R.id.p2AnswerTxt);
-        p1ResultListView = findViewById(R.id.p1ResultLst);
-        p2ResultListView = findViewById(R.id.p2ResultLst);
+        inputNumberBtn = (Button) findViewById(R.id.inputNumberBtn);
+        sendGuessBtn = (ImageButton) findViewById(R.id.sendGuessBtn);
+        p1NameTxt = (TextView) findViewById(R.id.p1NameTxt);
+        p2NameTxt = (TextView) findViewById(R.id.p2NameTxt);
+        p1AnswerTxt = (TextView) findViewById(R.id.p1AnswerTxt);
+        p2AnswerTxt = (TextView) findViewById(R.id.p2AnswerTxt);
+        p1ResultListView = (ListView) findViewById(R.id.p1ResultLst);
+        p2ResultListView = (ListView) findViewById(R.id.p2ResultLst);
         p1NameTxt.setText(currentPlayer.getName());
         String p2Name = currentGameRoom.getPlayers().get(0).equals(currentPlayer)?
                 currentGameRoom.getPlayers().get(1).getName() : currentGameRoom.getPlayers().get(0).getName();
@@ -151,7 +151,7 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
         p2ResultListView.setAdapter(p2GuessResultAdapter);
     }
 
-    private void setupAnswer() {
+    private void showDialogForSettingAnswer() {
         new InputNumberWindowDialog.Builder(this)
                 .setOnEnterClickListener(answer -> duel1A2BModule.setAnswer(answer))
                 .setCanceledOnTouchOutside(false)
@@ -194,7 +194,7 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
     public void onGameStarted() {
         gameStarted = true;
         progressDialog.dismiss();
-        setupAnswer();
+        showDialogForSettingAnswer();
         soundManager.playSound(R.raw.dingdong);
     }
 

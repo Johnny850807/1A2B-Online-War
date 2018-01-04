@@ -32,7 +32,8 @@ public abstract class GsonEventHandler<In, Out> extends GameEventHandler<In, Out
 
 	@Override
 	protected In parseData(String data) {
-		return GsonEventHandler.gson.fromJson(data, getDataClass());
+		Class<In> clazz = getDataClass();
+		return GsonEventHandler.gson.fromJson(data, clazz);
 	}
 	
 	@Override

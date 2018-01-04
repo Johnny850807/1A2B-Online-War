@@ -9,7 +9,7 @@ import container.protocol.ProtocolFactory;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.GuessRecord;
 import gamecore.model.games.a1b2.GuessResult;
-import gamecore.model.games.a1b2.boss.AttackResult.AttackType;
+import gamecore.model.games.a1b2.boss.AttackResult.AttackName;
 import utils.ForServer;
 import utils.MyGson;
 
@@ -55,21 +55,35 @@ public abstract class AbstractSpirit implements Spirit{
 	
 	@Override
 	@ForServer
-	public AttackResult getAttacked(AbstractSpirit attacker, String guess, AttackType attackType) {
+	public AttackResult getAttacked(AbstractSpirit attacker, String guess, AttackName attackType) {
 		return getAttacked(attacker, guess, attackType, defaultDamageParser);
 	}
 	
 	@Override
 	@ForServer
-	public AttackResult getAttacked(AbstractSpirit attacker, String guess, AttackType attackType, DamageParser damageParser) {
+	public AttackResult getAttacked(AbstractSpirit attacker, String guess, AttackName attackType, DamageParser damageParser) {
+		log.trace(getName() + " gets attacked by " + attacker.getName() + " with guessing: " + guess);
 		GuessResult guessResult = A1B2NumberValidator.getGuessResult(answer, guess);
+		log.trace("result: " + guessResult);
 		int damage = damageParser.parsingDamage(guessResult);
+		log.trace("damage:" + damage);
 		GuessRecord guessRecord = new GuessRecord(guess, guessResult);
 		AttackResult attackResult =  new AttackResult(damage, attackType, guessRecord, attacker, this);
 		onDamaging(attackResult);
 		return attackResult;
 	}
 
+	protected void onDamaging(AttackResult attackResult){
+		costHp(attackResult.getDamage());
+		if (isDead())
+			onDie(attackResult);
+		else 
+		{
+			if (attackResult.getA() == 4)
+				onAnswerGuessed4A(attackResult);
+			onSurvivedFromAttack(attackResult);
+		}
+	}
 	
 	private static int getRandom(int min, int max){
 		return new Random().nextInt(max+1) + min;
@@ -82,15 +96,7 @@ public abstract class AbstractSpirit implements Spirit{
 	void costMp(int cost){
 		mp = mp - cost < 0 ? 0 : mp - cost;
 	}
-	
-	protected void onDamaging(AttackResult attackResult){
-		costHp(attackResult.getDamage());
-		if (isDead())
-			onDie(attackResult);
-		else if (attackResult.getA() == 4)
-			onAnswerGuessed4A(attackResult);
-		onSurvivedFromAttack(attackResult);
-	}
+
 	
 	/**
 	 * when the answer has been guessed correctly with the 4A result.
@@ -131,5 +137,35 @@ public abstract class AbstractSpirit implements Spirit{
 	public boolean isDead(){
 		return getHp() <= 0;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AbstractSpirit other = (AbstractSpirit) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
 	
+	@Override
+	public String toString() {
+		return String.format("'%s, hp: %d/%d, mp:%d, %s'", getName(), getHp(), getMaxHp(), getMp(), 
+								isDead() ? "dead" : "alive");
+	}
 }

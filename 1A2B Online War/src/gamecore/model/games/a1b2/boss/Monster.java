@@ -1,36 +1,76 @@
 package gamecore.model.games.a1b2.boss;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
+import utils.RandomString;
 
-public abstract class Monster extends AbstractSpirit{
-	protected List<MonsterAction> actions;
-	protected Boss1A2BGame game;
-	protected Random random = new Random();
+public class Monster extends AbstractSpirit{
+	protected transient static Random random = new Random();
+	protected transient List<MonsterAction> actions;
+	protected transient Boss1A2BGame game;
 	
 	public Monster(String id, String name, MyLogger log, ProtocolFactory protocolFactory) {
 		super(id, name, log, protocolFactory);
 	}
 	
 	public void init(Boss1A2BGame game){
-		this.actions = createMonsterActions();
+		this.actions = onCreateMonsterActions();
 		this.game = game;
-		this.setAnswer(produceAnswer());
+		this.setAnswer(onProduceAnswer());
 	}
 
-	protected abstract List<MonsterAction> createMonsterActions();
-	protected abstract String produceAnswer();
+	protected List<MonsterAction> onCreateMonsterActions(){
+		List<MonsterAction> actions = new ArrayList<>();
+		actions.add(new NormalAttack());
+		return actions;
+	}
 	
-	@Override
+	protected String onProduceAnswer() {
+		return RandomString.nextNonDuplicatedNumber(4);
+	}
+
 	public void action() {
-		MonsterAction action = getMonsterAction();
+		log.trace("Boss' turn, the boss is choosing his action.");
+		MonsterAction action = chooseNextMonsterAction();
+		if (action.getCostMp() > getMp())
+			throw new IllegalStateException("The boss does not have enough mp to execute the action, please override the chooseNextMonsterActiob() method to write your own desicion method.");
+		log.trace("the action chosen: " + action.getAttackName());
+		costMp(action.getCostMp());
 		action.execute(this, game);
 	}
 	
-	protected MonsterAction getMonsterAction(){
+	/**
+	 * how the boss choose his action in each turn.
+	 */
+	protected MonsterAction chooseNextMonsterAction(){
 		return actions.get(random.nextInt(actions.size()));
 	}
+
+	@Override
+	public Type getType() {
+		return Type.MONSTER;
+	}
+
+	@Override
+	public int getMp() {
+		return 200;
+	}
+
+	@Override
+	public int getMaxHp() {
+		return 500;
+	}
+
+	@Override
+	protected void onAnswerGuessed4A(AttackResult attackResult) {/*hook*/}
+
+	@Override
+	protected void onDie(AttackResult attackResult) {/*hook*/}
+
+	@Override
+	protected void onSurvivedFromAttack(AttackResult attackResult) {/*hook*/}
 }
