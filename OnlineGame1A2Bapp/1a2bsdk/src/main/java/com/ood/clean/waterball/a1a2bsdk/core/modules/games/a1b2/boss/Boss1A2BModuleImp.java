@@ -18,6 +18,7 @@ import gamecore.model.RequestStatus;
 import gamecore.model.games.GameOverModel;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
+import gamecore.model.games.a1b2.boss.core.SpiritsModel;
 
 import static container.core.Constants.Events.Games.Boss1A2B.ATTACK;
 import static container.core.Constants.Events.Games.Boss1A2B.SET_ANSWER;
@@ -96,9 +97,9 @@ public class Boss1A2BModuleImp extends AbstractOnlineGameModule implements Boss1
 
         @Override
         @BindCallback(event = GAMESTARTED, status = RequestStatus.success)
-        public void onGameStarted() {
+        public void onGameStarted(SpiritsModel spiritsModel) {
             Log.d(TAG, "the game " + currentGameRoom.getGameMode() + " started.");
-            callback.onGameStarted();
+            callback.onGameStarted(spiritsModel);
         }
 
         @Override

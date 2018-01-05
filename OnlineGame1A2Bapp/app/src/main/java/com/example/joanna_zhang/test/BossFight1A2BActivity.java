@@ -35,6 +35,7 @@ import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.AttackResult;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
+import gamecore.model.games.a1b2.boss.core.SpiritsModel;
 import gamecore.model.games.a1b2.core.A1B2NumberValidator;
 import gamecore.model.games.a1b2.core.GuessRecord;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
@@ -47,8 +48,8 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
     private Boss1A2BModule boss1A2BModule;
     private GameRoom currentGameRoom;
-    private Player currentPlayer;
-    private List<AttackResult> resultList;
+    private Player currentPlayer;   //TODO write a base abstract activity handling all initializing currentGameRoom and currentPlayer tasks.
+    private List<GuessRecord> resultList;
     private InputNumberWindowDialog inputNumberWindowDialog;
     private Button inputNumberBtn;
     private ImageButton sendGuessBtn;
@@ -83,7 +84,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         progressBar = findViewById(R.id.bossHpProgressBar);
         playerRecyclerView = findViewById(R.id.boss1a2bPlayerRecyclerView);
     }
-
 
     //Test
 //    private void mockPlayers(){
@@ -156,7 +156,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     }
 
     @Override
-    public void onGameStarted() {
+    public void onGameStarted(SpiritsModel spiritsModel) {
         setupAnswer();
     }
 
@@ -193,7 +193,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
                 .setPositiveButton(confirm, (d,i) -> finish())
                 .show();
     }
-
 
     @Override
     public void onSetAnswerSuccessfully(ContentModel contentModel) {
