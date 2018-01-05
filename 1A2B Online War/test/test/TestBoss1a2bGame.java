@@ -109,7 +109,7 @@ public class TestBoss1a2bGame implements GameLifecycleListener{
 	
 	
 	@Override
-	public void onGameStarted(Game game) {
+	public void onGameStarted(Game game, Protocol protocol) {
 		assertEquals(this.game, game);
 	}
 
@@ -124,8 +124,8 @@ public class TestBoss1a2bGame implements GameLifecycleListener{
 	public static Collection primeNumbers() {
 		gameFactory = new GameOnlineReleaseFactory();
 		return Arrays.asList(new Object[][] {
-			{new TestingBoss("t", "TestingBoss", new MockLogger(), gameFactory.getProtocolFactory())},
-			{new OnePunchBoss("o", "OnePunchBoss", new MockLogger(), gameFactory.getProtocolFactory())}
+			{new TestingBoss("t", new MockLogger(), gameFactory.getProtocolFactory())},
+			{new OnePunchBoss("o", new MockLogger(), gameFactory.getProtocolFactory())}
 	      });
 	}
 }

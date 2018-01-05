@@ -22,6 +22,7 @@ import gamecore.model.games.a1b2.boss.core.AttackResult;
 import gamecore.model.games.a1b2.boss.core.Monster;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
+import gamecore.model.games.a1b2.boss.core.SpiritsModel;
 import gamecore.model.games.a1b2.boss.core.AttackResult.AttackType;
 import gamecore.model.games.a1b2.core.A1B2NumberValidator;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
@@ -43,10 +44,16 @@ public class Boss1A2BGame extends Game{
 		for (ClientPlayer clientPlayer : clientPlayers)
 			playerSpirits.add(new PlayerSpirit(clientPlayer, log, protocolFactory));
 	}
-
+	
 	@Override
-	protected void onGameStarted() {
+	protected void onInitGame() {
 		boss.init(this);
+	}
+	
+	@Override
+	protected Protocol onCreateGameStartedProtocol() {
+		return protocolFactory.createProtocol(Games.GAMESTARTED, RequestStatus.success.toString(),
+				gson.toJson(new SpiritsModel(boss, playerSpirits)));
 	}
 	
 	@ForServer

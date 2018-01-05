@@ -8,6 +8,7 @@ import container.core.MyLogger;
 import container.protocol.ProtocolFactory;
 import gamecore.model.games.a1b2.boss.imp.Boss1A2BGame;
 import gamecore.model.games.a1b2.boss.imp.RandomGuessAttack;
+import utils.ForServer;
 import utils.RandomString;
 
 public class Monster extends AbstractSpirit{
@@ -35,6 +36,7 @@ public class Monster extends AbstractSpirit{
 		return RandomString.nextNonDuplicatedNumber(4);
 	}
 
+	@ForServer
 	public void action() {
 		log.trace("Boss' turn, the boss is choosing his action.");
 		MonsterAction action = chooseNextMonsterAction();

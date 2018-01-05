@@ -240,10 +240,8 @@ public class ReleaseGameCore implements GameCore{
 	}
 
 	@Override
-	public void onGameStarted(Game game) {
-		Protocol protocol = factory.getProtocolFactory().createProtocol(Games.GAMESTARTED,
-				RequestStatus.success.toString(), null);
-		broadcastRoom(game.getRoomId(), protocol);
+	public void onGameStarted(Game game, Protocol gameStartedProtocol) {
+		broadcastRoom(game.getRoomId(), gameStartedProtocol);
 	}
 
 	@Override
