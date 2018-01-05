@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,16 +45,11 @@ import gamecore.model.games.a1b2.core.A1B2NumberValidator;
 import gamecore.model.games.a1b2.core.GuessRecord;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
 
-import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
-import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
-
-public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender{
+public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender{
 
     private final static String TAG = "BossFight1A2BActivity";
     private Boss1A2BModule boss1A2BModule;
-    private GameRoom currentGameRoom;
-    private Player currentPlayer;   //TODO write a base abstract activity handling all initializing currentGameRoom and currentPlayer tasks.
     private List<GuessRecord> resultList;
     private List<AttackResult> attackResults = new ArrayList<>();
     private InputNumberWindowDialog inputNumberWindowDialog;
@@ -82,8 +76,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
         boss1A2BModule = (Boss1A2BModule) server.createModule(ModuleName.GAME1A2BBOSS);
-        currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
-        currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
         playerSpiritItemViewFactory = new PlayerSpiritItemViewFactory(this);
     }
 

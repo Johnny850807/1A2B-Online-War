@@ -43,13 +43,11 @@ import static com.example.joanna_zhang.test.R.string.confirm;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
-public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowDialog.OnClickListener, Duel1A2BModule.Callback {
+public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowDialog.OnClickListener, Duel1A2BModule.Callback {
     private final static String TAG = "Duel1A2BActivity";
     private Duel1A2BModule duel1A2BModule;
     private android.app.AlertDialog progressDialog;
     private List<GuessRecord> p1ResultList, p2ResultList;
-    private GameRoom currentGameRoom;
-    private Player currentPlayer;
     private ChatWindowView chatWindowView;
     private InputNumberWindowDialog inputNumberWindowDialog;
     private Button inputNumberBtn;
@@ -124,8 +122,6 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
     private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
         duel1A2BModule = (Duel1A2BModule) server.createModule(ModuleName.GAME1A2BDUEL);
-        currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
-        currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
         p1GuessResultAdapter = new GuessResultAdapter();
         p2GuessResultAdapter = new GuessResultAdapter();
         soundManager = new SoundManager(this);
