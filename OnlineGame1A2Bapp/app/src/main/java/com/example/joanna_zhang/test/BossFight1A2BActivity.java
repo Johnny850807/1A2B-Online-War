@@ -171,7 +171,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     private class SettingAnswerOnEnterClickListener implements InputNumberWindowDialog.OnClickListener {
         @Override
         public void onEnterClick(String guessNumber) {
-
+            boss1A2BModule.setAnswer(guessNumber);
         }
     }
 
@@ -182,7 +182,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
     @Override
     public void onGameClosed(GameRoom gameRoom) {
-
+        createAndShowPlayerLeftNotifyingDialog(gameRoom.getHost());
     }
 
     private void createAndShowPlayerLeftNotifyingDialog(Player leftPlayeer){
