@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,12 +12,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
+import com.example.joanna_zhang.test.mocks.MockClient;
+import com.example.joanna_zhang.test.mocks.MockProtocolFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.a1b2.boss.Boss1A2BModule;
@@ -28,8 +30,10 @@ import java.util.List;
 
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
+import gamecore.model.ClientPlayer;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
+import gamecore.model.MockLogger;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.games.GameOverModel;
 import gamecore.model.games.a1b2.boss.core.AbstractSpirit;
@@ -52,9 +56,10 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
     private ListView attackResultListView;
     private GuessResultAdapter guessResultAdapter;
     private ProgressBar progressBar;
-    private RecyclerView playerRecyclerView;
-    private List<PlayerSpirit> playerSpirits = new ArrayList<>();
     private SpiritsModel spiritsModel;
+    private LinearLayout playerSpiritsViewGroup;
+    private List<PlayerSpirit> playerSpirits = new ArrayList<>();
+    private PlayerSpiritItemViewFactory playerSpiritItemViewFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +69,13 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         findViews();
         setupLayout();
         setUpInputNumberWindowView();
+        testPlayerSpiritViews();
     }
 
     private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
         boss1A2BModule = (Boss1A2BModule) server.createModule(ModuleName.GAME1A2BBOSS);
+        playerSpiritItemViewFactory = new PlayerSpiritItemViewFactory(this);
     }
 
     private void findViews() {
@@ -76,13 +83,13 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         sendGuessBtn = findViewById(R.id.sendGuessBtn);
         progressBar = findViewById(R.id.bossHpProgressBar);
         attackResultListView = findViewById(R.id.attackResultsLst);
-        playerRecyclerView = findViewById(R.id.boss1a2bPlayerRecyclerView);
+        playerSpiritsViewGroup = findViewById(R.id.playerSpiritsViewGroup);
+        attackResultListView = findViewById(R.id.bossResultsLst);
     }
 
     private void setupLayout() {
         setupProgressBar();
         setupAttackResultListView();
-        setupPlayerRecyclerView();
     }
 
     private void setupAttackResultListView() {
@@ -96,23 +103,33 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         progressBar.setScaleY(3f);
     }
 
-    private void setupPlayerRecyclerView() {
-        PlayerListAdapter PlayerListAdapter = new PlayerListAdapter();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        playerRecyclerView.setLayoutManager(layoutManager);
-        playerRecyclerView.setAdapter(PlayerListAdapter);
-    }
 
     private void setUpInputNumberWindowView() {
         inputNumberWindowDialog = new InputNumberWindowDialog.Builder(this)
-                .setOnEnterClickListener(new InputNumberWindowDialog.OnClickListener() {
-                    @Override
-                    public void onEnterClick(String guessNumber) {
-                        inputNumberBtn.setText(guessNumber);
-                    }
-                })
+                .setOnEnterClickListener(guessNumber -> inputNumberBtn.setText(guessNumber))
                 .setTitle(getString(R.string.pleaseInputGuess))
                 .build();
+    }
+
+    //TODO please remove this if we don't need it anymore
+    private void testPlayerSpiritViews() {
+        MockLogger mockLogger = new MockLogger();
+        MockProtocolFactory mockProtocolFactory = new MockProtocolFactory();
+        Player p1 = new Player("p1");
+        Player p2 = new Player("p2");
+        Player p3 = new Player("p3");
+        Player p4 = new Player("p4");
+        Player p5 = new Player("p5");
+        playerSpirits.add(new PlayerSpirit(new ClientPlayer(new MockClient(p1), p1), mockLogger, mockProtocolFactory));
+        playerSpirits.add(new PlayerSpirit(new ClientPlayer(new MockClient(p2), p2), mockLogger, mockProtocolFactory));
+        playerSpirits.add(new PlayerSpirit(new ClientPlayer(new MockClient(p3), p3), mockLogger, mockProtocolFactory));
+        playerSpirits.add(new PlayerSpirit(new ClientPlayer(new MockClient(p4), p4), mockLogger, mockProtocolFactory));
+        playerSpirits.add(new PlayerSpirit(new ClientPlayer(new MockClient(p5), p5), mockLogger, mockProtocolFactory));
+        for (PlayerSpirit playerSpirit : playerSpirits)
+        {
+            PlayerSpiritItemViewFactory.PlayerSpiritViewHolder  viewHolder = playerSpiritItemViewFactory.createPlayerSpiritItemView(playerSpirit, playerSpiritsViewGroup);
+            this.playerSpiritsViewGroup.addView(viewHolder.view);
+        }
     }
 
     public void inputNumberOnClick(View view) {
@@ -278,42 +295,6 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
 
 
             return view;
-        }
-    }
-
-    private class PlayerListAdapter extends RecyclerView.Adapter<MyViewHolder>{
-
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(BossFight1A2BActivity.this).inflate(R.layout.boss1a2b_player_list_item, parent, false);
-            return new MyViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(MyViewHolder holder, int position) {
-            Player player = currentGameRoom.getPlayers().get(position);
-            holder.playerHpBar.getProgressDrawable().setColorFilter(
-                    Color.GREEN, PorterDuff.Mode.DARKEN);
-            holder.playerHpBar.setScaleY(3f);
-            holder.playerName.setText(player.getName());
-            holder.playerHp.setText("2000");
-        }
-
-        @Override
-        public int getItemCount() {
-            return playerSpirits.size();
-        }
-    }
-
-    private class MyViewHolder extends RecyclerView.ViewHolder {
-        ProgressBar playerHpBar;
-        TextView playerName;
-        TextView playerHp;
-        MyViewHolder(View view) {
-            super(view);
-            playerHpBar = view.findViewById(R.id.boss1a2bPlayerHpProgressBar);
-            playerName = view.findViewById(R.id.boss1a2bPlayerNameTxt);
-            playerHp = view.findViewById(R.id.boss1a2bPlayerHPTxt);
         }
     }
 
