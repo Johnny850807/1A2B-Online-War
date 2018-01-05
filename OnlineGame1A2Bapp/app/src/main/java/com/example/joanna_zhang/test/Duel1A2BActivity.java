@@ -363,5 +363,4 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
             return view;
         }
     }
-
 }

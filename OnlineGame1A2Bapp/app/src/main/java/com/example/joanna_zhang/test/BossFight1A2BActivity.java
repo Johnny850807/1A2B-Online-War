@@ -34,6 +34,7 @@ import gamecore.model.games.GameOverModel;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.AttackResult;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
+import gamecore.model.games.a1b2.boss.core.SpiritsModel;
 import gamecore.model.games.a1b2.core.A1B2NumberValidator;
 import gamecore.model.games.a1b2.core.GuessRecord;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
@@ -43,7 +44,6 @@ import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
 public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2BModule.Callback{
-
     private Boss1A2BModule boss1A2BModule;
     private GameRoom currentGameRoom;
     private Player currentPlayer;   //TODO write a base abstract activity handling all initializing currentGameRoom and currentPlayer tasks.
@@ -94,7 +94,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     private void setupLayout() {
         setupProgressBar();
         setupPlayerRecyclerView();
-
     }
 
     private void setupProgressBar() {
@@ -132,7 +131,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
             A1B2NumberValidator.validateNumber(guessNumber);
             inputNumberBtn.setEnabled(false);
             sendGuessBtn.setEnabled(false);
-
         }catch (NumberNotValidException err){
             Toast.makeText(this, R.string.numberShouldBeInLengthFour, Toast.LENGTH_LONG).show();
         }
@@ -151,11 +149,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     @Override
     public void onError(@NonNull Throwable err) {
 
-    }
-
-    @Override
-    public void onGameStarted() {
-        setupAnswer();
     }
 
     private void setupAnswer() {
@@ -192,6 +185,10 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
                 .show();
     }
 
+    @Override
+    public void onGameStarted(SpiritsModel spiritsModel) {
+        setupAnswer();
+    }
 
     @Override
     public void onSetAnswerSuccessfully(ContentModel contentModel) {
