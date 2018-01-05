@@ -30,13 +30,18 @@ public class SoundManager {
     }
 
     public void playSound(@RawRes int resid){
+        int soundId;
         if (!soundIdMaps.containsKey(resid))
-            register(resid);
-        soundPool.play(soundIdMaps.get(resid), 1, 1, 60, 0, 1);
+            soundId = register(resid);
+        else
+            soundId = soundIdMaps.get(resid);
+        soundPool.play(soundId, 1, 1, 60, 0, 1);
     }
 
-    private void register(@RawRes int resId){
-        soundIdMaps.put(resId, soundPool.load(context, resId, 1));
+    private int register(@RawRes int resId){
+        int soundId = soundPool.load(context, resId, 1);
+        soundIdMaps.put(resId, soundId);
+        return soundId;
     }
 
 }

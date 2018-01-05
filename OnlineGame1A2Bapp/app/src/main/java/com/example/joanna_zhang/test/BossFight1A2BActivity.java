@@ -39,6 +39,7 @@ import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.AttackResult;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
+import gamecore.model.games.a1b2.boss.core.SpiritsModel;
 import gamecore.model.games.a1b2.core.A1B2NumberValidator;
 import gamecore.model.games.a1b2.core.GuessRecord;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
@@ -47,12 +48,12 @@ import static com.example.joanna_zhang.test.R.string.confirm;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
-public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2BModule.Callback{
+public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender{
 
     private final static String TAG = "BossFight1A2BActivity";
     private Boss1A2BModule boss1A2BModule;
     private GameRoom currentGameRoom;
-    private Player currentPlayer;
+    private Player currentPlayer;   //TODO write a base abstract activity handling all initializing currentGameRoom and currentPlayer tasks.
     private List<GuessRecord> resultList;
     private List<AttackResult> attackResults = new ArrayList<>();
     private InputNumberWindowDialog inputNumberWindowDialog;
@@ -62,7 +63,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     private GuessResultAdapter guessResultAdapter;
     private ProgressBar progressBar;
     private RecyclerView playerRecyclerView;
-    private List<AbstractSpirit> players = new ArrayList<>();
+    private List<PlayerSpirit> players = new ArrayList<>();
     private AbstractSpirit whosTurn;
 
 
@@ -158,11 +159,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         Log.e(TAG, err.getMessage());
     }
 
-    @Override
-    public void onGameStarted() {
-        setupAnswer();
-    }
-
     private void setupAnswer() {
         new InputNumberWindowDialog.Builder(this)
                 .setOnEnterClickListener(new SettingAnswerOnEnterClickListener())
@@ -170,6 +166,26 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
                 .setCancelable(false)
                 .setTitle(getString(R.string.setAnswerFirst))
                 .show();
+    }
+
+    @Override
+    public void onDrawHpCosted(AbstractSpirit abstractSpirit, int i) {
+
+    }
+
+    @Override
+    public void onDrawMpCosted(AbstractSpirit abstractSpirit, int i) {
+
+    }
+
+    @Override
+    public void onDrawNormalAttack(AbstractSpirit abstractSpirit, AbstractSpirit abstractSpirit1, AttackResult attackResult) {
+
+    }
+
+    @Override
+    public void onDrawMagicAttack(AbstractSpirit abstractSpirit, AbstractSpirit abstractSpirit1, AttackResult attackResult) {
+
     }
 
     private class SettingAnswerOnEnterClickListener implements InputNumberWindowDialog.OnClickListener {
@@ -181,20 +197,20 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
     @Override
     public void onPlayerLeft(PlayerRoomModel model) {
-        createAndShowPlayerLeftNotifyingDialog(model.getPlayer());
+        AppDialogFactory.playerLeftFromGameDialog(this, model.getPlayer());
     }
 
     @Override
     public void onGameClosed(GameRoom gameRoom) {
-        createAndShowPlayerLeftNotifyingDialog(gameRoom.getHost());
+        AppDialogFactory.playerLeftFromGameDialog(this, gameRoom.getHost());
     }
 
-    private void createAndShowPlayerLeftNotifyingDialog(Player leftPlayeer){
-        AppDialogFactory.templateBuilder(this)
-                .setTitle(R.string.gameClosed)
-                .setMessage(getString(R.string.playerIsAlreadyLeft,leftPlayeer.getName()))
-                .setPositiveButton(confirm, (d,i) -> finish())
-                .show();
+    @Override
+    public void onGameStarted(SpiritsModel spiritsModel) {
+        spiritsModel.setOnAttackActionParsingListener(this);
+        spiritsModel.updateHPMPFromTheAttackActionModel();
+        players = spiritsModel.getPlayerSpirits();
+        setupAnswer();
     }
 
     @Override
@@ -204,6 +220,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
     @Override
     public void onSetAnswerUnsuccessfully(ErrorMessage errorMessage) {
+
         Log.e(TAG, errorMessage.getMessage());
     }
 
@@ -223,6 +240,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
             drawAttackResult(attackResult);
             attackResults.add(attackResult);
         }
+
         guessResultAdapter.notifyDataSetChanged();
     }
 

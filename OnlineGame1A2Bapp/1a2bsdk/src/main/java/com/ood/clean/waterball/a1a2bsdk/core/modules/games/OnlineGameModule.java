@@ -25,10 +25,6 @@ public interface OnlineGameModule extends GameModule{
     void leaveGame();
 
     public interface Callback extends GameCallBack, RoomExpiredCallback {
-        /**
-         * when everybody enters the game, the game started.
-         */
-        void onGameStarted();
 
         /**
          * when the winner came out, the game will be over.

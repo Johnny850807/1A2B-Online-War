@@ -33,6 +33,11 @@ public interface Duel1A2BModule extends OnlineGameModule{
     public interface Callback extends OnlineGameModule.Callback {
 
         /**
+         * when everybody enters the game, the game started.
+         */
+        void onGameStarted();
+
+        /**
          * while you set the answer successfully.
          */
         void onSetAnswerSuccessfully(ContentModel setAnswerModel);
