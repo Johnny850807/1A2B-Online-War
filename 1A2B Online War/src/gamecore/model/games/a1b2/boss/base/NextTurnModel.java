@@ -1,4 +1,4 @@
-package gamecore.model.games.a1b2.boss;
+package gamecore.model.games.a1b2.boss.base;
 
 import java.io.Serializable;
 

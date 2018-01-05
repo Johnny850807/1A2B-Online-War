@@ -11,7 +11,7 @@ import java.util.Scanner;
  * The 1A2B guessing algorithm which uses a table for storing every possible numbers
  * and filtering each number from each guess record.
  * 
- * This algorithm can produce the correct the answer in at most seven guesses.
+ * This algorithm can produce the correct the answer in at most eight guesses.
  */
 public class PossibleTableGuessing implements GuessStrategy{
 	private List<String> possibleNumbers = new LinkedList<>();

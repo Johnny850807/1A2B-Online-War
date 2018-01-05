@@ -1,10 +1,12 @@
-package gamecore.model.games.a1b2.boss;
+package gamecore.model.games.a1b2.boss.imp;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
+import gamecore.model.games.a1b2.boss.base.Monster;
+import gamecore.model.games.a1b2.boss.base.MonsterAction;
 import utils.RandomString;
 
 /**
@@ -23,7 +25,6 @@ public class OnePunchBoss extends Monster{
 		actions.add(new PowerfulPunch());
 		return actions;
 	}
-
 
 	@Override
 	public int getMp() {

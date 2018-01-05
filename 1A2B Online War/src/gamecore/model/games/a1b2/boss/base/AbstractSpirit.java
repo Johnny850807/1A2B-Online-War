@@ -1,4 +1,4 @@
-package gamecore.model.games.a1b2.boss;
+package gamecore.model.games.a1b2.boss.base;
 
 import java.util.Random;
 
@@ -9,7 +9,7 @@ import container.protocol.ProtocolFactory;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.GuessRecord;
 import gamecore.model.games.a1b2.GuessResult;
-import gamecore.model.games.a1b2.boss.AttackResult.AttackName;
+import gamecore.model.games.a1b2.boss.base.AttackResult.AttackType;
 import utils.ForServer;
 import utils.MyGson;
 
@@ -53,15 +53,19 @@ public abstract class AbstractSpirit implements Spirit{
 		}
 	};
 	
+	public static final DamageParser getDefaultdamageparser() {
+		return defaultDamageParser;
+	}
+	
 	@Override
 	@ForServer
-	public AttackResult getAttacked(AbstractSpirit attacker, String guess, AttackName attackType) {
+	public AttackResult getAttacked(AbstractSpirit attacker, String guess, AttackType attackType) {
 		return getAttacked(attacker, guess, attackType, defaultDamageParser);
 	}
 	
 	@Override
 	@ForServer
-	public AttackResult getAttacked(AbstractSpirit attacker, String guess, AttackName attackType, DamageParser damageParser) {
+	public AttackResult getAttacked(AbstractSpirit attacker, String guess, AttackType attackType, DamageParser damageParser) {
 		log.trace(getName() + " gets attacked by " + attacker.getName() + " with guessing: " + guess);
 		GuessResult guessResult = A1B2NumberValidator.getGuessResult(answer, guess);
 		log.trace("result: " + guessResult);
@@ -89,11 +93,11 @@ public abstract class AbstractSpirit implements Spirit{
 		return new Random().nextInt(max+1) + min;
 	}
 	
-	void costHp(int damage){
+	public void costHp(int damage){
 		hp = hp - damage < 0 ? 0 : hp - damage;
 	}
 	
-	void costMp(int cost){
+	public void costMp(int cost){
 		mp = mp - cost < 0 ? 0 : mp - cost;
 	}
 

@@ -1,9 +1,10 @@
-package gamecore.model.games.a1b2.boss;
+package gamecore.model.games.a1b2.boss.base;
 
 import container.base.MyLogger;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.model.ClientPlayer;
+import gamecore.model.games.a1b2.boss.base.AttackResult.AttackType;
 import utils.ForServer;
 
 /**

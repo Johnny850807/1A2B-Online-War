@@ -1,4 +1,4 @@
-package gamecore.model.games.a1b2.boss;
+package gamecore.model.games.a1b2.boss.base;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,10 +7,12 @@ import java.util.List;
 public class AttackActionModel implements Iterable<AttackResult>{
 	private AbstractSpirit attacker;
 	private int mpCost;
+	private String attackName;
 	private List<AttackResult> attackResults = new ArrayList<>();
 	
-	public AttackActionModel(int mpCost, AbstractSpirit attacker, AttackResult ...results) {
+	public AttackActionModel(String attackName, int mpCost, AbstractSpirit attacker, AttackResult ...results) {
 		this.attacker = attacker;
+		this.attackName = attackName;
 		this.mpCost = mpCost;
 		for (AttackResult result : results)
 			addAttackResult(result);
@@ -50,5 +52,12 @@ public class AttackActionModel implements Iterable<AttackResult>{
 		return attackResults.iterator();
 	}
 	
+	public String getAttackName() {
+		return attackName;
+	}
 	
+	public void setAttackName(String attackName) {
+		this.attackName = attackName;
+	}
 }
+

@@ -1,4 +1,4 @@
-package gamecore.model.games.a1b2.boss;
+package gamecore.model.games.a1b2.boss.base;
 
 import static container.Constants.Events.Games.Boss1A2B.NEXT_TURN;
 
@@ -19,7 +19,7 @@ import gamecore.model.games.ProcessInvalidException;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.GameOverModel;
 import gamecore.model.games.a1b2.NumberNotValidException;
-import gamecore.model.games.a1b2.boss.AttackResult.AttackName;
+import gamecore.model.games.a1b2.boss.base.AttackResult.AttackType;
 import utils.ForServer;
 
 /**
@@ -120,8 +120,8 @@ public class Boss1A2BGame extends Game{
 	
 	private void attackingBoss(PlayerSpirit attacker, String guess){
 		log.trace("the player "+ attacker.getName() + " is attacking the boss.");
-		AttackResult attackResult = boss.getAttacked(attacker, guess, AttackName.NORMAL);
-		AttackActionModel actionModel = new AttackActionModel(0, attacker, attackResult);
+		AttackResult attackResult = boss.getAttacked(attacker, guess, AttackType.NORMAL);
+		AttackActionModel actionModel = new AttackActionModel("Normal guess", 0, attacker, attackResult);
 		addAllResultsAndbroadcastAttackActionModel(actionModel);
 	}
 	

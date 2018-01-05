@@ -1,8 +1,8 @@
-package gamecore.model.games.a1b2.boss;
+package gamecore.model.games.a1b2.boss.base;
 
 import java.util.Random;
 
-import gamecore.model.games.a1b2.boss.AttackResult.AttackName;
+import gamecore.model.games.a1b2.boss.base.AttackResult.AttackType;
 
 public interface MonsterAction {
 	Random random = new Random();
@@ -14,5 +14,7 @@ public interface MonsterAction {
 	
 	int getCostMp();
 	
-	AttackName getAttackName();
+	AttackType getAttackType();
+	
+	String getAttackName();
 }

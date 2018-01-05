@@ -1,4 +1,4 @@
-package gamecore.model.games.a1b2.boss;
+package gamecore.model.games.a1b2.boss.base;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.Random;
 
 import container.base.MyLogger;
 import container.protocol.ProtocolFactory;
+import gamecore.model.games.a1b2.boss.imp.RandomGuessAttack;
 import utils.RandomString;
 
 public class Monster extends AbstractSpirit{
@@ -25,7 +26,7 @@ public class Monster extends AbstractSpirit{
 
 	protected List<MonsterAction> onCreateMonsterActions(){
 		List<MonsterAction> actions = new ArrayList<>();
-		actions.add(new NormalAttack());
+		actions.add(new RandomGuessAttack());
 		return actions;
 	}
 	
@@ -38,7 +39,7 @@ public class Monster extends AbstractSpirit{
 		MonsterAction action = chooseNextMonsterAction();
 		if (action.getCostMp() > getMp())
 			throw new IllegalStateException("The boss does not have enough mp to execute the action, please override the chooseNextMonsterActiob() method to write your own desicion method.");
-		log.trace("the action chosen: " + action.getAttackName());
+		log.trace("the action chosen: " + action.getAttackType());
 		costMp(action.getCostMp());
 		action.execute(this, game);
 	}

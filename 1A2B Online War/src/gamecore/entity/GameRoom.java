@@ -19,8 +19,8 @@ import gamecore.model.RoomStatus;
 import gamecore.model.games.Game;
 import gamecore.model.games.GameEnteringWaitingBox;
 import gamecore.model.games.a1b2.Duel1A2BGame;
-import gamecore.model.games.a1b2.boss.BasicBoss;
-import gamecore.model.games.a1b2.boss.Boss1A2BGame;
+import gamecore.model.games.a1b2.boss.base.Boss1A2BGame;
+import gamecore.model.games.a1b2.boss.imp.BasicBoss;
 import utils.ForServer;
 import utils.GamecoreHelper;
 

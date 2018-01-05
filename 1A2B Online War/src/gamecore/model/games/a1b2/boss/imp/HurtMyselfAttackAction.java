@@ -1,8 +1,13 @@
-package gamecore.model.games.a1b2.boss;
+package gamecore.model.games.a1b2.boss.imp;
 import gamecore.model.games.a1b2.GuessResult;
-import gamecore.model.games.a1b2.boss.AbstractSpirit.DamageParser;
-
-import gamecore.model.games.a1b2.boss.AttackResult.AttackName;
+import gamecore.model.games.a1b2.boss.base.AbstractMonsterAction;
+import gamecore.model.games.a1b2.boss.base.AttackActionModel;
+import gamecore.model.games.a1b2.boss.base.AttackResult;
+import gamecore.model.games.a1b2.boss.base.Boss1A2BGame;
+import gamecore.model.games.a1b2.boss.base.Monster;
+import gamecore.model.games.a1b2.boss.base.PlayerSpirit;
+import gamecore.model.games.a1b2.boss.base.AbstractSpirit.DamageParser;
+import gamecore.model.games.a1b2.boss.base.AttackResult.AttackType;
 
 /**
  * @author ShuYong
@@ -12,8 +17,8 @@ public class HurtMyselfAttackAction extends AbstractMonsterAction{
 	@Override
 	public void execute(Monster monster, Boss1A2BGame game) {
 		PlayerSpirit targetPlayer = getRandomTargetPlayer(game);
-		String guess = produceGuess();
-		AttackResult attackResult = targetPlayer.getAttacked(monster, guess, AttackName.MAGIC, getHurtMyselfDamageParser(monster));
+		String guess = produceRandomGuess();
+		AttackResult attackResult = targetPlayer.getAttacked(monster, guess, AttackType.MAGIC, getHurtMyselfDamageParser(monster));
 		AttackActionModel model = new AttackActionModel(getCostMp(), monster);
 		model.addAttackResult(attackResult);
 		game.addAllResultsAndbroadcastAttackActionModel(model);
@@ -37,7 +42,12 @@ public class HurtMyselfAttackAction extends AbstractMonsterAction{
 	}
 	
 	@Override
-	public AttackName getAttackName() {
-		return AttackName.MAGIC;
+	public AttackType getAttackType() {
+		return AttackType.MAGIC;
+	}
+
+	@Override
+	public String getAttackName() {
+		return "Hurting Punch";
 	}
 }

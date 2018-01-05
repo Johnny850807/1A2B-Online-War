@@ -1,4 +1,4 @@
-package gamecore.model.games.a1b2.boss;
+package gamecore.model.games.a1b2.boss.imp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,9 @@ import container.protocol.ProtocolFactory;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.Player;
 import gamecore.model.RequestStatus;
+import gamecore.model.games.a1b2.boss.base.AttackResult;
+import gamecore.model.games.a1b2.boss.base.Monster;
+import gamecore.model.games.a1b2.boss.base.PlayerSpirit;
 import utils.RandomString;
 
 public class BasicBoss extends Monster{

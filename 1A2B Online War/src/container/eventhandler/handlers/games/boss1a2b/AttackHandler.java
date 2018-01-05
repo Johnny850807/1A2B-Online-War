@@ -10,7 +10,7 @@ import gamecore.model.ContentModel;
 import gamecore.model.games.ProcessInvalidException;
 import gamecore.model.games.a1b2.Duel1A2BGame;
 import gamecore.model.games.a1b2.NumberNotValidException;
-import gamecore.model.games.a1b2.boss.Boss1A2BGame;
+import gamecore.model.games.a1b2.boss.base.Boss1A2BGame;
 
 /**
  * @author Waterball
