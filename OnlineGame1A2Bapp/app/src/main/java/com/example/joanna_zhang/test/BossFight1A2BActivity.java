@@ -42,15 +42,12 @@ import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import gamecore.model.games.a1b2.boss.core.SpiritsModel;
 import gamecore.model.games.a1b2.core.A1B2NumberValidator;
-import gamecore.model.games.a1b2.core.GuessRecord;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
-
 
 public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender{
 
     private final static String TAG = "BossFight1A2BActivity";
     private Boss1A2BModule boss1A2BModule;
-    private List<GuessRecord> resultList;
     private List<AttackResult> attackResults = new ArrayList<>();
     private InputNumberWindowDialog inputNumberWindowDialog;
     private Button inputNumberBtn;
@@ -58,8 +55,9 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
     private ListView attackResultListView;
     private GuessResultAdapter guessResultAdapter;
     private ProgressBar progressBar;
+    private SpiritsModel spiritsModel;
     private LinearLayout playerSpiritsViewGroup;
-    private List<PlayerSpirit> players = new ArrayList<>();
+    private List<PlayerSpirit> playerSpirits = new ArrayList<>();
     private PlayerSpiritItemViewFactory playerSpiritItemViewFactory;
 
     @Override
@@ -83,6 +81,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         inputNumberBtn = findViewById(R.id.inputNumberBtn);
         sendGuessBtn = findViewById(R.id.sendGuessBtn);
         progressBar = findViewById(R.id.bossHpProgressBar);
+        attackResultListView = findViewById(R.id.attackResultsLst);
         playerSpiritsViewGroup = findViewById(R.id.playerSpiritsViewGroup);
         attackResultListView = findViewById(R.id.bossResultsLst);
     }
@@ -120,12 +119,12 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         Player p3 = new Player("p3");
         Player p4 = new Player("p4");
         Player p5 = new Player("p5");
-        players.add(new PlayerSpirit(new ClientPlayer(new MockClient(p1), p1), mockLogger, mockProtocolFactory));
-        players.add(new PlayerSpirit(new ClientPlayer(new MockClient(p2), p2), mockLogger, mockProtocolFactory));
-        players.add(new PlayerSpirit(new ClientPlayer(new MockClient(p3), p3), mockLogger, mockProtocolFactory));
-        players.add(new PlayerSpirit(new ClientPlayer(new MockClient(p4), p4), mockLogger, mockProtocolFactory));
-        players.add(new PlayerSpirit(new ClientPlayer(new MockClient(p5), p5), mockLogger, mockProtocolFactory));
-        for (PlayerSpirit playerSpirit : players)
+        playerSpirits.add(new PlayerSpirit(new ClientPlayer(new MockClient(p1), p1), mockLogger, mockProtocolFactory));
+        playerSpirits.add(new PlayerSpirit(new ClientPlayer(new MockClient(p2), p2), mockLogger, mockProtocolFactory));
+        playerSpirits.add(new PlayerSpirit(new ClientPlayer(new MockClient(p3), p3), mockLogger, mockProtocolFactory));
+        playerSpirits.add(new PlayerSpirit(new ClientPlayer(new MockClient(p4), p4), mockLogger, mockProtocolFactory));
+        playerSpirits.add(new PlayerSpirit(new ClientPlayer(new MockClient(p5), p5), mockLogger, mockProtocolFactory));
+        for (PlayerSpirit playerSpirit : playerSpirits)
         {
             PlayerSpiritItemViewFactory.PlayerSpiritViewHolder  viewHolder = playerSpiritItemViewFactory.createPlayerSpiritItemView(playerSpirit, playerSpiritsViewGroup);
             this.playerSpiritsViewGroup.addView(viewHolder.view);
@@ -163,7 +162,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         Log.e(TAG, err.getMessage());
     }
 
-    private void setupAnswer() {
+    private void showDialogForSettingAnswer() {
         new InputNumberWindowDialog.Builder(this)
                 .setOnEnterClickListener(new SettingAnswerOnEnterClickListener())
                 .setCanceledOnTouchOutside(false)
@@ -201,19 +200,20 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
 
     @Override
     public void onPlayerLeft(PlayerRoomModel model) {
-        AppDialogFactory.playerLeftFromGameDialog(this, model.getPlayer());
+        AppDialogFactory.playerLeftFromGameDialog(this, model.getPlayer()).show();
     }
 
     @Override
     public void onGameClosed(GameRoom gameRoom) {
-        AppDialogFactory.playerLeftFromGameDialog(this, gameRoom.getHost());
+        AppDialogFactory.playerLeftFromGameDialog(this, gameRoom.getHost()).show();
     }
 
     @Override
     public void onGameStarted(SpiritsModel spiritsModel) {
+        this.spiritsModel = spiritsModel;
         spiritsModel.setOnAttackActionParsingListener(this);
-        players = spiritsModel.getPlayerSpirits();
-        setupAnswer();
+        playerSpirits = spiritsModel.getPlayerSpirits();
+        showDialogForSettingAnswer();
     }
 
     @Override
@@ -233,16 +233,17 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
 
     @Override
     public void onAttackUnsuccessfully(ErrorMessage errorMessage) {
+        inputNumberBtn.setEnabled(true);
+        sendGuessBtn.setEnabled(true);
         Log.e(TAG, errorMessage.getMessage());
     }
 
     @Override
     public void onNextAttackAction(AttackActionModel attackActionModel) {
-        for (AttackResult attackResult : attackActionModel) {
+        for (AttackResult attackResult : attackActionModel)
             drawAttackResult(attackResult);
-            attackResults.add(attackResult);
-        }
-
+        attackResults = attackActionModel.getAttackResults();
+        spiritsModel.updateHPMPFromTheAttackActionModel(attackActionModel);
         guessResultAdapter.notifyDataSetChanged();
     }
 
@@ -259,7 +260,6 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
     public void onGameOver(GameOverModel gameOverModel) {
 
     }
-
 
     private class GuessResultAdapter extends BaseAdapter {
 
@@ -280,7 +280,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
 
         @Override
         public View getView(int position, View view, ViewGroup viewGroup) {
-            view = LayoutInflater.from(BossFight1A2BActivity.this).inflate(R.layout.boss_result_list_item, viewGroup, false);
+            view = LayoutInflater.from(BossFight1A2BActivity.this).inflate(R.layout.attack_result_list_item, viewGroup, false);
 
             AttackResult attackResult = attackResults.get(position);
             TextView player = view.findViewById(R.id.playerNameTxt);
