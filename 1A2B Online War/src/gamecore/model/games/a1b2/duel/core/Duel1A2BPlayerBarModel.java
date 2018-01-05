@@ -3,7 +3,10 @@ package gamecore.model.games.a1b2.duel.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import gamecore.model.games.a1b2.A1B2NumberValidator;
+import gamecore.model.games.a1b2.core.A1B2NumberValidator;
+import gamecore.model.games.a1b2.core.GuessRecord;
+import gamecore.model.games.a1b2.core.GuessResult;
+import gamecore.model.games.a1b2.core.NumberNotValidException;
 
 
 public class Duel1A2BPlayerBarModel {

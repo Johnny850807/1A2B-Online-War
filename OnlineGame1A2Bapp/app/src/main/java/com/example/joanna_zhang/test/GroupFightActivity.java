@@ -1,28 +1,12 @@
 package com.example.joanna_zhang.test;
 
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
-
-import java.util.List;
 
 import gamecore.entity.ChatMessage;
-import gamecore.entity.GameRoom;
-import gamecore.entity.Player;
 import gamecore.model.ErrorMessage;
 
-import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
-
 public class GroupFightActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowDialog.OnClickListener {
-
+/*
     //private Duel1A2BGameModule duel1A2BGameModule;
     //private List<GuessRecord> p1ResultList, p2ResultList;
     private GameRoom gameRoom;
@@ -60,7 +44,7 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
         inputNumberWindowDialog = new InputNumberWindowDialog.Builder(this)
                 .setOnEnterClickListener(this)
                 .build();
-    }
+    }*/
 
     @Override
     public void onChatMessageUpdate(ChatMessage chatMessage) {
@@ -79,9 +63,9 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
 
     @Override
     public void onEnterClick(String guessNumber) {
-        inputNumberBtn.setText(guessNumber);
+        //inputNumberBtn.setText(guessNumber);
     }
-
+/*
     private class GuessResultAdapter extends BaseAdapter {
 
         @Override
@@ -106,5 +90,5 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
             // TODO
             return null;
         }
-    }
+    }*/
 }

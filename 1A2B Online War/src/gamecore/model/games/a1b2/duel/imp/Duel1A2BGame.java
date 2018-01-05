@@ -14,12 +14,12 @@ import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.RequestStatus;
 import gamecore.model.games.Game;
+import gamecore.model.games.GameOverModel;
 import gamecore.model.games.ProcessInvalidException;
+import gamecore.model.games.a1b2.core.GuessRecord;
+import gamecore.model.games.a1b2.core.GuessResult;
+import gamecore.model.games.a1b2.core.NumberNotValidException;
 import gamecore.model.games.a1b2.duel.core.Duel1A2BPlayerBarModel;
-import gamecore.model.games.a1b2.duel.core.GameOverModel;
-import gamecore.model.games.a1b2.duel.core.GuessRecord;
-import gamecore.model.games.a1b2.duel.core.GuessResult;
-import gamecore.model.games.a1b2.duel.core.NumberNotValidException;
 import utils.ForServer;
 
 /**

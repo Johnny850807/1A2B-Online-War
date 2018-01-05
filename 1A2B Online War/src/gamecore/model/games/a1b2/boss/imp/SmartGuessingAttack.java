@@ -8,7 +8,7 @@ import gamecore.model.games.a1b2.boss.core.AttackResult;
 import gamecore.model.games.a1b2.boss.core.Monster;
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import gamecore.model.games.a1b2.boss.core.AttackResult.AttackType;
-import gamecore.model.games.a1b2.duel.imp.PossibleTableGuessing;
+import gamecore.model.games.a1b2.imp.PossibleTableGuessing;
 
 /**
  * @author Waterball

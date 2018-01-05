@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 public class RandomString {
+	
 	public static String next(int length){
 		Random random = new Random();
 		StringBuilder strb = new StringBuilder();

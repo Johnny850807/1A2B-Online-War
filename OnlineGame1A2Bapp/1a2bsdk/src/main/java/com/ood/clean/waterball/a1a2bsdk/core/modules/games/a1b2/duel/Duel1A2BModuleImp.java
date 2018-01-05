@@ -18,8 +18,8 @@ import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
+import gamecore.model.games.GameOverModel;
 import gamecore.model.games.a1b2.duel.core.Duel1A2BPlayerBarModel;
-import gamecore.model.games.a1b2.duel.core.GameOverModel;
 
 import static container.core.Constants.Events.Games.Duel1A2B.GUESS;
 import static container.core.Constants.Events.Games.Duel1A2B.GUESSING_STARTED;

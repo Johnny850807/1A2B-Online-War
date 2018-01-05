@@ -15,9 +15,9 @@ import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
+import gamecore.model.games.GameOverModel;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
-import gamecore.model.games.a1b2.duel.core.GameOverModel;
 
 import static container.core.Constants.Events.Games.Boss1A2B.ATTACK;
 import static container.core.Constants.Events.Games.Boss1A2B.SET_ANSWER;

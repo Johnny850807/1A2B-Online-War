@@ -15,7 +15,6 @@ import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.MockLogger;
 import gamecore.model.games.GameEnteringWaitingBox.OnGamePlayersAllEnteredListener;
-import gamecore.model.games.a1b2.duel.core.GameOverModel;
 import utils.ForServer;
 
 public abstract class Game implements OnGamePlayersAllEnteredListener{

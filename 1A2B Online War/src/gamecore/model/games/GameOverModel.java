@@ -1,4 +1,4 @@
-package gamecore.model.games.a1b2.duel.core;
+package gamecore.model.games;
 
 import gamecore.model.GameMode;
 
