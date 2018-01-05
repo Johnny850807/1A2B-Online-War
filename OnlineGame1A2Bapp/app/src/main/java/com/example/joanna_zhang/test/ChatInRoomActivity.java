@@ -36,11 +36,9 @@ import gamecore.model.PlayerStatus;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
-public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InRoomModule.Callback, AdapterView.OnItemLongClickListener {
+public class ChatInRoomActivity extends BaseAbstractActivity implements ChatWindowView.ChatMessageListener, InRoomModule.Callback, AdapterView.OnItemLongClickListener {
     private static final String TAG = "ChatInRoomActivity";
     private static final int HOST_POSITION = 0;
-    private GameRoom currentGameRoom;
-    private Player currentPlayer;
     private ChatWindowView chatWindowView;
     private Button gameStartBtn;
     private TextView gameModeTxt;
@@ -63,8 +61,6 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void init() {
-        currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
-        currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
         roomPlayerListAdapter = new RoomPlayerListAdapter();
         soundManager = new SoundManager(this);
         inRoomModule = (InRoomModule) CoreGameServer.getInstance().createModule(ModuleName.INROOM);

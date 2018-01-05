@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -42,15 +41,10 @@ import gamecore.model.games.a1b2.boss.core.SpiritsModel;
 import gamecore.model.games.a1b2.core.A1B2NumberValidator;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
 
-import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
-import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
-
-public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender{
+public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender{
 
     private final static String TAG = "BossFight1A2BActivity";
     private Boss1A2BModule boss1A2BModule;
-    private GameRoom currentGameRoom;
-    private Player currentPlayer;   //TODO write a base abstract activity handling all initializing currentGameRoom and currentPlayer tasks.
     private List<AttackResult> attackResults = new ArrayList<>();
     private InputNumberWindowDialog inputNumberWindowDialog;
     private Button inputNumberBtn;
@@ -75,8 +69,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
         boss1A2BModule = (Boss1A2BModule) server.createModule(ModuleName.GAME1A2BBOSS);
-        currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
-        currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
     }
 
     private void findViews() {
@@ -153,7 +145,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     public void onError(@NonNull Throwable err) {
         Log.e(TAG, err.getMessage());
     }
-
 
     private void setupAnswer() {
         new InputNumberWindowDialog.Builder(this)
