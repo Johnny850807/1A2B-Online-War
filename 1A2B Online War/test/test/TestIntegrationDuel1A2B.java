@@ -75,7 +75,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	protected Player player = new Player("Player");
 	protected MockClient hostClient = new MockClient(); 
 	protected MockClient playerClient = new MockClient();
-	protected GameMode gameMode = GameMode.BOSS1A2B;
+	protected GameMode gameMode;
 	protected GameRoom gameRoom;
 	protected int signInCount = 0;
 	protected List<Duel1A2BPlayerBarModel> duelModels;
@@ -87,7 +87,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	
 	@Before
 	public void setup(){
-		
+		gameMode = GameMode.BOSS1A2B;
 	}
 	
 	@Test
@@ -99,7 +99,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		
 		/***choose only one of the testing method below alternatively.***/
 		/***the game mode selected should be equal to the testing game method.***/
-		
+
 		//testPlayingDuel1A2B();  //if enable this, the game room will be closed after game completed
 		testPlayingBoss1A2B();
 		//testBootingPlayer();
@@ -219,8 +219,8 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		assertTrue(playerClient.hasReceivedEvent(GUESS));;
 		assertTrue(playerClient.hasReceivedEvent(ONE_ROUND_OVER));
 		assertTrue(hostClient.hasReceivedEvent(ONE_ROUND_OVER));
-		
-		assertEquals(GAMEOVER, playerClient.getLastedResponse().getEvent());
+
+		assertTrue(playerClient.hasReceivedEvent(GAMEOVER));
 		assertEquals(GAMEOVER, hostClient.getLastedResponse().getEvent());
 		assertEquals(0, factory.getGameCore().getGameRooms().size());
 		/*bindPlayerAndHostFromUpdatedGameroom(gson.fromJson(hostClient.getLastedResponse().getData(), GameRoom.class));

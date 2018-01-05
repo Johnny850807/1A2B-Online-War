@@ -15,8 +15,8 @@ import utils.RandomString;
  */
 public class OnePunchBoss extends Monster{
 
-	public OnePunchBoss(String id, String name, MyLogger log, ProtocolFactory protocolFactory) {
-		super(id, name, log, protocolFactory);
+	public OnePunchBoss(String id, MyLogger log, ProtocolFactory protocolFactory) {
+		super(id, "One Punch", log, protocolFactory);
 	}
 
 	@Override

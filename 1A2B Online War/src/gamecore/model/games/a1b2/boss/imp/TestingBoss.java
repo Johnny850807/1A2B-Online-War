@@ -14,8 +14,8 @@ import gamecore.model.games.a1b2.boss.core.Monster;
  */
 public class TestingBoss extends Monster{
 	public static final String ANSWER = "1234";
-	public TestingBoss(String id, String name, MyLogger log, ProtocolFactory protocolFactory) {
-		super(id, name, log, protocolFactory);
+	public TestingBoss(String id, MyLogger log, ProtocolFactory protocolFactory) {
+		super(id, "Test", log, protocolFactory);
 	}
 
 	@Override

@@ -26,32 +26,17 @@ public class AttackResult implements Serializable{
 	public AttackType getAttackType() {
 		return attackType;
 	}
-	public void setAttackType(AttackType attackType) {
-		this.attackType = attackType;
-	}
 	public int getDamage() {
 		return damage;
-	}
-	public void setDamage(int damage) {
-		this.damage = damage;
 	}
 	public GuessRecord getGuessRecord() {
 		return guessRecord;
 	}
-	public void setGuessRecord(GuessRecord guessRecord) {
-		this.guessRecord = guessRecord;
-	}
 	public AbstractSpirit getAttacker() {
 		return attacker;
 	}
-	public void setAttacker(AbstractSpirit attacker) {
-		this.attacker = attacker;
-	}
 	public AbstractSpirit getAttacked() {
 		return attacked;
-	}
-	public void setAttacked(AbstractSpirit attacked) {
-		this.attacked = attacked;
 	}
 	
 	public int getA(){

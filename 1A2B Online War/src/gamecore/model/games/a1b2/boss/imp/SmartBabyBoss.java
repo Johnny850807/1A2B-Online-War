@@ -10,8 +10,8 @@ import gamecore.model.games.a1b2.boss.core.MonsterAction;
 
 public class SmartBabyBoss extends Monster{
 
-	public SmartBabyBoss(String id, String name, MyLogger log, ProtocolFactory protocolFactory) {
-		super(id, name, log, protocolFactory);
+	public SmartBabyBoss(String id, MyLogger log, ProtocolFactory protocolFactory) {
+		super(id, "Baby", log, protocolFactory);
 	}
 	
 	@Override
