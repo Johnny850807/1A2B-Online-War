@@ -44,7 +44,6 @@ import gamecore.model.games.a1b2.core.A1B2NumberValidator;
 import gamecore.model.games.a1b2.core.GuessRecord;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
 
-import static com.example.joanna_zhang.test.R.string.confirm;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
@@ -64,8 +63,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     private ProgressBar progressBar;
     private RecyclerView playerRecyclerView;
     private List<PlayerSpirit> players = new ArrayList<>();
-    private AbstractSpirit whosTurn;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +155,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     public void onError(@NonNull Throwable err) {
         Log.e(TAG, err.getMessage());
     }
+
 
     private void setupAnswer() {
         new InputNumberWindowDialog.Builder(this)
@@ -287,6 +285,10 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
             player.setText(attackResult.getAttacker().getName());
             guess.setText(attackResult.getGuessRecord().getGuess());
             result.setText(attackResult.getA() + "A" + attackResult.getB() + "B -> " + attackResult.getAttacked());
+
+//            player.setText(resultList.get(i).getAttacker());
+//            guess.setText(resultList.get(i).getGuessRecord().getGuess());
+//            result.setText();
 
             return view;
         }
