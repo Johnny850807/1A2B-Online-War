@@ -281,10 +281,6 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
             guess.setText(attackResult.getGuessRecord().getGuess());
             result.setText(attackResult.getA() + "A" + attackResult.getB() + "B -> " + attackResult.getAttacked());
 
-//            player.setText(resultList.get(i).getAttacker());
-//            guess.setText(resultList.get(i).getGuessRecord().getGuess());
-//            result.setText();
-
             return view;
         }
     }
