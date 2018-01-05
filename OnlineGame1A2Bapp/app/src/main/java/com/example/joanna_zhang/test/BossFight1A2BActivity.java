@@ -46,7 +46,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
     private Boss1A2BModule boss1A2BModule;
     private GameRoom currentGameRoom;
-    private Player currentPlayer;
+    private Player currentPlayer;   //TODO write a base abstract activity handling all initializing currentGameRoom and currentPlayer tasks.
     private List<GuessRecord> resultList;
     private InputNumberWindowDialog inputNumberWindowDialog;
     private Button inputNumberBtn;
@@ -82,7 +82,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         progressBar = findViewById(R.id.bossHpProgressBar);
         playerRecyclerView = findViewById(R.id.boss1a2bPlayerRecyclerView);
     }
-
 
     //Test
     private void mockPlayers(){
