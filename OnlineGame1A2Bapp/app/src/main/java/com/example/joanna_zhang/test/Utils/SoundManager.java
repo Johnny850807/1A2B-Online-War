@@ -32,7 +32,7 @@ public class SoundManager {
     public void playSound(@RawRes int resid){
         if (!soundIdMaps.containsKey(resid))
             register(resid);
-        soundPool.play(soundIdMaps.get(resid), 1, 1, 0, 0, 1);
+        soundPool.play(soundIdMaps.get(resid), 1, 1, 60, 0, 1);
     }
 
     private void register(@RawRes int resId){

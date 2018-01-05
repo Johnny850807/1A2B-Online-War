@@ -298,25 +298,17 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
 
     @Override
     public void onPlayerLeft(PlayerRoomModel model) {
-        createAndShowPlayerLeftNotifyingDialog(model.getPlayer());
+        AppDialogFactory.playerLeftFromGameDialog(this, model.getPlayer()).show();
     }
 
     @Override
     public void onGameClosed(GameRoom gameRoom) {
-        createAndShowPlayerLeftNotifyingDialog(gameRoom.getHost());
+        AppDialogFactory.playerLeftFromGameDialog(this, gameRoom.getHost()).show();
     }
 
     @Override
     public void onRoomExpired() {
-        AppDialogFactory.timeExpiredDialog(this, getString(R.string.roomClosedForExpired)).show();
-    }
-
-    private void createAndShowPlayerLeftNotifyingDialog(Player leftPlayeer){
-        AppDialogFactory.templateBuilder(this)
-                .setTitle(R.string.gameClosed)
-                .setMessage(getString(R.string.playerIsAlreadyLeft, leftPlayeer.getName()))
-                .setPositiveButton(confirm, (d,i) -> finish())
-                .show();
+        AppDialogFactory.roomTimeExpiredDialog(this, getString(R.string.roomClosedForExpired)).show();
     }
 
     private void createAndShowDialogForWinner(Player winner){

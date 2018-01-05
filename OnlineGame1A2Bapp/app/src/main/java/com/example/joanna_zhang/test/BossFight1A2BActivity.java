@@ -77,10 +77,10 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     }
 
     private void findViews() {
-        inputNumberBtn =  findViewById(R.id.inputNumberBtn);
-        sendGuessBtn =  findViewById(R.id.sendGuessBtn);
-        progressBar =  findViewById(R.id.bossHpProgressBar);
-        playerRecyclerView =  findViewById(R.id.boss1a2bPlayerRecyclerView);
+        inputNumberBtn = findViewById(R.id.inputNumberBtn);
+        sendGuessBtn = findViewById(R.id.sendGuessBtn);
+        progressBar = findViewById(R.id.bossHpProgressBar);
+        playerRecyclerView = findViewById(R.id.boss1a2bPlayerRecyclerView);
     }
 
 

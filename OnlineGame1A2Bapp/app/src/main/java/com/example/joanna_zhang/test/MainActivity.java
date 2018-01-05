@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
-import com.example.joanna_zhang.test.Utils.RandomNameCreator;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutException;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
@@ -24,6 +23,7 @@ import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 import container.core.Constants;
 import gamecore.entity.Player;
 import gamecore.model.ServerInformation;
+import utils.RandomNameCreator;
 
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYERNAME;

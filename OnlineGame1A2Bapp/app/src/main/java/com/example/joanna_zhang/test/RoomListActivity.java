@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -336,8 +335,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     private class SearchEditTextWatcher implements TextWatcher {
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -345,8 +343,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
         }
 
         @Override
-        public void afterTextChanged(Editable editable) {
-        }
+        public void afterTextChanged(Editable editable) {}
     }
 
     @Override
@@ -418,7 +415,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onPlayerLeisureTimeExpired() {
-        AppDialogFactory.timeExpiredDialog(this, getString(R.string.playerTimeExpired)).show();
+        AppDialogFactory.roomTimeExpiredDialog(this, getString(R.string.playerTimeExpired)).show();
     }
 
     @Override
