@@ -24,6 +24,8 @@ public class PlayerSpiritItemViewFactory{
     public PlayerSpiritViewHolder createPlayerSpiritItemView(PlayerSpirit playerSpirit){
         View view = LayoutInflater.from(context).inflate(R.layout.boss1a2b_player_list_item, parent, false);
         PlayerSpiritViewHolder playerSpiritViewHolder = new PlayerSpiritViewHolder(view);
+        playerSpiritViewHolder.playerHpBar.setProgress(playerSpirit.getHp());
+        playerSpiritViewHolder.playerHpBar.setMax(playerSpirit.getMaxHp());
         playerSpiritViewHolder.playerHpBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN);
         playerSpiritViewHolder.playerHpBar.setScaleY(3f);
         playerSpiritViewHolder.playerHp.setText(playerSpirit.getHp());
@@ -36,7 +38,7 @@ public class PlayerSpiritItemViewFactory{
         ProgressBar playerHpBar;
         TextView playerName;
         TextView playerHp;
-        public PlayerSpiritViewHolder(View view) {
+        private PlayerSpiritViewHolder(View view) {
             this.view = view;
             playerHpBar = view.findViewById(R.id.boss1a2bPlayerHpProgressBar);
             playerName = view.findViewById(R.id.boss1a2bPlayerNameTxt);
