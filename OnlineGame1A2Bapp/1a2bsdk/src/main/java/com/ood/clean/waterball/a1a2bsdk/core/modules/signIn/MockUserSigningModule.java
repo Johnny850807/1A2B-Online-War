@@ -2,7 +2,7 @@ package com.ood.clean.waterball.a1a2bsdk.core.modules.signIn;
 
 import android.support.annotation.NonNull;
 
-import container.Constants;
+import container.core.Constants;
 import gamecore.entity.Player;
 import gamecore.model.ServerInformation;
 

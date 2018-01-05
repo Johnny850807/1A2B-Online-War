@@ -8,14 +8,13 @@ import java.util.TreeMap;
 
 import com.google.gson.Gson;
 
-import container.base.MyLogger;
+import container.core.MyLogger;
 import container.protocol.ProtocolFactory;
 import gamecore.entity.GameRoom;
 import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.MockLogger;
 import gamecore.model.games.GameEnteringWaitingBox.OnGamePlayersAllEnteredListener;
-import gamecore.model.games.a1b2.GameOverModel;
 import utils.ForServer;
 
 public abstract class Game implements OnGamePlayersAllEnteredListener{

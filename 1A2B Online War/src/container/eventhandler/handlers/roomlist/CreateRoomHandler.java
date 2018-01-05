@@ -2,12 +2,11 @@ package container.eventhandler.handlers.roomlist;
 
 import java.util.Date;
 
-import container.ApacheLoggerAdapter;
-import container.base.Client;
-
+import container.core.Client;
 import container.eventhandler.handlers.GsonEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
+import gamecore.ApacheLoggerAdapter;
 import gamecore.GameCore;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;

@@ -2,8 +2,8 @@ package gamecore;
 
 import java.util.List;
 
-import container.base.Client;
-import container.base.ClientBinder;
+import container.core.Client;
+import container.core.ClientBinder;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;

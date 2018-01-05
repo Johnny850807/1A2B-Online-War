@@ -14,10 +14,10 @@ import gamecore.entity.Player;
 import gamecore.model.RequestStatus;
 import gamecore.model.ServerInformation;
 
-import static container.Constants.Events.RECONNECTED;
-import static container.Constants.Events.Signing.GETINFO;
-import static container.Constants.Events.Signing.SIGNIN;
-import static container.Constants.Events.Signing.SIGNOUT;
+import static container.core.Constants.Events.RECONNECTED;
+import static container.core.Constants.Events.Signing.GETINFO;
+import static container.core.Constants.Events.Signing.SIGNIN;
+import static container.core.Constants.Events.Signing.SIGNOUT;
 
 
 public class UserSigningModuleImp extends AbstractGameModule implements UserSigningModule{

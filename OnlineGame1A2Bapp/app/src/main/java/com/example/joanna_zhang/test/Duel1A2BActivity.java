@@ -32,11 +32,11 @@ import gamecore.entity.Player;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
 import gamecore.model.PlayerRoomModel;
-import gamecore.model.games.a1b2.A1B2NumberValidator;
-import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
-import gamecore.model.games.a1b2.GameOverModel;
-import gamecore.model.games.a1b2.GuessRecord;
-import gamecore.model.games.a1b2.NumberNotValidException;
+import gamecore.model.games.GameOverModel;
+import gamecore.model.games.a1b2.core.A1B2NumberValidator;
+import gamecore.model.games.a1b2.core.GuessRecord;
+import gamecore.model.games.a1b2.core.NumberNotValidException;
+import gamecore.model.games.a1b2.duel.core.Duel1A2BPlayerBarModel;
 
 import static android.R.string.cancel;
 import static com.example.joanna_zhang.test.R.string.confirm;
@@ -132,14 +132,14 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
     }
 
     private void findViews() {
-        inputNumberBtn = findViewById(R.id.inputNumberBtn);
-        sendGuessBtn = findViewById(R.id.sendGuessBtn);
-        p1NameTxt = findViewById(R.id.p1NameTxt);
-        p2NameTxt = findViewById(R.id.p2NameTxt);
-        p1AnswerTxt = findViewById(R.id.p1AnswerTxt);
-        p2AnswerTxt = findViewById(R.id.p2AnswerTxt);
-        p1ResultListView = findViewById(R.id.p1ResultLst);
-        p2ResultListView = findViewById(R.id.p2ResultLst);
+        inputNumberBtn =  findViewById(R.id.inputNumberBtn);
+        sendGuessBtn =  findViewById(R.id.sendGuessBtn);
+        p1NameTxt =  findViewById(R.id.p1NameTxt);
+        p2NameTxt =  findViewById(R.id.p2NameTxt);
+        p1AnswerTxt =  findViewById(R.id.p1AnswerTxt);
+        p2AnswerTxt =  findViewById(R.id.p2AnswerTxt);
+        p1ResultListView =  findViewById(R.id.p1ResultLst);
+        p2ResultListView =  findViewById(R.id.p2ResultLst);
         p1NameTxt.setText(currentPlayer.getName());
         String p2Name = currentGameRoom.getPlayers().get(0).equals(currentPlayer)?
                 currentGameRoom.getPlayers().get(1).getName() : currentGameRoom.getPlayers().get(0).getName();
@@ -241,7 +241,7 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
 
     @Override
     public void onSetAnswerSuccessfully(ContentModel setAnswerModel) {
-        Toast.makeText(this, "You set the number is" + setAnswerModel.getContent(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "You set the number is " + setAnswerModel.getContent(), Toast.LENGTH_SHORT).show();
         p1AnswerTxt.setText(setAnswerModel.getContent());
     }
 
@@ -314,7 +314,7 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
     private void createAndShowPlayerLeftNotifyingDialog(Player leftPlayeer){
         AppDialogFactory.templateBuilder(this)
                 .setTitle(R.string.gameClosed)
-                .setMessage(getString(R.string.playerIsAlreadyLeft,leftPlayeer.getName()))
+                .setMessage(getString(R.string.playerIsAlreadyLeft, leftPlayeer.getName()))
                 .setPositiveButton(confirm, (d,i) -> finish())
                 .show();
     }

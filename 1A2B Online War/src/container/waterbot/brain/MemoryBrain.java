@@ -1,6 +1,5 @@
 package container.waterbot.brain;
 
-import container.base.Client;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import container.waterbot.Brain;
@@ -10,11 +9,13 @@ import gamecore.model.ClientStatus;
 import gamecore.model.PlayerRoomModel;
 import utils.MyGson;
 
-import static container.Constants.*;
-import static container.Constants.Events.*;
-import static container.Constants.Events.Signing.*;
-import static container.Constants.Events.InRoom.*;
-import static container.Constants.Events.RoomList.*;
+import static container.core.Constants.*;
+import static container.core.Constants.Events.*;
+import static container.core.Constants.Events.InRoom.*;
+import static container.core.Constants.Events.RoomList.*;
+import static container.core.Constants.Events.Signing.*;
+
+import container.core.Client;
 
 /**
  * The brain handling all the events that have to modify the reference from the memory of the waterbot.

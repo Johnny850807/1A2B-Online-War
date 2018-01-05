@@ -5,8 +5,8 @@ package container.eventhandler.handlers.chat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import container.Constants.Events.InRoom;
-import container.base.Client;
+import container.core.Client;
+import container.core.Constants.Events.InRoom;
 import container.eventhandler.handlers.GsonEventHandler;
 import container.eventhandler.handlers.inroom.BootPlayerHandler;
 import container.eventhandler.handlers.inroom.ChangeStatusHandler;

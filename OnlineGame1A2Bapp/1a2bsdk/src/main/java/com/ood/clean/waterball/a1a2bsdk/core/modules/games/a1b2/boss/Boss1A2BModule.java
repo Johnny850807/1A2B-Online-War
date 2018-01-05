@@ -9,9 +9,9 @@ import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
-import gamecore.model.games.a1b2.GameOverModel;
-import gamecore.model.games.a1b2.boss.AttackActionModel;
-import gamecore.model.games.a1b2.boss.NextTurnModel;
+import gamecore.model.games.GameOverModel;
+import gamecore.model.games.a1b2.boss.core.AttackActionModel;
+import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 
 public interface Boss1A2BModule extends OnlineGameModule{
     void registerCallback(Context context, Player currentPlayer, GameRoom currentGameRoom, Boss1A2BModule.Callback callback);
@@ -20,12 +20,39 @@ public interface Boss1A2BModule extends OnlineGameModule{
     public void attack(String guess);
 
     public interface Callback extends OnlineGameModule.Callback{
+        /**
+         * when then player sets the answer successfully
+         */
         public void onSetAnswerSuccessfully(ContentModel contentModel);
+
+        /**
+         * when then player sets the answer unsuccessfully
+         */
         public void onSetAnswerUnsuccessfully(ErrorMessage errorMessage);
+
+        /**
+         * when then player attacks the boss and produce the attack results successfully
+         */
         public void onAttackSuccessfully(ContentModel contentModel);
+
+        /**
+         * when then player sets the answer unsuccessfully
+         */
         public void onAttackUnsuccessfully(ErrorMessage errorMessage);
-        public void onNexAttackAction(AttackActionModel attackActionModel);
-        public void onYourTurn(NextTurnModel nextTurnModel);
+
+        /**
+         * when any spirit finishes his attack action.
+         */
+        public void onNextAttackAction(AttackActionModel attackActionModel);
+
+        /**
+         * when then player sets the answer successfully
+         */
+        public void onNextTurn(NextTurnModel nextTurnModel);
+
+        /**
+         * when then player sets the answer successfully
+         */
         public void onGameOver(GameOverModel gameOverModel);
     }
 

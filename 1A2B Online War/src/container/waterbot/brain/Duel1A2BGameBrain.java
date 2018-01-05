@@ -1,6 +1,6 @@
 package container.waterbot.brain;
 
-import container.base.Client;
+import container.core.Client;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import container.waterbot.Brain;
@@ -9,13 +9,16 @@ import gamecore.entity.Player;
 import gamecore.model.ClientStatus;
 import gamecore.model.ContentModel;
 import gamecore.model.RoomStatus;
-import gamecore.model.games.a1b2.A1B2NumberValidator;
-import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
+import gamecore.model.games.a1b2.core.A1B2NumberValidator;
+import gamecore.model.games.a1b2.duel.core.Duel1A2BPlayerBarModel;
 import utils.MyGson;
 import utils.RandomString;
 
-import static container.Constants.Events.InRoom.*;
-import static container.Constants.Events.RoomList.*;
+import static container.core.Constants.Events.Chat.*;
+import static container.core.Constants.Events.Games.*;
+import static container.core.Constants.Events.Games.Duel1A2B.*;
+import static container.core.Constants.Events.InRoom.*;
+import static container.core.Constants.Events.RoomList.*;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -23,10 +26,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.google.gson.reflect.TypeToken;
-
-import static container.Constants.Events.Chat.*;
-import static container.Constants.Events.Games.*;
-import static container.Constants.Events.Games.Duel1A2B.*;
 
 public class Duel1A2BGameBrain extends BaseChatChainBrain{
 	private int guessedTime = 0;

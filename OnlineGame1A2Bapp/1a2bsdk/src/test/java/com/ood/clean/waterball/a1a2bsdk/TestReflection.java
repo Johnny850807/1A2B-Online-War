@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 
-import container.base.Client;
+import container.core.Client;
 import container.protocol.ProtocolFactory;
 import gamecore.entity.Player;
 import gamecore.model.RequestStatus;
@@ -26,7 +26,8 @@ import static org.junit.Assert.fail;
 
 public class TestReflection implements UserSigningModule.Callback{
     private @Inject EventBus eventBus;
-    private @Inject Client client;
+    private @Inject
+    Client client;
     private @Inject ProtocolFactory protocolFactory;
     private Player player = new Player("Johnny");
 

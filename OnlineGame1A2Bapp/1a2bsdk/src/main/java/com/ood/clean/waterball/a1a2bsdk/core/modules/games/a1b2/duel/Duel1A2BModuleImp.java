@@ -18,19 +18,20 @@ import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
-import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
-import gamecore.model.games.a1b2.GameOverModel;
+import gamecore.model.games.GameOverModel;
+import gamecore.model.games.a1b2.duel.core.Duel1A2BPlayerBarModel;
 
-import static container.Constants.Events.Games.Duel1A2B.GUESS;
-import static container.Constants.Events.Games.Duel1A2B.GUESSING_STARTED;
-import static container.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
-import static container.Constants.Events.Games.Duel1A2B.SET_ANSWER;
-import static container.Constants.Events.Games.GAMEOVER;
-import static container.Constants.Events.Games.GAMESTARTED;
-import static container.Constants.Events.InRoom.CLOSE_ROOM;
-import static container.Constants.Events.InRoom.CLOSE_ROOM_TIME_EXPIRED;
-import static container.Constants.Events.InRoom.LEAVE_ROOM;
-import static container.Constants.Events.RECONNECTED;
+import static container.core.Constants.Events.Games.Duel1A2B.GUESS;
+import static container.core.Constants.Events.Games.Duel1A2B.GUESSING_STARTED;
+import static container.core.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
+import static container.core.Constants.Events.Games.Duel1A2B.SET_ANSWER;
+import static container.core.Constants.Events.Games.GAMEOVER;
+import static container.core.Constants.Events.Games.GAMESTARTED;
+import static container.core.Constants.Events.InRoom.CLOSE_ROOM;
+import static container.core.Constants.Events.InRoom.CLOSE_ROOM_TIME_EXPIRED;
+import static container.core.Constants.Events.InRoom.LEAVE_ROOM;
+import static container.core.Constants.Events.RECONNECTED;
+
 
 public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1A2BModule {
     private ProxyCallback proxyCallback;

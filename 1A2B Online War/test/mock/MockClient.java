@@ -9,8 +9,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import container.Constants.Events.Chat;
-import container.base.Client;
+import container.core.Client;
+import container.core.Constants.Events.Chat;
 import container.protocol.Protocol;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.Entity;
