@@ -1,4 +1,4 @@
-package com.example.joanna_zhang.test;
+package com.example.joanna_zhang.test.view.myview;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.joanna_zhang.test.R;
 import com.example.joanna_zhang.test.Utils.MaxSizeLinkedList;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;

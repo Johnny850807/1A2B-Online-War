@@ -1,4 +1,4 @@
-package com.example.joanna_zhang.test;
+package com.example.joanna_zhang.test.view.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.joanna_zhang.test.R;
 
 
 public class InputNumberWindowDialog extends Dialog implements View.OnClickListener {

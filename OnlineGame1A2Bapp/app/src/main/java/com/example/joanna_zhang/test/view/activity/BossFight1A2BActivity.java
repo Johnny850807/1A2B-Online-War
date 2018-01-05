@@ -1,10 +1,9 @@
-package com.example.joanna_zhang.test;
+package com.example.joanna_zhang.test.view.activity;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +17,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.joanna_zhang.test.view.dialog.InputNumberWindowDialog;
+import com.example.joanna_zhang.test.view.myview.PlayerSpiritItemViewFactory;
+import com.example.joanna_zhang.test.R;
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.mocks.MockClient;
 import com.example.joanna_zhang.test.mocks.MockProtocolFactory;
@@ -102,7 +104,6 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
                 Color.GREEN, PorterDuff.Mode.DARKEN);
         progressBar.setScaleY(3f);
     }
-
 
     private void setUpInputNumberWindowView() {
         inputNumberWindowDialog = new InputNumberWindowDialog.Builder(this)

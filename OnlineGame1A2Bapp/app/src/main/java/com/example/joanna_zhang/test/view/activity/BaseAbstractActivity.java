@@ -1,6 +1,5 @@
-package com.example.joanna_zhang.test;
+package com.example.joanna_zhang.test.view.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;

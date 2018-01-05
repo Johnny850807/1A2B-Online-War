@@ -1,10 +1,9 @@
-package com.example.joanna_zhang.test;
+package com.example.joanna_zhang.test.view.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -17,6 +16,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.joanna_zhang.test.view.myview.ChatWindowView;
+import com.example.joanna_zhang.test.view.dialog.InputNumberWindowDialog;
+import com.example.joanna_zhang.test.R;
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
@@ -40,8 +42,6 @@ import gamecore.model.games.a1b2.duel.core.Duel1A2BPlayerBarModel;
 
 import static android.R.string.cancel;
 import static com.example.joanna_zhang.test.R.string.confirm;
-import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
-import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
 public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowDialog.OnClickListener, Duel1A2BModule.Callback {
     private final static String TAG = "Duel1A2BActivity";

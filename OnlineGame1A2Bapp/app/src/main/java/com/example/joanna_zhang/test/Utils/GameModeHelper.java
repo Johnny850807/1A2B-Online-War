@@ -2,8 +2,8 @@ package com.example.joanna_zhang.test.Utils;
 
 import android.content.Context;
 
-import com.example.joanna_zhang.test.BossFight1A2BActivity;
-import com.example.joanna_zhang.test.Duel1A2BActivity;
+import com.example.joanna_zhang.test.view.activity.BossFight1A2BActivity;
+import com.example.joanna_zhang.test.view.activity.Duel1A2BActivity;
 import com.example.joanna_zhang.test.R;
 
 import gamecore.model.GameMode;

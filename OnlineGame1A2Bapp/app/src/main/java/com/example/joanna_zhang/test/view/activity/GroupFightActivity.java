@@ -1,6 +1,9 @@
-package com.example.joanna_zhang.test;
+package com.example.joanna_zhang.test.view.activity;
 
 import android.support.v7.app.AppCompatActivity;
+
+import com.example.joanna_zhang.test.view.myview.ChatWindowView;
+import com.example.joanna_zhang.test.view.dialog.InputNumberWindowDialog;
 
 import gamecore.entity.ChatMessage;
 import gamecore.model.ErrorMessage;

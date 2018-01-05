@@ -1,4 +1,4 @@
-package com.example.joanna_zhang.test;
+package com.example.joanna_zhang.test.view.myview;
 
 
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.example.joanna_zhang.test.R;
 
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 
@@ -32,10 +34,10 @@ public class PlayerSpiritItemViewFactory{
     }
 
     public class PlayerSpiritViewHolder{
-        View view;
-        ProgressBar playerHpBar;
-        TextView playerName;
-        TextView playerHp;
+        public View view;
+        public ProgressBar playerHpBar;
+        public TextView playerName;
+        public TextView playerHp;
         private PlayerSpiritViewHolder(View view) {
             this.view = view;
             playerHpBar = view.findViewById(R.id.boss1a2bPlayerHpProgressBar);

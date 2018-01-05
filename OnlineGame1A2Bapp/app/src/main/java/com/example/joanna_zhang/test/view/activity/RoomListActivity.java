@@ -1,4 +1,4 @@
-package com.example.joanna_zhang.test;
+package com.example.joanna_zhang.test.view.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.joanna_zhang.test.R;
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.GameModeHelper;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;

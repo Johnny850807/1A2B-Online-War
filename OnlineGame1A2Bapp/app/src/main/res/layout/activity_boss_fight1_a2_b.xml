@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background"
     android:orientation="vertical"
-    tools:context="com.example.joanna_zhang.test.BossFight1A2BActivity">
+    tools:context="com.example.joanna_zhang.test.view.activity.BossFight1A2BActivity">
 
 
     <ProgressBar
