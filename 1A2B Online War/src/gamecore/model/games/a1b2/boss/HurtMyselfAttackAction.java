@@ -13,7 +13,7 @@ public class HurtMyselfAttackAction extends AbstractMonsterAction{
 	public void execute(Monster monster, Boss1A2BGame game) {
 		PlayerSpirit targetPlayer = getRandomTargetPlayer(game);
 		String guess = produceGuess();
-		AttackResult attackResult = targetPlayer.getAttacked(monster, guess, AttackName.MAGIC,getHurtMyselfDamageParser(monster));
+		AttackResult attackResult = targetPlayer.getAttacked(monster, guess, AttackName.MAGIC, getHurtMyselfDamageParser(monster));
 		AttackActionModel model = new AttackActionModel(getCostMp(), monster);
 		model.addAttackResult(attackResult);
 		game.addAllResultsAndbroadcastAttackActionModel(model);
