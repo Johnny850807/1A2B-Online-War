@@ -359,5 +359,4 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
             return view;
         }
     }
-
 }

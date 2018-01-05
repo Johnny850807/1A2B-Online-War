@@ -2,7 +2,6 @@ package com.example.joanna_zhang.test;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -46,6 +45,7 @@ import gamecore.model.games.a1b2.core.NumberNotValidException;
 
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
+
 
 public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender{
 
@@ -151,7 +151,6 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
     public void onError(@NonNull Throwable err) {
         Log.e(TAG, err.getMessage());
     }
-
 
     private void setupAnswer() {
         new InputNumberWindowDialog.Builder(this)
