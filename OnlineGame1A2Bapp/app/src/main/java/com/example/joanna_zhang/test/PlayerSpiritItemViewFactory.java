@@ -14,26 +14,24 @@ import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 
 public class PlayerSpiritItemViewFactory{
     private Context context;
-    private ViewGroup parent;
 
-    public PlayerSpiritItemViewFactory(Context context, ViewGroup parent) {
+    public PlayerSpiritItemViewFactory(Context context) {
         this.context = context;
-        this.parent = parent;
     }
 
-    public PlayerSpiritViewHolder createPlayerSpiritItemView(PlayerSpirit playerSpirit){
+    public PlayerSpiritViewHolder createPlayerSpiritItemView(PlayerSpirit playerSpirit, ViewGroup parent){
         View view = LayoutInflater.from(context).inflate(R.layout.boss1a2b_player_list_item, parent, false);
         PlayerSpiritViewHolder playerSpiritViewHolder = new PlayerSpiritViewHolder(view);
         playerSpiritViewHolder.playerHpBar.setProgress(playerSpirit.getHp());
         playerSpiritViewHolder.playerHpBar.setMax(playerSpirit.getMaxHp());
         playerSpiritViewHolder.playerHpBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN);
         playerSpiritViewHolder.playerHpBar.setScaleY(3f);
-        playerSpiritViewHolder.playerHp.setText(playerSpirit.getHp());
+        playerSpiritViewHolder.playerHp.setText(String.valueOf(playerSpirit.getHp()));
         playerSpiritViewHolder.playerName.setText(playerSpirit.getName());
         return playerSpiritViewHolder;
     }
 
-    private class PlayerSpiritViewHolder{
+    public class PlayerSpiritViewHolder{
         View view;
         ProgressBar playerHpBar;
         TextView playerName;
