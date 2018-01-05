@@ -132,14 +132,14 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
     }
 
     private void findViews() {
-        inputNumberBtn = (Button) findViewById(R.id.inputNumberBtn);
-        sendGuessBtn = (ImageButton) findViewById(R.id.sendGuessBtn);
-        p1NameTxt = (TextView) findViewById(R.id.p1NameTxt);
-        p2NameTxt = (TextView) findViewById(R.id.p2NameTxt);
-        p1AnswerTxt = (TextView) findViewById(R.id.p1AnswerTxt);
-        p2AnswerTxt = (TextView) findViewById(R.id.p2AnswerTxt);
-        p1ResultListView = (ListView) findViewById(R.id.p1ResultLst);
-        p2ResultListView = (ListView) findViewById(R.id.p2ResultLst);
+        inputNumberBtn =  findViewById(R.id.inputNumberBtn);
+        sendGuessBtn =  findViewById(R.id.sendGuessBtn);
+        p1NameTxt =  findViewById(R.id.p1NameTxt);
+        p2NameTxt =  findViewById(R.id.p2NameTxt);
+        p1AnswerTxt =  findViewById(R.id.p1AnswerTxt);
+        p2AnswerTxt =  findViewById(R.id.p2AnswerTxt);
+        p1ResultListView =  findViewById(R.id.p1ResultLst);
+        p2ResultListView =  findViewById(R.id.p2ResultLst);
         p1NameTxt.setText(currentPlayer.getName());
         String p2Name = currentGameRoom.getPlayers().get(0).equals(currentPlayer)?
                 currentGameRoom.getPlayers().get(1).getName() : currentGameRoom.getPlayers().get(0).getName();
@@ -241,7 +241,7 @@ public class Duel1A2BActivity extends AppCompatActivity implements ChatWindowVie
 
     @Override
     public void onSetAnswerSuccessfully(ContentModel setAnswerModel) {
-        Toast.makeText(this, "You set the number is" + setAnswerModel.getContent(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "You set the number is " + setAnswerModel.getContent(), Toast.LENGTH_SHORT).show();
         p1AnswerTxt.setText(setAnswerModel.getContent());
     }
 
