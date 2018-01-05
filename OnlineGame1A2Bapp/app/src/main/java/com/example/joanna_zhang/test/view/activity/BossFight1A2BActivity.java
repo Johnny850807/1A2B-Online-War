@@ -86,7 +86,6 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         progressBar = findViewById(R.id.bossHpProgressBar);
         attackResultListView = findViewById(R.id.attackResultsLst);
         playerSpiritsViewGroup = findViewById(R.id.playerSpiritsViewGroup);
-        attackResultListView = findViewById(R.id.bossResultsLst);
     }
 
     private void setupLayout() {
