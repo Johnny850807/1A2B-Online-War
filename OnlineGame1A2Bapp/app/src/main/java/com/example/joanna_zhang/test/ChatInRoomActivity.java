@@ -71,9 +71,9 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void findViews() {
-        gameModeTxt = (TextView) findViewById(R.id.roomModeNameTxt);
-        gameStartBtn = (Button) findViewById(R.id.gameStartBtn);
-        chatRoomPlayerListView = (ListView) findViewById(R.id.chatRoomPlayersLst);
+        gameModeTxt = findViewById(R.id.roomModeNameTxt);
+        gameStartBtn = findViewById(R.id.gameStartBtn);
+        chatRoomPlayerListView = findViewById(R.id.chatRoomPlayersLst);
     }
 
     private void setUpGameModeTxt() {
