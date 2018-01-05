@@ -234,7 +234,7 @@ public class ChatInRoomActivity extends AppCompatActivity implements ChatWindowV
 
     @Override
     public void onRoomExpired() {
-        AppDialogFactory.timeExpiredDialog(this, getString(R.string.roomClosedForExpired)).show();
+        AppDialogFactory.roomTimeExpiredDialog(this, getString(R.string.roomClosedForExpired)).show();
     }
 
     @Override

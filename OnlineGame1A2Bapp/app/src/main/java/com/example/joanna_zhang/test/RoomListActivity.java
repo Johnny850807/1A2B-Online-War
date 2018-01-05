@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -418,7 +417,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onPlayerLeisureTimeExpired() {
-        AppDialogFactory.timeExpiredDialog(this, getString(R.string.playerTimeExpired)).show();
+        AppDialogFactory.roomTimeExpiredDialog(this, getString(R.string.playerTimeExpired)).show();
     }
 
     @Override
