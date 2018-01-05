@@ -164,7 +164,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         Log.e(TAG, err.getMessage());
     }
 
-    private void setupAnswer() {
+    private void showDialogForSettingAnswer() {
         new InputNumberWindowDialog.Builder(this)
                 .setOnEnterClickListener(new SettingAnswerOnEnterClickListener())
                 .setCanceledOnTouchOutside(false)
@@ -215,7 +215,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         this.spiritsModel = spiritsModel;
         spiritsModel.setOnAttackActionParsingListener(this);
         playerSpirits = spiritsModel.getPlayerSpirits();
-        setupAnswer();
+        showDialogForSettingAnswer();
     }
 
     @Override
@@ -292,8 +292,6 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
             player.setText(attackResult.getAttacker().getName());
             guess.setText(attackResult.getGuessRecord().getGuess());
             result.setText(attackResult.getA() + "A" + attackResult.getB() + "B -> " + attackResult.getAttacked());
-
-
 
             return view;
         }
