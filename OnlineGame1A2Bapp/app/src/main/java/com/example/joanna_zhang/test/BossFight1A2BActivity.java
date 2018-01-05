@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
+import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.a1b2.boss.Boss1A2BModule;
 
@@ -69,7 +70,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
     private void init() {
         CoreGameServer server = CoreGameServer.getInstance();
-        //boss1A2BModule = (Boss1A2BModule) server.createModule(ModuleName.);
+        boss1A2BModule = (Boss1A2BModule) server.createModule(ModuleName.GAME1A2BBOSS);
         currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
         currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
         guessResultAdapter = new GuessResultAdapter();
@@ -115,7 +116,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
                 .setOnEnterClickListener(new InputNumberWindowDialog.OnClickListener() {
                     @Override
                     public void onEnterClick(String guessNumber) {
-
+                        inputNumberBtn.setText(guessNumber);
                     }
                 })
                 .setTitle(getString(R.string.pleaseInputGuess))
