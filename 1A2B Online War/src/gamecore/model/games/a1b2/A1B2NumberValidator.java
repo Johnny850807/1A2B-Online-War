@@ -1,7 +1,19 @@
 package gamecore.model.games.a1b2;
 
+import gamecore.model.games.a1b2.duel.core.GuessResult;
+import gamecore.model.games.a1b2.duel.core.NumberNotValidException;
+
 public final class A1B2NumberValidator {
 	private static final char UNASSIGNED = '-';
+	
+	public static boolean isNumberValid(String number){
+		try{
+			validateNumber(number);
+			return true;
+		}catch (NumberNotValidException e) {
+			return false;
+		}
+	}
 	
 	/**
 	 * validate the number if it's fit to the 1A2B guess or answer. 
@@ -13,17 +25,17 @@ public final class A1B2NumberValidator {
 		char[] duplicatedCheck = getCheckChars(); //for ASCII 48 ~ 57 letter duplicated checking.
 		
 		if (number.length() != 4)
-			throw new NumberNotValidException("Number length should be 4.");
+			throw new NumberNotValidException("Number length should be 4. (Got: " + number + ")");
 		for (int i = 0 ; i < number.length() ; i ++)
 		{
 			char num = number.charAt(i);
 			if (!Character.isDigit(num))
-				throw new NumberNotValidException("Number cannot be an alphabet.");
+				throw new NumberNotValidException("Number cannot be an alphabet. (Got: " + number + ")");
 			int index = num - 48;
 			if (duplicatedCheck[index] == UNASSIGNED)
 				duplicatedCheck[index] = num;
 			else
-				throw new NumberNotValidException("Digit duplicated.");
+				throw new NumberNotValidException("Digit duplicated. (Got: " + number + ")");
 		}
 	}
 	

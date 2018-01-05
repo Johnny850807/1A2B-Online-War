@@ -15,18 +15,18 @@ import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
-import gamecore.model.games.a1b2.GameOverModel;
-import gamecore.model.games.a1b2.boss.AttackActionModel;
-import gamecore.model.games.a1b2.boss.NextTurnModel;
+import gamecore.model.games.a1b2.boss.core.AttackActionModel;
+import gamecore.model.games.a1b2.boss.core.NextTurnModel;
+import gamecore.model.games.a1b2.duel.core.GameOverModel;
 
-import static container.Constants.Events.Games.Boss1A2B.ATTACK;
-import static container.Constants.Events.Games.Boss1A2B.SET_ANSWER;
-import static container.Constants.Events.Games.GAMEOVER;
-import static container.Constants.Events.Games.GAMESTARTED;
-import static container.Constants.Events.InRoom.CLOSE_ROOM;
-import static container.Constants.Events.InRoom.CLOSE_ROOM_TIME_EXPIRED;
-import static container.Constants.Events.InRoom.LEAVE_ROOM;
-import static container.Constants.Events.RECONNECTED;
+import static container.core.Constants.Events.Games.Boss1A2B.ATTACK;
+import static container.core.Constants.Events.Games.Boss1A2B.SET_ANSWER;
+import static container.core.Constants.Events.Games.GAMEOVER;
+import static container.core.Constants.Events.Games.GAMESTARTED;
+import static container.core.Constants.Events.InRoom.CLOSE_ROOM;
+import static container.core.Constants.Events.InRoom.CLOSE_ROOM_TIME_EXPIRED;
+import static container.core.Constants.Events.InRoom.LEAVE_ROOM;
+import static container.core.Constants.Events.RECONNECTED;
 
 public class Boss1A2BModuleImp extends AbstractOnlineGameModule implements Boss1A2BModule {
     private ProxyCallback proxyCallback;
@@ -174,9 +174,9 @@ public class Boss1A2BModuleImp extends AbstractOnlineGameModule implements Boss1
         }
 
         @Override
-        public void onYourTurn(NextTurnModel nextTurnModel) {
+        public void onNextTurn(NextTurnModel nextTurnModel) {
             Log.d(TAG, "Turn changed: " + nextTurnModel.getWhosTurn().getName());
-            callback.onYourTurn(nextTurnModel);
+            callback.onNextTurn(nextTurnModel);
         }
 
     }

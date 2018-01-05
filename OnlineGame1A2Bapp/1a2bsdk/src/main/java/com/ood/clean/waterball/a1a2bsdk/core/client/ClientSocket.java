@@ -15,15 +15,15 @@ import java.net.Socket;
 
 import javax.inject.Inject;
 
-import container.SocketIO;
-import container.base.Client;
+import container.core.Client;
+import container.core.SocketIO;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 
 import static com.ood.clean.waterball.a1a2bsdk.core.Secret.PORT;
 import static com.ood.clean.waterball.a1a2bsdk.core.Secret.SERVER_ADDRESS;
 
-public class ClientSocket implements Client{
+public class ClientSocket implements Client {
     final static String TAG = "Socket";
     private @Inject ProtocolFactory protocolFactory;
     private @Inject EventBus eventBus;

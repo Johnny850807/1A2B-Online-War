@@ -1,7 +1,7 @@
 package container.eventhandler.handlers.inroom;
 
-import container.Constants.Events.InRoom;
-import container.base.Client;
+import container.core.Client;
+import container.core.Constants.Events.InRoom;
 import container.eventhandler.handlers.GsonEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;

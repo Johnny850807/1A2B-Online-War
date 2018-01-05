@@ -1,5 +1,5 @@
 package scripts;
-import static container.Constants.Events.RoomList.*;
+import static container.core.Constants.Events.RoomList.*;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -7,8 +7,8 @@ import java.util.stream.IntStream;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import container.Constants.Events.RoomList;
-import container.Constants.Events.Signing;
+import container.core.Constants.Events.RoomList;
+import container.core.Constants.Events.Signing;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.entity.GameRoom;

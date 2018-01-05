@@ -21,7 +21,7 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutE
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.signIn.UserSigningModule;
 
-import container.Constants;
+import container.core.Constants;
 import gamecore.entity.Player;
 import gamecore.model.ServerInformation;
 

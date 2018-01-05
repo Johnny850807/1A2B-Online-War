@@ -19,7 +19,7 @@ import java.util.Set;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.model.RequestStatus;
-import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
+import gamecore.model.games.a1b2.duel.core.Duel1A2BPlayerBarModel;
 import utils.MyGson;
 
 

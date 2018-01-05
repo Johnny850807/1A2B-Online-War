@@ -1,5 +1,5 @@
 package scripts;
-import static container.Constants.Events.RoomList.CREATE_ROOM;
+import static container.core.Constants.Events.RoomList.CREATE_ROOM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import javax.print.attribute.Size2DSyntax;
 
 import com.google.gson.Gson;
 
-import container.Constants.Events.Signing;
+import container.core.Constants.Events.Signing;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.entity.GameRoom;
