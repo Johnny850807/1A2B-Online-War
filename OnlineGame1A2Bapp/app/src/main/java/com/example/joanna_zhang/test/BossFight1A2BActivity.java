@@ -2,17 +2,20 @@ package com.example.joanna_zhang.test;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,9 +34,11 @@ import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.games.GameOverModel;
+import gamecore.model.games.a1b2.boss.core.AbstractSpirit;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.AttackResult;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
+import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import gamecore.model.games.a1b2.core.A1B2NumberValidator;
 import gamecore.model.games.a1b2.core.GuessRecord;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
@@ -44,17 +49,21 @@ import static com.example.joanna_zhang.test.Utils.Params.Keys.PLAYER;
 
 public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2BModule.Callback{
 
+    private final static String TAG = "BossFight1A2BActivity";
     private Boss1A2BModule boss1A2BModule;
     private GameRoom currentGameRoom;
     private Player currentPlayer;
     private List<GuessRecord> resultList;
+    private List<AttackResult> attackResults = new ArrayList<>();
     private InputNumberWindowDialog inputNumberWindowDialog;
     private Button inputNumberBtn;
     private ImageButton sendGuessBtn;
+    private ListView attackResultListView;
     private GuessResultAdapter guessResultAdapter;
     private ProgressBar progressBar;
     private RecyclerView playerRecyclerView;
-    private List<Player> players = new ArrayList<>();
+    private List<AbstractSpirit> players = new ArrayList<>();
+    private AbstractSpirit whosTurn;
 
 
     @Override
@@ -63,7 +72,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         setContentView(R.layout.activity_boss_fight1_a2_b);
         init();
         findViews();
-        mockPlayers(); //Test
         setupLayout();
         setUpInputNumberWindowView();
     }
@@ -73,29 +81,25 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         boss1A2BModule = (Boss1A2BModule) server.createModule(ModuleName.GAME1A2BBOSS);
         currentPlayer = (Player) getIntent().getSerializableExtra(PLAYER);
         currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
-        guessResultAdapter = new GuessResultAdapter();
     }
 
     private void findViews() {
         inputNumberBtn = findViewById(R.id.inputNumberBtn);
         sendGuessBtn = findViewById(R.id.sendGuessBtn);
         progressBar = findViewById(R.id.bossHpProgressBar);
+        attackResultListView = findViewById(R.id.bossResultsLst);
         playerRecyclerView = findViewById(R.id.boss1a2bPlayerRecyclerView);
-    }
-
-
-    //Test
-    private void mockPlayers(){
-        players.add(new Player("Lin"));
-        players.add(new Player("Pan"));
-        players.add(new Player("WB"));
-        players.add(new Player("Joanna"));
     }
 
     private void setupLayout() {
         setupProgressBar();
+        setupAttackResultListView();
         setupPlayerRecyclerView();
+    }
 
+    private void setupAttackResultListView() {
+        guessResultAdapter = new GuessResultAdapter();
+        attackResultListView.setAdapter(guessResultAdapter);
     }
 
     private void setupProgressBar() {
@@ -133,7 +137,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
             A1B2NumberValidator.validateNumber(guessNumber);
             inputNumberBtn.setEnabled(false);
             sendGuessBtn.setEnabled(false);
-
+            boss1A2BModule.attack(guessNumber);
         }catch (NumberNotValidException err){
             Toast.makeText(this, R.string.numberShouldBeInLengthFour, Toast.LENGTH_LONG).show();
         }
@@ -151,7 +155,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
     @Override
     public void onError(@NonNull Throwable err) {
-
+        Log.e(TAG, err.getMessage());
     }
 
     @Override
@@ -193,15 +197,14 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
                 .show();
     }
 
-
     @Override
     public void onSetAnswerSuccessfully(ContentModel contentModel) {
-
+        Log.v(TAG, contentModel.getPlayerId() + "set answer successfully");
     }
 
     @Override
     public void onSetAnswerUnsuccessfully(ErrorMessage errorMessage) {
-
+        Log.e(TAG, errorMessage.getMessage());
     }
 
     @Override
@@ -211,13 +214,16 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
     @Override
     public void onAttackUnsuccessfully(ErrorMessage errorMessage) {
-
+        Log.e(TAG, errorMessage.getMessage());
     }
 
     @Override
     public void onNextAttackAction(AttackActionModel attackActionModel) {
-        for (AttackResult attackResult : attackActionModel)
+        for (AttackResult attackResult : attackActionModel) {
             drawAttackResult(attackResult);
+            attackResults.add(attackResult);
+        }
+        guessResultAdapter.notifyDataSetChanged();
     }
 
     private void drawAttackResult(AttackResult attackResult){
@@ -239,7 +245,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
         @Override
         public int getCount() {
-            return resultList.size();
+            return attackResults.size();
         }
 
         @Override
@@ -253,17 +259,17 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         }
 
         @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
+        public View getView(int position, View view, ViewGroup viewGroup) {
             view = LayoutInflater.from(BossFight1A2BActivity.this).inflate(R.layout.boss_result_list_item, viewGroup, false);
 
+            AttackResult attackResult = attackResults.get(position);
             TextView player = view.findViewById(R.id.playerNameTxt);
             TextView guess = view.findViewById(R.id.guessNumberTxt);
             TextView result = view.findViewById(R.id.bNumber);
 
-
-//            player.setText();
-//            guess.setText();
-//            result.setText();
+            player.setText(attackResult.getAttacker().getName());
+            guess.setText(attackResult.getGuessRecord().getGuess());
+            result.setText(attackResult.getA() + "A" + attackResult.getB() + "B -> " + attackResult.getAttacked());
 
             return view;
         }
