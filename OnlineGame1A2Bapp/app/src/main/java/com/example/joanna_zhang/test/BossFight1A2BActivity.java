@@ -208,7 +208,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     @Override
     public void onGameStarted(SpiritsModel spiritsModel) {
         spiritsModel.setOnAttackActionParsingListener(this);
-        spiritsModel.updateHPMPFromTheAttackActionModel();
         players = spiritsModel.getPlayerSpirits();
         setupAnswer();
     }
