@@ -1,4 +1,4 @@
-package gamecore.model.games.a1b2.duel.imp;
+package gamecore.model.games.a1b2.imp;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-import gamecore.model.games.a1b2.A1B2NumberValidator;
-import gamecore.model.games.a1b2.duel.core.GuessRecord;
-import gamecore.model.games.a1b2.duel.core.GuessResult;
-import gamecore.model.games.a1b2.duel.core.GuessStrategy;
+import gamecore.model.games.a1b2.core.A1B2NumberValidator;
+import gamecore.model.games.a1b2.core.GuessRecord;
+import gamecore.model.games.a1b2.core.GuessResult;
+import gamecore.model.games.a1b2.core.GuessStrategy;
 
 /**
  * @author Waterball

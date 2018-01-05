@@ -8,7 +8,7 @@ import gamecore.model.games.a1b2.boss.core.Monster;
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import gamecore.model.games.a1b2.boss.core.AbstractSpirit.DamageParser;
 import gamecore.model.games.a1b2.boss.core.AttackResult.AttackType;
-import gamecore.model.games.a1b2.duel.core.GuessResult;
+import gamecore.model.games.a1b2.core.GuessResult;
 
 /**
  * @author Waterball

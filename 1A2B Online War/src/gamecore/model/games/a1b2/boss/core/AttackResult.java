@@ -5,8 +5,8 @@ import java.io.Serializable;
 import org.omg.CORBA.PRIVATE_MEMBER;
 
 import gamecore.model.ClientPlayer;
-import gamecore.model.games.a1b2.duel.core.GuessRecord;
-import gamecore.model.games.a1b2.duel.core.GuessResult;
+import gamecore.model.games.a1b2.core.GuessRecord;
+import gamecore.model.games.a1b2.core.GuessResult;
 
 public class AttackResult implements Serializable{
 	private int damage;

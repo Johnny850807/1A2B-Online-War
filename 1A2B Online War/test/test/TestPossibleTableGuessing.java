@@ -11,10 +11,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import gamecore.model.games.a1b2.A1B2NumberValidator;
-import gamecore.model.games.a1b2.duel.core.GuessRecord;
-import gamecore.model.games.a1b2.duel.core.NumberNotValidException;
-import gamecore.model.games.a1b2.duel.imp.PossibleTableGuessing;
+import gamecore.model.games.a1b2.core.A1B2NumberValidator;
+import gamecore.model.games.a1b2.core.GuessRecord;
+import gamecore.model.games.a1b2.core.NumberNotValidException;
+import gamecore.model.games.a1b2.imp.PossibleTableGuessing;
 import utils.RandomString;
 
 @RunWith(Parameterized.class)

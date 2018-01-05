@@ -8,7 +8,7 @@ import gamecore.GameCore;
 import gamecore.entity.GameRoom;
 import gamecore.model.ContentModel;
 import gamecore.model.games.ProcessInvalidException;
-import gamecore.model.games.a1b2.duel.core.NumberNotValidException;
+import gamecore.model.games.a1b2.core.NumberNotValidException;
 import gamecore.model.games.a1b2.duel.imp.Duel1A2BGame;
 
 /**

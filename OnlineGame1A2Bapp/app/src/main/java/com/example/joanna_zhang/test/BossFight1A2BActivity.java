@@ -30,13 +30,13 @@ import gamecore.entity.Player;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
 import gamecore.model.PlayerRoomModel;
-import gamecore.model.games.a1b2.A1B2NumberValidator;
+import gamecore.model.games.GameOverModel;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.AttackResult;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
-import gamecore.model.games.a1b2.duel.core.GameOverModel;
-import gamecore.model.games.a1b2.duel.core.GuessRecord;
-import gamecore.model.games.a1b2.duel.core.NumberNotValidException;
+import gamecore.model.games.a1b2.core.A1B2NumberValidator;
+import gamecore.model.games.a1b2.core.GuessRecord;
+import gamecore.model.games.a1b2.core.NumberNotValidException;
 
 import static com.example.joanna_zhang.test.R.string.confirm;
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;

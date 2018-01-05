@@ -15,16 +15,16 @@ import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.RequestStatus;
 import gamecore.model.games.Game;
+import gamecore.model.games.GameOverModel;
 import gamecore.model.games.ProcessInvalidException;
-import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.AttackResult;
 import gamecore.model.games.a1b2.boss.core.Monster;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import gamecore.model.games.a1b2.boss.core.AttackResult.AttackType;
-import gamecore.model.games.a1b2.duel.core.GameOverModel;
-import gamecore.model.games.a1b2.duel.core.NumberNotValidException;
+import gamecore.model.games.a1b2.core.A1B2NumberValidator;
+import gamecore.model.games.a1b2.core.NumberNotValidException;
 import utils.ForServer;
 
 /**

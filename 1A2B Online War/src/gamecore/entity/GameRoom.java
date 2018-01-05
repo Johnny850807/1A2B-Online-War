@@ -22,7 +22,7 @@ import gamecore.model.games.a1b2.boss.imp.BasicBoss;
 import gamecore.model.games.a1b2.boss.imp.Boss1A2BGame;
 import gamecore.model.games.a1b2.duel.imp.Duel1A2BGame;
 import utils.ForServer;
-import utils.GamecoreHelper;
+import utils.LogHelper;
 
 /**
  * GameRoom contains only the info and the status the room should present. The game of the room will be
@@ -243,7 +243,7 @@ public class GameRoom extends Entity implements LeisureTimeChallengeable{
 			playerClients.add(clientBinder.getClientPlayer(playerStatus.getPlayer().getId()));
 		
 		log.trace("Host prepared: " + hostClient.getPlayerName());
-		log.trace("Players prepared: " + GamecoreHelper.clientsToString(playerClients));
+		log.trace("Players prepared: " + LogHelper.clientsToString(playerClients));
 		
 		initGame(hostClient, playerClients, listener);
 		pushLeisureTime();

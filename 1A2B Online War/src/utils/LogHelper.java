@@ -6,7 +6,7 @@ import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ClientPlayer;
 
-public class GamecoreHelper {
+public class LogHelper {
 	
 	public static String clientsToString(Collection<ClientPlayer> clientPlayers){
 		StringBuilder strb = new StringBuilder();

@@ -11,9 +11,9 @@ import container.protocol.ProtocolFactory;
 import container.protocol.XOXOXDelimiterFactory;
 import gamecore.entity.Player;
 import gamecore.model.ClientPlayer;
-import gamecore.model.games.a1b2.duel.core.GuessRecord;
-import gamecore.model.games.a1b2.duel.core.GuessResult;
-import gamecore.model.games.a1b2.duel.core.NumberNotValidException;
+import gamecore.model.games.a1b2.core.GuessRecord;
+import gamecore.model.games.a1b2.core.GuessResult;
+import gamecore.model.games.a1b2.core.NumberNotValidException;
 import gamecore.model.games.a1b2.duel.imp.Duel1A2BGame;
 import mock.MockClient;
 

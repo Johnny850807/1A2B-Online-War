@@ -6,10 +6,10 @@ import com.google.gson.Gson;
 
 import container.core.MyLogger;
 import container.protocol.ProtocolFactory;
-import gamecore.model.games.a1b2.A1B2NumberValidator;
 import gamecore.model.games.a1b2.boss.core.AttackResult.AttackType;
-import gamecore.model.games.a1b2.duel.core.GuessRecord;
-import gamecore.model.games.a1b2.duel.core.GuessResult;
+import gamecore.model.games.a1b2.core.A1B2NumberValidator;
+import gamecore.model.games.a1b2.core.GuessRecord;
+import gamecore.model.games.a1b2.core.GuessResult;
 import utils.ForServer;
 import utils.MyGson;
 

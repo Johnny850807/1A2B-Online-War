@@ -9,7 +9,7 @@ import gamecore.entity.Player;
 import gamecore.model.ClientStatus;
 import gamecore.model.ContentModel;
 import gamecore.model.RoomStatus;
-import gamecore.model.games.a1b2.A1B2NumberValidator;
+import gamecore.model.games.a1b2.core.A1B2NumberValidator;
 import gamecore.model.games.a1b2.duel.core.Duel1A2BPlayerBarModel;
 import utils.MyGson;
 import utils.RandomString;

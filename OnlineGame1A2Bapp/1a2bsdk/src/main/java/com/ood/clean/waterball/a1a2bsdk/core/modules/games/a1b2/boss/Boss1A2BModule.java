@@ -9,9 +9,9 @@ import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
+import gamecore.model.games.GameOverModel;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
-import gamecore.model.games.a1b2.duel.core.GameOverModel;
 
 public interface Boss1A2BModule extends OnlineGameModule{
     void registerCallback(Context context, Player currentPlayer, GameRoom currentGameRoom, Boss1A2BModule.Callback callback);

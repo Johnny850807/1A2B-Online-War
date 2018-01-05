@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import container.core.Constants;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
@@ -29,7 +30,7 @@ public class MyGson {
 			    .registerSubtype(PlayerSpirit.class, AbstractSpirit.Type.PLAYER.toString())
 			    .registerSubtype(Monster.class, AbstractSpirit.Type.MONSTER.toString());
 		
-		gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+		gson = new GsonBuilder().setDateFormat(Constants.DATEFORMAT)
         		.registerTypeAdapter(Date.class, new DateDeserializer())
         		.registerTypeAdapterFactory(runtimeTypeAdapterFactory).create();
 	}
