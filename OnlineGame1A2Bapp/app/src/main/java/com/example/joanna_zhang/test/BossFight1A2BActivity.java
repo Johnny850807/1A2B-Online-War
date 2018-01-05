@@ -2,7 +2,6 @@ package com.example.joanna_zhang.test;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -41,7 +40,6 @@ import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import gamecore.model.games.a1b2.boss.core.SpiritsModel;
 import gamecore.model.games.a1b2.core.A1B2NumberValidator;
-import gamecore.model.games.a1b2.core.GuessRecord;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
 
 import static com.example.joanna_zhang.test.Utils.Params.Keys.GAMEROOM;
@@ -53,7 +51,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     private Boss1A2BModule boss1A2BModule;
     private GameRoom currentGameRoom;
     private Player currentPlayer;   //TODO write a base abstract activity handling all initializing currentGameRoom and currentPlayer tasks.
-    private List<GuessRecord> resultList;
     private List<AttackResult> attackResults = new ArrayList<>();
     private InputNumberWindowDialog inputNumberWindowDialog;
     private Button inputNumberBtn;
@@ -62,7 +59,8 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     private GuessResultAdapter guessResultAdapter;
     private ProgressBar progressBar;
     private RecyclerView playerRecyclerView;
-    private List<PlayerSpirit> players = new ArrayList<>();
+    private List<PlayerSpirit> playerSpirits = new ArrayList<>();
+    private SpiritsModel spiritsModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +83,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
         inputNumberBtn = findViewById(R.id.inputNumberBtn);
         sendGuessBtn = findViewById(R.id.sendGuessBtn);
         progressBar = findViewById(R.id.bossHpProgressBar);
-        attackResultListView = findViewById(R.id.bossResultsLst);
+        attackResultListView = findViewById(R.id.attackResultsLst);
         playerRecyclerView = findViewById(R.id.boss1a2bPlayerRecyclerView);
     }
 
@@ -195,18 +193,19 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
     @Override
     public void onPlayerLeft(PlayerRoomModel model) {
-        AppDialogFactory.playerLeftFromGameDialog(this, model.getPlayer());
+        AppDialogFactory.playerLeftFromGameDialog(this, model.getPlayer()).show();
     }
 
     @Override
     public void onGameClosed(GameRoom gameRoom) {
-        AppDialogFactory.playerLeftFromGameDialog(this, gameRoom.getHost());
+        AppDialogFactory.playerLeftFromGameDialog(this, gameRoom.getHost()).show();
     }
 
     @Override
     public void onGameStarted(SpiritsModel spiritsModel) {
+        this.spiritsModel = spiritsModel;
         spiritsModel.setOnAttackActionParsingListener(this);
-        players = spiritsModel.getPlayerSpirits();
+        playerSpirits = spiritsModel.getPlayerSpirits();
         setupAnswer();
     }
 
@@ -217,7 +216,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
     @Override
     public void onSetAnswerUnsuccessfully(ErrorMessage errorMessage) {
-
         Log.e(TAG, errorMessage.getMessage());
     }
 
@@ -228,16 +226,17 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
     @Override
     public void onAttackUnsuccessfully(ErrorMessage errorMessage) {
+        inputNumberBtn.setEnabled(true);
+        sendGuessBtn.setEnabled(true);
         Log.e(TAG, errorMessage.getMessage());
     }
 
     @Override
     public void onNextAttackAction(AttackActionModel attackActionModel) {
-        for (AttackResult attackResult : attackActionModel) {
+        for (AttackResult attackResult : attackActionModel)
             drawAttackResult(attackResult);
-            attackResults.add(attackResult);
-        }
-
+        attackResults = attackActionModel.getAttackResults();
+        spiritsModel.updateHPMPFromTheAttackActionModel(attackActionModel);
         guessResultAdapter.notifyDataSetChanged();
     }
 
@@ -254,7 +253,6 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
     public void onGameOver(GameOverModel gameOverModel) {
 
     }
-
 
     private class GuessResultAdapter extends BaseAdapter {
 
@@ -275,7 +273,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
         @Override
         public View getView(int position, View view, ViewGroup viewGroup) {
-            view = LayoutInflater.from(BossFight1A2BActivity.this).inflate(R.layout.boss_result_list_item, viewGroup, false);
+            view = LayoutInflater.from(BossFight1A2BActivity.this).inflate(R.layout.attack_result_list_item, viewGroup, false);
 
             AttackResult attackResult = attackResults.get(position);
             TextView player = view.findViewById(R.id.playerNameTxt);
@@ -286,9 +284,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
             guess.setText(attackResult.getGuessRecord().getGuess());
             result.setText(attackResult.getA() + "A" + attackResult.getB() + "B -> " + attackResult.getAttacked());
 
-//            player.setText(resultList.get(i).getAttacker());
-//            guess.setText(resultList.get(i).getGuessRecord().getGuess());
-//            result.setText();
+
 
             return view;
         }
@@ -314,7 +310,7 @@ public class BossFight1A2BActivity extends AppCompatActivity implements Boss1A2B
 
         @Override
         public int getItemCount() {
-            return players.size();
+            return playerSpirits.size();
         }
     }
 
