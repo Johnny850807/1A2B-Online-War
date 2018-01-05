@@ -48,7 +48,6 @@ import gamecore.model.games.a1b2.core.A1B2NumberValidator;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
 
 public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender{
-
     private final static String TAG = "BossFight1A2BActivity";
     private Boss1A2BModule boss1A2BModule;
     private List<AttackResult> attackResults = new ArrayList<>();
@@ -86,7 +85,6 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         progressBar = findViewById(R.id.bossHpProgressBar);
         attackResultListView = findViewById(R.id.attackResultsLst);
         playerSpiritsViewGroup = findViewById(R.id.playerSpiritsViewGroup);
-        attackResultListView = findViewById(R.id.bossResultsLst);
     }
 
     private void setupLayout() {
