@@ -3,8 +3,8 @@ package scripts;
 
 import com.google.gson.Gson;
 
-import container.Constants.Events.Games;
-import container.Constants.Events.Games.Duel1A2B;
+import container.core.Constants.Events.Games;
+import container.core.Constants.Events.Games.Duel1A2B;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.model.ContentModel;

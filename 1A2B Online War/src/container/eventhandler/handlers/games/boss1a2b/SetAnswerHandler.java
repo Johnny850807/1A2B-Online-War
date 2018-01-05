@@ -1,6 +1,6 @@
 package container.eventhandler.handlers.games.boss1a2b;
 
-import container.base.Client;
+import container.core.Client;
 import container.eventhandler.handlers.GsonEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
@@ -8,9 +8,9 @@ import gamecore.GameCore;
 import gamecore.entity.GameRoom;
 import gamecore.model.ContentModel;
 import gamecore.model.games.ProcessInvalidException;
-import gamecore.model.games.a1b2.Duel1A2BGame;
-import gamecore.model.games.a1b2.NumberNotValidException;
-import gamecore.model.games.a1b2.boss.base.Boss1A2BGame;
+import gamecore.model.games.a1b2.boss.imp.Boss1A2BGame;
+import gamecore.model.games.a1b2.duel.core.NumberNotValidException;
+import gamecore.model.games.a1b2.duel.imp.Duel1A2BGame;
 
 /**
  * @author Waterball

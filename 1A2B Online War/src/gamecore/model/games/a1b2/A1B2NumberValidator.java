@@ -1,5 +1,8 @@
 package gamecore.model.games.a1b2;
 
+import gamecore.model.games.a1b2.duel.core.GuessResult;
+import gamecore.model.games.a1b2.duel.core.NumberNotValidException;
+
 public final class A1B2NumberValidator {
 	private static final char UNASSIGNED = '-';
 	

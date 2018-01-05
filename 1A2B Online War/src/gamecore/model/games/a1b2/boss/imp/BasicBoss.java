@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import container.Constants.Events.Chat;
-import container.base.MyLogger;
+import container.core.MyLogger;
+import container.core.Constants.Events.Chat;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.Player;
 import gamecore.model.RequestStatus;
-import gamecore.model.games.a1b2.boss.base.AttackResult;
-import gamecore.model.games.a1b2.boss.base.Monster;
-import gamecore.model.games.a1b2.boss.base.PlayerSpirit;
+import gamecore.model.games.a1b2.boss.core.AttackResult;
+import gamecore.model.games.a1b2.boss.core.Monster;
+import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import utils.RandomString;
 
 public class BasicBoss extends Monster{

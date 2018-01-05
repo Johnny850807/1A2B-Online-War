@@ -16,14 +16,14 @@ import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
 
-import static container.Constants.Events.InRoom.BOOTED;
-import static container.Constants.Events.InRoom.CHANGE_STATUS;
-import static container.Constants.Events.InRoom.CLOSE_ROOM;
-import static container.Constants.Events.InRoom.CLOSE_ROOM_TIME_EXPIRED;
-import static container.Constants.Events.InRoom.LAUNCH_GAME;
-import static container.Constants.Events.InRoom.LEAVE_ROOM;
-import static container.Constants.Events.RECONNECTED;
-import static container.Constants.Events.RoomList.JOIN_ROOM;
+import static container.core.Constants.Events.InRoom.BOOTED;
+import static container.core.Constants.Events.InRoom.CHANGE_STATUS;
+import static container.core.Constants.Events.InRoom.CLOSE_ROOM;
+import static container.core.Constants.Events.InRoom.CLOSE_ROOM_TIME_EXPIRED;
+import static container.core.Constants.Events.InRoom.LAUNCH_GAME;
+import static container.core.Constants.Events.InRoom.LEAVE_ROOM;
+import static container.core.Constants.Events.RECONNECTED;
+import static container.core.Constants.Events.RoomList.JOIN_ROOM;
 
 
 public class InRoomModuleImp extends AbstractGameModule implements InRoomModule{

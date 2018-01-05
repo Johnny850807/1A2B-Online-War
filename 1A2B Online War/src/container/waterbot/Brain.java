@@ -1,6 +1,6 @@
 package container.waterbot;
 
-import container.base.Client;
+import container.core.Client;
 import container.protocol.Protocol;
 
 public interface Brain {

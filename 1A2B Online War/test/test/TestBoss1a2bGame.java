@@ -11,8 +11,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import container.Constants.Events.Games;
-import container.Constants.Events.Games.Boss1A2B;
+import container.core.Constants.Events.Games;
+import container.core.Constants.Events.Games.Boss1A2B;
 import container.protocol.Protocol;
 
 import static org.junit.Assert.*;
@@ -26,12 +26,12 @@ import gamecore.model.games.GameEnteringWaitingBox;
 import gamecore.model.games.ProcessInvalidException;
 import gamecore.model.games.Game;
 import gamecore.model.games.Game.GameLifecycleListener;
-import gamecore.model.games.a1b2.GameOverModel;
-import gamecore.model.games.a1b2.NumberNotValidException;
-import gamecore.model.games.a1b2.boss.base.Boss1A2BGame;
-import gamecore.model.games.a1b2.boss.base.Monster;
+import gamecore.model.games.a1b2.boss.core.Monster;
+import gamecore.model.games.a1b2.boss.imp.Boss1A2BGame;
 import gamecore.model.games.a1b2.boss.imp.OnePunchBoss;
 import gamecore.model.games.a1b2.boss.imp.TestingBoss;
+import gamecore.model.games.a1b2.duel.core.GameOverModel;
+import gamecore.model.games.a1b2.duel.core.NumberNotValidException;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
 import mock.MockClient;

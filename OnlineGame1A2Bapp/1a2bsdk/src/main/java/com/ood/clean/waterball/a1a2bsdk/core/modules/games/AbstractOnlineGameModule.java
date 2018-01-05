@@ -10,8 +10,9 @@ import gamecore.entity.Player;
 import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.RequestStatus;
 
-import static container.Constants.Events.Games.ENTERGAME;
-import static container.Constants.Events.InRoom.LEAVE_ROOM;
+import static container.core.Constants.Events.Games.ENTERGAME;
+import static container.core.Constants.Events.InRoom.LEAVE_ROOM;
+
 
 public abstract class AbstractOnlineGameModule extends AbstractGameModule implements OnlineGameModule{
 

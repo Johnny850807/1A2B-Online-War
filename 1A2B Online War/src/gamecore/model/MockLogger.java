@@ -2,7 +2,7 @@ package gamecore.model;
 
 import java.io.Serializable;
 
-import container.base.MyLogger;
+import container.core.MyLogger;
 
 public class MockLogger implements MyLogger, Serializable{
 

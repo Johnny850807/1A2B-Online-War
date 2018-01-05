@@ -11,10 +11,10 @@ import com.google.gson.reflect.TypeToken;
 import gamecore.entity.ChatMessage;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
-import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
-import gamecore.model.games.a1b2.boss.base.AbstractSpirit;
-import gamecore.model.games.a1b2.boss.base.Monster;
-import gamecore.model.games.a1b2.boss.base.PlayerSpirit;
+import gamecore.model.games.a1b2.boss.core.AbstractSpirit;
+import gamecore.model.games.a1b2.boss.core.Monster;
+import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
+import gamecore.model.games.a1b2.duel.core.Duel1A2BPlayerBarModel;
 
 /**
  * @author Waterball

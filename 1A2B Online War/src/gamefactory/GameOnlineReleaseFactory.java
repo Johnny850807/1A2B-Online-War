@@ -1,8 +1,8 @@
 package gamefactory;
 
-import container.SocketClient;
-import container.base.Client;
-import container.base.IO;
+import container.core.Client;
+import container.core.IO;
+import container.core.SocketClient;
 import container.eventhandler.ConfigBasedGameEventHandlerFactory;
 import container.eventhandler.GameEventHandlerFactory;
 import container.protocol.ProtocolFactory;

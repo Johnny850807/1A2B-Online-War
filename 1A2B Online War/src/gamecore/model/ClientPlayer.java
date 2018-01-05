@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import container.base.Client;
+import container.core.Client;
 import container.protocol.Protocol;
 import gamecore.entity.LeisureTimeChallengeable;
 import gamecore.entity.Player;

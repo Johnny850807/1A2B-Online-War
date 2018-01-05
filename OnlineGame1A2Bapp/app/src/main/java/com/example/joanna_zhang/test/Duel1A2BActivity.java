@@ -33,10 +33,10 @@ import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.games.a1b2.A1B2NumberValidator;
-import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
-import gamecore.model.games.a1b2.GameOverModel;
-import gamecore.model.games.a1b2.GuessRecord;
-import gamecore.model.games.a1b2.NumberNotValidException;
+import gamecore.model.games.a1b2.duel.core.Duel1A2BPlayerBarModel;
+import gamecore.model.games.a1b2.duel.core.GameOverModel;
+import gamecore.model.games.a1b2.duel.core.GuessRecord;
+import gamecore.model.games.a1b2.duel.core.NumberNotValidException;
 
 import static android.R.string.cancel;
 import static com.example.joanna_zhang.test.R.string.confirm;

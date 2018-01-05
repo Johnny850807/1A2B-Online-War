@@ -3,10 +3,10 @@ package gamecore.model.games.a1b2.boss.imp;
 import java.util.ArrayList;
 import java.util.List;
 
-import container.base.MyLogger;
+import container.core.MyLogger;
 import container.protocol.ProtocolFactory;
-import gamecore.model.games.a1b2.boss.base.Monster;
-import gamecore.model.games.a1b2.boss.base.MonsterAction;
+import gamecore.model.games.a1b2.boss.core.Monster;
+import gamecore.model.games.a1b2.boss.core.MonsterAction;
 
 public class SmartBabyBoss extends Monster{
 

@@ -18,11 +18,11 @@ import org.junit.validator.ValidateWith;
 
 import com.google.gson.Gson;
 
-import container.Constants.Events.Games;
-import container.Constants.Events.InRoom;
-import container.Constants.Events.RoomList;
-import container.Constants.Events.Signing;
-import container.base.Client;
+import container.core.Client;
+import container.core.Constants.Events.Games;
+import container.core.Constants.Events.InRoom;
+import container.core.Constants.Events.RoomList;
+import container.core.Constants.Events.Signing;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
@@ -32,7 +32,7 @@ import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
 import gamecore.model.RoomStatus;
 import gamecore.model.games.Game;
-import gamecore.model.games.a1b2.GameOverModel;
+import gamecore.model.games.a1b2.duel.core.GameOverModel;
 import gamefactory.GameFactory;
 import utils.ForServer;
 import utils.MyGson;

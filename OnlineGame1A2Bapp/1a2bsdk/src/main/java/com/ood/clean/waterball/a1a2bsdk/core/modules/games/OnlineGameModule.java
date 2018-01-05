@@ -6,7 +6,7 @@ import com.ood.clean.waterball.a1a2bsdk.core.modules.RoomExpiredCallback;
 
 import gamecore.entity.GameRoom;
 import gamecore.model.PlayerRoomModel;
-import gamecore.model.games.a1b2.GameOverModel;
+import gamecore.model.games.a1b2.duel.core.GameOverModel;
 
 public interface OnlineGameModule extends GameModule{
 

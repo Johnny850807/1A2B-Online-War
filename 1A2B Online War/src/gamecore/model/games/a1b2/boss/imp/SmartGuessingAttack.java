@@ -3,14 +3,12 @@ package gamecore.model.games.a1b2.boss.imp;
 import java.util.HashMap;
 import java.util.Map;
 
-import gamecore.model.games.a1b2.PossibleTableGuessing;
-import gamecore.model.games.a1b2.boss.base.AbstractMonsterAction;
-import gamecore.model.games.a1b2.boss.base.AttackActionModel;
-import gamecore.model.games.a1b2.boss.base.AttackResult;
-import gamecore.model.games.a1b2.boss.base.Boss1A2BGame;
-import gamecore.model.games.a1b2.boss.base.Monster;
-import gamecore.model.games.a1b2.boss.base.PlayerSpirit;
-import gamecore.model.games.a1b2.boss.base.AttackResult.AttackType;
+import gamecore.model.games.a1b2.boss.core.AttackActionModel;
+import gamecore.model.games.a1b2.boss.core.AttackResult;
+import gamecore.model.games.a1b2.boss.core.Monster;
+import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
+import gamecore.model.games.a1b2.boss.core.AttackResult.AttackType;
+import gamecore.model.games.a1b2.duel.imp.PossibleTableGuessing;
 
 /**
  * @author Waterball
