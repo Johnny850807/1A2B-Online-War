@@ -60,7 +60,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     private ImageView bossImg;
     private ListView attackResultListView;
     private GuessResultAdapter guessResultAdapter;
-    private ProgressBar progressBar;
+    private ProgressBar bossHpProgressBar;
 
     private LinearLayout playerSpiritsViewGroup;
     private AbstractSpiritItemViewFactory abstractSpiritItemViewFactory;
@@ -103,7 +103,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         bossImg = findViewById(R.id.bossImg);
         inputNumberBtn = findViewById(R.id.inputNumberBtn);
         sendGuessBtn = findViewById(R.id.sendGuessBtn);
-        progressBar = findViewById(R.id.bossHpProgressBar);
+        bossHpProgressBar = findViewById(R.id.bossHpProgressBar);
         attackResultListView = findViewById(R.id.attackResultsLst);
         playerSpiritsViewGroup = findViewById(R.id.playerSpiritsViewGroup);
     }
@@ -119,9 +119,9 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     private void setupProgressBar() {
-        progressBar.getProgressDrawable().setColorFilter(
+        bossHpProgressBar.getProgressDrawable().setColorFilter(
                 Color.GREEN, PorterDuff.Mode.DARKEN);
-        progressBar.setScaleY(3f);
+        bossHpProgressBar.setScaleY(3f);
     }
 
     private void setUpInputNumberWindowView() {
@@ -179,7 +179,6 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
             playerSpiritsViewGroup.addView(viewHolder.view);
             playerSpiritViewHoldersMap.put(playerSpirit.getId(), viewHolder);
         }
-        playerSpiritViewHoldersMap.put(spiritsModel.getBoss().getId(), abstractSpiritItemViewFactory.createAbstractSpiritItemView(spiritsModel.getBoss(), playerSpiritsViewGroup));
     }
 
     private void showDialogForSettingAnswer() {
@@ -291,10 +290,9 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
     @Override
     public void onDrawHpCosted(AbstractSpirit spirit, int cost) {
-        ProgressBar playerHpBar = playerSpiritViewHoldersMap.get(spirit.getId()).playerHpBar;
-        int nowHp = playerHpBar.getProgress();
-        CostingProgressBarAnimation animation = new CostingProgressBarAnimation(playerHpBar, nowHp, nowHp - cost);
-        playerHpBar.startAnimation(animation);
+        ProgressBar hpBar = spirit.getId().equals(spiritsModel.getBoss().getId()) ? bossHpProgressBar : playerSpiritViewHoldersMap.get(spirit.getId()).playerHpBar;
+        CostingProgressBarAnimation animation = new CostingProgressBarAnimation(hpBar, spirit.getHp(), spirit.getHp() - cost);
+        hpBar.startAnimation(animation);
     }
 
     @Override
