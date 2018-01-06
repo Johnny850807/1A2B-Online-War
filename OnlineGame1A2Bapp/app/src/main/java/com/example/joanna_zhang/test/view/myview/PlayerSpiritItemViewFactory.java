@@ -2,8 +2,6 @@ package com.example.joanna_zhang.test.view.myview;
 
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +24,7 @@ public class PlayerSpiritItemViewFactory {
         ViewHolder viewHolder = new ViewHolder(view);
         viewHolder.playerHpBar.setMax(spirit.getMaxHp());
         viewHolder.playerHpBar.setProgress(spirit.getHp());
-        viewHolder.playerHpBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN);
+        //viewHolder.playerHpBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN);
         viewHolder.playerHpBar.setScaleY(3f);
         viewHolder.playerAnswer.setText("");
         viewHolder.playerName.setText(spirit.getName());

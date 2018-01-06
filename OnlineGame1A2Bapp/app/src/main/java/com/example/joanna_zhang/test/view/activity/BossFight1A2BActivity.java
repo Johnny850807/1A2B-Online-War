@@ -2,7 +2,6 @@ package com.example.joanna_zhang.test.view.activity;
 
 import android.app.AlertDialog;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -119,9 +118,9 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     private void setupProgressBar() {
-        bossHpProgressBar.getProgressDrawable().setColorFilter(
+        /*bossHpProgressBar.getProgressDrawable().setColorFilter(
                 Color.GREEN, PorterDuff.Mode.DARKEN);
-        bossHpProgressBar.setScaleY(3f);
+        bossHpProgressBar.setScaleY(3f);*/
     }
 
     private void setUpInputNumberWindowView() {
@@ -170,6 +169,8 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         spiritsModel.setOnAttackActionParsingListener(this);
         showDialogForSettingAnswer();
         bossHpProgressBar.setMax(spiritsModel.getBoss().getMaxHp());
+        bossHpProgressBar.setProgress(spiritsModel.getBoss().getHp());
+        bossHpProgressBar.setScaleY(3f);
         createAllPlayerSpiritViews(spiritsModel);
     }
 
