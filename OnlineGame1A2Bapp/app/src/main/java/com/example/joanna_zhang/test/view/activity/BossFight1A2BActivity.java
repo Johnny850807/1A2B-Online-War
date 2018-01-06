@@ -3,7 +3,6 @@ package com.example.joanna_zhang.test.view.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -120,9 +119,9 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     private void setupProgressBar() {
-        bossHpProgressBar.getProgressDrawable().setColorFilter(
+        /*bossHpProgressBar.getProgressDrawable().setColorFilter(
                 Color.GREEN, PorterDuff.Mode.DARKEN);
-        bossHpProgressBar.setScaleY(3f);
+        bossHpProgressBar.setScaleY(3f);*/
     }
 
     private void setUpInputNumberWindowView() {
@@ -171,6 +170,8 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         spiritsModel.setOnAttackActionParsingListener(this);
         showDialogForSettingAnswer();
         bossHpProgressBar.setMax(spiritsModel.getBoss().getMaxHp());
+        bossHpProgressBar.setProgress(spiritsModel.getBoss().getHp());
+        bossHpProgressBar.setScaleY(3f);
         createAllPlayerSpiritViews(spiritsModel);
     }
 
@@ -235,23 +236,28 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     @Override
     public void onNextTurn(NextTurnModel nextTurnModel) {
         this.whosTurn = nextTurnModel.getWhosTurn();
-        for (PlayerSpiritItemViewFactory.ViewHolder viewHolder : playerSpiritViewHoldersMap.values())
-            viewHolder.view.setBackgroundColor(Color.GRAY);
 
-        playerSpiritViewHoldersMap.get(whosTurn.getId()).view.setBackgroundResource(R.drawable.boss1a2b_player_background);
+        drawPlayerSpiritsViewBackground();
 
         if (whosTurn.getId().equals(currentPlayer.getId())) {
             setInputNumberViewsEnabled(true);
-            inputNumberBtn.setText(null);
             soundManager.playSound(R.raw.dong);
         } else {
             setInputNumberViewsEnabled(false);
         }
     }
 
+    private void drawPlayerSpiritsViewBackground() {
+        for (PlayerSpiritItemViewFactory.ViewHolder viewHolder : playerSpiritViewHoldersMap.values())
+            viewHolder.view.setBackgroundColor(Color.GRAY);
+
+        playerSpiritViewHoldersMap.get(whosTurn.getId()).view.setBackgroundResource(R.drawable.boss1a2b_player_background);
+    }
+
     private void setInputNumberViewsEnabled(boolean enabled) {
         inputNumberBtn.setEnabled(enabled);
         sendGuessBtn.setEnabled(enabled);
+        inputNumberBtn.setText(null);
     }
 
     @Override
