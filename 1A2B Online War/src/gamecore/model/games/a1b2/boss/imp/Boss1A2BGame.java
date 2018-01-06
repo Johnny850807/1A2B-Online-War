@@ -19,6 +19,7 @@ import gamecore.model.games.GameOverModel;
 import gamecore.model.games.ProcessInvalidException;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.AttackResult;
+import gamecore.model.games.a1b2.boss.core.IBoss1A2BGame;
 import gamecore.model.games.a1b2.boss.core.Monster;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
@@ -31,7 +32,7 @@ import utils.ForServer;
 /**
  * @author Waterball
  */
-public class Boss1A2BGame extends Game{
+public class Boss1A2BGame extends Game implements IBoss1A2BGame{
 	private transient Monster boss;
 	private List<PlayerSpirit> playerSpirits = Collections.synchronizedList(new ArrayList<>());
 	private List<AttackResult> attackResults = new ArrayList<>();
@@ -56,6 +57,7 @@ public class Boss1A2BGame extends Game{
 				gson.toJson(new SpiritsModel(boss, playerSpirits)));
 	}
 	
+	@Override
 	@ForServer
 	public synchronized void setPlayerAnswer(String playerId, String answer) throws NumberNotValidException{
 		validateSettingAnswerOperation(answer);
@@ -76,6 +78,7 @@ public class Boss1A2BGame extends Game{
 			throw new ProcessInvalidException("The attacking phase is started, you cannot set the answer anymore.");
 	}
 	
+	@Override
 	@ForServer
 	public boolean areAllAnswersBeenCommitted(){
 		if (boss.getAnswer() == null)
@@ -93,6 +96,8 @@ public class Boss1A2BGame extends Game{
 		broadcastToAll(protocol);
 	}
 	
+
+	@Override
 	@ForServer
 	public synchronized void attack(String playerId, String guess) throws NumberNotValidException{
 		validateAttackingOperation(playerId, guess);
@@ -136,7 +141,8 @@ public class Boss1A2BGame extends Game{
 		AttackActionModel actionModel = new AttackActionModel("Normal guess", 0, attacker, attackResult);
 		addAllResultsAndbroadcastAttackActionModel(actionModel);
 	}
-	
+
+	@Override
 	@ForServer
 	public void addAllResultsAndbroadcastAttackActionModel(AttackActionModel model){
 		log.trace("Adding the attack action: " + model);
@@ -147,16 +153,15 @@ public class Boss1A2BGame extends Game{
 		broadcastToAll(protocol);
 	}
 	
+
+	@Override
 	@ForServer
 	public void addAttackResult(AttackResult attackResult){
 		this.attackResults.add(attackResult);
 	}
 
-	/**
-	 * find the next alive player's index from now whosTurn forward to the end.
-	 * @return the next player's index, return -1 if all alive player turns are over.
-	 * @exception IllegalStateException all players are dead
-	 */
+
+	@Override
 	public int findNextAlivePlayerIndexForward(){
 		if (areAllPlayersDead())
 			throw new IllegalStateException("All players are dead, why should we find out the next alive player index?");
@@ -168,10 +173,14 @@ public class Boss1A2BGame extends Game{
 		return index;
 	}
 	
+
+	@Override
 	public boolean isTheBossGameOver(){
 		return boss.isDead() || areAllPlayersDead() ;
 	}
 	
+
+	@Override
 	public boolean areAllPlayersDead(){
 		for (PlayerSpirit playerSpirit : getPlayerSpirits())
 			if (!playerSpirit.isDead())
@@ -179,6 +188,8 @@ public class Boss1A2BGame extends Game{
 		return true;
 	}
 	
+
+	@Override
 	public PlayerSpirit getPlayerSpirit(String playerId){
 		for (PlayerSpirit player : playerSpirits)
 			if (player.getId().equals(playerId))
@@ -202,10 +213,14 @@ public class Boss1A2BGame extends Game{
 		broadcastToAll(protocol);
 	}
 	
+
+	@Override
 	public List<PlayerSpirit> getPlayerSpirits() {
 		return playerSpirits;
 	}
 	
+
+	@Override
 	public List<PlayerSpirit> getAlivePlayerSpirits() {
 		List<PlayerSpirit> alivePlayerSpirits = new ArrayList<>();
 		for (PlayerSpirit playerSpirit : getPlayerSpirits())
@@ -215,15 +230,19 @@ public class Boss1A2BGame extends Game{
 	} 
 	
 	
+
+	@Override
 	public int getWhosTurn() {
 		return whosTurn;
 	}
 	
+	@Override
 	@ForServer
 	public Monster getBoss() {
 		return boss;
 	}
 
+	@Override
 	public void broadcastToAll(Protocol protocol){
 		for (PlayerSpirit player : playerSpirits)
 			player.broadcast(protocol);

@@ -21,6 +21,9 @@ import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 import gamecore.model.games.a1b2.boss.core.SpiritsModel;
 
 import static container.core.Constants.Events.Games.Boss1A2B.ATTACK;
+import static container.core.Constants.Events.Games.Boss1A2B.ATTACKING_STARTED;
+import static container.core.Constants.Events.Games.Boss1A2B.ATTACK_RESULTS;
+import static container.core.Constants.Events.Games.Boss1A2B.NEXT_TURN;
 import static container.core.Constants.Events.Games.Boss1A2B.SET_ANSWER;
 import static container.core.Constants.Events.Games.GAMEOVER;
 import static container.core.Constants.Events.Games.GAMESTARTED;
@@ -103,6 +106,13 @@ public class Boss1A2BModuleImp extends AbstractOnlineGameModule implements Boss1
         }
 
         @Override
+        @BindCallback(event = ATTACKING_STARTED, status = RequestStatus.success)
+        public void onAttackingPhaseStarted() {
+            Log.d(TAG, "the attacking phase started.");
+            callback.onAttackingPhaseStarted();
+        }
+
+        @Override
         @BindCallback(event = GAMEOVER, status = RequestStatus.success)
         public void onGameOver(GameOverModel gameOverModel) {
             Log.d(TAG, "Game over, the winner's id is: " + gameOverModel.getWinnerId());
@@ -145,36 +155,42 @@ public class Boss1A2BModuleImp extends AbstractOnlineGameModule implements Boss1
         }
 
         @Override
+        @BindCallback(event = SET_ANSWER, status = RequestStatus.success)
         public void onSetAnswerSuccessfully(ContentModel contentModel) {
             Log.d(TAG, "Set answer successfully: " + contentModel.getContent());
             callback.onSetAnswerSuccessfully(contentModel);
         }
 
         @Override
+        @BindCallback(event = SET_ANSWER, status = RequestStatus.failed)
         public void onSetAnswerUnsuccessfully(ErrorMessage errorMessage) {
             Log.d(TAG, "Set answer unsuccessfully: " + errorMessage.getMessage());
             callback.onSetAnswerUnsuccessfully(errorMessage);
         }
 
         @Override
+        @BindCallback(event = ATTACK, status = RequestStatus.success)
         public void onAttackSuccessfully(ContentModel contentModel) {
             Log.d(TAG, "Attack successfully: " + contentModel.getContent());
             callback.onAttackSuccessfully(contentModel);
         }
 
         @Override
+        @BindCallback(event = ATTACK, status = RequestStatus.failed)
         public void onAttackUnsuccessfully(ErrorMessage errorMessage) {
             Log.d(TAG, "Attack unsuccessfully: " + errorMessage.getMessage());
             callback.onAttackUnsuccessfully(errorMessage);
         }
 
         @Override
+        @BindCallback(event = ATTACK_RESULTS, status = RequestStatus.success)
         public void onNextAttackAction(AttackActionModel attackActionModel) {
             Log.d(TAG, "On next attack action model received: " + attackActionModel);
             callback.onNextAttackAction(attackActionModel);
         }
 
         @Override
+        @BindCallback(event = NEXT_TURN, status = RequestStatus.success)
         public void onNextTurn(NextTurnModel nextTurnModel) {
             Log.d(TAG, "Turn changed: " + nextTurnModel.getWhosTurn().getName());
             callback.onNextTurn(nextTurnModel);

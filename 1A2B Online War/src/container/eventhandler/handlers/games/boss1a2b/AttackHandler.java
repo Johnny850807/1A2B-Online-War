@@ -8,7 +8,7 @@ import gamecore.GameCore;
 import gamecore.entity.GameRoom;
 import gamecore.model.ContentModel;
 import gamecore.model.games.ProcessInvalidException;
-import gamecore.model.games.a1b2.boss.imp.Boss1A2BGame;
+import gamecore.model.games.a1b2.boss.core.IBoss1A2BGame;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
 import gamecore.model.games.a1b2.duel.imp.Duel1A2BGame;
 
@@ -32,7 +32,7 @@ public class AttackHandler extends GsonEventHandler<ContentModel, ContentModel>{
 	protected Response onHandling(ContentModel attackModel) {
 		try{
 			GameRoom gameRoom = gameCore().getGameRoom(attackModel.getRoomId());
-			Boss1A2BGame gameModel = (Boss1A2BGame) gameRoom.getGame();
+			IBoss1A2BGame gameModel = (IBoss1A2BGame) gameRoom.getGame();
 			gameModel.attack(attackModel.getPlayerId(), attackModel.getContent());
 			return success(attackModel);
 		}catch (NumberNotValidException|ProcessInvalidException e) {

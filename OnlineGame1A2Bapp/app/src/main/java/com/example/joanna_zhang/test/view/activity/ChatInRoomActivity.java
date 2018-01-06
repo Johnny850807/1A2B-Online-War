@@ -231,7 +231,7 @@ public class ChatInRoomActivity extends BaseAbstractActivity implements ChatWind
 
     @Override
     public void onRoomExpired() {
-        AppDialogFactory.roomTimeExpiredDialog(this, getString(R.string.roomClosedForExpired)).show();
+        AppDialogFactory.roomTimeExpiredDialog(this).show();
     }
 
     @Override

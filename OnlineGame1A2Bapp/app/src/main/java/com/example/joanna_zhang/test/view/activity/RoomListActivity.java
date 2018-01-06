@@ -416,7 +416,7 @@ public class RoomListActivity extends AppCompatActivity implements Spinner.OnIte
 
     @Override
     public void onPlayerLeisureTimeExpired() {
-        AppDialogFactory.roomTimeExpiredDialog(this, getString(R.string.playerTimeExpired)).show();
+        AppDialogFactory.playerTimeExpiredDialog(this).show();
     }
 
     @Override

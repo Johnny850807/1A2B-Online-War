@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     public void onError(@NonNull Throwable err) {
         loginBtn.setEnabled(true);
         if (err instanceof ConnectionTimedOutException)
-            AppDialogFactory.internetErrorDialog(this).show();
+            AppDialogFactory.internetConnectionErrorDialog(this).show();
     }
 
     @Override

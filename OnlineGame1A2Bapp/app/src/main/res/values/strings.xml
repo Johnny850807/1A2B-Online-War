@@ -47,7 +47,7 @@
     <string name="pleaseInputGuess">請輸入答案</string>
     <string name="bootPlayer">剔除玩家</string>
     <string name="sureAboutBootThisPlayer">確定要剔除此玩家嗎?</string>
-    <string name="waitOtherPlayersJoin">等待對手加入..</string>
+    <string name="waitingForPlayersEntering">等待對手連線..</string>
     <string name="pleaseWait">請稍後</string>
     <string name="playerAmountNotEnoughToLuanchGame">人數不足</string>
     <string name="someoneDidntReady">尚有玩家未準備完成</string>
@@ -57,7 +57,7 @@
     <string name="thePlayerYouWantToBoot" formatted="false">是否要踢 %s 玩家 ?</string>
     <string name="yes">是</string>
     <string name="no">否</string>
-    <string name="secret">\????</string>
+    <string name="secretAnswer">\????</string>
     <string name="numberShouldBeInLengthFour">數字須為四位不重複數字。</string>
     <string name="theWinnerIs" formatted="false">遊戲結束！勝利者為 %s ！</string>
     <string name="signOut">登出</string>

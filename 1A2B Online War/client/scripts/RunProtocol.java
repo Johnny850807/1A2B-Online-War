@@ -18,8 +18,8 @@ import utils.MyGson;
  * a script used to run any protocol.
  */
 public class RunProtocol {
-	private static final String PLAYERID = "f6ae2253-3f7d-485c-ae0e-2eb494024876";
-	private static final String ROOMID = "6067fa11-9249-434a-a8f8-bec923b869ca";
+	private static final String PLAYERID = "678503a3-bec6-4719-ba99-40074cfbcb67";
+	private static final String ROOMID = "2bb5253b-ef3e-4053-af10-c338ff7e6ab7";
 	private static final String ANSWER = "5678";
 	private static final String GUESSNUMBER = "1234";
 	private static final Gson gson = MyGson.getGson();
@@ -30,7 +30,7 @@ public class RunProtocol {
 			gson.toJson(new ContentModel(PLAYERID, ROOMID, ANSWER)));
 	private static final Protocol GUESS = factory.createProtocol(Duel1A2B.GUESS, RequestStatus.request.toString(), 
 			gson.toJson(new ContentModel(PLAYERID, ROOMID, GUESSNUMBER)));
-	private static final Protocol TARGET = GUESS;
+	private static final Protocol TARGET = ENTERGAME;
 
 	public static void main(String[] argv){
 		SocketConnector cn = SocketConnector.getInstance();

@@ -45,19 +45,20 @@ public class SpiritsModel {
 	 */
 	public void updateHPMPFromTheAttackActionModel(AttackActionModel actionModel){
 		AbstractSpirit whosTurn = getSpiritByPlayerId(actionModel.getAttacker().getId());
-		whosTurn.costMp(actionModel.getMpCost());
 		if (onAttackActionRender != null && actionModel.getMpCost() != 0)
 			onAttackActionRender.onDrawMpCosted(whosTurn, actionModel.getMpCost());
+		whosTurn.costMp(actionModel.getMpCost());
+		
 		for (AttackResult attackResult : actionModel)
 		{
 			AbstractSpirit attacker = getSpiritByPlayerId(attackResult.getAttacker().getId());
 			AbstractSpirit attacked = getSpiritByPlayerId(attackResult.getAttacked().getId());
+			if (onAttackActionRender != null && attackResult.getDamage() != 0)
+				onAttackActionRender.onDrawHpCosted(attacked, attackResult.getDamage());
 			attacked.costHp(attackResult.getDamage());
 			
 			if (onAttackActionRender != null)
 			{
-				if (attackResult.getDamage() != 0)
-					onAttackActionRender.onDrawHpCosted(attacked, attackResult.getDamage());
 				AttackType attackType = attackResult.getAttackType();
 				if (attackType == AttackType.MAGIC)
 					onAttackActionRender.onDrawMagicAttack(attacked, attacker, attackResult);
