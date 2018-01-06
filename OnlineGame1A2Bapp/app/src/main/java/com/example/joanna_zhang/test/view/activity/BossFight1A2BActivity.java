@@ -1,5 +1,6 @@
 package com.example.joanna_zhang.test.view.activity;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
@@ -23,7 +24,6 @@ import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.example.joanna_zhang.test.animations.ProgressBarAnimation;
 import com.example.joanna_zhang.test.view.dialog.InputNumberWindowDialog;
-import com.example.joanna_zhang.test.view.dialog.WaitingForPlayersEnteringDialog;
 import com.example.joanna_zhang.test.view.myview.PlayerSpiritItemViewFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
@@ -48,6 +48,10 @@ import gamecore.model.games.a1b2.core.A1B2NumberValidator;
 import gamecore.model.games.a1b2.core.GuessResult;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
 
+/**
+ * TODO
+ * (1) dialog: sure to leave from the game? (let's see we have to do this in every game, so why not to make a online game base activity for all such these operations?)
+ */
 public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender{
     private final static String TAG = "BossFight1A2BActivity";
 
@@ -61,8 +65,8 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
     private PlayerSpiritItemViewFactory playerSpiritItemViewFactory;
     private Map<String, PlayerSpiritItemViewFactory.ViewHolder> playerSpiritViewHoldersMap = new HashMap<>();  //<player's id, view holder>
 
-    private InputNumberWindowDialog inputNumberWindowDialog;  //TODO RENAME
-    private WaitingForPlayersEnteringDialog waitingForPlayersEnteringDialog;
+    private AlertDialog inputNumberWindowDialog;  //TODO RENAME
+    private AlertDialog waitingForPlayersEnteringDialog;
 
     private MediaPlayer mediaPlayer;
     private SoundManager soundManager;
@@ -91,7 +95,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         CoreGameServer server = CoreGameServer.getInstance();
         boss1A2BModule = (Boss1A2BModule) server.createModule(ModuleName.GAME1A2BBOSS);
         playerSpiritItemViewFactory = new PlayerSpiritItemViewFactory(this);
-        waitingForPlayersEnteringDialog = new WaitingForPlayersEnteringDialog(this);
+        waitingForPlayersEnteringDialog = AppDialogFactory.createWaitingForPlayersEnteringDialog(this);
     }
 
     private void findViews() {
@@ -171,6 +175,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
     public void onGameStarted(SpiritsModel spiritsModel) {
         this.gameStarted = true;
         this.spiritsModel = spiritsModel;
+        waitingForPlayersEnteringDialog.dismiss();
         //TODO create all player spirit views from the factory and bind into the viewHolderMaps
         spiritsModel.setOnAttackActionParsingListener(this);
         showDialogForSettingAnswer();

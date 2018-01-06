@@ -1,7 +1,7 @@
 package com.example.joanna_zhang.test.view.dialog;
 
 import android.app.Activity;
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.example.joanna_zhang.test.R;
 
 
-public class InputNumberWindowDialog extends Dialog implements View.OnClickListener {
+public class InputNumberWindowDialog extends AlertDialog implements View.OnClickListener {
     private Context context;
     private TextView titleTxt;
     private Button button1, button2, button3, button4, button5, button6, button7, button8, button9, button0, cancelBtn, confirmBtn;
