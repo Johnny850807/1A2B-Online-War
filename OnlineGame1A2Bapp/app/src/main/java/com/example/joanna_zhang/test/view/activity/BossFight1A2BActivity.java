@@ -25,7 +25,7 @@ import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.example.joanna_zhang.test.animations.CostingProgressBarAnimation;
 import com.example.joanna_zhang.test.view.dialog.InputNumberWindowDialog;
-import com.example.joanna_zhang.test.view.myview.AbstractSpiritItemViewFactory;
+import com.example.joanna_zhang.test.view.myview.PlayerSpiritItemViewFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.a1b2.boss.Boss1A2BModule;
@@ -63,8 +63,8 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     private ProgressBar bossHpProgressBar;
 
     private LinearLayout playerSpiritsViewGroup;
-    private AbstractSpiritItemViewFactory abstractSpiritItemViewFactory;
-    private Map<String, AbstractSpiritItemViewFactory.ViewHolder> playerSpiritViewHoldersMap = new HashMap<>();  //<player's id, view holder>
+    private PlayerSpiritItemViewFactory playerSpiritItemViewFactory;
+    private Map<String, PlayerSpiritItemViewFactory.ViewHolder> playerSpiritViewHoldersMap = new HashMap<>();  //<player's id, view holder>
 
     private AlertDialog inputNumberWindowDialog;  //TODO RENAME
     private AlertDialog waitingForPlayersEnteringDialog;
@@ -95,7 +95,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         soundManager = new SoundManager(this);
         CoreGameServer server = CoreGameServer.getInstance();
         boss1A2BModule = (Boss1A2BModule) server.createModule(ModuleName.GAME1A2BBOSS);
-        abstractSpiritItemViewFactory = new AbstractSpiritItemViewFactory(this);
+        playerSpiritItemViewFactory = new PlayerSpiritItemViewFactory(this);
         waitingForPlayersEnteringDialog = AppDialogFactory.createWaitingForPlayersEnteringDialog(this);
     }
 
@@ -174,9 +174,9 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     private void createAllPlayerSpiritViews(SpiritsModel spiritsModel) {
-        abstractSpiritItemViewFactory = new AbstractSpiritItemViewFactory(this);
+        playerSpiritItemViewFactory = new PlayerSpiritItemViewFactory(this);
         for (PlayerSpirit playerSpirit : spiritsModel.getPlayerSpirits()) {
-            AbstractSpiritItemViewFactory.ViewHolder viewHolder = abstractSpiritItemViewFactory.createAbstractSpiritItemView(playerSpirit, playerSpiritsViewGroup);
+            PlayerSpiritItemViewFactory.ViewHolder viewHolder = playerSpiritItemViewFactory.createAbstractSpiritItemView(playerSpirit, playerSpiritsViewGroup);
             playerSpiritsViewGroup.addView(viewHolder.view);
             playerSpiritViewHoldersMap.put(playerSpirit.getId(), viewHolder);
         }

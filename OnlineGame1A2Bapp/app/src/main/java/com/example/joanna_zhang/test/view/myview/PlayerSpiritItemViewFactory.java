@@ -12,16 +12,16 @@ import android.widget.TextView;
 
 import com.example.joanna_zhang.test.R;
 
-import gamecore.model.games.a1b2.boss.core.AbstractSpirit;
+import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 
-public class AbstractSpiritItemViewFactory {
+public class PlayerSpiritItemViewFactory {
     private Context context;
 
-    public AbstractSpiritItemViewFactory(Context context) {
+    public PlayerSpiritItemViewFactory(Context context) {
         this.context = context;
     }
 
-    public ViewHolder createAbstractSpiritItemView(AbstractSpirit spirit, ViewGroup parent){
+    public ViewHolder createAbstractSpiritItemView(PlayerSpirit spirit, ViewGroup parent){
         View view = LayoutInflater.from(context).inflate(R.layout.boss1a2b_player_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         viewHolder.playerHpBar.setMax(spirit.getMaxHp());
