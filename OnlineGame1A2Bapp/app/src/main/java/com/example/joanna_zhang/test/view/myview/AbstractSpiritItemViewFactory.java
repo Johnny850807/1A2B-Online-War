@@ -12,24 +12,24 @@ import android.widget.TextView;
 
 import com.example.joanna_zhang.test.R;
 
-import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
+import gamecore.model.games.a1b2.boss.core.AbstractSpirit;
 
-public class PlayerSpiritItemViewFactory{
+public class AbstractSpiritItemViewFactory {
     private Context context;
 
-    public PlayerSpiritItemViewFactory(Context context) {
+    public AbstractSpiritItemViewFactory(Context context) {
         this.context = context;
     }
 
-    public ViewHolder createPlayerSpiritItemView(PlayerSpirit playerSpirit, ViewGroup parent){
+    public ViewHolder createAbstractSpiritItemView(AbstractSpirit spirit, ViewGroup parent){
         View view = LayoutInflater.from(context).inflate(R.layout.boss1a2b_player_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        viewHolder.playerHpBar.setProgress(playerSpirit.getHp());
-        viewHolder.playerHpBar.setMax(playerSpirit.getMaxHp());
+        viewHolder.playerHpBar.setProgress(spirit.getHp());
+        viewHolder.playerHpBar.setMax(spirit.getMaxHp());
         viewHolder.playerHpBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN);
         viewHolder.playerHpBar.setScaleY(3f);
         viewHolder.playerAnswer.setText("");
-        viewHolder.playerName.setText(playerSpirit.getName());
+        viewHolder.playerName.setText(spirit.getName());
         return viewHolder;
     }
 

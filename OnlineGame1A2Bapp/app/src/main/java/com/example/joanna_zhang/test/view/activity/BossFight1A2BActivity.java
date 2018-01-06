@@ -6,12 +6,10 @@ import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -25,9 +23,9 @@ import android.widget.Toast;
 import com.example.joanna_zhang.test.R;
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
-import com.example.joanna_zhang.test.animations.ProgressBarAnimation;
+import com.example.joanna_zhang.test.animations.CostingProgressBarAnimation;
 import com.example.joanna_zhang.test.view.dialog.InputNumberWindowDialog;
-import com.example.joanna_zhang.test.view.myview.PlayerSpiritItemViewFactory;
+import com.example.joanna_zhang.test.view.myview.AbstractSpiritItemViewFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.a1b2.boss.Boss1A2BModule;
@@ -65,8 +63,8 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     private ProgressBar progressBar;
 
     private LinearLayout playerSpiritsViewGroup;
-    private PlayerSpiritItemViewFactory playerSpiritItemViewFactory;
-    private Map<String, PlayerSpiritItemViewFactory.ViewHolder> playerSpiritViewHoldersMap = new HashMap<>();  //<player's id, view holder>
+    private AbstractSpiritItemViewFactory abstractSpiritItemViewFactory;
+    private Map<String, AbstractSpiritItemViewFactory.ViewHolder> playerSpiritViewHoldersMap = new HashMap<>();  //<player's id, view holder>
 
     private AlertDialog inputNumberWindowDialog;  //TODO RENAME
     private AlertDialog waitingForPlayersEnteringDialog;
@@ -97,7 +95,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         soundManager = new SoundManager(this);
         CoreGameServer server = CoreGameServer.getInstance();
         boss1A2BModule = (Boss1A2BModule) server.createModule(ModuleName.GAME1A2BBOSS);
-        playerSpiritItemViewFactory = new PlayerSpiritItemViewFactory(this);
+        abstractSpiritItemViewFactory = new AbstractSpiritItemViewFactory(this);
         waitingForPlayersEnteringDialog = AppDialogFactory.createWaitingForPlayersEnteringDialog(this);
     }
 
@@ -177,9 +175,9 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     private void createAllPlayerSpiritViews(SpiritsModel spiritsModel) {
-        playerSpiritItemViewFactory = new PlayerSpiritItemViewFactory(this);
+        abstractSpiritItemViewFactory = new AbstractSpiritItemViewFactory(this);
         for (PlayerSpirit playerSpirit : spiritsModel.getPlayerSpirits()){
-            PlayerSpiritItemViewFactory.ViewHolder viewHolder = playerSpiritItemViewFactory.createPlayerSpiritItemView(playerSpirit, playerSpiritsViewGroup);
+            AbstractSpiritItemViewFactory.ViewHolder viewHolder = abstractSpiritItemViewFactory.createAbstractSpiritItemView(playerSpirit, playerSpiritsViewGroup);
             playerSpiritsViewGroup.addView(viewHolder.view);
             playerSpiritViewHoldersMap.put(playerSpirit.getId(), viewHolder);
         }
@@ -296,24 +294,15 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     @Override
-    public void onDrawHpCosted(AbstractSpirit attacker, int cost) {
-        ProgressBar playerHpBar = playerSpiritViewHoldersMap.get(attacker.getId()).playerHpBar;
+    public void onDrawHpCosted(AbstractSpirit spirit, int cost) {
+        ProgressBar playerHpBar = playerSpiritViewHoldersMap.get(spirit.getId()).playerHpBar;
         int nowHp = playerHpBar.getProgress();
-        ProgressBarAnimation animation = new ProgressBarAnimation(playerHpBar, nowHp, nowHp - cost);
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {setProgressBarColor(playerHpBar, Color.RED);}
-            @Override
-            public void onAnimationEnd(Animation animation) {setProgressBarColor(playerHpBar, Color.GREEN);}
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
-        });
-        animation.setDuration(cost * 3);
+        CostingProgressBarAnimation animation = new CostingProgressBarAnimation(playerHpBar, nowHp, nowHp - cost);
         playerHpBar.startAnimation(animation);
     }
 
     @Override
-    public void onDrawMpCosted(AbstractSpirit attacker, int cost) {}
+    public void onDrawMpCosted(AbstractSpirit spirit, int cost) {}
 
     @Override
     public void onDrawNormalAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
@@ -331,10 +320,6 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     @Override
     public void onError(@NonNull Throwable err) {
         Log.e(TAG, err.getMessage());
-    }
-
-    private void setProgressBarColor(ProgressBar progressbar, int color){
-        progressbar.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.DARKEN);
     }
 
     @Override

@@ -29,11 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gamecore.entity.ChatMessage;
-import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
-import gamecore.model.PlayerRoomModel;
 import gamecore.model.games.GameOverModel;
 import gamecore.model.games.a1b2.core.A1B2NumberValidator;
 import gamecore.model.games.a1b2.core.GuessRecord;
