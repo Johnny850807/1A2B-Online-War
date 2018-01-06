@@ -303,11 +303,6 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         //TODO
     }
 
-    @Override //TODO extract to the base online game activity
-    public void onRoomExpired() {
-        AppDialogFactory.roomTimeExpiredDialog(this);
-    }
-
     @Override
     public void onServerReconnected() {}
 
