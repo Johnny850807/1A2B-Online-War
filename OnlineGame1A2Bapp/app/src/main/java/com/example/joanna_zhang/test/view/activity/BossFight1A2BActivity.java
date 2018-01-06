@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -24,7 +23,7 @@ import android.widget.Toast;
 import com.example.joanna_zhang.test.R;
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
-import com.example.joanna_zhang.test.animations.ProgressBarAnimation;
+import com.example.joanna_zhang.test.animations.CostingProgressBarAnimation;
 import com.example.joanna_zhang.test.view.dialog.InputNumberWindowDialog;
 import com.example.joanna_zhang.test.view.myview.PlayerSpiritItemViewFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
@@ -298,16 +297,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
     public void onDrawHpCosted(AbstractSpirit attacker, int cost) {
         ProgressBar playerHpBar = playerSpiritViewHoldersMap.get(attacker.getId()).playerHpBar;
         int nowHp = playerHpBar.getProgress();
-        ProgressBarAnimation animation = new ProgressBarAnimation(playerHpBar, nowHp, nowHp - cost);
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {setProgressBarColor(playerHpBar, Color.RED);}
-            @Override
-            public void onAnimationEnd(Animation animation) {setProgressBarColor(playerHpBar, Color.GREEN);}
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
-        });
-        animation.setDuration(cost * 3);
+        CostingProgressBarAnimation animation = new CostingProgressBarAnimation(playerHpBar, nowHp, nowHp - cost);
         playerHpBar.startAnimation(animation);
     }
 
@@ -337,9 +327,6 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         Log.e(TAG, err.getMessage());
     }
 
-    private void setProgressBarColor(ProgressBar progressbar, int color){
-        progressbar.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.DARKEN);
-    }
 
     @Override
     protected void onStop() {
