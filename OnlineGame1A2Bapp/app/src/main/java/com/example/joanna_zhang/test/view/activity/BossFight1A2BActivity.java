@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -226,7 +227,6 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     public void onNextTurn(NextTurnModel nextTurnModel) {
         this.whosTurn = nextTurnModel.getWhosTurn();
 
-        //TODO handle something that when it's the current player's turn if need, for example: to enable input window..
         if (whosTurn.getId().equals(currentPlayer.getId()))
         {
             setInputNumberViewsEnabled(true);
@@ -288,6 +288,14 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         ProgressBar playerHpBar = playerSpiritViewHoldersMap.get(attacker.getId()).playerHpBar;
         int nowHp = playerHpBar.getProgress();
         ProgressBarAnimation animation = new ProgressBarAnimation(playerHpBar, nowHp, nowHp - cost);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {setProgressBarColor(playerHpBar, Color.RED);}
+            @Override
+            public void onAnimationEnd(Animation animation) {setProgressBarColor(playerHpBar, Color.GREEN);}
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
         animation.setDuration(cost * 3);
         playerHpBar.startAnimation(animation);
     }
@@ -296,15 +304,14 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     public void onDrawMpCosted(AbstractSpirit attacker, int cost) {}
 
     @Override
-    public void onDrawNormalAttack(AbstractSpirit abstractSpirit, AbstractSpirit abstractSpirit1, AttackResult attackResult) {
+    public void onDrawNormalAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
         //TODO
     }
 
     @Override
-    public void onDrawMagicAttack(AbstractSpirit abstractSpirit, AbstractSpirit abstractSpirit1, AttackResult attackResult) {
+    public void onDrawMagicAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
         //TODO
     }
-
 
     @Override //TODO extract to the base online game activity
     public void onRoomExpired() {
@@ -317,6 +324,10 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     @Override
     public void onError(@NonNull Throwable err) {
         Log.e(TAG, err.getMessage());
+    }
+
+    private void setProgressBarColor(ProgressBar progressbar, int color){
+        progressbar.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.DARKEN);
     }
 
     @Override
