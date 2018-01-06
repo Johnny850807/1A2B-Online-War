@@ -179,6 +179,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         for (PlayerSpirit playerSpirit : spiritsModel.getPlayerSpirits()) {
             PlayerSpiritItemViewFactory.ViewHolder viewHolder = playerSpiritItemViewFactory.createAbstractSpiritItemView(playerSpirit, playerSpiritsViewGroup);
             playerSpiritsViewGroup.addView(viewHolder.view);
+            viewHolder.playerAnswer.setText(playerSpirit.getAnswer());
             playerSpiritViewHoldersMap.put(playerSpirit.getId(), viewHolder);
         }
     }
