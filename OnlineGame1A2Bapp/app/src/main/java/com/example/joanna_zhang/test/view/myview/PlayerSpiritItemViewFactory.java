@@ -28,7 +28,7 @@ public class PlayerSpiritItemViewFactory{
         viewHolder.playerHpBar.setMax(playerSpirit.getMaxHp());
         viewHolder.playerHpBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN);
         viewHolder.playerHpBar.setScaleY(3f);
-        viewHolder.playerAnswer.setText(String.valueOf(playerSpirit.getAnswer()));
+        viewHolder.playerAnswer.setText("");
         viewHolder.playerName.setText(playerSpirit.getName());
         return viewHolder;
     }

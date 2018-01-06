@@ -171,9 +171,9 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         this.gameStarted = true;
         this.spiritsModel = spiritsModel;
         waitingForPlayersEnteringDialog.dismiss();
-        createAllPlayerSpiritViews(spiritsModel);
         spiritsModel.setOnAttackActionParsingListener(this);
         showDialogForSettingAnswer();
+        createAllPlayerSpiritViews(spiritsModel);
     }
 
     private void createAllPlayerSpiritViews(SpiritsModel spiritsModel) {
@@ -206,6 +206,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     @Override
     public void onSetAnswerSuccessfully(ContentModel contentModel) {
         Log.v(TAG, contentModel.getPlayerId() + "set answer successfully -> " + contentModel.getContent());
+        playerSpiritViewHoldersMap.get(contentModel.getPlayerId()).playerAnswer.setText(contentModel.getContent());
     }
 
     @Override
