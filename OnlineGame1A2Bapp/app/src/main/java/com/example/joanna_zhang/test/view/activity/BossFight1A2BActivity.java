@@ -168,9 +168,14 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         this.gameStarted = true;
         this.spiritsModel = spiritsModel;
         waitingForPlayersEnteringDialog.dismiss();
+        createAllPlayerSpiritViews();
         //TODO create all player spirit views from the factory and bind into the viewHolderMaps
         spiritsModel.setOnAttackActionParsingListener(this);
         showDialogForSettingAnswer();
+    }
+
+    private void createAllPlayerSpiritViews() {
+
     }
 
     private void showDialogForSettingAnswer() {
