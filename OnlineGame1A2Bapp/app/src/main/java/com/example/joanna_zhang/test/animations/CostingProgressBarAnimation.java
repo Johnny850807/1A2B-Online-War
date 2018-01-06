@@ -17,18 +17,7 @@ public class CostingProgressBarAnimation extends Animation {
         this.progressBar = progressBar;
         this.from = from;
         this.to = to;
-
-        setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                progressBar.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.DARKEN);
-            }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                progressBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN);}
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
-        });
+        progressBar.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.DARKEN);
         long damage = (long) (from - to);
         long duration = damage < 40 ? 800 : damage < 130 ? 1200 : damage < 250 ? 1800 : 2200;
         setDuration(duration);
@@ -38,6 +27,8 @@ public class CostingProgressBarAnimation extends Animation {
     protected void applyTransformation(float interpolatedTime, Transformation t) {
         super.applyTransformation(interpolatedTime, t);
         float value = from + (to - from) * interpolatedTime;
+        if (value <= to)
+            progressBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN);
         progressBar.setProgress((int) value);
     }
 
