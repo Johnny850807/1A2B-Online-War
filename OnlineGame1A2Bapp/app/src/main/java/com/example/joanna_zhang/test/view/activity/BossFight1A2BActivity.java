@@ -1,6 +1,7 @@
 package com.example.joanna_zhang.test.view.activity;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
@@ -238,8 +239,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
         playerSpiritViewHoldersMap.get(whosTurn.getId()).view.setBackgroundResource(R.drawable.boss1a2b_player_background);
 
-        if (whosTurn.getId().equals(currentPlayer.getId()))
-        {
+        if (whosTurn.getId().equals(currentPlayer.getId())) {
             setInputNumberViewsEnabled(true);
             inputNumberBtn.setText(null);
             soundManager.playSound(R.raw.dong);
@@ -255,6 +255,13 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
     @Override
     public void onGameOver(GameOverModel gameOverModel) {
+        if (spiritsModel.getBoss().getId().equals(gameOverModel.getWinnerId()))
+            AppDialogFactory.templateBuilder(this)
+                    .setTitle(R.string.gameOver)
+                    .setMessage(getString(R.string.theWinnerIs, spiritsModel.getBoss().getName()))
+                    .setPositiveButton(R.string.confirm, (dialog, which) -> finish())
+                    .show();
+        else
 
     }
 

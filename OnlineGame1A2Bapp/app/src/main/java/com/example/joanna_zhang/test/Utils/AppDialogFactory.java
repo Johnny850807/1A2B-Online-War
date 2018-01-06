@@ -45,6 +45,7 @@ public class AppDialogFactory {
                 .create();
     }
 
+
     /**
      * @return the template alert dialog for showing any error message with the specified action while the positive button is on clicked.
      */
