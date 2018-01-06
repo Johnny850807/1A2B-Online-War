@@ -3,6 +3,7 @@ package com.example.joanna_zhang.test.view.dialog;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -22,14 +23,20 @@ public class InputNumberWindowDialog extends AlertDialog implements View.OnClick
     public InputNumberWindowDialog(Context context) {
         super(context);
         this.context = context;
-        setUpView();
+
     }
 
-    public void setUpView() {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(createView());
+    }
+
+    private View createView(){
         View dialogView = LayoutInflater.from(context).inflate(R.layout.input_number_window, null);
-        this.setContentView(dialogView);
         findAllViewById(dialogView);
         whenButtonOnClick();
+        return dialogView;
     }
 
     public void findAllViewById(View view) {
