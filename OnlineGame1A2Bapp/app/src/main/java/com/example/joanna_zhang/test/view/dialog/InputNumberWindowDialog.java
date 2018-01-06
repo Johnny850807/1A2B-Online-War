@@ -15,6 +15,7 @@ import com.example.joanna_zhang.test.R;
 
 public class InputNumberWindowDialog extends AlertDialog implements View.OnClickListener {
     private Context context;
+    private String title;
     private TextView titleTxt;
     private Button button1, button2, button3, button4, button5, button6, button7, button8, button9, button0, cancelBtn, confirmBtn;
     private EditText answerEd;
@@ -23,7 +24,6 @@ public class InputNumberWindowDialog extends AlertDialog implements View.OnClick
     public InputNumberWindowDialog(Context context) {
         super(context);
         this.context = context;
-
     }
 
     @Override
@@ -35,6 +35,7 @@ public class InputNumberWindowDialog extends AlertDialog implements View.OnClick
     private View createView(){
         View dialogView = LayoutInflater.from(context).inflate(R.layout.input_number_window, null);
         findAllViewById(dialogView);
+        titleTxt.setText(title);
         whenButtonOnClick();
         return dialogView;
     }
@@ -123,7 +124,7 @@ public class InputNumberWindowDialog extends AlertDialog implements View.OnClick
         }
 
         public Builder setTitle(String title) {
-            inputNumberWindowDialog.titleTxt.setText(title);
+            inputNumberWindowDialog.title = title;
             return this;
         }
 
