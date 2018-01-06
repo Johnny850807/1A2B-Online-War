@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,7 @@ import gamecore.model.games.a1b2.boss.core.AbstractSpirit;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.AttackResult;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
+import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import gamecore.model.games.a1b2.boss.core.SpiritsModel;
 import gamecore.model.games.a1b2.core.A1B2NumberValidator;
 import gamecore.model.games.a1b2.core.GuessResult;
@@ -168,14 +170,18 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         this.gameStarted = true;
         this.spiritsModel = spiritsModel;
         waitingForPlayersEnteringDialog.dismiss();
-        createAllPlayerSpiritViews();
+        createAllPlayerSpiritViews(spiritsModel);
         //TODO create all player spirit views from the factory and bind into the viewHolderMaps
         spiritsModel.setOnAttackActionParsingListener(this);
         showDialogForSettingAnswer();
     }
 
-    private void createAllPlayerSpiritViews() {
-
+    private void createAllPlayerSpiritViews(SpiritsModel spiritsModel) {
+        playerSpiritItemViewFactory = new PlayerSpiritItemViewFactory(this);
+        for (PlayerSpirit playerSpirit : spiritsModel.getPlayerSpirits()){
+            PlayerSpiritItemViewFactory.ViewHolder viewHolder = playerSpiritItemViewFactory.createPlayerSpiritItemView(playerSpirit, playerSpiritsViewGroup);
+            playerSpiritViewHoldersMap.put(playerSpirit.getId(), viewHolder);
+        }
     }
 
     private void showDialogForSettingAnswer() {
@@ -204,7 +210,6 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     @Override
     public void onSetAnswerUnsuccessfully(ErrorMessage errorMessage) {
         Log.e(TAG, errorMessage.getMessage());
-
         //TODO show message with some UX
     }
 
@@ -222,7 +227,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
     @Override
     public void onNextAttackAction(AttackActionModel attackActionModel) {
-        attackResults.addAll(attackActionModel.getAttackResults());  //TODO don't do this! this will clear the last records!
+        attackResults.addAll(attackActionModel.getAttackResults());
         spiritsModel.updateHPMPFromTheAttackActionModel(attackActionModel);
         guessResultAdapter.notifyDataSetChanged();
     }
