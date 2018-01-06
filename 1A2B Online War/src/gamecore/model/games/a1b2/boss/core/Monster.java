@@ -6,7 +6,6 @@ import java.util.Random;
 
 import container.core.MyLogger;
 import container.protocol.ProtocolFactory;
-import gamecore.model.games.a1b2.boss.imp.Boss1A2BGame;
 import gamecore.model.games.a1b2.boss.imp.RandomGuessAttack;
 import utils.ForServer;
 import utils.RandomString;
@@ -14,13 +13,13 @@ import utils.RandomString;
 public class Monster extends AbstractSpirit{
 	protected transient static Random random = new Random();
 	protected transient List<MonsterAction> actions;
-	protected transient Boss1A2BGame game;
+	protected transient IBoss1A2BGame game;
 	
 	public Monster(String id, String name, MyLogger log, ProtocolFactory protocolFactory) {
 		super(id, name, log, protocolFactory);
 	}
 	
-	public void init(Boss1A2BGame game){
+	public void init(IBoss1A2BGame game){
 		this.actions = onCreateMonsterActions();
 		this.game = game;
 		this.setAnswer(onProduceAnswer());

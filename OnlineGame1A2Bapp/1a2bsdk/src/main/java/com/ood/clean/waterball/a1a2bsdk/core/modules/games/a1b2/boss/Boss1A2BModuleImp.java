@@ -21,6 +21,7 @@ import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 import gamecore.model.games.a1b2.boss.core.SpiritsModel;
 
 import static container.core.Constants.Events.Games.Boss1A2B.ATTACK;
+import static container.core.Constants.Events.Games.Boss1A2B.ATTACKING_STARTED;
 import static container.core.Constants.Events.Games.Boss1A2B.SET_ANSWER;
 import static container.core.Constants.Events.Games.GAMEOVER;
 import static container.core.Constants.Events.Games.GAMESTARTED;
@@ -100,6 +101,13 @@ public class Boss1A2BModuleImp extends AbstractOnlineGameModule implements Boss1
         public void onGameStarted(SpiritsModel spiritsModel) {
             Log.d(TAG, "the game " + currentGameRoom.getGameMode() + " started.");
             callback.onGameStarted(spiritsModel);
+        }
+
+        @Override
+        @BindCallback(event = ATTACKING_STARTED, status = RequestStatus.success)
+        public void onAttackingPhaseStarted() {
+            Log.d(TAG, "the attacking phase started.");
+            callback.onAttackingPhaseStarted();
         }
 
         @Override

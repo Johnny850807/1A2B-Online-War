@@ -2,6 +2,7 @@ package com.example.joanna_zhang.test.view.activity;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -17,51 +18,62 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.joanna_zhang.test.view.dialog.InputNumberWindowDialog;
-import com.example.joanna_zhang.test.view.myview.PlayerSpiritItemViewFactory;
 import com.example.joanna_zhang.test.R;
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
-import com.example.joanna_zhang.test.mocks.MockClient;
-import com.example.joanna_zhang.test.mocks.MockProtocolFactory;
+import com.example.joanna_zhang.test.Utils.SoundManager;
+import com.example.joanna_zhang.test.animations.ProgressBarAnimation;
+import com.example.joanna_zhang.test.view.dialog.InputNumberWindowDialog;
+import com.example.joanna_zhang.test.view.dialog.WaitingForPlayersEnteringDialog;
+import com.example.joanna_zhang.test.view.myview.PlayerSpiritItemViewFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.a1b2.boss.Boss1A2BModule;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import gamecore.entity.GameRoom;
-import gamecore.entity.Player;
-import gamecore.model.ClientPlayer;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
-import gamecore.model.MockLogger;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.games.GameOverModel;
 import gamecore.model.games.a1b2.boss.core.AbstractSpirit;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.AttackResult;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
-import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import gamecore.model.games.a1b2.boss.core.SpiritsModel;
 import gamecore.model.games.a1b2.core.A1B2NumberValidator;
+import gamecore.model.games.a1b2.core.GuessResult;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
 
 public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender{
-
     private final static String TAG = "BossFight1A2BActivity";
-    private Boss1A2BModule boss1A2BModule;
-    private List<AttackResult> attackResults = new ArrayList<>();
-    private InputNumberWindowDialog inputNumberWindowDialog;
+
     private Button inputNumberBtn;
     private ImageButton sendGuessBtn;
     private ListView attackResultListView;
     private GuessResultAdapter guessResultAdapter;
     private ProgressBar progressBar;
-    private SpiritsModel spiritsModel;
+
     private LinearLayout playerSpiritsViewGroup;
-    private List<PlayerSpirit> playerSpirits = new ArrayList<>();
     private PlayerSpiritItemViewFactory playerSpiritItemViewFactory;
+    private Map<String, PlayerSpiritItemViewFactory.ViewHolder> playerSpiritViewHoldersMap = new HashMap<>();  //<player's id, view holder>
+
+    private InputNumberWindowDialog inputNumberWindowDialog;  //TODO RENAME
+    private WaitingForPlayersEnteringDialog waitingForPlayersEnteringDialog;
+
+    private MediaPlayer mediaPlayer;
+    private SoundManager soundManager;
+
+    private Boss1A2BModule boss1A2BModule;
+    private SpiritsModel spiritsModel;
+    private List<AttackResult> attackResults = new ArrayList<>();
+    private AbstractSpirit whosTurn;  //the turn of the player's being, used for blocking the invalid attacking request
+
+    private boolean gameStarted = false;
+    private boolean attackingStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +83,15 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         findViews();
         setupLayout();
         setUpInputNumberWindowView();
-        testPlayerSpiritViews();
     }
 
     private void init() {
+        mediaPlayer = MediaPlayer.create(this, R.raw.king_boss_op);
+        soundManager = new SoundManager(this);
         CoreGameServer server = CoreGameServer.getInstance();
         boss1A2BModule = (Boss1A2BModule) server.createModule(ModuleName.GAME1A2BBOSS);
         playerSpiritItemViewFactory = new PlayerSpiritItemViewFactory(this);
+        waitingForPlayersEnteringDialog = new WaitingForPlayersEnteringDialog(this);
     }
 
     private void findViews() {
@@ -111,25 +125,19 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
                 .build();
     }
 
-    //TODO please remove this if we don't need it anymore
-    private void testPlayerSpiritViews() {
-        MockLogger mockLogger = new MockLogger();
-        MockProtocolFactory mockProtocolFactory = new MockProtocolFactory();
-        Player p1 = new Player("p1");
-        Player p2 = new Player("p2");
-        Player p3 = new Player("p3");
-        Player p4 = new Player("p4");
-        Player p5 = new Player("p5");
-        playerSpirits.add(new PlayerSpirit(new ClientPlayer(new MockClient(p1), p1), mockLogger, mockProtocolFactory));
-        playerSpirits.add(new PlayerSpirit(new ClientPlayer(new MockClient(p2), p2), mockLogger, mockProtocolFactory));
-        playerSpirits.add(new PlayerSpirit(new ClientPlayer(new MockClient(p3), p3), mockLogger, mockProtocolFactory));
-        playerSpirits.add(new PlayerSpirit(new ClientPlayer(new MockClient(p4), p4), mockLogger, mockProtocolFactory));
-        playerSpirits.add(new PlayerSpirit(new ClientPlayer(new MockClient(p5), p5), mockLogger, mockProtocolFactory));
-        for (PlayerSpirit playerSpirit : playerSpirits)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        boss1A2BModule.registerCallback(this, currentPlayer, currentGameRoom, this);
+        CoreGameServer.getInstance().resendUnhandledEvents();
+
+        if (!gameStarted)
         {
-            PlayerSpiritItemViewFactory.PlayerSpiritViewHolder  viewHolder = playerSpiritItemViewFactory.createPlayerSpiritItemView(playerSpirit, playerSpiritsViewGroup);
-            this.playerSpiritsViewGroup.addView(viewHolder.view);
+            waitingForPlayersEnteringDialog.show();
+            boss1A2BModule.enterGame();
         }
+        else if (attackingStarted)  //only play the music while attacking started
+            mediaPlayer.start();
     }
 
     public void inputNumberOnClick(View view) {
@@ -148,56 +156,6 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         }
     }
 
-    @Override
-    public void onRoomExpired() {
-
-    }
-
-    @Override
-    public void onServerReconnected() {
-
-    }
-
-    @Override
-    public void onError(@NonNull Throwable err) {
-        Log.e(TAG, err.getMessage());
-    }
-
-    private void showDialogForSettingAnswer() {
-        new InputNumberWindowDialog.Builder(this)
-                .setOnEnterClickListener(new SettingAnswerOnEnterClickListener())
-                .setCanceledOnTouchOutside(false)
-                .setCancelable(false)
-                .setTitle(getString(R.string.setAnswerFirst))
-                .show();
-    }
-
-    @Override
-    public void onDrawHpCosted(AbstractSpirit abstractSpirit, int i) {
-
-    }
-
-    @Override
-    public void onDrawMpCosted(AbstractSpirit abstractSpirit, int i) {
-
-    }
-
-    @Override
-    public void onDrawNormalAttack(AbstractSpirit abstractSpirit, AbstractSpirit abstractSpirit1, AttackResult attackResult) {
-
-    }
-
-    @Override
-    public void onDrawMagicAttack(AbstractSpirit abstractSpirit, AbstractSpirit abstractSpirit1, AttackResult attackResult) {
-
-    }
-
-    private class SettingAnswerOnEnterClickListener implements InputNumberWindowDialog.OnClickListener {
-        @Override
-        public void onEnterClick(String guessNumber) {
-            boss1A2BModule.setAnswer(guessNumber);
-        }
-    }
 
     @Override
     public void onPlayerLeft(PlayerRoomModel model) {
@@ -211,20 +169,39 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
 
     @Override
     public void onGameStarted(SpiritsModel spiritsModel) {
+        this.gameStarted = true;
         this.spiritsModel = spiritsModel;
+        //TODO create all player spirit views from the factory and bind into the viewHolderMaps
         spiritsModel.setOnAttackActionParsingListener(this);
-        playerSpirits = spiritsModel.getPlayerSpirits();
         showDialogForSettingAnswer();
+    }
+
+    private void showDialogForSettingAnswer() {
+        new InputNumberWindowDialog.Builder(this)
+                .setTitle(getString(R.string.setAnswerFirst))
+                .setOnEnterClickListener((answer) -> boss1A2BModule.setAnswer(answer))
+                .setCanceledOnTouchOutside(false)
+                .setCancelable(false)
+                .show();
+    }
+
+    @Override
+    public void onAttackingPhaseStarted() {
+        Log.d(TAG, "The attacking phase started.");
+        this.attackingStarted = true;
+        mediaPlayer.start();
+        Toast.makeText(this, R.string.bossGameStarted, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onSetAnswerSuccessfully(ContentModel contentModel) {
-        Log.v(TAG, contentModel.getPlayerId() + "set answer successfully");
+        Log.v(TAG, contentModel.getPlayerId() + "set answer successfully -> " + contentModel.getContent());
     }
 
     @Override
     public void onSetAnswerUnsuccessfully(ErrorMessage errorMessage) {
         Log.e(TAG, errorMessage.getMessage());
+        //TODO show message with some UX
     }
 
     @Override
@@ -234,27 +211,33 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
 
     @Override
     public void onAttackUnsuccessfully(ErrorMessage errorMessage) {
-        inputNumberBtn.setEnabled(true);
-        sendGuessBtn.setEnabled(true);
         Log.e(TAG, errorMessage.getMessage());
+        setInputNumberViewsEnabled(true);
+        //TODO show message with some UX
     }
 
     @Override
     public void onNextAttackAction(AttackActionModel attackActionModel) {
-        for (AttackResult attackResult : attackActionModel)
-            drawAttackResult(attackResult);
-        attackResults = attackActionModel.getAttackResults();
+        attackResults = attackActionModel.getAttackResults();  //TODO don't do this! this will clear the last records!
         spiritsModel.updateHPMPFromTheAttackActionModel(attackActionModel);
         guessResultAdapter.notifyDataSetChanged();
     }
 
-    private void drawAttackResult(AttackResult attackResult){
-
-    }
-
     @Override
     public void onNextTurn(NextTurnModel nextTurnModel) {
+        this.whosTurn = nextTurnModel.getWhosTurn();
 
+        //TODO handle something that when it's the current player's turn if need, for example: to enable input window..
+        if (whosTurn.getId().equals(currentPlayer.getId()))
+        {
+            setInputNumberViewsEnabled(true);
+            soundManager.playSound(R.raw.dong);
+        }
+    }
+
+    private void setInputNumberViewsEnabled(boolean enabled){
+        inputNumberBtn.setEnabled(enabled);
+        sendGuessBtn.setEnabled(enabled);
     }
 
     @Override
@@ -262,6 +245,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
 
     }
 
+    //TODO use recyclerview instead
     private class GuessResultAdapter extends BaseAdapter {
 
         @Override
@@ -288,12 +272,65 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
             TextView guess = view.findViewById(R.id.guessNumberTxt);
             TextView result = view.findViewById(R.id.bNumber);
 
+            GuessResult guessResult = attackResult.getGuessRecord().getResult();
             player.setText(attackResult.getAttacker().getName());
             guess.setText(attackResult.getGuessRecord().getGuess());
-            result.setText(attackResult.getA() + "A" + attackResult.getB() + "B -> " + attackResult.getAttacked());
+            //TODO AbstractSpirit.toString will not handle as your expectation, But the GuessResult.toString() will !
+            result.setText(guessResult + " -> " + attackResult.getAttacked());
 
             return view;
         }
     }
 
+    @Override
+    public void onDrawHpCosted(AbstractSpirit attacker, int cost) {
+        ProgressBar playerHpBar = playerSpiritViewHoldersMap.get(attacker.getId()).playerHpBar;
+        int nowHp = playerHpBar.getProgress();
+        ProgressBarAnimation animation = new ProgressBarAnimation(playerHpBar, nowHp, nowHp - cost);
+        animation.setDuration(cost * 3);
+        playerHpBar.startAnimation(animation);
+    }
+
+    @Override
+    public void onDrawMpCosted(AbstractSpirit attacker, int cost) {}
+
+    @Override
+    public void onDrawNormalAttack(AbstractSpirit abstractSpirit, AbstractSpirit abstractSpirit1, AttackResult attackResult) {
+        //TODO
+    }
+
+    @Override
+    public void onDrawMagicAttack(AbstractSpirit abstractSpirit, AbstractSpirit abstractSpirit1, AttackResult attackResult) {
+        //TODO
+    }
+
+
+    @Override
+    public void onRoomExpired() {
+        AppDialogFactory.roomTimeExpiredDialog(this);
+    }
+
+    @Override
+    public void onServerReconnected() {}
+
+    @Override
+    public void onError(@NonNull Throwable err) {
+        Log.e(TAG, err.getMessage());
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        boss1A2BModule.unregisterCallBack(this);
+
+        if (attackingStarted)
+            mediaPlayer.pause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mediaPlayer.release();
+        soundManager.release();
+    }
 }

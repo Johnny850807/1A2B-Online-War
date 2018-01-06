@@ -72,7 +72,7 @@
                 android:layout_gravity="center"
                 android:background="@drawable/guessnumber_textview_border"
                 android:gravity="center"
-                android:text="@string/secret"
+                android:text="@string/secretAnswer"
                 android:padding="4dp"
                 android:textSize="16sp"
                 android:textColor="#ff1c1c" />

@@ -44,4 +44,7 @@ public class SoundManager {
         return soundId;
     }
 
+    public void release(){
+        soundPool.release();
+    }
 }

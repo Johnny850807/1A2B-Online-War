@@ -117,6 +117,7 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
     protected void onDestroy() {
         super.onDestroy();
         chatWindowView.onStop();
+        soundManager.release();
     }
 
     private void init() {
@@ -173,7 +174,7 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
         progressDialog = new ProgressDialog.Builder(Duel1A2BActivity.this)
                 .setCancelable(false)
                 .setTitle(getString(R.string.pleaseWait))
-                .setMessage(getString(R.string.waitOtherPlayersJoin))
+                .setMessage(getString(R.string.waitingForPlayersEntering))
                 .show();
     }
 
@@ -304,7 +305,7 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
 
     @Override
     public void onRoomExpired() {
-        AppDialogFactory.roomTimeExpiredDialog(this, getString(R.string.roomClosedForExpired)).show();
+        AppDialogFactory.roomTimeExpiredDialog(this).show();
     }
 
     private void createAndShowDialogForWinner(Player winner){
@@ -359,4 +360,5 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
             return view;
         }
     }
+
 }

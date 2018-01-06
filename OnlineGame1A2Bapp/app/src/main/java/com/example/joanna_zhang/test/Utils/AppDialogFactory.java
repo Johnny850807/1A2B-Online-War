@@ -19,12 +19,22 @@ public class AppDialogFactory {
                 .setTitle(R.string.app_name);
     }
 
-    public static AlertDialog roomTimeExpiredDialog(Activity activity, String message){
+    public static AlertDialog.Builder expiredDialogTemplateBuilder(Activity activity){
         return templateBuilder(activity)
                 .setTitle(R.string.expiredDetection)
-                .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton(confirm, (d, p)->activity.finish())
+                .setPositiveButton(confirm, (d, p)->activity.finish());
+    }
+
+    public static AlertDialog roomTimeExpiredDialog(Activity activity){
+        return expiredDialogTemplateBuilder(activity)
+                .setMessage(activity.getString(R.string.roomClosedForExpired))
+                .create();
+    }
+
+    public static AlertDialog playerTimeExpiredDialog(Activity activity){
+        return expiredDialogTemplateBuilder(activity)
+                .setMessage(activity.getString(R.string.playerTimeExpired))
                 .create();
     }
 

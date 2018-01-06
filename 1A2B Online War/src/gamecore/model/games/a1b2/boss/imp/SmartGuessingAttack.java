@@ -5,6 +5,7 @@ import java.util.Map;
 
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.AttackResult;
+import gamecore.model.games.a1b2.boss.core.IBoss1A2BGame;
 import gamecore.model.games.a1b2.boss.core.Monster;
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import gamecore.model.games.a1b2.boss.core.AttackResult.AttackType;
@@ -21,7 +22,7 @@ public class SmartGuessingAttack extends AbstractMonsterAction{
 	private Map<String, PossibleTableGuessing> guessStrategies = new HashMap<>();
 	
 	@Override
-	public void execute(Monster monster, Boss1A2BGame game) {
+	public void execute(Monster monster, IBoss1A2BGame game) {
 		PlayerSpirit playerSpirit = getRandomTargetPlayer(game);
 		if (!guessStrategies.containsKey(playerSpirit.getId()))
 			guessStrategies.put(playerSpirit.getId(), new PossibleTableGuessing());
