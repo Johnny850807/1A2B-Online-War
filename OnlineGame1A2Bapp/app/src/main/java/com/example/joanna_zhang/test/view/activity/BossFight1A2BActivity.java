@@ -234,7 +234,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     @Override
     public void onNextTurn(NextTurnModel nextTurnModel) {
         this.whosTurn = nextTurnModel.getWhosTurn();
-        for (AbstractSpiritItemViewFactory.ViewHolder viewHolder : playerSpiritViewHoldersMap.values())
+        for (PlayerSpiritItemViewFactory.ViewHolder viewHolder : playerSpiritViewHoldersMap.values())
             viewHolder.view.setBackgroundColor(Color.GRAY);
 
         playerSpiritViewHoldersMap.get(whosTurn.getId()).view.setBackgroundResource(R.drawable.boss1a2b_player_background);
