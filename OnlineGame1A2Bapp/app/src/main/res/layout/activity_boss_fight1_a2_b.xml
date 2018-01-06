@@ -11,18 +11,16 @@
     <!--TODO don't use weight, we can have specific heights!-->
     <ProgressBar
         android:id="@+id/bossHpProgressBar"
-        style="@android:style/Widget.ProgressBar.Horizontal"
+        style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+        android:progressDrawable="@drawable/my_progressbar_drawable"
         android:layout_width="match_parent"
-<<<<<<< HEAD
-        android:layout_height="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center"/>
-=======
+        android:scaleY="2"
         android:layout_height="0dp"
+        android:max="100"
+        android:progress="50"
         android:layout_weight="0.03"
         android:layout_margin="8dp"
         android:maxHeight="30dip"/>
->>>>>>> 35f7196e955018438f8b2aa738100a08c17cec75
 
     <ImageView
         android:id="@+id/bossImg"
