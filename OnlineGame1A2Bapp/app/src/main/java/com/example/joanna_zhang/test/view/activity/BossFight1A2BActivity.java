@@ -52,7 +52,7 @@ import gamecore.model.games.a1b2.core.NumberNotValidException;
  * TODO
  * (1) dialog: sure to leave from the game? (let's see we have to do this in every game, so why not to make a online game base activity for all such these operations?)
  */
-public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender{
+public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender {
     private final static String TAG = "BossFight1A2BActivity";
 
     private Button inputNumberBtn;
@@ -138,13 +138,11 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         boss1A2BModule.registerCallback(this, currentPlayer, currentGameRoom, this);
         CoreGameServer.getInstance().resendUnhandledEvents();
 
-        if (!gameStarted)
-        {
+        if (!gameStarted) {
             Log.d(TAG, "show waiting dialog and enter the game.");
             waitingForPlayersEnteringDialog.show();
             boss1A2BModule.enterGame();
-        }
-        else if (attackingStarted)  //only play the music while attacking started
+        } else if (attackingStarted)  //only play the music while attacking started
             mediaPlayer.start();
     }
 
@@ -158,7 +156,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
             A1B2NumberValidator.validateNumber(guessNumber);
             setInputNumberViewsEnabled(false);
             boss1A2BModule.attack(guessNumber);
-        }catch (NumberNotValidException err){
+        } catch (NumberNotValidException err) {
             Toast.makeText(this, R.string.numberShouldBeInLengthFour, Toast.LENGTH_LONG).show();
         }
     }
@@ -176,12 +174,12 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
     private void createAllPlayerSpiritViews(SpiritsModel spiritsModel) {
         abstractSpiritItemViewFactory = new AbstractSpiritItemViewFactory(this);
-        for (PlayerSpirit playerSpirit : spiritsModel.getPlayerSpirits()){
+        for (PlayerSpirit playerSpirit : spiritsModel.getPlayerSpirits()) {
             AbstractSpiritItemViewFactory.ViewHolder viewHolder = abstractSpiritItemViewFactory.createAbstractSpiritItemView(playerSpirit, playerSpiritsViewGroup);
             playerSpiritsViewGroup.addView(viewHolder.view);
             playerSpiritViewHoldersMap.put(playerSpirit.getId(), viewHolder);
         }
-
+        playerSpiritViewHoldersMap.put(spiritsModel.getBoss().getId(), abstractSpiritItemViewFactory.createAbstractSpiritItemView(spiritsModel.getBoss(), playerSpiritsViewGroup));
     }
 
     private void showDialogForSettingAnswer() {
@@ -237,17 +235,15 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     public void onNextTurn(NextTurnModel nextTurnModel) {
         this.whosTurn = nextTurnModel.getWhosTurn();
 
-        if (whosTurn.getId().equals(currentPlayer.getId()))
-        {
+        if (whosTurn.getId().equals(currentPlayer.getId())) {
             setInputNumberViewsEnabled(true);
             soundManager.playSound(R.raw.dong);
-        }
-        else {
+        } else {
             setInputNumberViewsEnabled(false);
         }
     }
 
-    private void setInputNumberViewsEnabled(boolean enabled){
+    private void setInputNumberViewsEnabled(boolean enabled) {
         inputNumberBtn.setEnabled(enabled);
         sendGuessBtn.setEnabled(enabled);
     }
@@ -302,7 +298,8 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     @Override
-    public void onDrawMpCosted(AbstractSpirit spirit, int cost) {}
+    public void onDrawMpCosted(AbstractSpirit spirit, int cost) {
+    }
 
     @Override
     public void onDrawNormalAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
@@ -315,7 +312,8 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     @Override
-    public void onServerReconnected() {}
+    public void onServerReconnected() {
+    }
 
     @Override
     public void onError(@NonNull Throwable err) {
