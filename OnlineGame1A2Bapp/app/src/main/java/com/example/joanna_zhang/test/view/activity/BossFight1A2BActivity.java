@@ -257,12 +257,9 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     @Override
     public void onGameOver(GameOverModel gameOverModel) {
         if (spiritsModel.getBoss().getId().equals(gameOverModel.getWinnerId()))
-            AppDialogFactory.templateBuilder(this)
-                    .setTitle(R.string.gameOver)
-                    .setMessage(getString(R.string.theWinnerIs, spiritsModel.getBoss().getName()))
-                    .setPositiveButton(R.string.confirm, (dialog, which) -> finish())
-                    .show();
+            AppDialogFactory.showGameoverDialog(this, spiritsModel.getBoss()).show();
         else
+            AppDialogFactory.showGameoverDialog(this, currentPlayer)
 
     }
 

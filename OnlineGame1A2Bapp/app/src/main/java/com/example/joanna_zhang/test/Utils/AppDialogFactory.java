@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.example.joanna_zhang.test.R;
 
 import gamecore.entity.Player;
+import gamecore.model.games.a1b2.boss.core.AbstractSpirit;
+import gamecore.model.games.a1b2.boss.core.Spirit;
 
 import static com.example.joanna_zhang.test.R.string.confirm;
 
@@ -105,6 +107,14 @@ public class AppDialogFactory {
                 .setTitle(R.string.pleaseWait)
                 .setCancelable(false)
                 .setView(viewGroup)
+                .create();
+    }
+
+    public static AlertDialog showGameoverDialog(Activity activity, AbstractSpirit winner){
+        return templateBuilder(activity)
+                .setTitle(R.string.gameOver)
+                .setMessage(activity.getString(R.string.theWinnerIs, winner.getName()))
+                .setPositiveButton(R.string.confirm, (dialog, which) -> activity.finish())
                 .create();
     }
 
