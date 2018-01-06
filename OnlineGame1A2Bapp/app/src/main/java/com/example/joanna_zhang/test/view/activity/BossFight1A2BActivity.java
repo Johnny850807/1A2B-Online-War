@@ -298,6 +298,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     @Override
     public void onDrawHpCosted(AbstractSpirit spirit, int cost) {
         ProgressBar hpBar = spirit.getId().equals(spiritsModel.getBoss().getId()) ? bossHpProgressBar : playerSpiritViewHoldersMap.get(spirit.getId()).playerHpBar;
+        Log.d(TAG, "onDrawHpCosted: name " + spirit.getName() + ", cost: " + cost);
         CostingProgressBarAnimation animation = new CostingProgressBarAnimation(hpBar, spirit.getHp(), spirit.getHp() - cost);
         hpBar.startAnimation(animation);
     }
