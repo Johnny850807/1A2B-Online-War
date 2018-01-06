@@ -181,6 +181,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         playerSpiritItemViewFactory = new PlayerSpiritItemViewFactory(this);
         for (PlayerSpirit playerSpirit : spiritsModel.getPlayerSpirits()){
             PlayerSpiritItemViewFactory.ViewHolder viewHolder = playerSpiritItemViewFactory.createPlayerSpiritItemView(playerSpirit, playerSpiritsViewGroup);
+            playerSpiritsViewGroup.addView(viewHolder.view);
             playerSpiritViewHoldersMap.put(playerSpirit.getId(), viewHolder);
         }
     }
@@ -282,7 +283,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
             AttackResult attackResult = attackResults.get(position);
             TextView player = view.findViewById(R.id.playerNameTxt);
             TextView guess = view.findViewById(R.id.guessNumberTxt);
-            TextView result = view.findViewById(R.id.bNumber);
+            TextView result = view.findViewById(R.id.resultTxt);
 
             GuessResult guessResult = attackResult.getGuessRecord().getResult();
             player.setText(attackResult.getAttacker().getName());
