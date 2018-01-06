@@ -35,10 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import gamecore.entity.GameRoom;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
-import gamecore.model.PlayerRoomModel;
 import gamecore.model.games.GameOverModel;
 import gamecore.model.games.a1b2.boss.core.AbstractSpirit;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
@@ -53,7 +51,7 @@ import gamecore.model.games.a1b2.core.NumberNotValidException;
  * TODO
  * (1) dialog: sure to leave from the game? (let's see we have to do this in every game, so why not to make a online game base activity for all such these operations?)
  */
-public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender{
+public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender{
     private final static String TAG = "BossFight1A2BActivity";
 
     private Button inputNumberBtn;
@@ -164,17 +162,6 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         }
     }
 
-
-    @Override //TODO extract to the base online game activity
-    public void onPlayerLeft(PlayerRoomModel model) {
-        AppDialogFactory.playerLeftFromGameDialog(this, model.getPlayer()).show();
-    }
-
-    @Override //TODO extract to the base online game activity
-    public void onGameClosed(GameRoom gameRoom) {
-        AppDialogFactory.playerLeftFromGameDialog(this, gameRoom.getHost()).show();
-    }
-
     @Override
     public void onGameStarted(SpiritsModel spiritsModel) {
         Log.d(TAG, "OnGameStarted.");
@@ -230,7 +217,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
 
     @Override
     public void onNextAttackAction(AttackActionModel attackActionModel) {
-        attackResults = attackActionModel.getAttackResults();  //TODO don't do this! this will clear the last records!
+        attackResults.addAll(attackActionModel.getAttackResults());  //TODO don't do this! this will clear the last records!
         spiritsModel.updateHPMPFromTheAttackActionModel(attackActionModel);
         guessResultAdapter.notifyDataSetChanged();
     }
@@ -290,8 +277,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
             GuessResult guessResult = attackResult.getGuessRecord().getResult();
             player.setText(attackResult.getAttacker().getName());
             guess.setText(attackResult.getGuessRecord().getGuess());
-            //TODO AbstractSpirit.toString will not handle as your expectation, But the GuessResult.toString() will !
-            result.setText(guessResult + " -> " + attackResult.getAttacked());
+            result.setText(guessResult + " -> " + attackResult.getAttacked().getName());
 
             return view;
         }
