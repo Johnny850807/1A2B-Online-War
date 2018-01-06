@@ -135,11 +135,13 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "OnResume");
         boss1A2BModule.registerCallback(this, currentPlayer, currentGameRoom, this);
         CoreGameServer.getInstance().resendUnhandledEvents();
 
         if (!gameStarted)
         {
+            Log.d(TAG, "show waiting dialog and enter the game.");
             waitingForPlayersEnteringDialog.show();
             boss1A2BModule.enterGame();
         }
@@ -175,6 +177,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
 
     @Override
     public void onGameStarted(SpiritsModel spiritsModel) {
+        Log.d(TAG, "OnGameStarted.");
         this.gameStarted = true;
         this.spiritsModel = spiritsModel;
         waitingForPlayersEnteringDialog.dismiss();
@@ -184,6 +187,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
     }
 
     private void showDialogForSettingAnswer() {
+        Log.d(TAG, "showDialogForSettingAnswer");
         new InputNumberWindowDialog.Builder(this)
                 .setTitle(getString(R.string.setAnswerFirst))
                 .setOnEnterClickListener((answer) -> boss1A2BModule.setAnswer(answer))
