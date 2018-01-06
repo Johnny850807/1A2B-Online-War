@@ -1,6 +1,6 @@
 package com.example.joanna_zhang.test.view.activity;
 
-import android.app.ProgressDialog;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -16,11 +16,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.joanna_zhang.test.view.myview.ChatWindowView;
-import com.example.joanna_zhang.test.view.dialog.InputNumberWindowDialog;
 import com.example.joanna_zhang.test.R;
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
+import com.example.joanna_zhang.test.view.dialog.InputNumberWindowDialog;
+import com.example.joanna_zhang.test.view.myview.ChatWindowView;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.a1b2.duel.Duel1A2BModule;
@@ -43,13 +43,13 @@ import gamecore.model.games.a1b2.duel.core.Duel1A2BPlayerBarModel;
 import static android.R.string.cancel;
 import static com.example.joanna_zhang.test.R.string.confirm;
 
-public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowDialog.OnClickListener, Duel1A2BModule.Callback {
+public class Duel1A2BActivity extends OnlineGameActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowDialog.OnClickListener, Duel1A2BModule.Callback {
     private final static String TAG = "Duel1A2BActivity";
     private Duel1A2BModule duel1A2BModule;
-    private android.app.AlertDialog progressDialog;
     private List<GuessRecord> p1ResultList, p2ResultList;
     private ChatWindowView chatWindowView;
-    private InputNumberWindowDialog inputNumberWindowDialog;
+    private AlertDialog inputNumberWindowDialog;
+    private AlertDialog waitingForPlayersEnteringDialog;
     private Button inputNumberBtn;
     private ImageButton sendGuessBtn;
     private TextView p1NameTxt, p2NameTxt, p1AnswerTxt, p2AnswerTxt;
@@ -77,14 +77,11 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
         chatWindowView.onResume();
         duel1A2BModule.registerCallback(this, currentPlayer, currentGameRoom, this);
         if (!gameStarted)
-        {
-            waitOtherPlayersPrepare();
             duel1A2BModule.enterGame();
-        }
         CoreGameServer.getInstance().resendUnhandledEvents();
     }
 
-    @Override
+    @Override  //TODO extract to the base online game activity
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (!gameover)
@@ -117,6 +114,7 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
     protected void onDestroy() {
         super.onDestroy();
         chatWindowView.onStop();
+        soundManager.release();
     }
 
     private void init() {
@@ -125,6 +123,7 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
         p1GuessResultAdapter = new GuessResultAdapter();
         p2GuessResultAdapter = new GuessResultAdapter();
         soundManager = new SoundManager(this);
+        waitingForPlayersEnteringDialog = AppDialogFactory.createWaitingForPlayersEnteringDialog(this);
     }
 
     private void findViews() {
@@ -136,6 +135,7 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
         p2AnswerTxt =  findViewById(R.id.p2AnswerTxt);
         p1ResultListView =  findViewById(R.id.p1ResultLst);
         p2ResultListView =  findViewById(R.id.p2ResultLst);
+
         p1NameTxt.setText(currentPlayer.getName());
         String p2Name = currentGameRoom.getPlayers().get(0).equals(currentPlayer)?
                 currentGameRoom.getPlayers().get(1).getName() : currentGameRoom.getPlayers().get(0).getName();
@@ -169,14 +169,6 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
                 .build();
     }
 
-    private void waitOtherPlayersPrepare() {
-        progressDialog = new ProgressDialog.Builder(Duel1A2BActivity.this)
-                .setCancelable(false)
-                .setTitle(getString(R.string.pleaseWait))
-                .setMessage(getString(R.string.waitOtherPlayersJoin))
-                .show();
-    }
-
     public void updateResultList() {
         p1GuessResultAdapter.setResultList(p1ResultList);
         p2GuessResultAdapter.setResultList(p2ResultList);
@@ -189,7 +181,7 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
     @Override
     public void onGameStarted() {
         gameStarted = true;
-        progressDialog.dismiss();
+        waitingForPlayersEnteringDialog.dismiss();
         showDialogForSettingAnswer();
         soundManager.playSound(R.raw.dingdong);
     }
@@ -292,21 +284,6 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
         handler.postDelayed(()->createAndShowDialogForWinner(winner), 3000);
     }
 
-    @Override
-    public void onPlayerLeft(PlayerRoomModel model) {
-        AppDialogFactory.playerLeftFromGameDialog(this, model.getPlayer()).show();
-    }
-
-    @Override
-    public void onGameClosed(GameRoom gameRoom) {
-        AppDialogFactory.playerLeftFromGameDialog(this, gameRoom.getHost()).show();
-    }
-
-    @Override
-    public void onRoomExpired() {
-        AppDialogFactory.roomTimeExpiredDialog(this, getString(R.string.roomClosedForExpired)).show();
-    }
-
     private void createAndShowDialogForWinner(Player winner){
         AppDialogFactory.templateBuilder(this)
                 .setTitle(R.string.gameOver)
@@ -321,6 +298,7 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
         Toast.makeText(this, err.getMessage(), Toast.LENGTH_LONG).show();
     }
 
+    //TODO recyclerview
     private class GuessResultAdapter extends BaseAdapter {
 
         private List<GuessRecord> resultList = new ArrayList<>();
@@ -359,4 +337,5 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
             return view;
         }
     }
+
 }

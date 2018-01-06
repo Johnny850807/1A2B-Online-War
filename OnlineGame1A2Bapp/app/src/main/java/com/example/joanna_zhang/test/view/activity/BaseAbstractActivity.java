@@ -22,4 +22,6 @@ public class BaseAbstractActivity extends AppCompatActivity {
         currentGameRoom = (GameRoom) getIntent().getSerializableExtra(GAMEROOM);
     }
 
+
+
 }

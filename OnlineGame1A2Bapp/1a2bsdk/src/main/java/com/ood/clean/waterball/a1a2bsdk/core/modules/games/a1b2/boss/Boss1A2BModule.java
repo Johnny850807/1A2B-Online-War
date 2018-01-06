@@ -28,6 +28,12 @@ public interface Boss1A2BModule extends OnlineGameModule{
         void onGameStarted(SpiritsModel spiritsModel);
 
         /**
+         * when everybody has set the answer, the attacking phase started.
+         * The next turn event will be emitted following this event to indicate which is the first player to attack.
+         */
+        void onAttackingPhaseStarted();
+
+        /**
          * when then player sets the answer successfully
          */
         public void onSetAnswerSuccessfully(ContentModel contentModel);

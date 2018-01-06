@@ -21,24 +21,24 @@ public class PlayerSpiritItemViewFactory{
         this.context = context;
     }
 
-    public PlayerSpiritViewHolder createPlayerSpiritItemView(PlayerSpirit playerSpirit, ViewGroup parent){
+    public ViewHolder createPlayerSpiritItemView(PlayerSpirit playerSpirit, ViewGroup parent){
         View view = LayoutInflater.from(context).inflate(R.layout.boss1a2b_player_list_item, parent, false);
-        PlayerSpiritViewHolder playerSpiritViewHolder = new PlayerSpiritViewHolder(view);
-        playerSpiritViewHolder.playerHpBar.setProgress(playerSpirit.getHp());
-        playerSpiritViewHolder.playerHpBar.setMax(playerSpirit.getMaxHp());
-        playerSpiritViewHolder.playerHpBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN);
-        playerSpiritViewHolder.playerHpBar.setScaleY(3f);
-        playerSpiritViewHolder.playerHp.setText(String.valueOf(playerSpirit.getHp()));
-        playerSpiritViewHolder.playerName.setText(playerSpirit.getName());
-        return playerSpiritViewHolder;
+        ViewHolder viewHolder = new ViewHolder(view);
+        viewHolder.playerHpBar.setProgress(playerSpirit.getHp());
+        viewHolder.playerHpBar.setMax(playerSpirit.getMaxHp());
+        viewHolder.playerHpBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN);
+        viewHolder.playerHpBar.setScaleY(3f);
+        viewHolder.playerHp.setText(String.valueOf(playerSpirit.getHp()));
+        viewHolder.playerName.setText(playerSpirit.getName());
+        return viewHolder;
     }
 
-    public class PlayerSpiritViewHolder{
+    public class ViewHolder {
         public View view;
         public ProgressBar playerHpBar;
         public TextView playerName;
         public TextView playerHp;
-        private PlayerSpiritViewHolder(View view) {
+        private ViewHolder(View view) {
             this.view = view;
             playerHpBar = view.findViewById(R.id.boss1a2bPlayerHpProgressBar);
             playerName = view.findViewById(R.id.boss1a2bPlayerNameTxt);
