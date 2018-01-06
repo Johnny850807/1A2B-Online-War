@@ -43,7 +43,7 @@ import gamecore.model.games.a1b2.duel.core.Duel1A2BPlayerBarModel;
 import static android.R.string.cancel;
 import static com.example.joanna_zhang.test.R.string.confirm;
 
-public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowDialog.OnClickListener, Duel1A2BModule.Callback {
+public class Duel1A2BActivity extends OnlineGameActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowDialog.OnClickListener, Duel1A2BModule.Callback {
     private final static String TAG = "Duel1A2BActivity";
     private Duel1A2BModule duel1A2BModule;
     private List<GuessRecord> p1ResultList, p2ResultList;
