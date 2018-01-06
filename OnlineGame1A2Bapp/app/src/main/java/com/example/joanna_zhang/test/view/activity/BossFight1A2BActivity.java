@@ -288,15 +288,15 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     @Override
-    public void onDrawHpCosted(AbstractSpirit attacker, int cost) {
-        ProgressBar playerHpBar = playerSpiritViewHoldersMap.get(attacker.getId()).playerHpBar;
+    public void onDrawHpCosted(AbstractSpirit spirit, int cost) {
+        ProgressBar playerHpBar = playerSpiritViewHoldersMap.get(spirit.getId()).playerHpBar;
         int nowHp = playerHpBar.getProgress();
         CostingProgressBarAnimation animation = new CostingProgressBarAnimation(playerHpBar, nowHp, nowHp - cost);
         playerHpBar.startAnimation(animation);
     }
 
     @Override
-    public void onDrawMpCosted(AbstractSpirit attacker, int cost) {}
+    public void onDrawMpCosted(AbstractSpirit spirit, int cost) {}
 
     @Override
     public void onDrawNormalAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
@@ -315,7 +315,6 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     public void onError(@NonNull Throwable err) {
         Log.e(TAG, err.getMessage());
     }
-
 
     @Override
     protected void onStop() {
