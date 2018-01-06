@@ -292,21 +292,6 @@ public class Duel1A2BActivity extends OnlineGameActivity implements ChatWindowVi
                 .show();
     }
 
-    @Override //TODO extract to the base online game activity
-    public void onPlayerLeft(PlayerRoomModel model) {
-        AppDialogFactory.playerLeftFromGameDialog(this, model.getPlayer()).show();
-    }
-
-    @Override //TODO extract to the base online game activity
-    public void onGameClosed(GameRoom gameRoom) {
-        AppDialogFactory.playerLeftFromGameDialog(this, gameRoom.getHost()).show();
-    }
-
-    @Override //TODO extract to the base online game activity
-    public void onRoomExpired() {
-        AppDialogFactory.roomTimeExpiredDialog(this).show();
-    }
-
     @Override
     public void onError(@NonNull Throwable err) {
         Log.e("error", "error", err);

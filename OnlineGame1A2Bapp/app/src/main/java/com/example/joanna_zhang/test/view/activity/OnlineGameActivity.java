@@ -11,6 +11,7 @@ import gamecore.model.PlayerRoomModel;
 import gamecore.model.games.GameOverModel;
 
 public class OnlineGameActivity extends BaseAbstractActivity implements OnlineGameModule.Callback{
+
     @Override
     public void onRoomExpired() {
         AppDialogFactory.roomTimeExpiredDialog(this);
