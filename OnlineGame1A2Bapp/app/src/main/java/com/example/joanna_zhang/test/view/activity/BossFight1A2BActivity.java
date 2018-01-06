@@ -161,12 +161,12 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
     }
 
 
-    @Override
+    @Override //TODO extract to the base online game activity
     public void onPlayerLeft(PlayerRoomModel model) {
         AppDialogFactory.playerLeftFromGameDialog(this, model.getPlayer()).show();
     }
 
-    @Override
+    @Override //TODO extract to the base online game activity
     public void onGameClosed(GameRoom gameRoom) {
         AppDialogFactory.playerLeftFromGameDialog(this, gameRoom.getHost()).show();
     }
@@ -310,7 +310,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
     }
 
 
-    @Override
+    @Override //TODO extract to the base online game activity
     public void onRoomExpired() {
         AppDialogFactory.roomTimeExpiredDialog(this);
     }

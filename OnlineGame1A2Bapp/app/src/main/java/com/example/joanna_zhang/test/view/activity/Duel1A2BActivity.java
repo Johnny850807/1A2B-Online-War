@@ -81,7 +81,7 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
         CoreGameServer.getInstance().resendUnhandledEvents();
     }
 
-    @Override
+    @Override  //TODO extract to the base online game activity
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (!gameover)
@@ -284,21 +284,6 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
         handler.postDelayed(()->createAndShowDialogForWinner(winner), 3000);
     }
 
-    @Override
-    public void onPlayerLeft(PlayerRoomModel model) {
-        AppDialogFactory.playerLeftFromGameDialog(this, model.getPlayer()).show();
-    }
-
-    @Override
-    public void onGameClosed(GameRoom gameRoom) {
-        AppDialogFactory.playerLeftFromGameDialog(this, gameRoom.getHost()).show();
-    }
-
-    @Override
-    public void onRoomExpired() {
-        AppDialogFactory.roomTimeExpiredDialog(this).show();
-    }
-
     private void createAndShowDialogForWinner(Player winner){
         AppDialogFactory.templateBuilder(this)
                 .setTitle(R.string.gameOver)
@@ -307,12 +292,28 @@ public class Duel1A2BActivity extends BaseAbstractActivity implements ChatWindow
                 .show();
     }
 
+    @Override //TODO extract to the base online game activity
+    public void onPlayerLeft(PlayerRoomModel model) {
+        AppDialogFactory.playerLeftFromGameDialog(this, model.getPlayer()).show();
+    }
+
+    @Override //TODO extract to the base online game activity
+    public void onGameClosed(GameRoom gameRoom) {
+        AppDialogFactory.playerLeftFromGameDialog(this, gameRoom.getHost()).show();
+    }
+
+    @Override //TODO extract to the base online game activity
+    public void onRoomExpired() {
+        AppDialogFactory.roomTimeExpiredDialog(this).show();
+    }
+
     @Override
     public void onError(@NonNull Throwable err) {
         Log.e("error", "error", err);
         Toast.makeText(this, err.getMessage(), Toast.LENGTH_LONG).show();
     }
 
+    //TODO recyclerview
     private class GuessResultAdapter extends BaseAdapter {
 
         private List<GuessRecord> resultList = new ArrayList<>();
