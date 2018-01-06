@@ -155,8 +155,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         String guessNumber = inputNumberBtn.getText().toString();
         try {
             A1B2NumberValidator.validateNumber(guessNumber);
-            inputNumberBtn.setEnabled(false);
-            sendGuessBtn.setEnabled(false);
+            setInputNumberViewsEnabled(false);
             boss1A2BModule.attack(guessNumber);
         }catch (NumberNotValidException err){
             Toast.makeText(this, R.string.numberShouldBeInLengthFour, Toast.LENGTH_LONG).show();
@@ -209,6 +208,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
     @Override
     public void onSetAnswerUnsuccessfully(ErrorMessage errorMessage) {
         Log.e(TAG, errorMessage.getMessage());
+
         //TODO show message with some UX
     }
 
@@ -240,6 +240,9 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
         {
             setInputNumberViewsEnabled(true);
             soundManager.playSound(R.raw.dong);
+        }
+        else {
+            setInputNumberViewsEnabled(false);
         }
     }
 
