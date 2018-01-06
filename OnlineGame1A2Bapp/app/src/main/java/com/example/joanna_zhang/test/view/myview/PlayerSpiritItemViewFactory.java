@@ -28,7 +28,7 @@ public class PlayerSpiritItemViewFactory{
         viewHolder.playerHpBar.setMax(playerSpirit.getMaxHp());
         viewHolder.playerHpBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN);
         viewHolder.playerHpBar.setScaleY(3f);
-        viewHolder.playerHp.setText(String.valueOf(playerSpirit.getHp()));
+        viewHolder.playerAnswer.setText("");
         viewHolder.playerName.setText(playerSpirit.getName());
         return viewHolder;
     }
@@ -37,12 +37,12 @@ public class PlayerSpiritItemViewFactory{
         public View view;
         public ProgressBar playerHpBar;
         public TextView playerName;
-        public TextView playerHp;
+        public TextView playerAnswer;
         private ViewHolder(View view) {
             this.view = view;
-            playerHpBar = view.findViewById(R.id.boss1a2bPlayerHpProgressBar);
-            playerName = view.findViewById(R.id.boss1a2bPlayerNameTxt);
-            playerHp = view.findViewById(R.id.boss1a2bPlayerHPTxt);
+            playerHpBar = view.findViewById(R.id.playerHpProgressBar);
+            playerName = view.findViewById(R.id.playerNameTxt);
+            playerAnswer = view.findViewById(R.id.playerAnswerTxt);
         }
     }
 }

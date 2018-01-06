@@ -11,14 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:id="@+id/boss1a2bPlayerHpProgressBar"
+        android:id="@+id/playerHpProgressBar"
         android:layout_weight="1"
         android:layout_gravity="center"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/boss1a2bPlayerNameTxt"
+        android:id="@+id/playerNameTxt"
         android:textSize="20sp"
         android:text="林宗億"
         android:textColor="#000"
@@ -28,7 +28,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/boss1a2bPlayerHPTxt"
+        android:id="@+id/playerAnswerTxt"
         android:textColor= "#2104f7"
         android:layout_weight="1"
         android:gravity="center"/>
