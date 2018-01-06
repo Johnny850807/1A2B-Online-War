@@ -2,12 +2,14 @@ package com.example.joanna_zhang.test.animations;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.ProgressBar;
 
 
 public class CostingProgressBarAnimation extends Animation {
+    private static final String TAG = "HPAnimation";
     private ProgressBar progressBar;
     private float from;
     private float to;
@@ -21,6 +23,7 @@ public class CostingProgressBarAnimation extends Animation {
         long damage = (long) (from - to);
         long duration = damage < 40 ? 800 : damage < 130 ? 1200 : damage < 250 ? 1800 : 2200;
         setDuration(duration);
+        Log.d(TAG, "Progress animation: from " + from + " to " + to + " , duration " + duration);
     }
 
     @Override
@@ -30,6 +33,8 @@ public class CostingProgressBarAnimation extends Animation {
         if (value <= to)
             progressBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN);
         progressBar.setProgress((int) value);
+        Log.d(TAG, "Transformation: now process: " + progressBar.getProgress() +", set value: " + value);
+
     }
 
 }
