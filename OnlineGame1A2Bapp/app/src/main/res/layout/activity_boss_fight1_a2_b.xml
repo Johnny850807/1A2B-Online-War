@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context="com.example.joanna_zhang.test.view.activity.BossFight1A2BActivity">
 
-
+    <!--TODO don't use weight, we can have specific heights!-->
     <ProgressBar
         android:id="@+id/bossHpProgressBar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
@@ -19,14 +19,14 @@
         android:padding="10dp"/>
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/bossImg"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_gravity="center"
         android:layout_weight="2"
         android:background="@android:color/transparent"
         android:padding="10dp"
-        android:src="@drawable/babyboss" />
+        android:src="@drawable/babyboss"/>
 
     <HorizontalScrollView
         android:layout_width="match_parent"

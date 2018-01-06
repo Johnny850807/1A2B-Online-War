@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -57,6 +58,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
 
     private Button inputNumberBtn;
     private ImageButton sendGuessBtn;
+    private ImageView bossImg;
     private ListView attackResultListView;
     private GuessResultAdapter guessResultAdapter;
     private ProgressBar progressBar;
@@ -99,6 +101,7 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
     }
 
     private void findViews() {
+        bossImg = findViewById(R.id.bossImg);
         inputNumberBtn = findViewById(R.id.inputNumberBtn);
         sendGuessBtn = findViewById(R.id.sendGuessBtn);
         progressBar = findViewById(R.id.bossHpProgressBar);
