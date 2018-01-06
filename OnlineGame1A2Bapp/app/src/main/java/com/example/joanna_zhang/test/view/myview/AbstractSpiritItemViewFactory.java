@@ -24,8 +24,8 @@ public class AbstractSpiritItemViewFactory {
     public ViewHolder createAbstractSpiritItemView(AbstractSpirit spirit, ViewGroup parent){
         View view = LayoutInflater.from(context).inflate(R.layout.boss1a2b_player_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        viewHolder.playerHpBar.setProgress(spirit.getHp());
         viewHolder.playerHpBar.setMax(spirit.getMaxHp());
+        viewHolder.playerHpBar.setProgress(spirit.getHp());
         viewHolder.playerHpBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN);
         viewHolder.playerHpBar.setScaleY(3f);
         viewHolder.playerAnswer.setText("");
