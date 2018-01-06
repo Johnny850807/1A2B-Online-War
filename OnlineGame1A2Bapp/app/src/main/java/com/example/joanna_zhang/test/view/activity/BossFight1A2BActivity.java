@@ -235,24 +235,29 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     @Override
     public void onNextTurn(NextTurnModel nextTurnModel) {
         this.whosTurn = nextTurnModel.getWhosTurn();
-        for (PlayerSpiritItemViewFactory.ViewHolder viewHolder : playerSpiritViewHoldersMap.values())
-            viewHolder.view.setBackgroundColor(Color.GRAY);
 
-        playerSpiritViewHoldersMap.get(whosTurn.getId()).view.setBackgroundResource(R.drawable.boss1a2b_player_background);
+        drawPlayerSpiritsViewBackground();
 
         if (whosTurn.getId().equals(currentPlayer.getId()))
         {
             setInputNumberViewsEnabled(true);
-            inputNumberBtn.setText(null);
             soundManager.playSound(R.raw.dong);
         } else {
             setInputNumberViewsEnabled(false);
         }
     }
 
+    private void drawPlayerSpiritsViewBackground() {
+        for (PlayerSpiritItemViewFactory.ViewHolder viewHolder : playerSpiritViewHoldersMap.values())
+            viewHolder.view.setBackgroundColor(Color.GRAY);
+
+        playerSpiritViewHoldersMap.get(whosTurn.getId()).view.setBackgroundResource(R.drawable.boss1a2b_player_background);
+    }
+
     private void setInputNumberViewsEnabled(boolean enabled) {
         inputNumberBtn.setEnabled(enabled);
         sendGuessBtn.setEnabled(enabled);
+        inputNumberBtn.setText(null);
     }
 
     @Override
