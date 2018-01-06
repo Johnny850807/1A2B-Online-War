@@ -240,7 +240,6 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
     public void onNextTurn(NextTurnModel nextTurnModel) {
         this.whosTurn = nextTurnModel.getWhosTurn();
 
-        //TODO handle something that when it's the current player's turn if need, for example: to enable input window..
         if (whosTurn.getId().equals(currentPlayer.getId()))
         {
             setInputNumberViewsEnabled(true);
@@ -324,7 +323,6 @@ public class BossFight1A2BActivity extends BaseAbstractActivity implements Boss1
     public void onDrawMagicAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
         //TODO
     }
-
 
     @Override //TODO extract to the base online game activity
     public void onRoomExpired() {
