@@ -236,10 +236,12 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         for (AbstractSpiritItemViewFactory.ViewHolder viewHolder : playerSpiritViewHoldersMap.values())
             viewHolder.view.setBackgroundColor(Color.GRAY);
 
+        playerSpiritViewHoldersMap.get(whosTurn.getId()).view.setBackgroundResource(R.drawable.boss1a2b_player_background);
+
         if (whosTurn.getId().equals(currentPlayer.getId()))
         {
-            playerSpiritViewHoldersMap.get(whosTurn.getId()).view.setBackgroundResource(R.drawable.boss1a2b_player_background);
             setInputNumberViewsEnabled(true);
+            inputNumberBtn.setText(null);
             soundManager.playSound(R.raw.dong);
         } else {
             setInputNumberViewsEnabled(false);
