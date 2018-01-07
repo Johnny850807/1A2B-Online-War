@@ -166,6 +166,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         this.gameStarted = true;
         this.spiritsModel = spiritsModel;
         waitingForPlayersEnteringDialog.dismiss();
+        spiritsModel.setAttackDrawDelayTime(790);
         spiritsModel.setOnAttackActionParsingListener(this);
         showDialogForSettingAnswer();
         bossHpProgressBar.setMax(spiritsModel.getBoss().getMaxHp());
@@ -227,9 +228,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
     @Override
     public void onNextAttackAction(AttackActionModel attackActionModel) {
-        attackResults.addAll(attackActionModel.getAttackResults());
-        spiritsModel.updateHPMPFromTheAttackActionModel(attackActionModel);
-        guessResultAdapter.notifyDataSetChanged();
+        spiritsModel.updateHPMPFromTheAttackActionModelAsync(attackActionModel);
     }
 
     @Override
@@ -303,10 +302,12 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
     @Override
     public void onDrawHpCosted(AbstractSpirit spirit, int cost) {
-        ProgressBar hpBar = spirit.getId().equals(spiritsModel.getBoss().getId()) ? bossHpProgressBar : playerSpiritViewHoldersMap.get(spirit.getId()).playerHpBar;
-        Log.d(TAG, "onDrawHpCosted: name " + spirit.getName() + ", cost: " + cost);
-        CostingProgressBarAnimation animation = new CostingProgressBarAnimation(hpBar, spirit.getHp(), spirit.getHp() - cost);
-        hpBar.startAnimation(animation);
+        runOnUiThread(()->{
+            ProgressBar hpBar = spirit.getId().equals(spiritsModel.getBoss().getId()) ? bossHpProgressBar : playerSpiritViewHoldersMap.get(spirit.getId()).playerHpBar;
+            Log.d(TAG, "onDrawHpCosted: name " + spirit.getName() + ", cost: " + cost);
+            CostingProgressBarAnimation animation = new CostingProgressBarAnimation(hpBar, spirit.getHp(), spirit.getHp() - cost);
+            hpBar.startAnimation(animation);
+        });
     }
 
     @Override
@@ -315,12 +316,22 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
     @Override
     public void onDrawNormalAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
-        //TODO
+        runOnUiThread(()->{
+            addAttackResultAndUpdate(attackResult);
+        });
     }
 
     @Override
     public void onDrawMagicAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
-        //TODO
+        runOnUiThread(()->{
+            addAttackResultAndUpdate(attackResult);
+        });
+    }
+
+    private void addAttackResultAndUpdate(AttackResult attackResult){
+        attackResults.add(attackResult);
+        guessResultAdapter.notifyDataSetChanged();
+        attackResultListView.setSelection(attackResultListView.getCount() - 1);
     }
 
     @Override
