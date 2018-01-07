@@ -15,8 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_marginTop="10dp"
-        android:maxHeight="30dip"
-        android:padding="10dp"/>
+        android:maxHeight="30dip"/>
 
     <ImageView
         android:id="@+id/bossImg"

@@ -35,12 +35,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import container.core.Constants;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
 import gamecore.model.games.GameOverModel;
 import gamecore.model.games.a1b2.boss.core.AbstractSpirit;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.AttackResult;
+import gamecore.model.games.a1b2.boss.core.Monster;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import gamecore.model.games.a1b2.boss.core.SpiritsModel;
@@ -78,6 +80,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     private AbstractSpirit whosTurn;  //the turn of the player's being, used for blocking the invalid attacking request
 
     private boolean gameStarted = false;
+    private boolean gameover = false;
     private boolean attackingStarted = false;
 
     @Override
@@ -262,11 +265,22 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
     @Override
     public void onGameOver(GameOverModel gameOverModel) {
-        if (spiritsModel.getBoss().getId().equals(gameOverModel.getWinnerId()))
-            AppDialogFactory.showGameoverDialog(this, spiritsModel.getBoss()).show();
+        gameover = true;
+        if (gameOverModel.getWinnerId().equals(Constants.Events.Games.Boss1A2B.WinnerId.BOSS_WIN)) {
+            createAndShowDialogForWinner(spiritsModel.getBoss());
+            soundManager.playSound(R.raw.lose);
+        }
         else
-            AppDialogFactory.showGameoverDialog(this, currentPlayer)
+            AppDialogFactory.createGameoverResultDialogForWinner(this, currentPlayer).show();
+    }
 
+    private void createAndShowDialogForWinner(AbstractSpirit winner) {
+        AppDialogFactory.templateBuilder(this)
+                .setTitle(R.string.gameOver)
+                .setMessage(getString(R.string.theWinnerIs, winner.getName()))
+                .setPositiveButton(R.string.confirm, (dialog, which) -> finish())
+                .create()
+                .show();
     }
 
     //TODO use recyclerview instead

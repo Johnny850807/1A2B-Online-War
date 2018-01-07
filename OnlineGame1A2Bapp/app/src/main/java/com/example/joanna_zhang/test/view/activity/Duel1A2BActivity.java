@@ -279,15 +279,7 @@ public class Duel1A2BActivity extends OnlineGameActivity implements ChatWindowVi
         if (!winner.equals(currentPlayer))
             soundManager.playSound(R.raw.lose);
         inputNumberBtn.setEnabled(false);
-        handler.postDelayed(()->createAndShowDialogForWinner(winner), 3000);
-    }
-
-    private void createAndShowDialogForWinner(Player winner){
-        AppDialogFactory.templateBuilder(this)
-                .setTitle(R.string.gameOver)
-                .setMessage(getString(R.string.theWinnerIs, winner.getName()))
-                .setPositiveButton(confirm, (d,i) -> finish())
-                .show();
+        handler.postDelayed(()->AppDialogFactory.createGameoverResultDialogForWinner(this, winner).show(), 3000);
     }
 
     @Override

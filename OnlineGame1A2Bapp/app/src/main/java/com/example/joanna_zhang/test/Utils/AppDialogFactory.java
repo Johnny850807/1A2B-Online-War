@@ -110,7 +110,7 @@ public class AppDialogFactory {
                 .create();
     }
 
-    public static AlertDialog showGameoverDialog(Activity activity, AbstractSpirit winner){
+    public static AlertDialog createGameoverResultDialogForWinner(Activity activity, Player winner){
         return templateBuilder(activity)
                 .setTitle(R.string.gameOver)
                 .setMessage(activity.getString(R.string.theWinnerIs, winner.getName()))
