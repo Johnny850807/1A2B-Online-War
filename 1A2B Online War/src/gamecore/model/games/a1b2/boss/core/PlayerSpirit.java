@@ -14,7 +14,7 @@ public class PlayerSpirit extends AbstractSpirit{
 	private ClientPlayer player;
 	
 	public PlayerSpirit(ClientPlayer player, MyLogger log, ProtocolFactory protocolFactory) {
-		super(player.getId(), player.getPlayerName(), log, protocolFactory);
+		super(player.getId(), player.getPlayerName(), 500, 0, log, protocolFactory);
 		this.player = player;
 	}
 	
@@ -32,16 +32,6 @@ public class PlayerSpirit extends AbstractSpirit{
 	@Override
 	public Type getType() {
 		return Type.PLAYER;
-	}
-	
-	@Override
-	public int getMp() {
-		return 0;
-	}
-	
-	@Override
-	public int getMaxHp() {
-		return 500;
 	}
 
 	@Override

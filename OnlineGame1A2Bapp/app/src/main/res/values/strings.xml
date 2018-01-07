@@ -70,7 +70,7 @@
     <string name="expiredDetection">超時偵測</string>
     <string name="playerTimeExpired">玩家閒置時間過久，登出伺服器。</string>
     <string name="tryingToReconnectInternet">正在重新嘗試連線</string>
-    <string name="players">冒險者</string>
+    <string name="players">冒險者們</string>
     <string name="setAnswerUnSuccessfully">設置答案失敗</string>
     <string name="pleaseReAttack">攻擊失敗，請重新輸入答案並攻擊</string>
 

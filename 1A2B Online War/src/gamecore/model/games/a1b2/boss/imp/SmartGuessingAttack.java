@@ -14,20 +14,14 @@ import gamecore.model.games.a1b2.imp.PossibleTableGuessing;
 /**
  * @author Waterball
  */
-public class SmartGuessingAttack extends AbstractMonsterAction{
-	/**
-	 * <player's id, guessing algorithm>
-	 * One guessing strategy handles one player.
-	 */
-	private Map<String, PossibleTableGuessing> guessStrategies = new HashMap<>();
-	
+public class SmartGuessingAttack extends AbstractSmartAttackAction{
+
 	@Override
 	public void execute(Monster monster, IBoss1A2BGame game) {
 		PlayerSpirit playerSpirit = getRandomTargetPlayer(game);
-		if (!guessStrategies.containsKey(playerSpirit.getId()))
-			guessStrategies.put(playerSpirit.getId(), new PossibleTableGuessing());
-		String guess = guessStrategies.get(playerSpirit.getId()).nextGuess();
+		String guess = produceSmartGuess(playerSpirit);
 		AttackResult attackResult = playerSpirit.getAttacked(monster, guess, AttackType.NORMAL);
+		feedGuessRecord(playerSpirit, attackResult.getGuessRecord());
 		AttackActionModel model = new AttackActionModel(getAttackName(), getCostMp(), monster, attackResult);
 		game.addAllResultsAndbroadcastAttackActionModel(model);
 	}

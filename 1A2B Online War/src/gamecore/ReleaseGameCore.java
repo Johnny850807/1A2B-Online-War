@@ -301,11 +301,8 @@ public class ReleaseGameCore implements GameCore{
 		
 		@Override
 		public void run() {
-			log.trace("Now Thread count:" + Thread.activeCount());
-			log.trace("Challenger challening.");
 			challengingRooms();
 			challengingClientPlayers();
-			log.trace("Challenger challened.");
 		}
 		
 		private void challengingRooms(){

@@ -25,21 +25,28 @@ public abstract class AbstractSpirit implements Spirit{
 	protected String id;
 	protected Type type;
 	
-	public AbstractSpirit(String id, String name, MyLogger log, ProtocolFactory protocolFactory) {
+	public AbstractSpirit(String id, String name, int maxHp, int mp, MyLogger log, ProtocolFactory protocolFactory) {
 		this.protocolFactory = protocolFactory;
 		this.log = log;
 		this.id = id;
 		this.name = name;
 		this.type = getType();
-		this.hp = getMaxHp();
-		this.maxHp = getMaxHp();
-		this.mp = getMp();
+		this.hp = maxHp;
+		this.maxHp = maxHp;
+		this.mp = mp;
 	}
 
-	public abstract Type getType();
-	public abstract int getMp();
-	public abstract int getMaxHp();
+	public int getMaxHp() {
+		return maxHp;
+	}
+	public int getMp() {
+		return mp;
+	}	
+	public int getHp() {
+		return hp;
+	}
 	
+	public abstract Type getType();
 	public interface DamageParser{
 		int parsingDamage(GuessResult guessResult);
 	}
@@ -124,10 +131,6 @@ public abstract class AbstractSpirit implements Spirit{
 	
 	public String getName() {
 		return name;
-	}
-
-	public int getHp() {
-		return hp;
 	}
 
 	public String getAnswer() {

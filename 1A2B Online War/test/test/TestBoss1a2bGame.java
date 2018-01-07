@@ -1,5 +1,7 @@
 package test;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,23 +16,20 @@ import org.junit.runners.Parameterized;
 import container.core.Constants.Events.Games;
 import container.core.Constants.Events.Games.Boss1A2B;
 import container.protocol.Protocol;
-
-import static org.junit.Assert.*;
-
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.MockLogger;
+import gamecore.model.games.Game;
+import gamecore.model.games.Game.GameLifecycleListener;
 import gamecore.model.games.GameEnteringWaitingBox;
 import gamecore.model.games.GameOverModel;
 import gamecore.model.games.ProcessInvalidException;
-import gamecore.model.games.Game;
-import gamecore.model.games.Game.GameLifecycleListener;
 import gamecore.model.games.a1b2.boss.core.Monster;
 import gamecore.model.games.a1b2.boss.imp.Boss1A2BGame;
 import gamecore.model.games.a1b2.boss.imp.OnePunchBoss;
-import gamecore.model.games.a1b2.boss.imp.TestingBoss;
+import gamecore.model.games.a1b2.boss.imp.SmartBabyBoss;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
@@ -124,8 +123,8 @@ public class TestBoss1a2bGame implements GameLifecycleListener{
 	public static Collection primeNumbers() {
 		gameFactory = new GameOnlineReleaseFactory();
 		return Arrays.asList(new Object[][] {
-			{new TestingBoss("t", new MockLogger(), gameFactory.getProtocolFactory())},
-			{new OnePunchBoss("o", new MockLogger(), gameFactory.getProtocolFactory())}
+			{new SmartBabyBoss(new MockLogger(), gameFactory.getProtocolFactory())},
+			{new OnePunchBoss (new MockLogger(), gameFactory.getProtocolFactory())}
 	      });
 	}
 }

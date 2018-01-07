@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -12,19 +14,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.joanna_zhang.test.R;
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.example.joanna_zhang.test.animations.CostingProgressBarAnimation;
 import com.example.joanna_zhang.test.view.dialog.InputNumberDialog;
+import com.example.joanna_zhang.test.animations.DamageNumberEffectAnimation;
 import com.example.joanna_zhang.test.view.myview.PlayerSpiritItemViewFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
@@ -54,7 +61,9 @@ import static com.example.joanna_zhang.test.R.string.confirm;
 
 public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender {
     private final static String TAG = "BossFight1A2BActivity";
+    private Handler handler = new Handler();
 
+    private RelativeLayout containerView;
     private Button inputNumberBtn;
     private ImageButton sendGuessBtn;
     private ImageView bossImg;
@@ -62,6 +71,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     private GuessResultAdapter guessResultAdapter;
     private ProgressBar bossHpProgressBar;
 
+    private HorizontalScrollView playerSpiritsHorizontalScrollView;
     private LinearLayout playerSpiritsViewGroup;
     private PlayerSpiritItemViewFactory playerSpiritItemViewFactory;
     private Map<String, PlayerSpiritItemViewFactory.ViewHolder> playerSpiritViewHoldersMap = new HashMap<>();  //<player's id, view holder>
@@ -69,7 +79,9 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     private AlertDialog inputNumberDialog;
     private AlertDialog waitingForPlayersEnteringDialog;
 
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer nowPlayer;
+    private MediaPlayer song1Player;
+    private MediaPlayer song2Player;
     private SoundManager soundManager;
 
     private Boss1A2BModule boss1A2BModule;
@@ -87,12 +99,16 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         setContentView(R.layout.activity_boss_fight1_a2_b);
         init();
         findViews();
+        loadBossGif(R.drawable.lucid_half);
         setupLayout();
         setUpInputNumberWindowView();
     }
 
     private void init() {
-        mediaPlayer = MediaPlayer.create(this, R.raw.king_boss_op);
+        song1Player = MediaPlayer.create(this, R.raw.lucid_fight_1);
+        song2Player = MediaPlayer.create(this, R.raw.lucid_fight_2);
+        song1Player.setLooping(true);
+        song2Player.setLooping(true);
         soundManager = new SoundManager(this);
         CoreGameServer server = CoreGameServer.getInstance();
         boss1A2BModule = (Boss1A2BModule) server.createModule(ModuleName.GAME1A2BBOSS);
@@ -101,6 +117,8 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     private void findViews() {
+        playerSpiritsHorizontalScrollView = findViewById(R.id.playerSpiritsHorizontalScrollView);
+        containerView = findViewById(R.id.container);
         bossImg = findViewById(R.id.bossImg);
         inputNumberBtn = findViewById(R.id.inputNumberBtn);
         sendGuessBtn = findViewById(R.id.sendGuessBtn);
@@ -109,20 +127,18 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         playerSpiritsViewGroup = findViewById(R.id.playerSpiritsViewGroup);
     }
 
+    private void loadBossGif(@DrawableRes int gifId){
+        Glide.with(this).load(gifId).asGif().placeholder(R.drawable.lucid_half_static)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE).fitCenter().into(bossImg);
+    }
+
     private void setupLayout() {
-        setupProgressBar();
         setupAttackResultListView();
     }
 
     private void setupAttackResultListView() {
         guessResultAdapter = new GuessResultAdapter();
         attackResultListView.setAdapter(guessResultAdapter);
-    }
-
-    private void setupProgressBar() {
-        /*bossHpProgressBar.getProgressDrawable().setColorFilter(
-                Color.GREEN, PorterDuff.Mode.DARKEN);
-        bossHpProgressBar.setScaleY(3f);*/
     }
 
     private void setUpInputNumberWindowView() {
@@ -144,7 +160,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
             waitingForPlayersEnteringDialog.show();
             boss1A2BModule.enterGame();
         } else if (attackingStarted)  //only play the music while attacking started
-            mediaPlayer.start();
+            nowPlayer.start();
     }
 
     public void inputNumberOnClick(View view) {
@@ -168,6 +184,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         this.gameStarted = true;
         this.spiritsModel = spiritsModel;
         waitingForPlayersEnteringDialog.dismiss();
+        spiritsModel.setAttackDrawDelayTime(790);
         spiritsModel.setOnAttackActionParsingListener(this);
         showDialogForSettingAnswer();
         bossHpProgressBar.setMax(spiritsModel.getBoss().getMaxHp());
@@ -199,7 +216,8 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     public void onAttackingPhaseStarted() {
         Log.d(TAG, "The attacking phase started.");
         this.attackingStarted = true;
-        mediaPlayer.start();
+        nowPlayer = song1Player;
+        nowPlayer.start();
         Toast.makeText(this, R.string.bossGameStarted, Toast.LENGTH_SHORT).show();
     }
 
@@ -229,16 +247,14 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
     @Override
     public void onNextAttackAction(AttackActionModel attackActionModel) {
-        attackResults.addAll(attackActionModel.getAttackResults());
-        spiritsModel.updateHPMPFromTheAttackActionModel(attackActionModel);
-        guessResultAdapter.notifyDataSetChanged();
+        spiritsModel.updateHPMPFromTheAttackActionModelAsync(attackActionModel);
     }
 
     @Override
     public void onNextTurn(NextTurnModel nextTurnModel) {
         this.whosTurn = nextTurnModel.getWhosTurn();
 
-        drawPlayerSpiritsViewBackground();
+        drawhighlightOnTheTurnPlayerSpirit();
 
         if (whosTurn.getId().equals(currentPlayer.getId())) {
             setInputNumberViewsEnabled(true);
@@ -249,7 +265,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         }
     }
 
-    private void drawPlayerSpiritsViewBackground() {
+    private void drawhighlightOnTheTurnPlayerSpirit() {
         for (PlayerSpiritItemViewFactory.ViewHolder viewHolder : playerSpiritViewHoldersMap.values())
             viewHolder.view.setBackgroundColor(Color.GRAY);
 
@@ -270,6 +286,8 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         }
         else
             AppDialogFactory.createGameoverResultDialogForWinner(this, getString(R.string.players)).show();
+    }
+
     }
 
     //TODO use recyclerview instead
@@ -310,29 +328,83 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
     @Override
     public void onDrawHpCosted(AbstractSpirit spirit, int cost) {
-        ProgressBar hpBar = spirit.getId().equals(spiritsModel.getBoss().getId()) ? bossHpProgressBar : playerSpiritViewHoldersMap.get(spirit.getId()).playerHpBar;
-        Log.d(TAG, "onDrawHpCosted: name " + spirit.getName() + ", cost: " + cost);
-        CostingProgressBarAnimation animation = new CostingProgressBarAnimation(hpBar, spirit.getHp(), spirit.getHp() - cost);
-        hpBar.startAnimation(animation);
+        runOnUiThread(()->{
+            ProgressBar hpBar = spirit.getId().equals(spiritsModel.getBoss().getId()) ? bossHpProgressBar : playerSpiritViewHoldersMap.get(spirit.getId()).playerHpBar;
+            Log.d(TAG, "onDrawHpCosted: name " + spirit.getName() + ", cost: " + cost);
+            CostingProgressBarAnimation animation = new CostingProgressBarAnimation(hpBar, spirit.getHp(), spirit.getHp() - cost);
+            hpBar.startAnimation(animation);
+
+            if (spiritsModel.getBoss().getHp() < spiritsModel.getBoss().getMaxHp() / 2)
+                switchToSong2Player();
+        });
+    }
+
+    private void switchToSong2Player(){
+        song1Player.stop();
+        nowPlayer = song2Player;
+        song2Player.start();
     }
 
     @Override
-    public void onDrawMpCosted(AbstractSpirit spirit, int cost) {
-    }
+    public void onDrawMpCosted(AbstractSpirit spirit, int cost) {}
 
     @Override
     public void onDrawNormalAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
-        //TODO
+        runOnUiThread(()->{
+            addAttackResultAndUpdate(attackResult);
+            animateDamageText(attacked, attackResult);
+        });
     }
 
     @Override
     public void onDrawMagicAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
-        //TODO
+        runOnUiThread(()->{
+            if (attacker.getId().equals(spiritsModel.getBoss().getId()))
+                switchBossImgToMagicAttackingGifAndSwitchBackThen();
+            addAttackResultAndUpdate(attackResult);
+            animateDamageText(attacked, attackResult);
+        });
+    }
+
+    private void switchBossImgToMagicAttackingGifAndSwitchBackThen(){
+        loadBossGif(R.drawable.lucid_magic_attack3);
+        handler.postDelayed(()->loadBossGif(R.drawable.lucid_half), 1800);
+    }
+
+    private void addAttackResultAndUpdate(AttackResult attackResult){
+        attackResults.add(attackResult);
+        guessResultAdapter.notifyDataSetChanged();
+        attackResultListView.setSelection(attackResultListView.getCount() - 1);
+    }
+
+    private void animateDamageText(AbstractSpirit attacked, AttackResult attackResult){
+        TextView effectTxt = new TextView(this);
+        float x, y;
+        if (attacked.getId().equals(spiritsModel.getBoss().getId()))
+        {
+            Log.d(TAG, "Boss damaged animating.");
+            x = bossImg.getX();
+            y = bossImg.getY();
+        }
+        else
+        {
+            Log.d(TAG, "Player " + attacked.getName() + " damaged animating.");
+            x = playerSpiritViewHoldersMap.get(attacked.getId()).view.getX();
+            y = playerSpiritsHorizontalScrollView.getY() - 32;
+        }
+
+        Log.d(TAG, "Target view ("+x+","+y+")");
+        effectTxt.setX(x + 35);
+        effectTxt.setY(y);
+        containerView.addView(effectTxt);
+        effectTxt.setText(String.valueOf(attackResult.getDamage()));
+        DamageNumberEffectAnimation animation = new DamageNumberEffectAnimation(containerView, effectTxt);
+        animation.setTextSize(45);
+        effectTxt.startAnimation(animation);
     }
 
     @Override
-    public void onServerReconnected() {
-    }
+    public void onServerReconnected() {}
 
     @Override
     public void onError(@NonNull Throwable err) {
@@ -368,13 +440,15 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         boss1A2BModule.unregisterCallBack(this);
 
         if (attackingStarted)
-            mediaPlayer.pause();
+            nowPlayer.pause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mediaPlayer.release();
+        song1Player.release();
+        song2Player.release();
         soundManager.release();
+        handler.removeCallbacks(null);
     }
 }

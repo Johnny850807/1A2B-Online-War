@@ -3,11 +3,13 @@ package gamecore.model.games.a1b2.boss.core;
 import java.util.List;
 
 import gamecore.model.games.a1b2.boss.core.AttackResult.AttackType;
+import utils.Delay;
 
 public class SpiritsModel {
 	private Monster boss;
 	private List<PlayerSpirit> playerSpirits;
 	private transient OnAttackActionRender onAttackActionRender;
+	private long delayTime = 470;
 	
 	public SpiritsModel(Monster boss, List<PlayerSpirit> playerSpirits) {
 		this.boss = boss;
@@ -65,6 +67,7 @@ public class SpiritsModel {
 				else if (attackType == AttackType.NORMAL)
 					onAttackActionRender.onDrawNormalAttack(attacked, attacker, attackResult);
 			}
+			Delay.sleep(delayTime);
 		}
 	}
 	
@@ -80,12 +83,15 @@ public class SpiritsModel {
 		}.start();
 	}
 	
+	public void setAttackDrawDelayTime(long delayTime) {
+		this.delayTime = delayTime;
+	}
+	
 	public interface OnAttackActionRender{
 		void onDrawHpCosted(AbstractSpirit spirit, int costMp);
 		void onDrawMpCosted(AbstractSpirit spirit, int costHp);
 		void onDrawNormalAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult);
 		void onDrawMagicAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult);
 	}
-	
 	
 }
