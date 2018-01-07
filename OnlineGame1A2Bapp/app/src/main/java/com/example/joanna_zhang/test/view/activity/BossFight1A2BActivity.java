@@ -244,6 +244,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
         if (whosTurn.getId().equals(currentPlayer.getId())) {
             setInputNumberViewsEnabled(true);
+            inputNumberBtn.setText(null);
             soundManager.playSound(R.raw.dong);
         } else {
             setInputNumberViewsEnabled(false);
@@ -260,7 +261,6 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     private void setInputNumberViewsEnabled(boolean enabled) {
         inputNumberBtn.setEnabled(enabled);
         sendGuessBtn.setEnabled(enabled);
-        inputNumberBtn.setText(null);
     }
 
     @Override
