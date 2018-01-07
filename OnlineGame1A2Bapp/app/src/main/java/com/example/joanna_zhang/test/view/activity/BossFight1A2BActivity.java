@@ -81,7 +81,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
     private MediaPlayer nowPlayer;
     private MediaPlayer song1Player;
-    private MediaPlayer song2Player;
+    private MediaPlayer song2Player;  //the song when the boss's hp is left half
     private SoundManager soundManager;
 
     private Boss1A2BModule boss1A2BModule;
@@ -366,7 +366,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     @Override
     public void onDrawMagicAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
         runOnUiThread(()->{
-            if (attacker.getId().equals(spiritsModel.getBoss().getId()))
+            if (nowPlayer != song2Player && attacker.getId().equals(spiritsModel.getBoss().getId()))
                 switchBossImgToMagicAttackingGifAndSwitchBackThen();
             addAttackResultAndUpdate(attackResult);
             animateDamageText(attacked, attackResult);
