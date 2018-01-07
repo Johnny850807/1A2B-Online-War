@@ -3,6 +3,7 @@ package gamecore.model.games.a1b2.boss.core;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import container.core.MyLogger;
 import container.protocol.ProtocolFactory;
@@ -15,8 +16,8 @@ public class Monster extends AbstractSpirit{
 	protected transient List<MonsterAction> actions;
 	protected transient IBoss1A2BGame game;
 	
-	public Monster(String id, String name, MyLogger log, ProtocolFactory protocolFactory) {
-		super(id, name, log, protocolFactory);
+	public Monster(String name, int maxHp, int mp, MyLogger log, ProtocolFactory protocolFactory) {
+		super(UUID.randomUUID().toString(), name, maxHp, mp, log, protocolFactory);
 	}
 	
 	public void init(IBoss1A2BGame game){
@@ -50,22 +51,16 @@ public class Monster extends AbstractSpirit{
 	 * how the boss choose his action in each turn.
 	 */
 	protected MonsterAction chooseNextMonsterAction(){
-		return actions.get(random.nextInt(actions.size()));
+		List<MonsterAction> mpAvailableActions = new ArrayList<>();
+		for (MonsterAction monsterAction : actions)
+			if (monsterAction.getCostMp() <= getMp())
+				mpAvailableActions.add(monsterAction);
+		return mpAvailableActions.get(random.nextInt(mpAvailableActions.size()));
 	}
 
 	@Override
 	public Type getType() {
 		return Type.MONSTER;
-	}
-
-	@Override
-	public int getMp() {
-		return 200;
-	}
-
-	@Override
-	public int getMaxHp() {
-		return 500;
 	}
 
 	@Override

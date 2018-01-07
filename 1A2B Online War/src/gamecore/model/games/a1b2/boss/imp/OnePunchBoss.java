@@ -15,8 +15,8 @@ import utils.RandomString;
  */
 public class OnePunchBoss extends Monster{
 
-	public OnePunchBoss(String id, MyLogger log, ProtocolFactory protocolFactory) {
-		super(id, "One Punch", log, protocolFactory);
+	public OnePunchBoss(MyLogger log, ProtocolFactory protocolFactory) {
+		super("One Punch", Integer.MAX_VALUE, 2000, log, protocolFactory);
 	}
 
 	@Override
@@ -25,15 +25,4 @@ public class OnePunchBoss extends Monster{
 		actions.add(new PowerfulPunch());
 		return actions;
 	}
-
-	@Override
-	public int getMp() {
-		return 0;
-	}
-
-	@Override
-	public int getMaxHp() {
-		return Integer.MAX_VALUE;
-	}
-
 }

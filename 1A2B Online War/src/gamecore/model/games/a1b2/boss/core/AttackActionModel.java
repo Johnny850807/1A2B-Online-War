@@ -18,6 +18,7 @@ public class AttackActionModel implements Iterable<AttackResult>{
 			addAttackResult(result);
 	}
 	
+	
 	public AttackActionModel(int mpCost, AbstractSpirit attacker) {
 		this.attacker = attacker;
 		this.mpCost = mpCost;

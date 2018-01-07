@@ -4,6 +4,7 @@ package scripts;
 import com.google.gson.Gson;
 
 import container.core.Constants.Events.Games;
+import container.core.Constants.Events.Games.Boss1A2B;
 import container.core.Constants.Events.Games.Duel1A2B;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
@@ -18,8 +19,8 @@ import utils.MyGson;
  * a script used to run any protocol.
  */
 public class RunProtocol {
-	private static final String PLAYERID = "678503a3-bec6-4719-ba99-40074cfbcb67";
-	private static final String ROOMID = "2bb5253b-ef3e-4053-af10-c338ff7e6ab7";
+	private static final String PLAYERID = "a7f668cb-fd6d-432b-8878-ed43e5612326";
+	private static final String ROOMID = "d6a1c06c-b08f-4b33-bf8e-f2f3a35985a7";
 	private static final String ANSWER = "5678";
 	private static final String GUESSNUMBER = "1234";
 	private static final Gson gson = MyGson.getGson();
@@ -30,7 +31,9 @@ public class RunProtocol {
 			gson.toJson(new ContentModel(PLAYERID, ROOMID, ANSWER)));
 	private static final Protocol GUESS = factory.createProtocol(Duel1A2B.GUESS, RequestStatus.request.toString(), 
 			gson.toJson(new ContentModel(PLAYERID, ROOMID, GUESSNUMBER)));
-	private static final Protocol TARGET = ENTERGAME;
+	private static final Protocol SET_BOSS_ANSWER = factory.createProtocol(Boss1A2B.SET_ANSWER, RequestStatus.request.toString(), 
+			gson.toJson(new ContentModel(PLAYERID, ROOMID, ANSWER)));
+	private static final Protocol TARGET = SET_BOSS_ANSWER;
 
 	public static void main(String[] argv){
 		SocketConnector cn = SocketConnector.getInstance();

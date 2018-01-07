@@ -20,6 +20,7 @@ import gamecore.model.games.Game;
 import gamecore.model.games.GameEnteringWaitingBox;
 import gamecore.model.games.a1b2.boss.imp.BasicBoss;
 import gamecore.model.games.a1b2.boss.imp.Boss1A2BGame;
+import gamecore.model.games.a1b2.boss.imp.SmartBabyBoss;
 import gamecore.model.games.a1b2.duel.imp.Duel1A2BGame;
 import utils.ForServer;
 import utils.LogHelper;
@@ -292,7 +293,7 @@ public class GameRoom extends Entity implements LeisureTimeChallengeable{
 			//TODO
 			break;
 		case BOSS1A2B:
-			game = new Boss1A2BGame(protocolFactory, new BasicBoss(new ApacheLoggerAdapter(BasicBoss.class), protocolFactory), 
+			game = new Boss1A2BGame(protocolFactory, new SmartBabyBoss(new ApacheLoggerAdapter(BasicBoss.class), protocolFactory), 
 					allPlayers, id);
 			game.setLog(new ApacheLoggerAdapter(Boss1A2BGame.class));
 			break;

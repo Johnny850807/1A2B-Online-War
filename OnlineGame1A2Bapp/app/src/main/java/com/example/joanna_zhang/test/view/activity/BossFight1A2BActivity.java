@@ -1,7 +1,6 @@
 package com.example.joanna_zhang.test.view.activity;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -42,7 +41,6 @@ import gamecore.model.games.GameOverModel;
 import gamecore.model.games.a1b2.boss.core.AbstractSpirit;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.AttackResult;
-import gamecore.model.games.a1b2.boss.core.Monster;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import gamecore.model.games.a1b2.boss.core.SpiritsModel;
@@ -112,19 +110,12 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     private void setupLayout() {
-        setupProgressBar();
         setupAttackResultListView();
     }
 
     private void setupAttackResultListView() {
         guessResultAdapter = new GuessResultAdapter();
         attackResultListView.setAdapter(guessResultAdapter);
-    }
-
-    private void setupProgressBar() {
-        /*bossHpProgressBar.getProgressDrawable().setColorFilter(
-                Color.GREEN, PorterDuff.Mode.DARKEN);
-        bossHpProgressBar.setScaleY(3f);*/
     }
 
     private void setUpInputNumberWindowView() {
@@ -239,7 +230,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     public void onNextTurn(NextTurnModel nextTurnModel) {
         this.whosTurn = nextTurnModel.getWhosTurn();
 
-        drawPlayerSpiritsViewBackground();
+        drawhighlightOnTheTurnPlayerSpirit();
 
         if (whosTurn.getId().equals(currentPlayer.getId())) {
             setInputNumberViewsEnabled(true);
@@ -250,7 +241,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         }
     }
 
-    private void drawPlayerSpiritsViewBackground() {
+    private void drawhighlightOnTheTurnPlayerSpirit() {
         for (PlayerSpiritItemViewFactory.ViewHolder viewHolder : playerSpiritViewHoldersMap.values())
             viewHolder.view.setBackgroundColor(Color.GRAY);
 

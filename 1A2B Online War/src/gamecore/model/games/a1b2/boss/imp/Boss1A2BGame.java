@@ -114,6 +114,7 @@ public class Boss1A2BGame extends Game implements IBoss1A2BGame{
 				broadcastNextTurn(whosTurn);
 			else 
 			{
+				delay(2000);
 				boss.action();
 				log.info(getPlayerSpiritsStatus());
 				if (areAllPlayersDead())
@@ -206,6 +207,7 @@ public class Boss1A2BGame extends Game implements IBoss1A2BGame{
 	}
 	
 	private void broadcastNextTurn(int nextTurn){
+		delay(800);
 		log.trace(getPlayerSpirits().get(nextTurn).getName() + "'s turn.");
 		PlayerSpirit who = playerSpirits.get(nextTurn);
 		Protocol protocol = protocolFactory.createProtocol(NEXT_TURN, RequestStatus.success.toString(), 
@@ -256,5 +258,13 @@ public class Boss1A2BGame extends Game implements IBoss1A2BGame{
 		strb.append(boss).append("\n");
 		strb.append("\n========Status========");
 		return strb.toString();
+	}
+	
+	private void delay(long delay){
+		try {
+			Thread.sleep(delay);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

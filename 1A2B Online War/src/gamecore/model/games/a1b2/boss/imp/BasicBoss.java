@@ -20,18 +20,8 @@ public class BasicBoss extends Monster{
 	private transient Player bossPlayer;
 	
 	public BasicBoss(MyLogger log, ProtocolFactory protocolFactory) {
-		super(UUID.randomUUID().toString(), "Boss", log, protocolFactory);
+		super("Boss", 3000, 1000, log, protocolFactory);
 		bossPlayer = new Player(getName());
-	}
-
-	@Override
-	public int getMp() {
-		return 1000;
-	}
-
-	@Override
-	public int getMaxHp() {
-		return 3000;
 	}
 
 	@Override
