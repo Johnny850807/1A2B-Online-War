@@ -11,16 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.joanna_zhang.test.R;
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
@@ -58,7 +60,7 @@ import gamecore.model.games.a1b2.core.NumberNotValidException;
 public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender {
     private final static String TAG = "BossFight1A2BActivity";
 
-    private FrameLayout containerView;
+    private RelativeLayout containerView;
     private Button inputNumberBtn;
     private ImageButton sendGuessBtn;
     private ImageView bossImg;
@@ -92,6 +94,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         setContentView(R.layout.activity_boss_fight1_a2_b);
         init();
         findViews();
+        loadBossGif();
         setupLayout();
         setUpInputNumberWindowView();
     }
@@ -114,6 +117,12 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         bossHpProgressBar = findViewById(R.id.bossHpProgressBar);
         attackResultListView = findViewById(R.id.attackResultsLst);
         playerSpiritsViewGroup = findViewById(R.id.playerSpiritsViewGroup);
+    }
+
+    private void loadBossGif(){
+        Glide.with(this).load(R.drawable.lucid_half).
+                asGif().placeholder(R.drawable.lucid_half_static)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE).fitCenter().into(bossImg);
     }
 
     private void setupLayout() {
