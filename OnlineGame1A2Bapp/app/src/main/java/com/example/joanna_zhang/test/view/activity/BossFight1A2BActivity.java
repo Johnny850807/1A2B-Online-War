@@ -1,12 +1,12 @@
 package com.example.joanna_zhang.test.view.activity;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +24,7 @@ import com.example.joanna_zhang.test.R;
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.example.joanna_zhang.test.animations.CostingProgressBarAnimation;
-import com.example.joanna_zhang.test.view.dialog.InputNumberWindowDialog;
+import com.example.joanna_zhang.test.view.dialog.InputNumberDialog;
 import com.example.joanna_zhang.test.view.myview.PlayerSpiritItemViewFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
@@ -42,7 +42,6 @@ import gamecore.model.games.GameOverModel;
 import gamecore.model.games.a1b2.boss.core.AbstractSpirit;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.AttackResult;
-import gamecore.model.games.a1b2.boss.core.Monster;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import gamecore.model.games.a1b2.boss.core.SpiritsModel;
@@ -50,10 +49,9 @@ import gamecore.model.games.a1b2.core.A1B2NumberValidator;
 import gamecore.model.games.a1b2.core.GuessResult;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
 
-/**
- * TODO
- * (1) dialog: sure to leave from the game? (let's see we have to do this in every game, so why not to make a online game base activity for all such these operations?)
- */
+import static android.R.string.cancel;
+import static com.example.joanna_zhang.test.R.string.confirm;
+
 public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender {
     private final static String TAG = "BossFight1A2BActivity";
 
@@ -68,7 +66,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     private PlayerSpiritItemViewFactory playerSpiritItemViewFactory;
     private Map<String, PlayerSpiritItemViewFactory.ViewHolder> playerSpiritViewHoldersMap = new HashMap<>();  //<player's id, view holder>
 
-    private AlertDialog inputNumberWindowDialog;  //TODO RENAME
+    private AlertDialog inputNumberDialog;
     private AlertDialog waitingForPlayersEnteringDialog;
 
     private MediaPlayer mediaPlayer;
@@ -128,7 +126,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     private void setUpInputNumberWindowView() {
-        inputNumberWindowDialog = new InputNumberWindowDialog.Builder(this)
+        inputNumberDialog = new InputNumberDialog.Builder(this)
                 .setOnEnterClickListener(guessNumber -> inputNumberBtn.setText(guessNumber))
                 .setTitle(getString(R.string.pleaseInputGuess))
                 .build();
@@ -150,7 +148,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     public void inputNumberOnClick(View view) {
-        inputNumberWindowDialog.show();
+        inputNumberDialog.show();
     }
 
     public void onSendGuessNumberBtnClick(View view) {
@@ -189,7 +187,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
     private void showDialogForSettingAnswer() {
         Log.d(TAG, "showDialogForSettingAnswer");
-        new InputNumberWindowDialog.Builder(this)
+        new InputNumberDialog.Builder(this)
                 .setTitle(getString(R.string.setAnswerFirst))
                 .setOnEnterClickListener((answer) -> boss1A2BModule.setAnswer(answer))
                 .setCanceledOnTouchOutside(false)
@@ -214,7 +212,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     @Override
     public void onSetAnswerUnsuccessfully(ErrorMessage errorMessage) {
         Log.e(TAG, errorMessage.getMessage());
-        //TODO show message with some UX
+        Toast.makeText(this, R.string.setAnswerUnSuccessfully, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -226,7 +224,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     public void onAttackUnsuccessfully(ErrorMessage errorMessage) {
         Log.e(TAG, errorMessage.getMessage());
         setInputNumberViewsEnabled(true);
-        //TODO show message with some UX
+        Toast.makeText(this, R.string.pleaseReAttack, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -267,20 +265,11 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     public void onGameOver(GameOverModel gameOverModel) {
         gameover = true;
         if (gameOverModel.getWinnerId().equals(Constants.Events.Games.Boss1A2B.WinnerId.BOSS_WIN)) {
-            createAndShowDialogForWinner(spiritsModel.getBoss());
+            AppDialogFactory.createGameoverResultDialogForWinner(this, spiritsModel.getBoss().getName()).show();
             soundManager.playSound(R.raw.lose);
         }
         else
-            AppDialogFactory.createGameoverResultDialogForWinner(this, currentPlayer).show();
-    }
-
-    private void createAndShowDialogForWinner(AbstractSpirit winner) {
-        AppDialogFactory.templateBuilder(this)
-                .setTitle(R.string.gameOver)
-                .setMessage(getString(R.string.theWinnerIs, winner.getName()))
-                .setPositiveButton(R.string.confirm, (dialog, which) -> finish())
-                .create()
-                .show();
+            AppDialogFactory.createGameoverResultDialogForWinner(this, getString(R.string.players)).show();
     }
 
     //TODO use recyclerview instead
@@ -348,6 +337,29 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     @Override
     public void onError(@NonNull Throwable err) {
         Log.e(TAG, err.getMessage());
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (!gameover)
+                showLeftGameDialog();
+            else
+                finish();
+        }
+        return false;
+    }
+
+    private void showLeftGameDialog() {
+        AppDialogFactory.templateBuilder(this)
+                .setTitle(R.string.leftGame)
+                .setMessage(R.string.sureToLeftGame)
+                .setPositiveButton(confirm, (d,i) -> {
+                    boss1A2BModule.leaveGame();
+                    finish();
+                })
+                .setNegativeButton(cancel, null)
+                .show();
     }
 
     @Override

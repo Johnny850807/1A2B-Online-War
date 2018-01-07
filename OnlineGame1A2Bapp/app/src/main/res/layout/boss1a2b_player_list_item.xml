@@ -9,16 +9,14 @@
 
     <ProgressBar
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:progressDrawable="@drawable/my_progressbar_drawable"
         android:id="@+id/playerHpProgressBar"
         android:max="100"
         android:progress="50"
-        android:padding="3dp"
-        android:layout_weight="1"
         android:maxHeight="30dip"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 
     <TextView
         android:layout_width="match_parent"
@@ -32,10 +30,9 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="15dp"
         android:id="@+id/playerAnswerTxt"
         android:textColor= "#2104f7"
-        android:layout_weight="1"
         android:gravity="center"/>
 
 </LinearLayout>
