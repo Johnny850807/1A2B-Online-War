@@ -135,7 +135,7 @@ public class Duel1A2BGame extends Game{
 		Protocol protocol = protocolFactory.createProtocol(Games.GAMEOVER, 
 				RequestStatus.success.toString(), gson.toJson(model));
 		broadcastToAll(protocol);
-		listener.onGameOver(this, model);
+		listener.onGameOver(this);
 	}
 
 	public ClientPlayer getClientPlayer(String playerId){

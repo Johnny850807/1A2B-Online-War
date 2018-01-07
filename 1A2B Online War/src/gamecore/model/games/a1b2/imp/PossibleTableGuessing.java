@@ -1,6 +1,5 @@
 package gamecore.model.games.a1b2.imp;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -47,6 +46,7 @@ public class PossibleTableGuessing implements GuessStrategy{
 		possibleNumbers.removeAll(removeList);
 	}
 
+	// 1234 4B  5624
 	private boolean isPossibleNumber(String guess, String caseNum, int expectedA, int expectedB){
 		int actualA = 0, actualB = 0;
 		for (int i = 0 ; i < guess.length() ; i ++ )

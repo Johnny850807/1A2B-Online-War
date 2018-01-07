@@ -204,6 +204,7 @@ public class Boss1A2BGame extends Game implements IBoss1A2BGame{
 		Protocol protocol = protocolFactory.createProtocol(Games.GAMEOVER, RequestStatus.success.toString(),
 				gson.toJson(gameOverModel));
 		broadcastToAll(protocol);
+		listener.onGameOver(this);
 	}
 	
 	private void broadcastNextTurn(int nextTurn){

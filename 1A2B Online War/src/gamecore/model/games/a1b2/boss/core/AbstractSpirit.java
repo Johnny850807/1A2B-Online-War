@@ -46,6 +46,14 @@ public abstract class AbstractSpirit implements Spirit{
 		return hp;
 	}
 	
+	public void setMaxHp(int maxHp) {
+		this.hp = this.maxHp = maxHp;
+	}
+	
+	public void setMp(int mp) {
+		this.mp = mp;
+	}
+	
 	public abstract Type getType();
 	public interface DamageParser{
 		int parsingDamage(GuessResult guessResult);
@@ -56,7 +64,7 @@ public abstract class AbstractSpirit implements Spirit{
 		public int parsingDamage(GuessResult guessResult) {
 			// formula (r = random number): (28+r)*(a+b) - ((7+r)*b) 
 			int a = guessResult.getA(), b = guessResult.getB();
-			return (28+getRandom(5, 13))*(a+b) - (7+getRandom(1, 6))*b + getRandom(1, 15) + (a==4?80:0);
+			return (28+getRandom(5, 13))*(a+b) - (7+getRandom(1, 6))*b + getRandom(1, 15) + (a>=3?130:0) + (a==4?100:0);
 		}
 	};
 	
@@ -139,6 +147,7 @@ public abstract class AbstractSpirit implements Spirit{
 
 	public void setAnswer(String answer) {
 		this.answer = answer;
+		log.trace("The boss has set up the answer: " + answer);
 	}
 	
 	public boolean isDead(){
@@ -174,5 +183,9 @@ public abstract class AbstractSpirit implements Spirit{
 	public String toString() {
 		return String.format("'%s, hp: %d/%d, mp:%d, %s'", getName(), getHp(), getMaxHp(), getMp(), 
 								isDead() ? "dead" : "alive");
+	}
+	
+	public ProtocolFactory getProtocolFactory() {
+		return protocolFactory;
 	}
 }

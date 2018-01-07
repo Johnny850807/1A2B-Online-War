@@ -110,7 +110,7 @@ public abstract class Game{
 	public interface GameLifecycleListener {
 		public void onGameStarted(Game game, Protocol gameStartedProcol);
 		public void onGameInterrupted(Game game, ClientPlayer noResponsePlayer);
-		public void onGameOver(Game game, GameOverModel gameOverModel);
+		public void onGameOver(Game game);
 	}
 
 	public Date getLaunchDate() {

@@ -254,7 +254,7 @@ public class ReleaseGameCore implements GameCore{
 	}
 
 	@Override
-	public void onGameOver(Game game, GameOverModel gameOverModel) {
+	public void onGameOver(Game game) {
 		GameRoom room = getGameRoom(game.getRoomId());
 		log.trace("Game over, the room " + room.getName() + " closed, closing it.");
 		room.setAllPlayerStatus(ClientStatus.signedIn);

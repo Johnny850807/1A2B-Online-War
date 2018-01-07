@@ -29,12 +29,13 @@ import gamecore.model.games.ProcessInvalidException;
 import gamecore.model.games.a1b2.boss.core.Monster;
 import gamecore.model.games.a1b2.boss.imp.Boss1A2BGame;
 import gamecore.model.games.a1b2.boss.imp.OnePunchBoss;
-import gamecore.model.games.a1b2.boss.imp.SmartBabyBoss;
+import gamecore.model.games.a1b2.boss.imp.Lucid;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
 import mock.MockClient;
 import utils.MyGson;
+import utils.RandomString;
 
 @RunWith(Parameterized.class)
 public class TestBoss1a2bGame implements GameLifecycleListener{
@@ -89,7 +90,7 @@ public class TestBoss1a2bGame implements GameLifecycleListener{
 				if (hostClient.hasReceivedEvent(Games.GAMEOVER))
 					break fightingLoop;
 				if (!game.getPlayerSpirit(player.getId()).isDead())
-					game.attack(player.getId(), boss.getAnswer());
+					game.attack(player.getId(), RandomString.nextNonDuplicatedNumber(4));
 			}
 		} while (!hostClient.hasReceivedEvent(Games.GAMEOVER));
 		
@@ -116,14 +117,14 @@ public class TestBoss1a2bGame implements GameLifecycleListener{
 	public void onGameInterrupted(Game game, ClientPlayer noResponsePlayer) {}
 
 	@Override
-	public void onGameOver(Game game, GameOverModel gameOverModel) {
+	public void onGameOver(Game game) {
 	}
 	
 	@Parameterized.Parameters
 	public static Collection primeNumbers() {
 		gameFactory = new GameOnlineReleaseFactory();
 		return Arrays.asList(new Object[][] {
-			{new SmartBabyBoss(new MockLogger(), gameFactory.getProtocolFactory())},
+			{new Lucid(new MockLogger(), gameFactory.getProtocolFactory())},
 			{new OnePunchBoss (new MockLogger(), gameFactory.getProtocolFactory())}
 	      });
 	}
