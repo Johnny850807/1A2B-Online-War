@@ -2,20 +2,20 @@ package com.example.joanna_zhang.test.view.activity;
 
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.joanna_zhang.test.view.dialog.InputNumberWindowDialog;
+import com.example.joanna_zhang.test.view.dialog.InputNumberDialog;
 import com.example.joanna_zhang.test.view.myview.ChatWindowView;
 
 import gamecore.entity.ChatMessage;
 import gamecore.model.ErrorMessage;
 
-public class GroupFightActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowDialog.OnClickListener {
+public class GroupFightActivity extends AppCompatActivity implements ChatWindowView.ChatMessageListener, InputNumberDialog.OnClickListener {
 /*
     //private Duel1A2BGameModule duel1A2BGameModule;
     //private List<GuessRecord> p1ResultList, p2ResultList;
     private GameRoom gameRoom;
     private Player currentPlayer;
     private ChatWindowView chatWindowView;
-    private InputNumberWindowDialog inputNumberWindowDialog;
+    private InputNumberDialog inputNumberWindowDialog;
     private Button inputNumberBtn;
     private TextView p1NameTxt, p2NameTxt, p3NameTxt, p4NameTxt, p5NameTxt, p6NameTxt;
     private ListView p1ResultListView, p2ResultListView;
@@ -44,7 +44,7 @@ public class GroupFightActivity extends AppCompatActivity implements ChatWindowV
     }
 
     private void setupInputNumberWindowView() {
-        inputNumberWindowDialog = new InputNumberWindowDialog.Builder(this)
+        inputNumberWindowDialog = new InputNumberDialog.Builder(this)
                 .setOnEnterClickListener(this)
                 .build();
     }*/

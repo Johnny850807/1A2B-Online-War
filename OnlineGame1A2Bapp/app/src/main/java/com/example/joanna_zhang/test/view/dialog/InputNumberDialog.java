@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.example.joanna_zhang.test.R;
 
 
-public class InputNumberWindowDialog extends AlertDialog implements View.OnClickListener {
+public class InputNumberDialog extends AlertDialog implements View.OnClickListener {
     private Context context;
     private String title;
     private TextView titleTxt;
@@ -21,7 +21,7 @@ public class InputNumberWindowDialog extends AlertDialog implements View.OnClick
     private EditText answerEd;
     private OnClickListener OnClickListener;
 
-    public InputNumberWindowDialog(Context context) {
+    public InputNumberDialog(Context context) {
         super(context);
         this.context = context;
     }
@@ -112,10 +112,10 @@ public class InputNumberWindowDialog extends AlertDialog implements View.OnClick
     }
 
     public static class Builder {
-        private InputNumberWindowDialog inputNumberWindowDialog;
+        private InputNumberDialog inputNumberWindowDialog;
 
         public Builder(Activity activity) {
-            inputNumberWindowDialog = new InputNumberWindowDialog(activity);
+            inputNumberWindowDialog = new InputNumberDialog(activity);
         }
 
         public Builder setOnEnterClickListener(OnClickListener onClickListener) {
@@ -138,11 +138,11 @@ public class InputNumberWindowDialog extends AlertDialog implements View.OnClick
             return this;
         }
 
-        public InputNumberWindowDialog build() {
+        public InputNumberDialog build() {
             return inputNumberWindowDialog;
         }
 
-        public InputNumberWindowDialog show() {
+        public InputNumberDialog show() {
             inputNumberWindowDialog.show();
             return inputNumberWindowDialog;
         }

@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.example.joanna_zhang.test.R;
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
-import com.example.joanna_zhang.test.view.dialog.InputNumberWindowDialog;
+import com.example.joanna_zhang.test.view.dialog.InputNumberDialog;
 import com.example.joanna_zhang.test.view.myview.ChatWindowView;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
@@ -41,7 +41,7 @@ import gamecore.model.games.a1b2.duel.core.Duel1A2BPlayerBarModel;
 import static android.R.string.cancel;
 import static com.example.joanna_zhang.test.R.string.confirm;
 
-public class Duel1A2BActivity extends OnlineGameActivity implements ChatWindowView.ChatMessageListener, InputNumberWindowDialog.OnClickListener, Duel1A2BModule.Callback {
+public class Duel1A2BActivity extends OnlineGameActivity implements ChatWindowView.ChatMessageListener, InputNumberDialog.OnClickListener, Duel1A2BModule.Callback {
     private final static String TAG = "Duel1A2BActivity";
     private Duel1A2BModule duel1A2BModule;
     private List<GuessRecord> p1ResultList, p2ResultList;
@@ -79,7 +79,7 @@ public class Duel1A2BActivity extends OnlineGameActivity implements ChatWindowVi
         CoreGameServer.getInstance().resendUnhandledEvents();
     }
 
-    @Override  //TODO extract to the base online game activity
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (!gameover)
@@ -146,7 +146,7 @@ public class Duel1A2BActivity extends OnlineGameActivity implements ChatWindowVi
     }
 
     private void showDialogForSettingAnswer() {
-        new InputNumberWindowDialog.Builder(this)
+        new InputNumberDialog.Builder(this)
                 .setOnEnterClickListener(answer -> duel1A2BModule.setAnswer(answer))
                 .setCanceledOnTouchOutside(false)
                 .setCancelable(false)
@@ -161,7 +161,7 @@ public class Duel1A2BActivity extends OnlineGameActivity implements ChatWindowVi
     }
 
     private void setUpInputNumberWindowView() {
-        inputNumberWindowDialog = new InputNumberWindowDialog.Builder(this)
+        inputNumberWindowDialog = new InputNumberDialog.Builder(this)
                 .setOnEnterClickListener(this)
                 .setTitle(getString(R.string.pleaseInputGuess))
                 .build();
@@ -279,7 +279,7 @@ public class Duel1A2BActivity extends OnlineGameActivity implements ChatWindowVi
         if (!winner.equals(currentPlayer))
             soundManager.playSound(R.raw.lose);
         inputNumberBtn.setEnabled(false);
-        handler.postDelayed(()->AppDialogFactory.createGameoverResultDialogForWinner(this, winner).show(), 3000);
+        handler.postDelayed(()->AppDialogFactory.createGameoverResultDialogForWinner(this, winner.getName()).show(), 3000);
     }
 
     @Override
