@@ -365,7 +365,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     public void onDrawMagicAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
 
         runOnUiThread(()->{
-            if (nowPlayer != song2Player && attacker.equals(spiritsModel.getBoss()))
+            if (nowPlayer != song2Player && attacker.getId().equals(spiritsModel.getBoss().getId()))
                 switchBossImgToMagicAttackingGifAndSwitchBackThen();
             addAttackResultAndUpdate(attackResult);
             animateDamageText(attacked, attackResult);
@@ -386,7 +386,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     private void animateDamageText(AbstractSpirit attacked, AttackResult attackResult) {
         TextView effectTxt = new TextView(this);
         float x, y;
-        if (attacked.equals(spiritsModel.getBoss()))
+        if (attacked.getId().equals(spiritsModel.getBoss().getId()))
         {
             Log.d(TAG, "Boss damaged animating.");
             x = bossImg.getX();
