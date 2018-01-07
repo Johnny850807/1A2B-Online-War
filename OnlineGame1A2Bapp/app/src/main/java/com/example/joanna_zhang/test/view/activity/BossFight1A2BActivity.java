@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +25,7 @@ import com.example.joanna_zhang.test.R;
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.example.joanna_zhang.test.animations.CostingProgressBarAnimation;
+import com.example.joanna_zhang.test.animations.DamageNumberEffectAnimation;
 import com.example.joanna_zhang.test.view.dialog.InputNumberWindowDialog;
 import com.example.joanna_zhang.test.view.myview.PlayerSpiritItemViewFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
@@ -55,6 +58,7 @@ import gamecore.model.games.a1b2.core.NumberNotValidException;
 public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender {
     private final static String TAG = "BossFight1A2BActivity";
 
+    private FrameLayout containerView;
     private Button inputNumberBtn;
     private ImageButton sendGuessBtn;
     private ImageView bossImg;
@@ -62,6 +66,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     private GuessResultAdapter guessResultAdapter;
     private ProgressBar bossHpProgressBar;
 
+    private HorizontalScrollView playerSpiritsHorizontalScrollView;
     private LinearLayout playerSpiritsViewGroup;
     private PlayerSpiritItemViewFactory playerSpiritItemViewFactory;
     private Map<String, PlayerSpiritItemViewFactory.ViewHolder> playerSpiritViewHoldersMap = new HashMap<>();  //<player's id, view holder>
@@ -101,6 +106,8 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     private void findViews() {
+        playerSpiritsHorizontalScrollView = findViewById(R.id.playerSpiritsHorizontalScrollView);
+        containerView = findViewById(R.id.container);
         bossImg = findViewById(R.id.bossImg);
         inputNumberBtn = findViewById(R.id.inputNumberBtn);
         sendGuessBtn = findViewById(R.id.sendGuessBtn);
@@ -327,6 +334,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     public void onDrawNormalAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
         runOnUiThread(()->{
             addAttackResultAndUpdate(attackResult);
+            animateDamageText(attacked, attackResult);
         });
     }
 
@@ -334,6 +342,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     public void onDrawMagicAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
         runOnUiThread(()->{
             addAttackResultAndUpdate(attackResult);
+            animateDamageText(attacked, attackResult);
         });
     }
 
@@ -341,6 +350,32 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         attackResults.add(attackResult);
         guessResultAdapter.notifyDataSetChanged();
         attackResultListView.setSelection(attackResultListView.getCount() - 1);
+    }
+
+    private void animateDamageText(AbstractSpirit attacked, AttackResult attackResult){
+        TextView effectTxt = new TextView(this);
+        float x, y;
+        if (attacked.getId().equals(spiritsModel.getBoss().getId()))
+        {
+            Log.d(TAG, "Boss damaged animating.");
+            x = bossImg.getX();
+            y = bossImg.getY();
+        }
+        else
+        {
+            Log.d(TAG, "Player " + attacked.getName() + " damaged animating.");
+            x = playerSpiritViewHoldersMap.get(attacked.getId()).view.getX();
+            y = playerSpiritsHorizontalScrollView.getY() - 32;
+        }
+
+        Log.d(TAG, "Target view ("+x+","+y+")");
+        effectTxt.setX(x + 35);
+        effectTxt.setY(y);
+        containerView.addView(effectTxt);
+        effectTxt.setText(String.valueOf(attackResult.getDamage()));
+        DamageNumberEffectAnimation animation = new DamageNumberEffectAnimation(containerView, effectTxt);
+        animation.setTextSize(45);
+        effectTxt.startAnimation(animation);
     }
 
     @Override
