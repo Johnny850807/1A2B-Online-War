@@ -39,7 +39,7 @@ public class DamageNumberEffectAnimation extends Animation implements Animation.
     @Override
     protected void applyTransformation(float interpolatedTime, Transformation t) {
         super.applyTransformation(interpolatedTime, t);
-        float alpha = 255 + (-255) * interpolatedTime;
+        float alpha = 1 + (-1) * interpolatedTime;
         float x = fromX + (targetX - fromX) * interpolatedTime;
         float y = fromY + (targetY - fromY) * interpolatedTime;
         targetTxt.setAlpha(alpha);

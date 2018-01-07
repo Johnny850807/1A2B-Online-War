@@ -25,6 +25,14 @@ public class SmartBabyBoss extends Monster{
 	}
 	
 	@Override
+	protected MonsterAction chooseNextMonsterAction() {
+		if (getHp() > getMaxHp()/2)
+			for (MonsterAction action : actions)
+				if (action instanceof SmartGuessingAttack)
+					return action;
+		return super.chooseNextMonsterAction();
+	}
+	@Override
 	protected void onAnswerGuessed4A(AttackResult attackResult) {
 		setAnswer(onProduceAnswer());
 	}
