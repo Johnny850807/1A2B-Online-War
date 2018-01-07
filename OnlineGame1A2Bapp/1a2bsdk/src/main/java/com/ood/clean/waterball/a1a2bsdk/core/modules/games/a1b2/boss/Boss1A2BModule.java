@@ -11,6 +11,7 @@ import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
 import gamecore.model.games.GameOverModel;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
+import gamecore.model.games.a1b2.boss.core.Monster;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 import gamecore.model.games.a1b2.boss.core.SpiritsModel;
 
@@ -62,6 +63,11 @@ public interface Boss1A2BModule extends OnlineGameModule{
          * when then player sets the answer successfully
          */
         public void onNextTurn(NextTurnModel nextTurnModel);
+
+        /**
+         * when the boss change his answer
+         */
+        public void onBossAnswerChanged(Monster boss);
 
         /**
          * when then player sets the answer successfully

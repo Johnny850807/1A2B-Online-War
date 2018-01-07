@@ -70,5 +70,6 @@
     <string name="expiredDetection">超時偵測</string>
     <string name="playerTimeExpired">玩家閒置時間過久，登出伺服器。</string>
     <string name="tryingToReconnectInternet">正在重新嘗試連線</string>
+    <string name="theBossChangedHisAnswer" formatted="false">%s 改變他的答案了！</string>
 
 </resources>

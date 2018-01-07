@@ -28,6 +28,7 @@ public class CostingProgressBarAnimation extends Animation {
     protected void applyTransformation(float interpolatedTime, Transformation t) {
         super.applyTransformation(interpolatedTime, t);
         float value = from + (to - from) * interpolatedTime;
+        value = value < 0 ? 0 : value;
         /*if (value <= to)
             progressBar.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.DARKEN);*/
         progressBar.setProgress((int) value);

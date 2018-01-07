@@ -48,6 +48,7 @@ import gamecore.model.games.GameOverModel;
 import gamecore.model.games.a1b2.boss.core.AbstractSpirit;
 import gamecore.model.games.a1b2.boss.core.AttackActionModel;
 import gamecore.model.games.a1b2.boss.core.AttackResult;
+import gamecore.model.games.a1b2.boss.core.Monster;
 import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import gamecore.model.games.a1b2.boss.core.SpiritsModel;
@@ -265,6 +266,11 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         }
     }
 
+    @Override
+    public void onBossAnswerChanged(Monster boss) {
+        Toast.makeText(this, getString(R.string.theBossChangedHisAnswer, boss.getName()), Toast.LENGTH_SHORT).show();
+    }
+
     private void drawhighlightOnTheTurnPlayerSpirit() {
         for (PlayerSpiritItemViewFactory.ViewHolder viewHolder : playerSpiritViewHoldersMap.values())
             viewHolder.view.setBackgroundColor(Color.GRAY);
@@ -366,7 +372,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     @Override
     public void onDrawMagicAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
         runOnUiThread(()->{
-            if (nowPlayer != song2Player && attacker.getId().equals(spiritsModel.getBoss().getId()))
+            if (nowPlayer != song2Player && attacker.equals(spiritsModel.getBoss()))
                 switchBossImgToMagicAttackingGifAndSwitchBackThen();
             addAttackResultAndUpdate(attackResult);
             animateDamageText(attacked, attackResult);
@@ -387,7 +393,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     private void animateDamageText(AbstractSpirit attacked, AttackResult attackResult){
         TextView effectTxt = new TextView(this);
         float x, y;
-        if (attacked.getId().equals(spiritsModel.getBoss().getId()))
+        if (attacked.equals(spiritsModel.getBoss()))
         {
             Log.d(TAG, "Boss damaged animating.");
             x = bossImg.getX();
