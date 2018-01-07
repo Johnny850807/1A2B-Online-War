@@ -25,10 +25,10 @@
 
         <ImageView
             android:id="@+id/bossImg"
-            android:layout_width="220dp"
-            android:layout_height="220dp"
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
             android:layout_gravity="center"
-            android:src="@drawable/lucid_half"
+            android:src="@drawable/lucid_half_static"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             android:padding="10dp" />

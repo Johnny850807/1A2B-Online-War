@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,6 +61,7 @@ import gamecore.model.games.a1b2.core.NumberNotValidException;
  */
 public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender {
     private final static String TAG = "BossFight1A2BActivity";
+    private Handler handler = new Handler();
 
     private RelativeLayout containerView;
     private Button inputNumberBtn;
@@ -76,7 +79,9 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     private AlertDialog inputNumberWindowDialog;  //TODO RENAME
     private AlertDialog waitingForPlayersEnteringDialog;
 
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer nowPlayer;
+    private MediaPlayer song1Player;
+    private MediaPlayer song2Player;
     private SoundManager soundManager;
 
     private Boss1A2BModule boss1A2BModule;
@@ -94,13 +99,16 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         setContentView(R.layout.activity_boss_fight1_a2_b);
         init();
         findViews();
-        loadBossGif();
+        loadBossGif(R.drawable.lucid_half);
         setupLayout();
         setUpInputNumberWindowView();
     }
 
     private void init() {
-        mediaPlayer = MediaPlayer.create(this, R.raw.king_boss_op);
+        song1Player = MediaPlayer.create(this, R.raw.lucid_fight_1);
+        song2Player = MediaPlayer.create(this, R.raw.lucid_fight_2);
+        song1Player.setLooping(true);
+        song2Player.setLooping(true);
         soundManager = new SoundManager(this);
         CoreGameServer server = CoreGameServer.getInstance();
         boss1A2BModule = (Boss1A2BModule) server.createModule(ModuleName.GAME1A2BBOSS);
@@ -119,9 +127,8 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         playerSpiritsViewGroup = findViewById(R.id.playerSpiritsViewGroup);
     }
 
-    private void loadBossGif(){
-        Glide.with(this).load(R.drawable.lucid_half).
-                asGif().placeholder(R.drawable.lucid_half_static)
+    private void loadBossGif(@DrawableRes int gifId){
+        Glide.with(this).load(gifId).asGif().placeholder(R.drawable.lucid_half_static)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE).fitCenter().into(bossImg);
     }
 
@@ -153,7 +160,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
             waitingForPlayersEnteringDialog.show();
             boss1A2BModule.enterGame();
         } else if (attackingStarted)  //only play the music while attacking started
-            mediaPlayer.start();
+            nowPlayer.start();
     }
 
     public void inputNumberOnClick(View view) {
@@ -209,7 +216,8 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     public void onAttackingPhaseStarted() {
         Log.d(TAG, "The attacking phase started.");
         this.attackingStarted = true;
-        mediaPlayer.start();
+        nowPlayer = song1Player;
+        nowPlayer.start();
         Toast.makeText(this, R.string.bossGameStarted, Toast.LENGTH_SHORT).show();
     }
 
@@ -276,7 +284,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
             createAndShowDialogForWinner(spiritsModel.getBoss());
             soundManager.playSound(R.raw.lose);
         }
-        else
+        else    //TODO 誰跟你CURRENT PLAYER 贏??? 玩家陣營贏!!!
             AppDialogFactory.createGameoverResultDialogForWinner(this, currentPlayer).show();
     }
 
@@ -332,12 +340,20 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
             Log.d(TAG, "onDrawHpCosted: name " + spirit.getName() + ", cost: " + cost);
             CostingProgressBarAnimation animation = new CostingProgressBarAnimation(hpBar, spirit.getHp(), spirit.getHp() - cost);
             hpBar.startAnimation(animation);
+
+            if (spiritsModel.getBoss().getHp() < spiritsModel.getBoss().getMaxHp() / 2)
+                switchToSong2Player();
         });
     }
 
-    @Override
-    public void onDrawMpCosted(AbstractSpirit spirit, int cost) {
+    private void switchToSong2Player(){
+        song1Player.stop();
+        nowPlayer = song2Player;
+        song2Player.start();
     }
+
+    @Override
+    public void onDrawMpCosted(AbstractSpirit spirit, int cost) {}
 
     @Override
     public void onDrawNormalAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
@@ -350,9 +366,16 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     @Override
     public void onDrawMagicAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
         runOnUiThread(()->{
+            if (attacker.getId().equals(spiritsModel.getBoss().getId()))
+                switchBossImgToMagicAttackingGifAndSwitchBackThen();
             addAttackResultAndUpdate(attackResult);
             animateDamageText(attacked, attackResult);
         });
+    }
+
+    private void switchBossImgToMagicAttackingGifAndSwitchBackThen(){
+        loadBossGif(R.drawable.lucid_magic_attack3);
+        handler.postDelayed(()->loadBossGif(R.drawable.lucid_half), 1800);
     }
 
     private void addAttackResultAndUpdate(AttackResult attackResult){
@@ -388,8 +411,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     @Override
-    public void onServerReconnected() {
-    }
+    public void onServerReconnected() {}
 
     @Override
     public void onError(@NonNull Throwable err) {
@@ -402,13 +424,15 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         boss1A2BModule.unregisterCallBack(this);
 
         if (attackingStarted)
-            mediaPlayer.pause();
+            nowPlayer.pause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mediaPlayer.release();
+        song1Player.release();
+        song2Player.release();
         soundManager.release();
+        handler.removeCallbacks(null);
     }
 }
