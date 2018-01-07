@@ -127,7 +127,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         playerSpiritsViewGroup = findViewById(R.id.playerSpiritsViewGroup);
     }
 
-    private void loadBossGif(@DrawableRes int gifId){
+    private void loadBossGif(@DrawableRes int gifId) {
         Glide.with(this).load(gifId).asGif().placeholder(R.drawable.lucid_half_static)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE).fitCenter().into(bossImg);
     }
@@ -283,12 +283,10 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         if (gameOverModel.getWinnerId().equals(Constants.Events.Games.Boss1A2B.WinnerId.BOSS_WIN)) {
             AppDialogFactory.createGameoverResultDialogForWinner(this, spiritsModel.getBoss().getName()).show();
             soundManager.playSound(R.raw.lose);
-        }
-        else
+        } else
             AppDialogFactory.createGameoverResultDialogForWinner(this, getString(R.string.players)).show();
     }
 
-    }
 
     //TODO use recyclerview instead
     private class GuessResultAdapter extends BaseAdapter {
@@ -324,11 +322,12 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
             return view;
         }
+
     }
 
     @Override
     public void onDrawHpCosted(AbstractSpirit spirit, int cost) {
-        runOnUiThread(()->{
+        runOnUiThread(() -> {
             ProgressBar hpBar = spirit.getId().equals(spiritsModel.getBoss().getId()) ? bossHpProgressBar : playerSpiritViewHoldersMap.get(spirit.getId()).playerHpBar;
             Log.d(TAG, "onDrawHpCosted: name " + spirit.getName() + ", cost: " + cost);
             CostingProgressBarAnimation animation = new CostingProgressBarAnimation(hpBar, spirit.getHp(), spirit.getHp() - cost);
@@ -339,18 +338,19 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         });
     }
 
-    private void switchToSong2Player(){
+    private void switchToSong2Player() {
         song1Player.stop();
         nowPlayer = song2Player;
         song2Player.start();
     }
 
     @Override
-    public void onDrawMpCosted(AbstractSpirit spirit, int cost) {}
+    public void onDrawMpCosted(AbstractSpirit spirit, int cost) {
+    }
 
     @Override
     public void onDrawNormalAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
-        runOnUiThread(()->{
+        runOnUiThread(() -> {
             addAttackResultAndUpdate(attackResult);
             animateDamageText(attacked, attackResult);
         });
@@ -358,7 +358,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
     @Override
     public void onDrawMagicAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
-        runOnUiThread(()->{
+        runOnUiThread(() -> {
             if (attacker.getId().equals(spiritsModel.getBoss().getId()))
                 switchBossImgToMagicAttackingGifAndSwitchBackThen();
             addAttackResultAndUpdate(attackResult);
@@ -366,34 +366,31 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         });
     }
 
-    private void switchBossImgToMagicAttackingGifAndSwitchBackThen(){
+    private void switchBossImgToMagicAttackingGifAndSwitchBackThen() {
         loadBossGif(R.drawable.lucid_magic_attack3);
-        handler.postDelayed(()->loadBossGif(R.drawable.lucid_half), 1800);
+        handler.postDelayed(() -> loadBossGif(R.drawable.lucid_half), 1800);
     }
 
-    private void addAttackResultAndUpdate(AttackResult attackResult){
+    private void addAttackResultAndUpdate(AttackResult attackResult) {
         attackResults.add(attackResult);
         guessResultAdapter.notifyDataSetChanged();
         attackResultListView.setSelection(attackResultListView.getCount() - 1);
     }
 
-    private void animateDamageText(AbstractSpirit attacked, AttackResult attackResult){
+    private void animateDamageText(AbstractSpirit attacked, AttackResult attackResult) {
         TextView effectTxt = new TextView(this);
         float x, y;
-        if (attacked.getId().equals(spiritsModel.getBoss().getId()))
-        {
+        if (attacked.getId().equals(spiritsModel.getBoss().getId())) {
             Log.d(TAG, "Boss damaged animating.");
             x = bossImg.getX();
             y = bossImg.getY();
-        }
-        else
-        {
+        } else {
             Log.d(TAG, "Player " + attacked.getName() + " damaged animating.");
             x = playerSpiritViewHoldersMap.get(attacked.getId()).view.getX();
             y = playerSpiritsHorizontalScrollView.getY() - 32;
         }
 
-        Log.d(TAG, "Target view ("+x+","+y+")");
+        Log.d(TAG, "Target view (" + x + "," + y + ")");
         effectTxt.setX(x + 35);
         effectTxt.setY(y);
         containerView.addView(effectTxt);
@@ -404,7 +401,8 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     @Override
-    public void onServerReconnected() {}
+    public void onServerReconnected() {
+    }
 
     @Override
     public void onError(@NonNull Throwable err) {
@@ -426,7 +424,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         AppDialogFactory.templateBuilder(this)
                 .setTitle(R.string.leftGame)
                 .setMessage(R.string.sureToLeftGame)
-                .setPositiveButton(confirm, (d,i) -> {
+                .setPositiveButton(confirm, (d, i) -> {
                     boss1A2BModule.leaveGame();
                     finish();
                 })
