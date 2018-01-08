@@ -7,7 +7,12 @@ import android.view.animation.Transformation;
 import android.widget.TextView;
 
 
-public class DamageNumberEffectAnimation extends Animation implements Animation.AnimationListener {
+/**
+ * This animation first add the target textview inside the container for showing the animation. (so you don't have to do
+ * that manually) Then the target textview will be fade up with its number assigned, and ends up with removing the
+ * target textview from the container so it will not exist anymore.
+ */
+public class FadingNumberEffectAnimation extends Animation implements Animation.AnimationListener {
     private static final String TAG = "HPAnimation";
     private static final int XOFFSET = -10;
     private static final int YOFFSET = -140;
@@ -19,13 +24,14 @@ public class DamageNumberEffectAnimation extends Animation implements Animation.
     private float targetY;
     private int textSize = 45;
 
-    public DamageNumberEffectAnimation(ViewGroup container, TextView targetTxt) {
+    public FadingNumberEffectAnimation(ViewGroup container, TextView targetTxt) {
         this.container = container;
         this.targetTxt = targetTxt;
         this.fromX = targetTxt.getX();
         this.fromY = targetTxt.getY();
         this.targetX = targetTxt.getX() + XOFFSET;
         this.targetY = targetTxt.getY() + YOFFSET;
+        container.addView(targetTxt);
         targetTxt.setTextColor(Color.RED);
         targetTxt.setTextSize(textSize);
         setAnimationListener(this);

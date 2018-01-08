@@ -31,7 +31,7 @@ import com.example.joanna_zhang.test.Utils.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.example.joanna_zhang.test.animations.CostingProgressBarAnimation;
 import com.example.joanna_zhang.test.view.dialog.InputNumberDialog;
-import com.example.joanna_zhang.test.animations.DamageNumberEffectAnimation;
+import com.example.joanna_zhang.test.animations.FadingNumberEffectAnimation;
 import com.example.joanna_zhang.test.view.myview.PlayerSpiritItemViewFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
@@ -335,7 +335,8 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         runOnUiThread(() -> {
             ProgressBar hpBar = spirit.getId().equals(spiritsModel.getBoss().getId()) ? bossHpProgressBar : playerSpiritViewHoldersMap.get(spirit.getId()).playerHpBar;
             Log.d(TAG, "onDrawHpCosted: name " + spirit.getName() + ", cost: " + cost);
-            CostingProgressBarAnimation animation = new CostingProgressBarAnimation(hpBar, spirit.getHp(), spirit.getHp() - cost);
+            int nowHp = hpBar.getProgress();
+            CostingProgressBarAnimation animation = new CostingProgressBarAnimation(hpBar, nowHp, nowHp - cost);
             hpBar.startAnimation(animation);
 
             if (spiritsModel.getBoss().getHp() < spiritsModel.getBoss().getMaxHp() / 2)
@@ -350,8 +351,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     @Override
-    public void onDrawMpCosted(AbstractSpirit spirit, int cost) {
-    }
+    public void onDrawMpCosted(AbstractSpirit spirit, int cost) { /*no need to draw the mp cost currently*/}
 
     @Override
     public void onDrawNormalAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
@@ -363,9 +363,8 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
     @Override
     public void onDrawMagicAttack(AbstractSpirit attacked, AbstractSpirit attacker, AttackResult attackResult) {
-
         runOnUiThread(()->{
-            if (nowPlayer != song2Player && attacker.getId().equals(spiritsModel.getBoss().getId()))
+            if (attacker.getId().equals(spiritsModel.getBoss().getId()))
                 switchBossImgToMagicAttackingGifAndSwitchBackThen();
             addAttackResultAndUpdate(attackResult);
             animateDamageText(attacked, attackResult);
@@ -374,6 +373,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
 
     private void switchBossImgToMagicAttackingGifAndSwitchBackThen() {
         loadBossGif(R.drawable.lucid_magic_attack3);
+        //load back to the half git roughly when the attacking animation is over (1800ms)
         handler.postDelayed(() -> loadBossGif(R.drawable.lucid_half), 1800);
     }
 
@@ -388,28 +388,26 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         float x, y;
         if (attacked.getId().equals(spiritsModel.getBoss().getId()))
         {
-            Log.d(TAG, "Boss damaged animating.");
+            Log.d(TAG, "Boss damaged animating."); //the number shows above the boss' image
             x = bossImg.getX();
             y = bossImg.getY();
-        } else {
+        } else {  //the number shows on the top of that damaged player spirit
             Log.d(TAG, "Player " + attacked.getName() + " damaged animating.");
             x = playerSpiritViewHoldersMap.get(attacked.getId()).view.getX();
             y = playerSpiritsHorizontalScrollView.getY() - 32;
         }
 
         Log.d(TAG, "Target view (" + x + "," + y + ")");
-        effectTxt.setX(x + 35);
+        effectTxt.setX(x + 35);  //add some biases
         effectTxt.setY(y);
-        containerView.addView(effectTxt);
         effectTxt.setText(String.valueOf(attackResult.getDamage()));
-        DamageNumberEffectAnimation animation = new DamageNumberEffectAnimation(containerView, effectTxt);
+        FadingNumberEffectAnimation animation = new FadingNumberEffectAnimation(containerView, effectTxt);
         animation.setTextSize(45);
         effectTxt.startAnimation(animation);
     }
 
     @Override
-    public void onServerReconnected() {
-    }
+    public void onServerReconnected() {}
 
     @Override
     public void onError(@NonNull Throwable err) {
