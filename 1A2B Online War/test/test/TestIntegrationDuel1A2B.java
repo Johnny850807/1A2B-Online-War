@@ -1,17 +1,17 @@
 package test;
 
-import static container.Constants.Events.Chat.SEND_MSG;
-import static container.Constants.Events.Games.*;
-import static container.Constants.Events.Games.Duel1A2B.GUESS;
-import static container.Constants.Events.Games.Duel1A2B.GUESSING_STARTED;
-import static container.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
-import static container.Constants.Events.Games.Duel1A2B.SET_ANSWER;
-import static container.Constants.Events.InRoom.*;
-import static container.Constants.Events.RoomList.CREATE_ROOM;
-import static container.Constants.Events.RoomList.JOIN_ROOM;
-import static container.Constants.Events.Signing.GETINFO;
-import static container.Constants.Events.Signing.SIGNIN;
-import static container.Constants.Events.Signing.SIGNOUT;
+import static container.core.Constants.Events.Chat.SEND_MSG;
+import static container.core.Constants.Events.Games.*;
+import static container.core.Constants.Events.Games.Duel1A2B.GUESS;
+import static container.core.Constants.Events.Games.Duel1A2B.GUESSING_STARTED;
+import static container.core.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
+import static container.core.Constants.Events.Games.Duel1A2B.SET_ANSWER;
+import static container.core.Constants.Events.InRoom.*;
+import static container.core.Constants.Events.RoomList.CREATE_ROOM;
+import static container.core.Constants.Events.RoomList.JOIN_ROOM;
+import static container.core.Constants.Events.Signing.GETINFO;
+import static container.core.Constants.Events.Signing.SIGNIN;
+import static container.core.Constants.Events.Signing.SIGNOUT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -30,9 +30,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import container.Constants.Events.Games;
-import container.Constants.Events.InRoom;
-import container.base.Client;
+import container.core.Client;
+import container.core.Constants.Events.Games;
+import container.core.Constants.Events.InRoom;
 import container.eventhandler.EventHandler;
 import container.eventhandler.GameEventHandlerFactory;
 import container.protocol.Protocol;
@@ -50,12 +50,12 @@ import gamecore.model.RequestStatus;
 import gamecore.model.RoomStatus;
 import gamecore.model.ServerInformation;
 import gamecore.model.games.Game;
-import gamecore.model.games.a1b2.Duel1A2BGame;
-import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
-import gamecore.model.games.a1b2.GameOverModel;
-import gamecore.model.games.a1b2.boss.AttackActionModel;
-import gamecore.model.games.a1b2.boss.AttackResult;
-import gamecore.model.games.a1b2.boss.NextTurnModel;
+import gamecore.model.games.GameOverModel;
+import gamecore.model.games.a1b2.boss.core.AttackActionModel;
+import gamecore.model.games.a1b2.boss.core.AttackResult;
+import gamecore.model.games.a1b2.boss.core.NextTurnModel;
+import gamecore.model.games.a1b2.duel.core.Duel1A2BPlayerBarModel;
+import gamecore.model.games.a1b2.duel.imp.Duel1A2BGame;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
 import mock.MockClient;
@@ -75,7 +75,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	protected Player player = new Player("Player");
 	protected MockClient hostClient = new MockClient(); 
 	protected MockClient playerClient = new MockClient();
-	protected GameMode gameMode = GameMode.BOSS1A2B;
+	protected GameMode gameMode;
 	protected GameRoom gameRoom;
 	protected int signInCount = 0;
 	protected List<Duel1A2BPlayerBarModel> duelModels;
@@ -87,7 +87,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 	
 	@Before
 	public void setup(){
-		
+		gameMode = GameMode.BOSS1A2B;
 	}
 	
 	@Test
@@ -99,7 +99,7 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		
 		/***choose only one of the testing method below alternatively.***/
 		/***the game mode selected should be equal to the testing game method.***/
-		
+
 		//testPlayingDuel1A2B();  //if enable this, the game room will be closed after game completed
 		testPlayingBoss1A2B();
 		//testBootingPlayer();
@@ -219,8 +219,8 @@ public class TestIntegrationDuel1A2B implements EventHandler.OnRespondingListene
 		assertTrue(playerClient.hasReceivedEvent(GUESS));;
 		assertTrue(playerClient.hasReceivedEvent(ONE_ROUND_OVER));
 		assertTrue(hostClient.hasReceivedEvent(ONE_ROUND_OVER));
-		
-		assertEquals(GAMEOVER, playerClient.getLastedResponse().getEvent());
+
+		assertTrue(playerClient.hasReceivedEvent(GAMEOVER));
 		assertEquals(GAMEOVER, hostClient.getLastedResponse().getEvent());
 		assertEquals(0, factory.getGameCore().getGameRooms().size());
 		/*bindPlayerAndHostFromUpdatedGameroom(gson.fromJson(hostClient.getLastedResponse().getData(), GameRoom.class));

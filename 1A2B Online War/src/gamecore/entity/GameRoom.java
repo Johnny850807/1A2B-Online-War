@@ -1,15 +1,15 @@
 package gamecore.entity;
 
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import container.ApacheLoggerAdapter;
-import container.base.ClientBinder;
-import container.base.MyLogger;
+import container.core.ClientBinder;
+import container.core.MyLogger;
 import container.protocol.ProtocolFactory;
+import gamecore.ApacheLoggerAdapter;
 import gamecore.model.ClientPlayer;
 import gamecore.model.ClientStatus;
 import gamecore.model.GameMode;
@@ -18,11 +18,12 @@ import gamecore.model.PlayerStatus;
 import gamecore.model.RoomStatus;
 import gamecore.model.games.Game;
 import gamecore.model.games.GameEnteringWaitingBox;
-import gamecore.model.games.a1b2.Duel1A2BGame;
-import gamecore.model.games.a1b2.boss.BasicBoss;
-import gamecore.model.games.a1b2.boss.Boss1A2BGame;
+import gamecore.model.games.a1b2.boss.imp.BasicBoss;
+import gamecore.model.games.a1b2.boss.imp.Boss1A2BGame;
+import gamecore.model.games.a1b2.boss.imp.Lucid;
+import gamecore.model.games.a1b2.duel.imp.Duel1A2BGame;
 import utils.ForServer;
-import utils.GamecoreHelper;
+import utils.LogHelper;
 
 /**
  * GameRoom contains only the info and the status the room should present. The game of the room will be
@@ -243,7 +244,7 @@ public class GameRoom extends Entity implements LeisureTimeChallengeable{
 			playerClients.add(clientBinder.getClientPlayer(playerStatus.getPlayer().getId()));
 		
 		log.trace("Host prepared: " + hostClient.getPlayerName());
-		log.trace("Players prepared: " + GamecoreHelper.clientsToString(playerClients));
+		log.trace("Players prepared: " + LogHelper.clientsToString(playerClients));
 		
 		initGame(hostClient, playerClients, listener);
 		pushLeisureTime();
@@ -292,7 +293,7 @@ public class GameRoom extends Entity implements LeisureTimeChallengeable{
 			//TODO
 			break;
 		case BOSS1A2B:
-			game = new Boss1A2BGame(protocolFactory, new BasicBoss(new ApacheLoggerAdapter(BasicBoss.class), protocolFactory), 
+			game = new Boss1A2BGame(protocolFactory, new Lucid(new ApacheLoggerAdapter(BasicBoss.class), protocolFactory), 
 					allPlayers, id);
 			game.setLog(new ApacheLoggerAdapter(Boss1A2BGame.class));
 			break;

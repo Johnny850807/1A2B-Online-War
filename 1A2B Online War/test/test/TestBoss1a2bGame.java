@@ -1,5 +1,7 @@
 package test;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,31 +13,29 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import container.Constants.Events.Games;
-import container.Constants.Events.Games.Boss1A2B;
+import container.core.Constants.Events.Games;
+import container.core.Constants.Events.Games.Boss1A2B;
 import container.protocol.Protocol;
-
-import static org.junit.Assert.*;
-
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.MockLogger;
-import gamecore.model.games.GameEnteringWaitingBox;
-import gamecore.model.games.ProcessInvalidException;
 import gamecore.model.games.Game;
 import gamecore.model.games.Game.GameLifecycleListener;
-import gamecore.model.games.a1b2.GameOverModel;
-import gamecore.model.games.a1b2.NumberNotValidException;
-import gamecore.model.games.a1b2.boss.Boss1A2BGame;
-import gamecore.model.games.a1b2.boss.Monster;
-import gamecore.model.games.a1b2.boss.OnePunchBoss;
-import gamecore.model.games.a1b2.boss.TestingBoss;
+import gamecore.model.games.GameEnteringWaitingBox;
+import gamecore.model.games.GameOverModel;
+import gamecore.model.games.ProcessInvalidException;
+import gamecore.model.games.a1b2.boss.core.Monster;
+import gamecore.model.games.a1b2.boss.imp.Boss1A2BGame;
+import gamecore.model.games.a1b2.boss.imp.OnePunchBoss;
+import gamecore.model.games.a1b2.boss.imp.Lucid;
+import gamecore.model.games.a1b2.core.NumberNotValidException;
 import gamefactory.GameFactory;
 import gamefactory.GameOnlineReleaseFactory;
 import mock.MockClient;
 import utils.MyGson;
+import utils.RandomString;
 
 @RunWith(Parameterized.class)
 public class TestBoss1a2bGame implements GameLifecycleListener{
@@ -90,7 +90,7 @@ public class TestBoss1a2bGame implements GameLifecycleListener{
 				if (hostClient.hasReceivedEvent(Games.GAMEOVER))
 					break fightingLoop;
 				if (!game.getPlayerSpirit(player.getId()).isDead())
-					game.attack(player.getId(), boss.getAnswer());
+					game.attack(player.getId(), RandomString.nextNonDuplicatedNumber(4));
 			}
 		} while (!hostClient.hasReceivedEvent(Games.GAMEOVER));
 		
@@ -109,7 +109,7 @@ public class TestBoss1a2bGame implements GameLifecycleListener{
 	
 	
 	@Override
-	public void onGameStarted(Game game) {
+	public void onGameStarted(Game game, Protocol protocol) {
 		assertEquals(this.game, game);
 	}
 
@@ -117,15 +117,15 @@ public class TestBoss1a2bGame implements GameLifecycleListener{
 	public void onGameInterrupted(Game game, ClientPlayer noResponsePlayer) {}
 
 	@Override
-	public void onGameOver(Game game, GameOverModel gameOverModel) {
+	public void onGameOver(Game game) {
 	}
 	
 	@Parameterized.Parameters
 	public static Collection primeNumbers() {
 		gameFactory = new GameOnlineReleaseFactory();
 		return Arrays.asList(new Object[][] {
-			{new TestingBoss("t", "TestingBoss", new MockLogger(), gameFactory.getProtocolFactory())},
-			{new OnePunchBoss("o", "OnePunchBoss", new MockLogger(), gameFactory.getProtocolFactory())}
+			{new Lucid(new MockLogger(), gameFactory.getProtocolFactory())},
+			{new OnePunchBoss (new MockLogger(), gameFactory.getProtocolFactory())}
 	      });
 	}
 }

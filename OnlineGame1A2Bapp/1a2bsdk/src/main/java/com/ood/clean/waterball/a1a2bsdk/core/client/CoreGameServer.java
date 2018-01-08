@@ -13,14 +13,14 @@ import com.ood.clean.waterball.a1a2bsdk.core.base.GameModule;
 
 import javax.inject.Inject;
 
-import container.base.Client;
+import container.core.Client;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.model.RequestStatus;
 
 import static com.ood.clean.waterball.a1a2bsdk.core.Secret.PORT;
 import static com.ood.clean.waterball.a1a2bsdk.core.Secret.SERVER_ADDRESS;
-import static container.Constants.Events.RECONNECTED;
+import static container.core.Constants.Events.RECONNECTED;
 
 /**
     Facade pattern of the 1A2B sdk, contains all modules supporting your 1A2B app.
@@ -29,7 +29,8 @@ public final class CoreGameServer{
     private static final String TAG = "Socket";
     private static final GameModuleFactory moduleFactory = new ReleaseGameModuleFactory();
     private static CoreGameServer instance;
-    private @Inject Client client;
+    private @Inject
+    Client client;
     private @Inject ProtocolFactory protocolFactory;
     private @Inject EventBus eventBus;
     private Thread clientThread;

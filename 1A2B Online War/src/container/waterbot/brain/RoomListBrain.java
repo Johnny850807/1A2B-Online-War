@@ -1,6 +1,6 @@
 package container.waterbot.brain;
 
-import container.base.Client;
+import container.core.Client;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import container.waterbot.Brain;
@@ -12,14 +12,14 @@ import gamecore.model.GameMode;
 import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.RoomStatus;
-import utils.GamecoreHelper;
+import utils.LogHelper;
 import utils.MyGson;
 
-import static container.Constants.*;
-import static container.Constants.Events.*;
-import static container.Constants.Events.Signing.*;
-import static container.Constants.Events.InRoom.*;
-import static container.Constants.Events.RoomList.*;
+import static container.core.Constants.*;
+import static container.core.Constants.Events.*;
+import static container.core.Constants.Events.InRoom.*;
+import static container.core.Constants.Events.RoomList.*;
+import static container.core.Constants.Events.Signing.*;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

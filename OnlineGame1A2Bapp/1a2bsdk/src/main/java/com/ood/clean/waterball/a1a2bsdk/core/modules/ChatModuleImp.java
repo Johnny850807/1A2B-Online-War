@@ -15,8 +15,9 @@ import gamecore.entity.Player;
 import gamecore.model.ErrorMessage;
 import gamecore.model.RequestStatus;
 
-import static container.Constants.Events.Chat.SEND_MSG;
-import static container.Constants.Events.RECONNECTED;
+import static container.core.Constants.Events.Chat.SEND_MSG;
+import static container.core.Constants.Events.RECONNECTED;
+
 
 public class ChatModuleImp extends AbstractGameModule implements ChatModule {
     protected ProxyCallback proxyCallback;

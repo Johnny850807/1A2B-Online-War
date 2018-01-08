@@ -9,7 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import container.base.Client;
+import container.core.Client;
 import container.protocol.Protocol;
 import container.waterbot.brain.SharedMemory;
 import gamecore.entity.GameRoom;

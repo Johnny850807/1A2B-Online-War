@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import container.base.Client;
+import container.core.Client;
 import container.waterbot.brain.Duel1A2BGameBrain;
 import container.waterbot.brain.GameBrain;
 import container.waterbot.brain.InRoomBrain;

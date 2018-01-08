@@ -3,7 +3,7 @@ package container.eventhandler.handlers.inroom;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import container.base.Client;
+import container.core.Client;
 import container.eventhandler.handlers.GsonEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;

@@ -26,9 +26,10 @@ public enum ModuleName {
      */
     INROOM,
 
-    /**
-     * the 1a2b game in duel mode
-     */
-    GAME1A2BDUEL;
+    /*All the game modules*/
+
+    GAME1A2BDUEL,
+
+    GAME1A2BBOSS;
 
 }

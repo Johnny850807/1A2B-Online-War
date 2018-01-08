@@ -10,7 +10,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import container.base.Client;
+import container.core.Client;
 import container.protocol.ProtocolFactory;
 import container.protocol.XOXOXDelimiterFactory;
 

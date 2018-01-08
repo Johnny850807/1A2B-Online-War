@@ -21,17 +21,16 @@ import gamecore.model.ClientPlayer;
  */
 public class GameEnteringWaitingBox {
 	private Set<String> unenteredPlayerIds = Collections.synchronizedSet(new HashSet<>());  
-	private OnGamePlayersAllEnteredListener listener;
-	private boolean hasEmittedEnterGame = false;
+	private Game game;
 	
-	public GameEnteringWaitingBox(OnGamePlayersAllEnteredListener listener, ClientPlayer ...clientPlayers){
-		this.listener = listener;
+	public GameEnteringWaitingBox(Game game, ClientPlayer ...clientPlayers){
+		this.game = game;
 		for (ClientPlayer clientPlayer : clientPlayers)
 			unenteredPlayerIds.add(clientPlayer.getId());
 	}
 	
-	public GameEnteringWaitingBox(OnGamePlayersAllEnteredListener listener, List<ClientPlayer> clientPlayers){
-		this.listener = listener;
+	public GameEnteringWaitingBox(Game game, List<ClientPlayer> clientPlayers){
+		this.game = game;
 		for (ClientPlayer clientPlayer : clientPlayers)
 			unenteredPlayerIds.add(clientPlayer.getId());
 	}
@@ -39,11 +38,7 @@ public class GameEnteringWaitingBox {
 	public void enter(ClientPlayer clientPlayer){
 		unenteredPlayerIds.remove(clientPlayer.getId());
 		if (unenteredPlayerIds.isEmpty())
-			listener.onAllPlayerEntered();
+			game.startGame();
 	}
 	
-	public interface OnGamePlayersAllEnteredListener{
-		public void onAllPlayerEntered();
-	}
-
 }

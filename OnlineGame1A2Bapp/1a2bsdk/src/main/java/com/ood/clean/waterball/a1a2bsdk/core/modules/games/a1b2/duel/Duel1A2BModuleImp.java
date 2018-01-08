@@ -16,22 +16,22 @@ import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
-import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
-import gamecore.model.games.a1b2.Duel1A2BPlayerBarModel;
-import gamecore.model.games.a1b2.GameOverModel;
+import gamecore.model.games.GameOverModel;
+import gamecore.model.games.a1b2.duel.core.Duel1A2BPlayerBarModel;
 
-import static container.Constants.Events.Games.Duel1A2B.GUESS;
-import static container.Constants.Events.Games.Duel1A2B.GUESSING_STARTED;
-import static container.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
-import static container.Constants.Events.Games.Duel1A2B.SET_ANSWER;
-import static container.Constants.Events.Games.GAMEOVER;
-import static container.Constants.Events.Games.GAMESTARTED;
-import static container.Constants.Events.InRoom.CLOSE_ROOM;
-import static container.Constants.Events.InRoom.CLOSE_ROOM_TIME_EXPIRED;
-import static container.Constants.Events.InRoom.LEAVE_ROOM;
-import static container.Constants.Events.RECONNECTED;
+import static container.core.Constants.Events.Games.Duel1A2B.GUESS;
+import static container.core.Constants.Events.Games.Duel1A2B.GUESSING_STARTED;
+import static container.core.Constants.Events.Games.Duel1A2B.ONE_ROUND_OVER;
+import static container.core.Constants.Events.Games.Duel1A2B.SET_ANSWER;
+import static container.core.Constants.Events.Games.GAMEOVER;
+import static container.core.Constants.Events.Games.GAMESTARTED;
+import static container.core.Constants.Events.InRoom.CLOSE_ROOM;
+import static container.core.Constants.Events.InRoom.CLOSE_ROOM_TIME_EXPIRED;
+import static container.core.Constants.Events.InRoom.LEAVE_ROOM;
+import static container.core.Constants.Events.RECONNECTED;
+
 
 public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1A2BModule {
     private ProxyCallback proxyCallback;
@@ -81,13 +81,6 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
     }
 
     @Override
-    public void leaveGame() {
-        Protocol protocol = protocolFactory.createProtocol(LEAVE_ROOM, RequestStatus.request.toString(),
-                gson.toJson(new PlayerRoomIdModel(currentPlayer.getId(), currentGameRoom.getId())));
-        client.broadcast(protocol);
-    }
-
-    @Override
     protected Player getCurrentPlayer() {
         return currentPlayer;
     }
@@ -104,12 +97,52 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
             this.callback = callback;
         }
 
-
         @Override
         @BindCallback(event = GAMESTARTED, status = RequestStatus.success)
         public void onGameStarted() {
             Log.d(TAG, "the game " + currentGameRoom.getGameMode() + " started.");
             callback.onGameStarted();
+        }
+        @Override
+        @BindCallback(event = GAMEOVER, status = RequestStatus.success)
+        public void onGameOver(GameOverModel gameOverModel) {
+            Log.d(TAG, "Game over, the winner's id is: " + gameOverModel.getWinnerId());
+            callback.onGameOver(gameOverModel);
+        }
+
+        @Override
+        @BindCallback(event = LEAVE_ROOM, status = RequestStatus.success)
+        public void onPlayerLeft(PlayerRoomModel model) {
+            Log.d(TAG, "The Opponent left.");
+            if (!model.getPlayer().equals(currentPlayer))
+                callback.onPlayerLeft(model);
+        }
+
+        @Override
+        @BindCallback(event = CLOSE_ROOM, status = RequestStatus.success)
+        public void onGameClosed(GameRoom gameRoom) {
+            Log.d(TAG, "The game closed.");
+            if (!gameRoom.equals(currentGameRoom))
+                throw new IllegalStateException("The closed room is not the current room, how did it broadcast to the game?");
+            callback.onGameClosed(gameRoom);
+        }
+
+        @Override
+        @BindCallback(event = CLOSE_ROOM_TIME_EXPIRED, status = RequestStatus.success)
+        public void onRoomExpired() {
+            Log.d(TAG, "Room expired.");
+            callback.onRoomExpired();
+        }
+
+        @Override
+        @BindCallback(event = RECONNECTED, status = RequestStatus.success)
+        public void onServerReconnected() {
+            callback.onServerReconnected();
+        }
+
+        @Override
+        public void onError(@NonNull Throwable err) {
+            callback.onError(err);
         }
 
         @Override
@@ -154,47 +187,6 @@ public class Duel1A2BModuleImp extends AbstractOnlineGameModule implements Duel1
             callback.onOneRoundOver(models);
         }
 
-        @Override
-        @BindCallback(event = GAMEOVER, status = RequestStatus.success)
-        public void onGameOver(GameOverModel gameOverModel) {
-            Log.d(TAG, "Game over, the winner's id is: " + gameOverModel.getWinnerId());
-            callback.onGameOver(gameOverModel);
-        }
-
-        @Override
-        @BindCallback(event = LEAVE_ROOM, status = RequestStatus.success)
-        public void onPlayerLeft(PlayerRoomModel model) {
-            Log.d(TAG, "The Opponent left.");
-            if (!model.getPlayer().equals(currentPlayer))
-                callback.onPlayerLeft(model);
-        }
-
-        @Override
-        @BindCallback(event = CLOSE_ROOM, status = RequestStatus.success)
-        public void onGameClosed(GameRoom gameRoom) {
-            Log.d(TAG, "The game closed.");
-            if (!gameRoom.equals(currentGameRoom))
-                throw new IllegalStateException("The closed room is not the current room, how did it broadcast to the game?");
-            callback.onGameClosed(gameRoom);
-        }
-
-        @Override
-        @BindCallback(event = CLOSE_ROOM_TIME_EXPIRED, status = RequestStatus.success)
-        public void onRoomExpired() {
-            Log.d(TAG, "Room expired.");
-            callback.onRoomExpired();
-        }
-
-        @Override
-        @BindCallback(event = RECONNECTED, status = RequestStatus.success)
-        public void onServerReconnected() {
-            callback.onServerReconnected();
-        }
-
-        @Override
-        public void onError(@NonNull Throwable err) {
-            callback.onError(err);
-        }
     }
 
 }

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import container.base.Client;
+import container.core.Client;
 import container.eventhandler.handlers.GsonEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;

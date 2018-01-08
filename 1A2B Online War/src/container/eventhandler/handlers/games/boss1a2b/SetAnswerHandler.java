@@ -1,6 +1,6 @@
 package container.eventhandler.handlers.games.boss1a2b;
 
-import container.base.Client;
+import container.core.Client;
 import container.eventhandler.handlers.GsonEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
@@ -8,9 +8,9 @@ import gamecore.GameCore;
 import gamecore.entity.GameRoom;
 import gamecore.model.ContentModel;
 import gamecore.model.games.ProcessInvalidException;
-import gamecore.model.games.a1b2.Duel1A2BGame;
-import gamecore.model.games.a1b2.NumberNotValidException;
-import gamecore.model.games.a1b2.boss.Boss1A2BGame;
+import gamecore.model.games.a1b2.boss.core.IBoss1A2BGame;
+import gamecore.model.games.a1b2.core.NumberNotValidException;
+import gamecore.model.games.a1b2.duel.imp.Duel1A2BGame;
 
 /**
  * @author Waterball
@@ -32,7 +32,7 @@ public class SetAnswerHandler extends GsonEventHandler<ContentModel, ContentMode
 	protected Response onHandling(ContentModel data) {
 		try{
 			GameRoom room = gameCore().getGameRoom(data.getRoomId());
-			Boss1A2BGame game = (Boss1A2BGame) room.getGame();
+			IBoss1A2BGame game = (IBoss1A2BGame) room.getGame();
 			game.setPlayerAnswer(data.getPlayerId(), data.getContent());
 			return success(data);
 		}catch (NumberNotValidException|ProcessInvalidException err) {

@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import container.Constants;
-import container.base.Client;
+import container.core.Client;
+import container.core.Constants;
 import container.eventhandler.handlers.GsonEventHandler;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
@@ -15,7 +15,7 @@ import gamecore.ReleaseGameCore;
 import gamecore.entity.GameRoom;
 import gamecore.model.ClientPlayer;
 import gamecore.model.ServerInformation;
-import utils.GamecoreHelper;
+import utils.LogHelper;
 
 public class GetServerInformationHandler extends GsonEventHandler<Void, ServerInformation>{
 	private static final Logger log = LogManager.getLogger(ReleaseGameCore.class);
@@ -36,8 +36,8 @@ public class GetServerInformationHandler extends GsonEventHandler<Void, ServerIn
 		ServerInformation information = new ServerInformation(Constants.VERSION, players.size(), 
 				rooms.size());
 		log.debug("Info of gamecore:");
-		log.debug("Clients: " + GamecoreHelper.clientsToString(gameCore().getClientPlayers()));
-		log.debug("Rooms: " + GamecoreHelper.roomsToString(gameCore().getGameRooms()));
+		log.debug("Clients: " + LogHelper.clientsToString(gameCore().getClientPlayers()));
+		log.debug("Rooms: " + LogHelper.roomsToString(gameCore().getGameRooms()));
 		return success(information);
 	}
 

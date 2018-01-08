@@ -1,5 +1,12 @@
 package container.waterbot;
 
+import static container.core.Constants.*;
+import static container.core.Constants.Events.*;
+import static container.core.Constants.Events.Chat.*;
+import static container.core.Constants.Events.InRoom.*;
+import static container.core.Constants.Events.RoomList.*;
+import static container.core.Constants.Events.Signing.*;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -17,19 +24,12 @@ import org.junit.runner.Request;
 
 import com.google.gson.Gson;
 
-import container.base.Client;
+import container.core.Client;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.entity.Player;
 import gamecore.model.RequestStatus;
 import utils.MyGson;
-
-import static container.Constants.*;
-import static container.Constants.Events.*;
-import static container.Constants.Events.Signing.*;
-import static container.Constants.Events.RoomList.*;
-import static container.Constants.Events.Chat.*;
-import static container.Constants.Events.InRoom.*;
 
 public class WbotClient implements Client{
 	private static final Logger log = LogManager.getLogger(WbotClient.class);

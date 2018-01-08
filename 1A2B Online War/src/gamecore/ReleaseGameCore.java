@@ -18,11 +18,11 @@ import org.junit.validator.ValidateWith;
 
 import com.google.gson.Gson;
 
-import container.Constants.Events.Games;
-import container.Constants.Events.InRoom;
-import container.Constants.Events.RoomList;
-import container.Constants.Events.Signing;
-import container.base.Client;
+import container.core.Client;
+import container.core.Constants.Events.Games;
+import container.core.Constants.Events.InRoom;
+import container.core.Constants.Events.RoomList;
+import container.core.Constants.Events.Signing;
 import container.protocol.Protocol;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
@@ -32,7 +32,7 @@ import gamecore.model.PlayerRoomModel;
 import gamecore.model.RequestStatus;
 import gamecore.model.RoomStatus;
 import gamecore.model.games.Game;
-import gamecore.model.games.a1b2.GameOverModel;
+import gamecore.model.games.GameOverModel;
 import gamefactory.GameFactory;
 import utils.ForServer;
 import utils.MyGson;
@@ -60,7 +60,7 @@ public class ReleaseGameCore implements GameCore{
 	@Override
 	public void broadcastRoom(String roomId, Protocol response) {
 		GameRoom room = getGameRoom(roomId);
-		validateNull(room);
+		validateNotNull(room);
 		synchronized (room) {
 			if (roomContainer.containsKey(room.getId()))
 			{
@@ -146,7 +146,7 @@ public class ReleaseGameCore implements GameCore{
 	@Override
 	public void closeGameRoom(GameRoom room, Protocol protocol){
 		room = getGameRoom(room.getId());  
-		validateNull(room);
+		validateNotNull(room);
 		
 		//first change all the player status in the room to signedIn.
 		room.setAllPlayerStatus(ClientStatus.signedIn);
@@ -226,7 +226,7 @@ public class ReleaseGameCore implements GameCore{
 				RequestStatus.success.toString(), gson.toJson(new PlayerRoomModel(player, gameRoom)));
 		ClientPlayer leftPlayer = getClientPlayer(player.getId());
 		gameRoom = getGameRoom(gameRoom.getId());
-		validateNull(leftPlayer, gameRoom);
+		validateNotNull(leftPlayer, gameRoom);
 		synchronized(gameRoom)
 		{
 			if (gameRoom.containsPlayer(leftPlayer.getPlayer()))
@@ -240,10 +240,8 @@ public class ReleaseGameCore implements GameCore{
 	}
 
 	@Override
-	public void onGameStarted(Game game) {
-		Protocol protocol = factory.getProtocolFactory().createProtocol(Games.GAMESTARTED,
-				RequestStatus.success.toString(), null);
-		broadcastRoom(game.getRoomId(), protocol);
+	public void onGameStarted(Game game, Protocol gameStartedProtocol) {
+		broadcastRoom(game.getRoomId(), gameStartedProtocol);
 	}
 
 	@Override
@@ -256,12 +254,13 @@ public class ReleaseGameCore implements GameCore{
 	}
 
 	@Override
-	public void onGameOver(Game game, GameOverModel gameOverModel) {
+	public void onGameOver(Game game) {
 		GameRoom room = getGameRoom(game.getRoomId());
 		log.trace("Game over, the room " + room.getName() + " closed, closing it.");
 		room.setAllPlayerStatus(ClientStatus.signedIn);
 		room.setRoomStatus(RoomStatus.waiting);
 		removeTheRoomFromMapSync(room, "The game is over.");
+		System.gc();
 	}
 
 	private void removeTheRoomFromMapSync(GameRoom room, String logMsg){
@@ -281,13 +280,14 @@ public class ReleaseGameCore implements GameCore{
 		}
 	}
 	
-	private void validateNull(Object ...objs){
+	private void validateNotNull(Object ...objs){
 		for (Object object : objs)
 			if (object == null)
 				throw new NullPointerException();
 	}
 	
 	/**
+	 * @author Waterball
 	 * The challenger to challenge each game room. Close the room if it has been so much time on waiting.
 	 */
 	private class Challenger extends TimerTask{
@@ -301,11 +301,8 @@ public class ReleaseGameCore implements GameCore{
 		
 		@Override
 		public void run() {
-			log.trace("Now Thread count:" + Thread.activeCount());
-			log.trace("Challenger challening.");
 			challengingRooms();
 			challengingClientPlayers();
-			log.trace("Challenger challened.");
 		}
 		
 		private void challengingRooms(){

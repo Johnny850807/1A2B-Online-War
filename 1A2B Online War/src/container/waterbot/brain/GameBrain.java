@@ -9,10 +9,10 @@ import gamecore.model.ClientStatus;
 import gamecore.model.PlayerRoomIdModel;
 import gamecore.model.RoomStatus;
 
-import static container.Constants.Events.InRoom.*;
-import static container.Constants.Events.RoomList.*;
-import static container.Constants.Events.Chat.*;
-import static container.Constants.Events.Games.*;
+import static container.core.Constants.Events.InRoom.*;
+import static container.core.Constants.Events.RoomList.*;
+import static container.core.Constants.Events.Chat.*;
+import static container.core.Constants.Events.Games.*;
 
 public class GameBrain extends ChainBrain{
 

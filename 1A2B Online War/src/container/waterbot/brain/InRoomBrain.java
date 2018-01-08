@@ -1,15 +1,15 @@
 package container.waterbot.brain;
 
-import static container.Constants.Events.InRoom.*;
-import static container.Constants.Events.RoomList.*;
-import static container.Constants.Events.Chat.*;
-import static container.Constants.Events.Games.ENTERGAME;
+import static container.core.Constants.Events.Chat.*;
+import static container.core.Constants.Events.Games.ENTERGAME;
+import static container.core.Constants.Events.InRoom.*;
+import static container.core.Constants.Events.RoomList.*;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-import container.base.Client;
+import container.core.Client;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import container.waterbot.Brain;

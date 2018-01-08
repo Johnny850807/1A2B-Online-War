@@ -6,19 +6,22 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 
+import org.junit.runner.Request;
+
 import com.google.gson.Gson;
 
-import container.base.MyLogger;
+import container.core.Constants.Events.Games;
+import container.core.MyLogger;
+import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import gamecore.entity.GameRoom;
 import gamecore.model.ClientPlayer;
 import gamecore.model.GameMode;
 import gamecore.model.MockLogger;
-import gamecore.model.games.GameEnteringWaitingBox.OnGamePlayersAllEnteredListener;
-import gamecore.model.games.a1b2.GameOverModel;
+import gamecore.model.RequestStatus;
 import utils.ForServer;
 
-public abstract class Game implements OnGamePlayersAllEnteredListener{
+public abstract class Game{
 	protected static transient Gson gson = new Gson();
 	protected transient MyLogger log = new MockLogger();
 	protected transient ProtocolFactory protocolFactory;
@@ -56,22 +59,22 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
  	public void setEnteringWaitingBox(GameEnteringWaitingBox enteringWaitingBox) {
 		this.enteringWaitingBox = enteringWaitingBox;
 	}
- 	
- 	@Override
- 	public final synchronized void onAllPlayerEntered() {
- 		listener.onGameStarted(this);
- 		startGame();
- 	}
- 	
+
  	@ForServer
- 	public final synchronized void startGame(){
+ 	public final synchronized void startGame() {
+ 		onInitGame();
+ 		listener.onGameStarted(this, onCreateGameStartedProtocol());
  		log.trace("Game " + gameMode.toString() + " started.");
  		gameStarted = true;
- 		onGameStarted();
  		startTimer();
  	}
 
- 	protected void onGameStarted(){/*hook method*/};
+ 	protected void onInitGame(){/*hook*/};
+ 	
+ 	protected Protocol onCreateGameStartedProtocol(){
+ 		return protocolFactory.createProtocol(Games.GAMESTARTED, RequestStatus.success.toString(), null);
+ 	};
+ 	
  	
  	public void setLog(MyLogger log) {
 		this.log = log;
@@ -105,9 +108,9 @@ public abstract class Game implements OnGamePlayersAllEnteredListener{
 	}
 	
 	public interface GameLifecycleListener {
-		public void onGameStarted(Game game);
+		public void onGameStarted(Game game, Protocol gameStartedProcol);
 		public void onGameInterrupted(Game game, ClientPlayer noResponsePlayer);
-		public void onGameOver(Game game, GameOverModel gameOverModel);
+		public void onGameOver(Game game);
 	}
 
 	public Date getLaunchDate() {

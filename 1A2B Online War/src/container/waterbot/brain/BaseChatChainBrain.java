@@ -1,11 +1,11 @@
 package container.waterbot.brain;
 
-import static container.Constants.Events.Chat.SEND_MSG;
+import static container.core.Constants.Events.Chat.SEND_MSG;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import container.base.Client;
+import container.core.Client;
 import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
 import container.waterbot.Brain;
