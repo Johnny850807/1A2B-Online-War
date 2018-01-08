@@ -29,12 +29,14 @@ public abstract class ChainBrain implements Brain{
 	
 	@Override
 	public void react(WaterBot waterBot, Protocol protocol, Client client) {
-		if (protocol.getStatus().equals(SUCCESS))
-			onReceiveSuccessProtocol(waterBot, protocol, client);
-		else if (protocol.getStatus().equals(FAILED))
-			onReceiveFailedProtocol(waterBot, protocol, client);
-		else 
-			throw new IllegalStateException(getLogPrefix(waterBot) + "WTF that the status is not SUCCESS or even FAILED?");
+		synchronized (waterBot) {
+			if (protocol.getStatus().equals(SUCCESS))
+				onReceiveSuccessProtocol(waterBot, protocol, client);
+			else if (protocol.getStatus().equals(FAILED))
+				onReceiveFailedProtocol(waterBot, protocol, client);
+			else 
+				throw new IllegalStateException(getLogPrefix(waterBot) + "WTF that the status is not SUCCESS or even FAILED?");
+		}
 	}
 	
 	protected abstract void onReceiveSuccessProtocol(WaterBot waterBot, Protocol protocol, Client client);

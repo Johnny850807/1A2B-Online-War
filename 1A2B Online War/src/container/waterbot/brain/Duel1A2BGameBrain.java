@@ -53,14 +53,9 @@ public class Duel1A2BGameBrain extends BaseChatChainBrain{
 				parseOpponentAnswer(waterBot, protocol);
 			broadcastRandomGuessAfter2Seconds(waterBot, client);
 			return;
-		case GAMEOVER:
-			waterBot.getMe().setUserStatus(ClientStatus.signedIn);
-			waterBot.getGameRoom().setRoomStatus(RoomStatus.waiting);
-			break;
 		default:
 			break;
 		}
-		
 		nextIfNotNull(waterBot, protocol, client);
 	}
 

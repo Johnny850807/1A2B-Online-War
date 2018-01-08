@@ -1,6 +1,8 @@
 package container.waterbot;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -13,10 +15,13 @@ import container.waterbot.brain.SharedMemory;
 import gamecore.entity.GameRoom;
 import gamecore.entity.Player;
 import gamecore.model.ClientStatus;
+import gamecore.model.PlayerRoomModel;
 
 public class WaterBot{
 	private static Logger log = LogManager.getLogger(WaterBot.class);
-	private static final Stack<String> NAMESTACK = new Stack<>();
+	public static String[] NAMES = {"Water", "Fire", "Joanna", "Lin", "ZonYee", "Nay", "ShuYin",
+			"JAVA", "Yuang", "Python", "Gen", "June", "Grace", "Pick", "Nick", "Python", "Lay", "Ren"
+			, "Yin", "Sean", "Hook", "Noy", "Esther", "Arping", "YanRu", "Yuan", "MinYun", "Coco"};
 	private Brain brain;
 	private Client client;
 	private String name;
@@ -27,18 +32,10 @@ public class WaterBot{
 	private boolean running = true;
 	
 	static{
-		NAMESTACK.push("Water");
-		NAMESTACK.push("Fire");
-		NAMESTACK.push("Joanna");
-		NAMESTACK.push("Lin");
-		NAMESTACK.push("ZonYee");;
-		NAMESTACK.push("Nay");
-		NAMESTACK.push("ShuYon");
-		NAMESTACK.push("JAVA");
-		NAMESTACK.push("Yuang");
-		NAMESTACK.push("Python");
-		Collections.shuffle(NAMESTACK);
-		log.trace("Name is all prepared, size: " + NAMESTACK.size());
+		List<String> shuffledNames = Arrays.asList(NAMES);
+		Collections.shuffle(shuffledNames);
+		NAMES = shuffledNames.toArray(NAMES);
+		log.trace("Name is all prepared, size: " + NAMES.length);
 	}
 	
 	public WaterBot(Brain brain){
@@ -46,9 +43,9 @@ public class WaterBot{
 		this.brain = brain;
 		
 		log.trace("New WaterBot " + wid + " born !");
-		if (NAMESTACK.isEmpty())
+		if (NAMES.length == 0)
 			throw new IllegalStateException("No name in the stack !");
-		this.name = NAMESTACK.pop();
+		this.name = NAMES[this.wid];
 	}
 	
 	public void setClient(Client client) {
@@ -123,21 +120,46 @@ public class WaterBot{
 		return getMemory().getRoom();
 	}
 	
+	public boolean isInRoom() {
+		return getGameRoom() != null;
+	}
+	
 	public void setMe(Player me){
-		log.trace(getName() + " signs in. Status -> " + ClientStatus.signedIn);
+		log.trace(getName() + " signs in. Status -> " + me.getUserStatus());
+		if (getMe() != null)
+			throw new IllegalStateException("Already signed in.");
 		getMemory().setMe(me);
 	}
 	
 	public void setGameRoom(GameRoom gameRoom){
-		log.trace(getName() + " holds the game room. Status -> " + ClientStatus.inRoom);
-		getMe().setUserStatus(ClientStatus.inRoom);
+		if (isInRoom())
+			throw new IllegalStateException("Already in room.");
 		getMemory().setRoom(gameRoom);
+		log.trace(getName() + " holds the game room. Status -> " + getMe().getUserStatus());
 	}
 	
 	public void clearGameRoom(){
-		log.trace(getName() + " clears the game room. Status -> " + ClientStatus.signedIn);
+		if (getGameRoom() == null)
+			throw new IllegalStateException("Has no room to clear.");
 		getMe().setUserStatus(ClientStatus.signedIn);
 		getMemory().setRoom(null);
+		log.trace(getName() + " clears the game room. Status -> " + getMe().getUserStatus());
+	}
+	
+	public boolean isMyRoom(GameRoom gameRoom) {
+		return gameRoom.equals(getGameRoom());
+	}
+	
+	public boolean isMyRoom(PlayerRoomModel model) {
+		return model.getGameRoom().equals(getGameRoom());
+	}
+	
+	public boolean isMe(Player player) {
+		return getMe().equals(player);
+	}
+	
+	public boolean isMe(PlayerRoomModel model) {
+		return getMe().equals(model.getPlayer());
 	}
 	
 	/**
@@ -145,6 +167,6 @@ public class WaterBot{
 	 * the current room of where the Waterbot staying.
 	 */
 	public boolean imTheHost(){
-		return getGameRoom().getHost().equals(getMe());
+		return isInRoom() && getGameRoom().getHost().equals(getMe());
 	}
 }

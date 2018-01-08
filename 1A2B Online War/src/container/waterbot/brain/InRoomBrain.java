@@ -36,40 +36,40 @@ public class InRoomBrain extends BaseChatChainBrain{
 	protected void onReceiveSuccessProtocol(WaterBot waterBot, Protocol protocol, Client client) {
 		switch (protocol.getEvent()) {
 		case CREATE_ROOM:
-			closeRoomIfGameNotStartedIn10Minutes(waterBot, client);
+			if (waterBot.imTheHost())
+				closeRoomIfGameNotStartedIn10Minutes(waterBot, client);
 			return;
 		case JOIN_ROOM:
-			welcomeAndUpdateRoomStatusIfInMyRoom(waterBot, protocol, client);
+			if (waterBot.imTheHost())
+				sendWelcomeMessage(waterBot, protocol, client);
+			setReadyIfMe(waterBot, protocol, client);
 			return;
-		case LEAVE_ROOM:
-			updateStatusIfLeftFromMyRoomOrMyself(waterBot, protocol, client);
-			break;
 		case CHANGE_STATUS:
 			ChangeStatusModel model = gson.fromJson(protocol.getData(), ChangeStatusModel.class);
 			updateStatusAndLaunchGameIfAvailable(waterBot, model, client);
 			return;
-		case LAUNCH_GAME:
-			updateStatusAndEnterToTheGame(waterBot, protocol, client);
-			break;
 		default:
 			break;
 		}
 		nextIfNotNull(waterBot, protocol, client);
 	}
+
 	private void closeRoomIfGameNotStartedIn10Minutes(WaterBot waterBot, Client client){
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				Player me = waterBot.getMe();
-				GameRoom room = waterBot.getGameRoom();
-				if (waterBot.imTheHost() && room.getRoomStatus() == RoomStatus.waiting &&
-						me.getUserStatus() == ClientStatus.inRoom)
-				{
-					log.trace(getLogPrefix(waterBot) + "the room has long time not been started, so close it.");
-					broadcastLeaveRoom(me, room, client);
+				synchronized (waterBot) {
+					Player me = waterBot.getMe();
+					GameRoom room = waterBot.getGameRoom();
+					if (waterBot.isInRoom() && room.getRoomStatus() == RoomStatus.waiting 
+							&& waterBot.imTheHost())
+					{
+						log.trace(getLogPrefix(waterBot) + "the room has long time not been started, so close it.");
+						broadcastLeaveRoom(me, room, client);
+					}
 				}
 			}
-		}, TimeUnit.MINUTES.toMillis(10));
+		}, TimeUnit.MINUTES.toMillis(5));
 	}
 
 	//TODO inroom
@@ -79,30 +79,14 @@ public class InRoomBrain extends BaseChatChainBrain{
 		client.broadcast(protocol);
 	}
 	
-	private void updateStatusIfLeftFromMyRoomOrMyself(WaterBot waterBot, Protocol protocol, Client client){
-		PlayerRoomModel leaveModel = gson.fromJson(protocol.getData(), PlayerRoomModel.class);
-		if (leaveModel.getPlayer().equals(waterBot.getMe()))
-		{
-			waterBot.getMe().setUserStatus(ClientStatus.signedIn);
-			waterBot.setGameRoom(null);
-		}
-		else if (leaveModel.getGameRoom().equals(waterBot.getGameRoom()))
-			waterBot.getGameRoom().removePlayer(leaveModel.getPlayer());
-	}
-	
-	
-	private void welcomeAndUpdateRoomStatusIfInMyRoom(WaterBot waterBot, Protocol protocol, Client client) {
+	private void sendWelcomeMessage(WaterBot waterBot, Protocol protocol, Client client) {
 		PlayerRoomModel joinModel = MyGson.parse(protocol.getData(), PlayerRoomModel.class);
 		Player me = waterBot.getMe();
 		GameRoom room = waterBot.getGameRoom();
-
-		if (joinModel.getGameRoom().equals(room) && waterBot.imTheHost()) 
-		{
-			room.addPlayer(joinModel.getPlayer());
 			sendMessagDelayed(waterBot, joinModel.getGameRoom(), client, joinModel.getPlayer().getName() + 
 					"，您好。歡迎加入我的遊戲！", 2000);		
-		}
-		else if (joinModel.getGameRoom().equals(room) && joinModel.getPlayer().equals(me))
+
+		if (waterBot.isMe(joinModel))
 			sayHelloAndLeaveIfTheRoomIsNotWorking(waterBot, room, client);
 	}
 	
@@ -114,7 +98,13 @@ public class InRoomBrain extends BaseChatChainBrain{
 		setReadyToGame(waterBot, room, client);
 		leaveRoomAfter3Minutes(waterBot, room, client);
 	}
-
+	
+	private void setReadyIfMe(WaterBot waterBot, Protocol protocol, Client client) {
+		PlayerRoomModel joinModel = gson.fromJson(protocol.getData(), PlayerRoomModel.class);
+		if (waterBot.isMe(joinModel))
+			setReadyToGame(waterBot, joinModel.getGameRoom(), client);
+	}
+	
 	private void setReadyToGame(WaterBot waterBot, GameRoom room, Client client){
 		Player me = waterBot.getMe();
 		Protocol protocol = protocolFactory.createProtocol(CHANGE_STATUS, REQUEST, 
@@ -136,14 +126,16 @@ public class InRoomBrain extends BaseChatChainBrain{
 	}
 	
 	private void updateStatusAndLaunchGameIfAvailable(WaterBot waterBot, ChangeStatusModel model, Client client) {
-		GameRoom gameRoom = waterBot.getGameRoom();
-		Player me = waterBot.getMe();
-		Player player = gameRoom.getPlayerById(model.getPlayerId());
-		gameRoom.changePlayerStatus(player, model.isPrepare());
-		if (waterBot.imTheHost() && gameRoom.canStartTheGame())
-		{
-			sendMessageRequest(waterBot, gameRoom, client, "各位玩家～遊戲要開始囉！");
-			launchTheGameAfter10Seconds(waterBot, gameRoom, client);
+		synchronized (waterBot) {
+			GameRoom gameRoom = waterBot.getGameRoom();
+			Player me = waterBot.getMe();
+			Player player = gameRoom.getPlayerById(model.getPlayerId());
+			gameRoom.changePlayerStatus(player, model.isPrepare());
+			if (waterBot.imTheHost() && gameRoom.canStartTheGame())
+			{
+				sendMessageRequest(waterBot, gameRoom, client, "各位玩家～遊戲要開始囉！");
+				launchTheGameAfter10Seconds(waterBot, gameRoom, client);
+			}
 		}
 	}
 	
@@ -151,8 +143,8 @@ public class InRoomBrain extends BaseChatChainBrain{
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				synchronized (waterBot.getGameRoom()) {
-					if (gameRoom.canStartTheGame())
+				synchronized (waterBot) {
+					if (waterBot.isInRoom() && waterBot.imTheHost() && gameRoom.canStartTheGame())
 						broadcastLaunchingGameRequest(waterBot, gameRoom, client);
 					else 
 						sendMessageRequest(waterBot, gameRoom, client, "好吧又得等上一陣子。");
@@ -162,28 +154,10 @@ public class InRoomBrain extends BaseChatChainBrain{
 	}
 	
 	private void broadcastLaunchingGameRequest(WaterBot waterBot, GameRoom gameRoom, Client client){
-		if (gameRoom.isHost(waterBot.getMe()))
-		{
-			log.trace(getLogPrefix(waterBot) + "launching the game...");
-			Protocol protocol = protocolFactory.createProtocol(LAUNCH_GAME, REQUEST, gson.toJson(gameRoom));
-			client.broadcast(protocol);
-		}
-		else
-			log.error(getLogPrefix(waterBot) + "The host is not the bot hiself, cannot launch the game....!!!");
-	}
-	
-	private void updateStatusAndEnterToTheGame(WaterBot waterBot, Protocol protocol, Client client){
-		log.trace(getLogPrefix(waterBot) + "Launching game event received.");
-		waterBot.getMe().setUserStatus(ClientStatus.inGame);
-		if (waterBot.imTheHost())
-			waterBot.getGameRoom().setRoomStatus(RoomStatus.gamestarted);
-		enterToTheGame(waterBot, client);
-	}
-	
-	private void enterToTheGame(WaterBot waterBot, Client client) {
-		PlayerRoomIdModel model = new PlayerRoomIdModel(waterBot.getMe().getId(), waterBot.getGameRoom().getId());
-		Protocol protocol = protocolFactory.createProtocol(ENTERGAME, REQUEST, gson.toJson(model));
+		log.trace(getLogPrefix(waterBot) + "launching the game...");
+		Protocol protocol = protocolFactory.createProtocol(LAUNCH_GAME, REQUEST, gson.toJson(gameRoom));
 		client.broadcast(protocol);
 	}
+	
 	
 }
