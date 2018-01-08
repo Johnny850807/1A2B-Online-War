@@ -7,19 +7,32 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import container.core.MyLogger;
+import container.core.Constants.Events.Chat;
+import container.protocol.Protocol;
 import container.protocol.ProtocolFactory;
+import gamecore.entity.ChatMessage;
+import gamecore.entity.Player;
+import gamecore.model.RequestStatus;
 import gamecore.model.games.a1b2.boss.core.AttackResult;
 import gamecore.model.games.a1b2.boss.core.IBoss1A2BGame;
 import gamecore.model.games.a1b2.boss.core.Monster;
 import gamecore.model.games.a1b2.boss.core.MonsterAction;
+import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import gamecore.model.games.a1b2.boss.core.AttackResult.AttackType;
 
 public class Lucid extends Monster{
+	private static transient Player bossPlayer = new Player("Lucid");
+	private static transient String[] CHATS = {"呵呵呵", "真是無趣...", "我要認真猜了", "這世界真無趣", "我是不會輸的", 
+			"沒什麼好堅持的", "沒什麼好捨不得的", "認真一點打好嗎?", "我真是受夠了...", "顆顆", "......", "4", "4",
+			"也許吧...", ":D", "好痛..", "我的演算法可以七次內猜中", "物件導向是如此地偉大", "你們都只是副本而已...", "我是出自於楓之谷"
+			, "憑什麼...", "徵JAVA高手開發", "徵設計高手", "哈哈哈哈哈！", "也不過如此！", "別鬧了吧你..."};
 	private transient ChangeAnswer changeAnswer;
 	private transient SmartGuessingAttack smartGuessingAttack;
 	private transient ChainAttack chainAttack;
 	private transient ExplosionAttack explosionAttack;
 	private transient SelfCuring selfCuring;
+	private transient boolean hasSentOnGuessed4AMsg = false;
+	private transient boolean hasSentSecondPhaseMsg = false;
 	
 	/**
 	 * make the decision that if the boss has to change the answer
@@ -33,6 +46,7 @@ public class Lucid extends Monster{
 	@Override
 	public void init(IBoss1A2BGame game) {
 		super.init(game);
+		sendChatMessageToAllPlayers("你們猜得贏我嗎...呵呵");
 		int playerAmount = game.getPlayerSpirits().size();
 		/**
 		 * the hp/mp depends on the player amount:
@@ -102,10 +116,38 @@ public class Lucid extends Monster{
 		return smartGuessingAttack;
 	}
 	
+	@Override
+	protected void onAnswerGuessed4A(AttackResult attackResult) {
+		super.onAnswerGuessed4A(attackResult);
+		if (!hasSentOnGuessed4AMsg && attackResult.getA() == 4)
+		{
+			hasSentOnGuessed4AMsg = true;
+			sendChatMessageToAllPlayers("你們真的滿厲害的嘛...可惜...");
+		}
+	}
+	
+	@Override
+	protected void onSurvivedFromAttack(AttackResult attackResult) {
+		super.onSurvivedFromAttack(attackResult);
+		if (!hasSentSecondPhaseMsg && !hasSentOnGuessed4AMsg && getHp() <= getMaxHp() / 2 )
+		{
+			hasSentSecondPhaseMsg = true;
+			sendChatMessageToAllPlayers("可惡，是你們逼我的...！");
+		}
+		if (random.nextInt(100) >= 95)
+			sendChatMessageToAllPlayers(CHATS[random.nextInt(CHATS.length)]);
+	}
 	
 	@Override
 	public void setAnswer(String answer) {
 		super.setAnswer(answer);
 		changingAnswerDegree = 0;  //remove the state whenever the answer changed
+	}
+	
+	protected void sendChatMessageToAllPlayers(String msg){
+		Protocol protocol = protocolFactory.createProtocol(Chat.SEND_MSG, RequestStatus.success.toString(), 
+				gson.toJson(new ChatMessage(game.getRoomId(), bossPlayer, msg)));
+		for (PlayerSpirit playerSpirit : game.getPlayerSpirits())
+			playerSpirit.broadcast(protocol);
 	}
 }
