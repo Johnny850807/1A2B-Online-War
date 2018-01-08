@@ -61,6 +61,7 @@ import gamecore.model.games.a1b2.core.GuessResult;
 import gamecore.model.games.a1b2.core.NumberNotValidException;
 
 import static android.R.string.cancel;
+import static com.example.joanna_zhang.test.R.raw.bo;
 import static com.example.joanna_zhang.test.R.string.confirm;
 
 public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2BModule.Callback, ChatModule.Callback, SpiritsModel.OnAttackActionRender {
@@ -311,7 +312,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         if (defaultTtsVoiceManager.isDefaultVoiceContent(message.getContent()))
             defaultTtsVoiceManager.playDefaultVoice(message.getContent());
         else
-            soundManager.playSound(R.raw.bo);
+            soundManager.playSound(bo);
         animateFadingTheChatMessage(message);
     }
 
@@ -321,7 +322,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         chatTextview.setText(message.getPoster().getName() + ": " + content);
         chatTextview.setTextColor(Color.BLACK);
         chatTextview.setTextSize(19);
-        chatTextview.setX(bossImg.getX());
+        chatTextview.setX(bossImg.getWidth()/4);  //the boss img's width  is match to the parent
         chatTextview.setY(playerSpiritsHorizontalScrollView.getY());  //the middle of the boss
         FadingTextEffectAnimation animation = new FadingTextEffectAnimation(containerView, chatTextview, 0, -1400);
         animation.setDuration(12000);
