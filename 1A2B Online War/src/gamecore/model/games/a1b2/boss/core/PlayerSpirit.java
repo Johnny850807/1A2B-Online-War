@@ -14,7 +14,7 @@ public class PlayerSpirit extends AbstractSpirit{
 	private ClientPlayer player;
 	
 	public PlayerSpirit(ClientPlayer player, MyLogger log, ProtocolFactory protocolFactory) {
-		super(player.getId(), player.getPlayerName(), 500, 0, log, protocolFactory);
+		super(player.getId(), player.getPlayerName(), 800, 0, log, protocolFactory);
 		this.player = player;
 	}
 	

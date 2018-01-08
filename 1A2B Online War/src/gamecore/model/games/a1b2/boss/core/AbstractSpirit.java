@@ -64,7 +64,7 @@ public abstract class AbstractSpirit implements Spirit{
 		public int parsingDamage(GuessResult guessResult) {
 			// formula (r = random number): (28+r)*(a+b) - ((7+r)*b) 
 			int a = guessResult.getA(), b = guessResult.getB();
-			return (28+getRandom(5, 13))*(a+b) - (7+getRandom(1, 6))*b + getRandom(1, 15) + (a>=3?130:0) + (a==4?100:0);
+			return (28+getRandom(5, 13))*(a+b) - (7+getRandom(1, 6))*b + getRandom(1, 15) + (a>=3?70:0) + (a==4?100:0);
 		}
 	};
 	

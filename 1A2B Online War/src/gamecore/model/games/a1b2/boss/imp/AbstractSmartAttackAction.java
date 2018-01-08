@@ -26,4 +26,8 @@ public abstract class AbstractSmartAttackAction extends AbstractMonsterAction{
 			guessStrategies.put(playerSpirit.getId(), new PossibleTableGuessing());
 		guessStrategies.get(playerSpirit.getId()).feedRecord(guessRecord);
 	}
+	
+	public void initStrategiesMap(Map<String, PossibleTableGuessing> guessStrategies) {
+		this.guessStrategies = guessStrategies;
+	}
 }

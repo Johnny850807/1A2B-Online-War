@@ -1,7 +1,9 @@
 package gamecore.model.games.a1b2.boss.imp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -19,6 +21,7 @@ import gamecore.model.games.a1b2.boss.core.Monster;
 import gamecore.model.games.a1b2.boss.core.MonsterAction;
 import gamecore.model.games.a1b2.boss.core.PlayerSpirit;
 import gamecore.model.games.a1b2.boss.core.AttackResult.AttackType;
+import gamecore.model.games.a1b2.imp.PossibleTableGuessing;
 
 public class Lucid extends Monster{
 	private static transient Player bossPlayer = new Player("Lucid");
@@ -31,6 +34,7 @@ public class Lucid extends Monster{
 	private transient ChainAttack chainAttack;
 	private transient ExplosionAttack explosionAttack;
 	private transient SelfCuring selfCuring;
+	private transient boolean hasUsedSelfCuring = false;
 	private transient boolean hasSentOnGuessed4AMsg = false;
 	private transient boolean hasSentSecondPhaseMsg = false;
 	
@@ -40,7 +44,7 @@ public class Lucid extends Monster{
 	private int changingAnswerDegree = 0; // change the answer if greater than 100
 	
 	public Lucid(MyLogger log, ProtocolFactory protocolFactory) {
-		super("Lucid", 700, 400, log, protocolFactory);
+		super("Lucid", 700, 1500, log, protocolFactory);
 	}
 	
 	@Override
@@ -54,15 +58,15 @@ public class Lucid extends Monster{
 		switch (playerAmount) {
 		case 2:
 			setMaxHp(2500);
-			setMp(800);
+			setMp(2500);
 			break;
 		case 3:
 			setMaxHp(5800);
-			setMp(2100);
+			setMp(3200);
 			break;
 		case 4:
 			setMaxHp(8700);
-			setMp(3500);
+			setMp(6500);
 			break;
 		default:
 			break;
@@ -77,6 +81,11 @@ public class Lucid extends Monster{
 		actions.add(changeAnswer = new ChangeAnswer());
 		actions.add(explosionAttack = new ExplosionAttack());
 		actions.add(selfCuring = new SelfCuring());
+		
+		Map<String, PossibleTableGuessing> sharedMap = new HashMap<>();
+		smartGuessingAttack.initStrategiesMap(sharedMap);
+		chainAttack.initStrategiesMap(sharedMap);
+		explosionAttack.initStrategiesMap(sharedMap);
 		return actions;
 	}
 	
@@ -101,9 +110,12 @@ public class Lucid extends Monster{
 		if (changingAnswerDegree >= 100 && getMp() >= changeAnswer.getCostMp())
 			return changeAnswer;
 		
-		if (playerAmount >= 3)  //self curing when have 3 or 4 players
+		if (!hasUsedSelfCuring && playerAmount >= 3)  //self curing when have 3 or 4 players
 			if (getHp() <= getMaxHp() / 7 && getMp() >= selfCuring.getCostMp())
+			{
+				hasUsedSelfCuring = true;
 				return selfCuring;
+			}
 		
 		//using the magic attack only if the hp left half
 		if (getHp() <= getMaxHp() / 2 && getMp() >= chainAttack.getCostMp())
