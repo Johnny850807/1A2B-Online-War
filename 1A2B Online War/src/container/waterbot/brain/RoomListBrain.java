@@ -50,7 +50,7 @@ public class RoomListBrain extends ChainBrain{
 	protected void onReceiveSuccessProtocol(WaterBot waterBot, Protocol protocol, Client client) {
 		switch (protocol.getEvent()) {
 		case SIGNIN:
-			broadcastGetRoomListInRandomSeconds(waterBot, client);
+			broadcastGetRoomListEveryRandomSeconds(waterBot, client);
 			break;
 		case GET_ROOMS:
 			this.rooms = MyGson.parseGameRooms(protocol.getData());
@@ -62,18 +62,22 @@ public class RoomListBrain extends ChainBrain{
 		nextIfNotNull(waterBot, protocol, client);
 	}
 	
-	private void broadcastGetRoomListInRandomSeconds(WaterBot waterBot, Client client) {
+	private void broadcastGetRoomListEveryRandomSeconds(WaterBot waterBot, Client client) {
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
-						if (waterBot.getMe().getUserStatus() == ClientStatus.signedIn)
-						{
-							log.trace(getLogPrefix(waterBot) + "requesting game roomlist...");
-							Protocol protocol = protocolFactory.createProtocol(GET_ROOMS, REQUEST, null);
-							client.broadcast(protocol);
+						synchronized (waterBot) {
+							if (!waterBot.isInRoom())
+							{
+								log.trace(getLogPrefix(waterBot) + "requesting game roomlist...");
+								Protocol protocol = protocolFactory.createProtocol(GET_ROOMS, REQUEST, null);
+								client.broadcast(protocol);
+							}
+							else
+								log.trace(getLogPrefix(waterBot) + "is in the room, so don't broadcast the GetRooms request.");
 						}
 					}
 				}, random.nextInt(10000)+1000);  //delay of each round
@@ -83,10 +87,9 @@ public class RoomListBrain extends ChainBrain{
 	
 	
 	private void chooseToJoinOrCreate(WaterBot waterBot, Client client) {
-		Player me = waterBot.getMe();
 		boolean hasAvailableRoom = hasAvailableRoom();
 		
-		if (me.getUserStatus() == ClientStatus.signedIn)
+		if (!waterBot.isInRoom())
 		{
 			if (hasAvailableRoom)
 				broadcastJoinRequest(waterBot, client);

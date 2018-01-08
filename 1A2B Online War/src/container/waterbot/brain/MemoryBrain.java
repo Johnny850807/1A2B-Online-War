@@ -8,6 +8,7 @@ import container.waterbot.WaterBot;
 import gamecore.entity.GameRoom;
 import gamecore.model.ClientStatus;
 import gamecore.model.PlayerRoomModel;
+import gamecore.model.RoomStatus;
 import utils.MyGson;
 
 import static container.Constants.*;
@@ -15,6 +16,7 @@ import static container.Constants.Events.*;
 import static container.Constants.Events.Signing.*;
 import static container.Constants.Events.InRoom.*;
 import static container.Constants.Events.RoomList.*;
+import static container.Constants.Events.Games.*;
 
 /**
  * The brain handling all the events that have to modify the reference from the memory of the waterbot.
@@ -35,7 +37,7 @@ public class MemoryBrain extends ChainBrain{
 			saveTheCreatedRoomIfMine(waterBot, protocol);
 			break;
 		case JOIN_ROOM:
-			saveTheJoinedRoomIfMine(waterBot, protocol);
+			saveTheJoinedRoomIfMe(waterBot, protocol);
 			addNewPlayerToRoomIfMyRoom(waterBot, protocol);
 			break;
 		case BOOTED:
@@ -48,6 +50,10 @@ public class MemoryBrain extends ChainBrain{
 		case CLOSE_ROOM:
 			clearRoomIfMine(waterBot, protocol);
 			break;
+		case LAUNCH_GAME:
+			waterBot.getGameRoom().setRoomStatus(RoomStatus.gamestarted);
+			waterBot.getMe().setUserStatus(ClientStatus.inGame);
+			break;
 		default:
 			break;
 		}
@@ -56,37 +62,37 @@ public class MemoryBrain extends ChainBrain{
 
 	private void saveTheCreatedRoomIfMine(WaterBot waterBot, Protocol protocol){
 		GameRoom gameRoom = MyGson.parseGameRoom(protocol.getData());
-		if (gameRoom.isHost(waterBot.getMe()))
+		if (waterBot.isMe(gameRoom.getHost()))
 			waterBot.setGameRoom(gameRoom);
 	}
 	
-	private void saveTheJoinedRoomIfMine(WaterBot waterBot, Protocol protocol){
+	private void saveTheJoinedRoomIfMe(WaterBot waterBot, Protocol protocol){
 		PlayerRoomModel joinModel = MyGson.parse(protocol.getData(), PlayerRoomModel.class);
-		if (joinModel.getPlayer().equals(waterBot.getMe()))
+		if (waterBot.isMe(joinModel))
 			waterBot.setGameRoom(joinModel.getGameRoom());
 	}
 
 	private void addNewPlayerToRoomIfMyRoom(WaterBot waterBot, Protocol protocol) {
 		PlayerRoomModel joinModel = MyGson.parse(protocol.getData(), PlayerRoomModel.class);
-		if (joinModel.getGameRoom().equals(waterBot.getGameRoom()))
+		if (waterBot.getGameRoom() != null && waterBot.isMyRoom(joinModel) && !waterBot.isMe(joinModel))  //prevent from adding self
 			waterBot.getGameRoom().addPlayer(joinModel.getPlayer());
 	}
 	
 	private void leaveRoomIfMe(WaterBot waterBot, Protocol protocol){
 		PlayerRoomModel leaveModel =  MyGson.parse(protocol.getData(), PlayerRoomModel.class);
-		if (leaveModel.getPlayer().equals(waterBot.getMe()))
+		if (waterBot.isMe(leaveModel))
 			waterBot.clearGameRoom();
 	}
 
 	private void removePlayerFromRoomIfMyRoom(WaterBot waterBot, Protocol protocol) {
 		PlayerRoomModel leaveModel =  MyGson.parse(protocol.getData(), PlayerRoomModel.class);
-		if (leaveModel.getGameRoom().equals(waterBot.getGameRoom()))
+		if (waterBot.getGameRoom() != null && waterBot.isMyRoom(leaveModel))
 			waterBot.getGameRoom().removePlayer(leaveModel.getPlayer());
 		
 	}
 	private void clearRoomIfMine(WaterBot waterBot, Protocol protocol){
 		GameRoom gameRoom = MyGson.parseGameRoom(protocol.getData());
-		if (gameRoom.equals(waterBot.getGameRoom()))
+		if (waterBot.isMyRoom(gameRoom))
 			waterBot.clearGameRoom();
 	}
 }

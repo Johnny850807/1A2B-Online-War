@@ -22,12 +22,14 @@ public abstract class BaseChatChainBrain extends ChainBrain{
 	}
 	
 	protected void sendMessageRequest(WaterBot waterBot, GameRoom room, Client client, String mgs){
-		if (waterBot.getGameRoom().equals(room))  //i'm still in that room
-		{
-			Player me = waterBot.getMemory().getMe();
-			ChatMessage message = new ChatMessage(room, me, mgs);
-			Protocol protocol = protocolFactory.createProtocol(SEND_MSG, REQUEST, gson.toJson(message));
-			client.broadcast(protocol);
+		synchronized (waterBot) {
+			if (waterBot.isMyRoom(room))  //i'm still in that room
+			{
+				Player me = waterBot.getMemory().getMe();
+				ChatMessage message = new ChatMessage(room, me, mgs);
+				Protocol protocol = protocolFactory.createProtocol(SEND_MSG, REQUEST, gson.toJson(message));
+				client.broadcast(protocol);
+			}
 		}
 	}
 	
@@ -36,8 +38,10 @@ public abstract class BaseChatChainBrain extends ChainBrain{
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if (waterBot.getMe().getUserStatus() == condition)
-					sendMessageRequest(waterBot, room, client, msg);
+				synchronized (waterBot) {
+					if (waterBot.getMe().getUserStatus() == condition)
+						sendMessageRequest(waterBot, room, client, msg);
+				}
 			}
 		}, delay);
 	}

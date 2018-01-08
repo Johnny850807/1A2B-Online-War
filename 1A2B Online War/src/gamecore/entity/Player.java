@@ -33,7 +33,7 @@ private ClientStatus userStatus = null;
 	}
 
 	public void setUserStatus(ClientStatus userStatus) {
-		System.out.println("Set player " + getUserStatus() + " status: " + userStatus);
+		System.out.println("Set player status " + getUserStatus() + " -> " + userStatus);
 		this.userStatus = userStatus;
 	}
 	
