@@ -16,7 +16,7 @@ import gamecore.model.games.a1b2.boss.core.NextTurnModel;
 import gamecore.model.games.a1b2.boss.core.SpiritsModel;
 
 public interface Boss1A2BModule extends OnlineGameModule{
-    void registerCallback(Context context, Player currentPlayer, GameRoom currentGameRoom, Boss1A2BModule.Callback callback);
+    void registerCallback(Context context, Player currentPlayer, GameRoom currentGameRoom, Boss1A2BModule.Callback bossCallback);
     void unregisterCallBack(Boss1A2BModule.Callback callback);
     public void setAnswer(String answer);
     public void attack(String guess);

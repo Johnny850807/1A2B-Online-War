@@ -5,15 +5,16 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.joanna_zhang.test.R;
 
 import gamecore.entity.Player;
-import gamecore.model.games.a1b2.boss.core.AbstractSpirit;
-import gamecore.model.games.a1b2.boss.core.Spirit;
 
 import static com.example.joanna_zhang.test.R.string.confirm;
 
@@ -86,19 +87,21 @@ public class AppDialogFactory {
      * @return the template alert dialog for notifying that the game is waiting for other players entering. This dialog should be dismissed manually when the game started.
      */
     public static AlertDialog createWaitingForPlayersEnteringDialog(Context context) {
-        LinearLayout viewGroup = new LinearLayout(context);
-        viewGroup.setOrientation(LinearLayout.HORIZONTAL);
+        RelativeLayout viewGroup = new RelativeLayout(context);
         viewGroup.setPadding(10, 10, 10, 10);
 
-        LinearLayout.LayoutParams txtParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        txtParams.setMarginEnd(20);
+        RelativeLayout.LayoutParams txtParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        txtParams.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE);
+
+        RelativeLayout.LayoutParams progressbarParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        progressbarParams.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
+
         TextView msgTxt = new TextView(context);
         msgTxt.setText(context.getString(R.string.waitingForPlayersEntering));
         msgTxt.setLayoutParams(txtParams);
 
         ProgressBar progressBar = new ProgressBar(context);
+        progressBar.setLayoutParams(progressbarParams);
 
         viewGroup.addView(msgTxt);
         viewGroup.addView(progressBar);
@@ -118,4 +121,31 @@ public class AppDialogFactory {
                 .create();
     }
 
+    public static AlertDialog simpleMessageEdittextDialog(Context context, OnMessageSendOnClickListener onclick){
+        InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        RelativeLayout viewGroup = new RelativeLayout(context);
+        viewGroup.setPadding(40, 20, 40, 20);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        EditText msgEd = new EditText(context);
+        msgEd.setHint(context.getString(R.string.inputChatMessage));
+        msgEd.setLayoutParams(params);
+        viewGroup.addView(msgEd);
+
+        return templateBuilder(context)
+                .setTitle(R.string.chat)
+                .setView(viewGroup)
+                .setPositiveButton(R.string.enter, (d,i)->{
+                    onclick.onMessageSendOnClick(msgEd.getText().toString());
+                    //hide the showing keyboard
+                    imm.hideSoftInputFromWindow(msgEd.getWindowToken(), 0);
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .create();
+    }
+
+    public interface OnMessageSendOnClickListener{
+        void onMessageSendOnClick(String message);
+    }
 }

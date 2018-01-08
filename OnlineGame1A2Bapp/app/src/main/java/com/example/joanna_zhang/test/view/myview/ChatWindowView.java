@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.joanna_zhang.test.R;
+import com.example.joanna_zhang.test.Utils.DefaultTtsVoiceManager;
 import com.example.joanna_zhang.test.Utils.MaxSizeLinkedList;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
@@ -43,13 +44,16 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
     private ImageButton sendMessageImgBtn;
     private ChatMessageListener listener;
     private ChatWindowAdapter adapter = new ChatWindowAdapter();
+
     private SoundManager soundManager;
+    private DefaultTtsVoiceManager defaultTtsVoiceManager;
 
     private ChatWindowView(Activity activity, GameRoom gameRoom, Player poster) {
         this.activity = activity;
         this.gameRoom = gameRoom;
         this.poster = poster;
         this.soundManager = new SoundManager(activity);
+        this.defaultTtsVoiceManager = DefaultTtsVoiceManager.getInstance();
         chatModule = (ChatModule) CoreGameServer.getInstance().createModule(ModuleName.CHAT);
         inputMessageEdt = activity.findViewById(R.id.inputChattingTxt);
         chatWindowLst = activity.findViewById(R.id.chatwindowLst);
@@ -79,7 +83,7 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
         chatModule.unregisterCallBack(this);
     }
 
-    private void update(ChatMessage chatMessage) {
+    private void addMessageToListAndNotifyListener(ChatMessage chatMessage) {
         listener.onChatMessageUpdate(chatMessage);
         chatMessages.add(chatMessage);
         adapter.notifyDataSetChanged();
@@ -107,8 +111,17 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
 
     @Override
     public void onMessageReceived(ChatMessage message) {
-        update(message);
-        soundManager.playSound(R.raw.bo);
+        playDefaultTtsVoiceOrBo(message.getContent());
+        String content = defaultTtsVoiceManager.parseDefaultContent(message.getContent());
+        message.setContent(content);
+        addMessageToListAndNotifyListener(message);
+    }
+
+    private void playDefaultTtsVoiceOrBo(String content){
+        if (defaultTtsVoiceManager.isDefaultVoiceContent(content))
+            defaultTtsVoiceManager.playDefaultVoice(content);
+        else
+            soundManager.playSound(R.raw.bo);
     }
 
     @Override
@@ -119,60 +132,6 @@ public class ChatWindowView implements View.OnClickListener, ChatModule.Callback
     @Override
     public void onMessageSendingFailed(ErrorMessage errorMessage) {
         listener.onMessageSendingFailed(errorMessage);
-    }
-
-    @Override
-    public void onOkMessage(ChatMessage message) {
-        message.setContent(activity.getString(R.string.ok));
-        soundManager.playSound(R.raw.ok);
-    }
-
-    @Override
-    public void onNoMessage(ChatMessage message) {
-        message.setContent(activity.getString(R.string.notWell));
-        soundManager.playSound(R.raw.no);
-    }
-
-    @Override
-    public void onAwesomeMessage(ChatMessage message) {
-        message.setContent(activity.getString(R.string.awesome));
-        soundManager.playSound(R.raw.awesome);
-    }
-
-    @Override
-    public void onQuicklyMessage(ChatMessage message) {
-        message.setContent(activity.getString(R.string.quickly));
-        soundManager.playSound(R.raw.quickly);
-    }
-
-    @Override
-    public void onDamnMessage(ChatMessage message) {
-        message.setContent(activity.getString(R.string.damnit));
-        soundManager.playSound(R.raw.damn);
-    }
-
-    @Override
-    public void onGoodGameMessage(ChatMessage message) {
-        message.setContent(activity.getString(R.string.goodGame));
-        soundManager.playSound(R.raw.gg);
-    }
-
-    @Override
-    public void onPleaseSetReadyMessage(ChatMessage message) {
-        message.setContent(activity.getString(R.string.pleaseSetReady));
-        soundManager.playSound(R.raw.please_ready);
-    }
-
-    @Override
-    public void onPleaseStartMessage(ChatMessage message) {
-        message.setContent(activity.getString(R.string.pleaseStartGame));
-        soundManager.playSound(R.raw.please_start);
-    }
-
-    @Override
-    public void onSorryMessage(ChatMessage message) {
-        message.setContent(activity.getString(R.string.sorry));
-        soundManager.playSound(R.raw.sorry);
     }
 
     @Override

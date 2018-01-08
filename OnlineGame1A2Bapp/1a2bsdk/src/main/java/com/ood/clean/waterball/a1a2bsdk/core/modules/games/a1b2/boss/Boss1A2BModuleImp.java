@@ -4,8 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.base.BindCallback;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.CallbackException;
+import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.AbstractOnlineGameModule;
 
 import container.protocol.Protocol;
@@ -35,31 +38,38 @@ import static container.core.Constants.Events.InRoom.LEAVE_ROOM;
 import static container.core.Constants.Events.RECONNECTED;
 
 public class Boss1A2BModuleImp extends AbstractOnlineGameModule implements Boss1A2BModule {
-    private ProxyCallback proxyCallback;
+    private ProxyCallback proxyBossCallback;
+    private ChatModule chatModule;
     protected Player currentPlayer;
     protected GameRoom currentGameRoom;
     protected Context context;
 
+    public Boss1A2BModuleImp(){
+        chatModule = (ChatModule) CoreGameServer.getInstance().createModule(ModuleName.CHAT);
+    }
+
     @Override
-    public void registerCallback(Context context, Player currentPlayer, GameRoom currentGameRoom, Boss1A2BModule.Callback callback) {
+    public void registerCallback(Context context, Player currentPlayer, GameRoom currentGameRoom,
+                                 Boss1A2BModule.Callback bossCallback) {
         validate(currentPlayer);
         validate(currentGameRoom);
         this.context = context;
         this.currentPlayer = currentPlayer;
         this.currentGameRoom = currentGameRoom;
 
-        if (this.proxyCallback != null)
-            callback.onError(new CallbackException());
-        this.proxyCallback = new Boss1A2BModuleImp.ProxyCallback(callback);
-        eventBus.registerCallback(proxyCallback);
+        if (this.proxyBossCallback != null)
+            bossCallback.onError(new CallbackException());
+        this.proxyBossCallback = new Boss1A2BModuleImp.ProxyCallback(bossCallback);
+        eventBus.registerCallback(proxyBossCallback);
+
     }
 
     @Override
     public void unregisterCallBack(Boss1A2BModule.Callback callback) {
-        if (this.proxyCallback == null || this.proxyCallback.callback != callback)
+        if (this.proxyBossCallback == null || this.proxyBossCallback.callback != callback)
             callback.onError(new CallbackException());
-        eventBus.unregisterCallback(proxyCallback);
-        this.proxyCallback = null;
+        eventBus.unregisterCallback(proxyBossCallback);
+        this.proxyBossCallback = null;
         this.currentPlayer = null;
         this.currentGameRoom = null;
     }
@@ -204,6 +214,5 @@ public class Boss1A2BModuleImp extends AbstractOnlineGameModule implements Boss1
             Log.d(TAG, boss.getName() + "'s answer changed.");
             callback.onBossAnswerChanged(boss);
         }
-
     }
 }

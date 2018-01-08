@@ -28,13 +28,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.joanna_zhang.test.R;
 import com.example.joanna_zhang.test.Utils.AppDialogFactory;
+import com.example.joanna_zhang.test.Utils.DefaultTtsVoiceManager;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.example.joanna_zhang.test.animations.CostingProgressBarAnimation;
+import com.example.joanna_zhang.test.animations.FadingTextEffectAnimation;
 import com.example.joanna_zhang.test.view.dialog.InputNumberDialog;
-import com.example.joanna_zhang.test.animations.FadingNumberEffectAnimation;
 import com.example.joanna_zhang.test.view.myview.PlayerSpiritItemViewFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
+import com.ood.clean.waterball.a1a2bsdk.core.modules.ChatModule;
 import com.ood.clean.waterball.a1a2bsdk.core.modules.games.a1b2.boss.Boss1A2BModule;
 
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 import container.core.Constants;
+import gamecore.entity.ChatMessage;
 import gamecore.model.ContentModel;
 import gamecore.model.ErrorMessage;
 import gamecore.model.games.GameOverModel;
@@ -60,10 +63,9 @@ import gamecore.model.games.a1b2.core.NumberNotValidException;
 import static android.R.string.cancel;
 import static com.example.joanna_zhang.test.R.string.confirm;
 
-public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2BModule.Callback, SpiritsModel.OnAttackActionRender {
+public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2BModule.Callback, ChatModule.Callback, SpiritsModel.OnAttackActionRender {
     private final static String TAG = "BossFight1A2BActivity";
     private Handler handler = new Handler();
-
     private RelativeLayout containerView;
     private Button inputNumberBtn;
     private ImageButton sendGuessBtn;
@@ -84,8 +86,10 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     private MediaPlayer song1Player;
     private MediaPlayer song2Player;  //the song when the boss's hp is left half
     private SoundManager soundManager;
+    private DefaultTtsVoiceManager defaultTtsVoiceManager;
 
     private Boss1A2BModule boss1A2BModule;
+    private ChatModule chatModule;
     private SpiritsModel spiritsModel;
     private List<AttackResult> attackResults = new ArrayList<>();
     private AbstractSpirit whosTurn;  //the turn of the player's being, used for blocking the invalid attacking request
@@ -106,13 +110,15 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
     }
 
     private void init() {
+        CoreGameServer server = CoreGameServer.getInstance();
+        boss1A2BModule = (Boss1A2BModule) server.createModule(ModuleName.GAME1A2BBOSS);
+        chatModule = (ChatModule) server.createModule(ModuleName.CHAT);
         song1Player = MediaPlayer.create(this, R.raw.lucid_fight_1);
         song2Player = MediaPlayer.create(this, R.raw.lucid_fight_2);
         song1Player.setLooping(true);
         song2Player.setLooping(true);
         soundManager = new SoundManager(this);
-        CoreGameServer server = CoreGameServer.getInstance();
-        boss1A2BModule = (Boss1A2BModule) server.createModule(ModuleName.GAME1A2BBOSS);
+        defaultTtsVoiceManager = DefaultTtsVoiceManager.getInstance();
         playerSpiritItemViewFactory = new PlayerSpiritItemViewFactory(this);
         waitingForPlayersEnteringDialog = AppDialogFactory.createWaitingForPlayersEnteringDialog(this);
     }
@@ -154,6 +160,7 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         super.onResume();
         Log.d(TAG, "OnResume");
         boss1A2BModule.registerCallback(this, currentPlayer, currentGameRoom, this);
+        chatModule.registerCallback(currentPlayer, currentGameRoom, this);
         CoreGameServer.getInstance().resendUnhandledEvents();
 
         if (!gameStarted) {
@@ -293,6 +300,44 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
             AppDialogFactory.createGameoverResultDialogForWinner(this, getString(R.string.players)).show();
     }
 
+    public void onChattingFabClick(View view) {
+        AppDialogFactory.simpleMessageEdittextDialog(this, (msg)->{
+            chatModule.sendMessage(new ChatMessage(currentGameRoom, currentPlayer, msg));
+        }).show();
+    }
+
+    @Override
+    public void onMessageReceived(ChatMessage message) {
+        if (defaultTtsVoiceManager.isDefaultVoiceContent(message.getContent()))
+            defaultTtsVoiceManager.playDefaultVoice(message.getContent());
+        else
+            soundManager.playSound(R.raw.bo);
+        animateFadingTheChatMessage(message);
+    }
+
+    private void animateFadingTheChatMessage(ChatMessage message){
+        String content = defaultTtsVoiceManager.parseDefaultContent(message.getContent());
+        TextView chatTextview = new TextView(this);
+        chatTextview.setText(message.getPoster().getName() + ": " + content);
+        chatTextview.setTextColor(Color.BLACK);
+        chatTextview.setTextSize(19);
+        chatTextview.setX(bossImg.getX());
+        chatTextview.setY(playerSpiritsHorizontalScrollView.getY());  //the middle of the boss
+        FadingTextEffectAnimation animation = new FadingTextEffectAnimation(containerView, chatTextview, 0, -1400);
+        animation.setDuration(12000);
+        chatTextview.startAnimation(animation);
+    }
+
+    @Override
+    public void onMessageSent(ChatMessage message) {
+        Log.d(TAG, "message sent successfully.");
+    }
+
+    @Override
+    public void onMessageSendingFailed(ErrorMessage errorMessage) {
+        Toast.makeText(this, R.string.chatMessageError, Toast.LENGTH_SHORT).show();
+    }
+
     //TODO use recyclerview instead
     private class GuessResultAdapter extends BaseAdapter {
 
@@ -400,9 +445,10 @@ public class BossFight1A2BActivity extends OnlineGameActivity implements Boss1A2
         Log.d(TAG, "Target view (" + x + "," + y + ")");
         effectTxt.setX(x + 35);  //add some biases
         effectTxt.setY(y);
+        effectTxt.setTextSize(45);
+        effectTxt.setTextColor(Color.RED);
         effectTxt.setText(String.valueOf(attackResult.getDamage()));
-        FadingNumberEffectAnimation animation = new FadingNumberEffectAnimation(containerView, effectTxt);
-        animation.setTextSize(45);
+        FadingTextEffectAnimation animation = new FadingTextEffectAnimation(containerView, effectTxt);
         effectTxt.startAnimation(animation);
     }
 

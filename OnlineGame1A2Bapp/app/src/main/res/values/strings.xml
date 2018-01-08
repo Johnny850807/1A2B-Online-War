@@ -20,7 +20,9 @@
     <string name="joinQuickly">快速加入</string>
     <string name="create_room">創建房間</string>
     <string name="inputNumber">輸入數字</string>
-    <string name="inputMessage">輸入訊息 (點擊選擇預設訊息)</string>
+    <string name="inputMessageOrDefault">輸入訊息 (點擊選擇預設訊息)</string>
+    <string name="inputChatMessage">輸入聊天訊息</string>
+    <string name="messageSendSuccessfully">訊息傳送成功</string>
     <string name="inputAnswer">輸入答案</string>
     <string name="back">清除</string>
     <string name="enter">送出</string>
@@ -74,5 +76,6 @@
     <string name="players">冒險者們</string>
     <string name="setAnswerUnSuccessfully">設置答案失敗</string>
     <string name="pleaseReAttack">攻擊失敗，請重新輸入答案並攻擊</string>
+    <string name="chat">聊天</string>
 
 </resources>

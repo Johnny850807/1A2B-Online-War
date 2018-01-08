@@ -23,7 +23,7 @@
     <string name="duel">Duel</string>
     <string name="fight">Fight</string>
     <string name="inputNumber">Input Number</string>
-    <string name="inputMessage">Input Message</string>
+    <string name="inputMessageOrDefault">Input Message</string>
     <string name="inputAnswer">Input Answer</string>
     <string name="back">Back</string>
     <string name="enter">Enter</string>

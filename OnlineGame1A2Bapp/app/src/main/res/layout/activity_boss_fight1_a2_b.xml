@@ -51,11 +51,22 @@
         </HorizontalScrollView>
     </LinearLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_alignTop="@+id/attackResultsLst"
+        android:onClick="onChattingFabClick"
+        android:src="@android:drawable/stat_notify_chat"/>
+
     <ListView
         android:id="@+id/attackResultsLst"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#000"
+        android:layout_marginTop="8dp"
         android:transcriptMode="alwaysScroll"
         android:layout_below="@+id/spiritsInfoContainer"
         android:layout_above="@+id/inputNumberContainer"/>
@@ -93,6 +104,6 @@
             android:onClick="onSendGuessNumberBtnClick"
             android:scaleType="fitCenter"
             android:src="@drawable/enter" />
-
     </LinearLayout>
+
 </RelativeLayout>
