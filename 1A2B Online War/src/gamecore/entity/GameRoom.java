@@ -236,7 +236,7 @@ public class GameRoom extends Entity implements LeisureTimeChallengeable{
 	@ForServer
 	public synchronized void launchGame(ClientBinder clientBinder, Game.GameLifecycleListener listener){
 		log.trace("Room: " + id + ", launcing the " + gameMode.toString() + " game.");
-		validatePlayerAmount();
+		validateLaunchingGame();
 		
 		ClientPlayer hostClient = clientBinder.getClientPlayer(host.getId());
 		List<ClientPlayer> playerClients = new ArrayList<>();
@@ -248,6 +248,11 @@ public class GameRoom extends Entity implements LeisureTimeChallengeable{
 		
 		initGame(hostClient, playerClients, listener);
 		pushLeisureTime();
+	}
+	
+	private synchronized void validateLaunchingGame(){
+		if (!canStartTheGame())
+			throw new IllegalStateException("The room cannot be launched. (all ready? player amount enough?)");
 	}
 	
 	public synchronized boolean canStartTheGame(){
@@ -268,13 +273,6 @@ public class GameRoom extends Entity implements LeisureTimeChallengeable{
 				getRoomStatus() != RoomStatus.gamestarted;
 	}
 	
-	private void validatePlayerAmount(){
-		int playerAmount = getPlayerAmount();
-		if (playerAmount < getMinPlayerAmount())
-			throw new IllegalStateException("The Player amount is not enough to launch the game. Expect: " + getMinPlayerAmount() + ", actual: " + playerAmount);
-		if (playerAmount > getMaxPlayerAmount())
-			throw new IllegalStateException("The Player amount is out of the limit. Expect: " + getMaxPlayerAmount() + ", actual: " + playerAmount);
-	}
 	
 	private void initGame(ClientPlayer hostClient, List<ClientPlayer> playerClients, Game.GameLifecycleListener listener){
 		List<ClientPlayer> allPlayers = new ArrayList<>();

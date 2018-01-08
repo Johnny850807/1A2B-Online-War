@@ -18,10 +18,10 @@ public class AttackActionModel implements Iterable<AttackResult>{
 			addAttackResult(result);
 	}
 	
-	
-	public AttackActionModel(int mpCost, AbstractSpirit attacker) {
+	public AttackActionModel(String attackName, int mpCost, AbstractSpirit attacker) {
 		this.attacker = attacker;
 		this.mpCost = mpCost;
+		this.attackName = attackName;
 	}
 	
 	public void addAttackResult(AttackResult attackResult){

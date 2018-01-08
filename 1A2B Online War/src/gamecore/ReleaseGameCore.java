@@ -125,16 +125,21 @@ public class ReleaseGameCore implements GameCore{
 			throw new NullPointerException("The room is invalid.");
 		Protocol protocol = factory.getProtocolFactory().createProtocol(RoomList.CREATE_ROOM,
 				RequestStatus.success.toString(), gson.toJson(room));
+		ClientPlayer hostClient = getClientPlayer(room.getHost().getId());
 		
-		if (clientsMap.containsKey(room.getHost().getId()))
-		{
-			broadcastClientPlayers(ClientStatus.signedIn, protocol);
-			roomContainer.put(room.getId(), room);
-			ClientPlayer hostClient = getClientPlayer(room.getHost().getId());
-			hostClient.getPlayer().setUserStatus(ClientStatus.inRoom);
+		if (hostClient != null)
+		synchronized (hostClient) {
+			if (clientsMap.containsKey(room.getHost().getId()))
+			{
+				synchronized (room) {
+					broadcastClientPlayers(ClientStatus.signedIn, protocol);
+					roomContainer.put(room.getId(), room);
+					hostClient.getPlayer().setUserStatus(ClientStatus.inRoom);
+				}
+			}
+			else
+				log.error("The host of the added room not exists!");
 		}
-		else
-			log.error("The host of the added room not exists!");
 	}
 	
 	@Override
@@ -171,18 +176,18 @@ public class ReleaseGameCore implements GameCore{
 	}
 
 	@Override
-	public void removeClientPlayer(String id) {
-		if (clientsMap.containsKey(id))
+	public void removeClientPlayer(String playerId) {
+		ClientPlayer clientPlayer = clientsMap.get(playerId);
+		if (clientPlayer != null)
 		{
-			ClientPlayer clientPlayer = clientsMap.get(id);
 			synchronized (clientPlayer) 
 			{
-				if (clientsMap.containsKey(id))
+				if (clientsMap.containsKey(playerId))
 				{
 					log.trace("Client removing: " + clientPlayer);
 					handleThePlayerRemovedEventToRooms(clientPlayer.getPlayer());
-					clientsMap.remove(id);
-					log.trace("Remove the player from the clientsMap.");
+					clientsMap.remove(playerId);
+					log.trace(clientPlayer.getPlayerName() + " removed.");
 				}
 			}
 		}
@@ -192,9 +197,8 @@ public class ReleaseGameCore implements GameCore{
 	
 	/**
 	 * Handle the operation of removing the player from any game room if exists, depends on two situation
-	 * (1) the player is a host: close his room and broadcast the close event to the room.
-	 * (2) the player is inside the room but not a host: boot him out from the room and broadcast the leave event to the room.
-	 * @param player removed player
+	 * (1) the player is the host: close his room and broadcast the close event to the room.
+	 * (2) the player is inside the room but not the host: boot him out from the room and broadcast the leave event to the room.
 	 */
 	private void handleThePlayerRemovedEventToRooms(final Player player){
 		log.trace("Handling the player removed.");

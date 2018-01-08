@@ -19,6 +19,7 @@ public class Lucid extends Monster{
 	private transient SmartGuessingAttack smartGuessingAttack;
 	private transient ChainAttack chainAttack;
 	private transient ExplosionAttack explosionAttack;
+	private transient SelfCuring selfCuring;
 	
 	/**
 	 * make the decision that if the boss has to change the answer
@@ -38,16 +39,16 @@ public class Lucid extends Monster{
 		 */
 		switch (playerAmount) {
 		case 2:
-			setMaxHp(2000);
+			setMaxHp(2500);
 			setMp(800);
 			break;
 		case 3:
-			setMaxHp(5500);
-			setMp(1500);
+			setMaxHp(5800);
+			setMp(2100);
 			break;
 		case 4:
-			setMaxHp(8200);
-			setMp(2900);
+			setMaxHp(8700);
+			setMp(3500);
 			break;
 		default:
 			break;
@@ -61,22 +62,8 @@ public class Lucid extends Monster{
 		actions.add(chainAttack = new ChainAttack());
 		actions.add(changeAnswer = new ChangeAnswer());
 		actions.add(explosionAttack = new ExplosionAttack());
+		actions.add(selfCuring = new SelfCuring());
 		return actions;
-	}
-	
-	@Override
-	protected boolean filterAction(MonsterAction monsterAction) {
-		//always use magic when the hp is left half and the mp is enough, .
-		if (monsterAction.getAttackType() == AttackType.NORMAL)  
-			return getHp() > getMaxHp() / 2 && getMp() <= chainAttack.getCostMp(); 
-			
-		// the magic can only be used when the hp is left half.
-		if (monsterAction.getAttackType() == AttackType.MAGIC) 
-			return getHp()  <= getMaxHp() / 2;  
-		
-		if (monsterAction instanceof ChangeAnswer)
-			return changingAnswerDegree >= 100;
-		return true;
 	}
 	
 
@@ -94,10 +81,25 @@ public class Lucid extends Monster{
 	
 	@Override
 	protected MonsterAction chooseNextMonsterAction() {
+		int playerAmount = game.getPlayerSpirits().size();
+		
 		// change the answer if the degree is greater than 100
 		if (changingAnswerDegree >= 100 && getMp() >= changeAnswer.getCostMp())
 			return changeAnswer;
-		return super.chooseNextMonsterAction();
+		
+		if (playerAmount >= 3)  //self curing when have 3 or 4 players
+			if (getHp() <= getMaxHp() / 7 && getMp() >= selfCuring.getCostMp())
+				return selfCuring;
+		
+		//using the magic attack only if the hp left half
+		if (getHp() <= getMaxHp() / 2 && getMp() >= chainAttack.getCostMp())
+		{
+			if (random.nextInt(100) < 50 || playerAmount == 1) //chain only if only one player
+				return chainAttack;
+			else
+				return explosionAttack;
+		}
+		return smartGuessingAttack;
 	}
 	
 	
