@@ -71,6 +71,12 @@
         android:layout_below="@+id/spiritsInfoContainer"
         android:layout_above="@+id/inputNumberContainer"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#ff6a00"
+        android:layout_alignTop="@+id/attackResultsLst"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
