@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joanna_zhang.test.R;
-import com.example.joanna_zhang.test.Utils.AppDialogFactory;
+import com.example.joanna_zhang.test.view.dialog.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.example.joanna_zhang.test.view.dialog.InputNumberDialog;
 import com.example.joanna_zhang.test.view.myview.ChatWindowView;

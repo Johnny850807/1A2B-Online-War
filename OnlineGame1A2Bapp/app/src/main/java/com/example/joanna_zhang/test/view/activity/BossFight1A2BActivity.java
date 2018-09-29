@@ -27,7 +27,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.joanna_zhang.test.R;
-import com.example.joanna_zhang.test.Utils.AppDialogFactory;
+import com.example.joanna_zhang.test.view.dialog.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.DefaultTtsVoiceManager;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.example.joanna_zhang.test.animations.CostingProgressBarAnimation;

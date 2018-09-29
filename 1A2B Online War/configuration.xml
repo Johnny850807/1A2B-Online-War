@@ -5,36 +5,15 @@
       <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} %n         - %msg%n"/>
     </Console>
 	
-	<File name="MyFile" fileName="logs/app.log" append="false">
+	<File name="MyFile" fileName="server.log" append="false">
        <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} %n          - %msg%n"/>
     </File>
 	
-	<File name="ErrorFile" fileName="logs/error.log" append="false">
-       <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} %n          - %msg%n"/>
-    </File>
-	
-	<File name="BotLog" fileName="logs/bot.log" append="false">
-       <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} %n          - %msg%n"/>
-    </File>
-	
-	<File name=" Boss1A2BLog" fileName="logs/boss1A2BLog.log" append="false">
-       <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} %n          - %msg%n"/>
-    </File>
   </Appenders>
   <Loggers>
 	<Root level="all" >
       <AppenderRef ref="MyFile"/>
       <AppenderRef ref="Console"/>
     </Root>
-	<Logger name="container.eventhandler.handlers" level="error">
-      <AppenderRef ref="ErrorFile"/>
-    </Logger>
-	<Logger name="gamecore.model.games.a1b2.boss" level="trace"  additivity="false">
-      <AppenderRef ref="Boss1A2BLog"/>
-    </Logger>
-	<Logger name="container.waterbot" level="trace" additivity="false">
-      <AppenderRef ref="BotLog"/>
-      <AppenderRef ref="Console"/>
-    </Logger>
   </Loggers>
 </Configuration>

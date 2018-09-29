@@ -1,8 +1,5 @@
 package container.core;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 public final class Constants {
 	public final static int VERSION = 1;
 	public final static String DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss";

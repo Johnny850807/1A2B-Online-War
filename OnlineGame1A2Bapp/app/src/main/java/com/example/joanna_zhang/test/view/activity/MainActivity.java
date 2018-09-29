@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joanna_zhang.test.R;
-import com.example.joanna_zhang.test.Utils.AppDialogFactory;
+import com.example.joanna_zhang.test.view.dialog.AppDialogFactory;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.base.exceptions.ConnectionTimedOutException;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;
@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
     private ProgressBar progressBar;
     private SharedPreferences sharedPreferences;
     private boolean serverConntected = false;
+    private Button signInBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements UserSigningModule
         if (serverConntected)
             signingModule.getServerInformation();
     }
+
+
 
     @Override
     public void onServerReconnected() {

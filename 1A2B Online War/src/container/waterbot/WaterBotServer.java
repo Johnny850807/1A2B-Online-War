@@ -1,7 +1,5 @@
 package container.waterbot;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.IntStream;
 
 import container.core.Client;
@@ -20,7 +18,7 @@ public class WaterBotServer {
 		if (argv.length > 1)
 			System.out.println("The argument should be only 1 for the bot amount.");
 		System.setProperty("log4j.configurationFile","configuration.xml");
-		int amount = Integer.parseInt("18");
+		int amount = Integer.parseInt("7");
 
 		IntStream.range(0, amount).parallel()
 			.forEach(i -> {

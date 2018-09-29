@@ -65,7 +65,9 @@ public class ReleaseGameCore implements GameCore{
 			if (roomContainer.containsKey(room.getId()))
 			{
 				log.trace("Broadcasting room: " + room.getName() + ", event: " + response.getEvent());
-				room.getPlayers().parallelStream().forEach(p -> broadcastClientPlayer(p.getId(), response));
+				room.getPlayers()
+					.parallelStream()
+					.forEach(p -> broadcastClientPlayer(p.getId(), response));
 				log.trace("Broadcasting room completed.");
 			}
 		}

@@ -61,7 +61,7 @@ public class Lucid extends Monster{
 			setMp(2500);
 			break;
 		case 3:
-			setMaxHp(5800);
+			setMaxHp(5300);
 			setMp(3200);
 			break;
 		case 4:
@@ -114,6 +114,7 @@ public class Lucid extends Monster{
 			if (getHp() <= getMaxHp() / 7 && getMp() >= selfCuring.getCostMp())
 			{
 				hasUsedSelfCuring = true;
+				sendChatMessageToAllPlayers("¦Û§Ú´_­ì¡I¡I¡I");
 				return selfCuring;
 			}
 		

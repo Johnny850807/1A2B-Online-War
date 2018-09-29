@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.example.joanna_zhang.test.view.myview.ChatWindowView;
 import com.example.joanna_zhang.test.R;
 import com.example.joanna_zhang.test.Utils.GameModeHelper;
-import com.example.joanna_zhang.test.Utils.AppDialogFactory;
+import com.example.joanna_zhang.test.view.dialog.AppDialogFactory;
 import com.example.joanna_zhang.test.Utils.SoundManager;
 import com.ood.clean.waterball.a1a2bsdk.core.ModuleName;
 import com.ood.clean.waterball.a1a2bsdk.core.client.CoreGameServer;

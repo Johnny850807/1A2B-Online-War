@@ -16,7 +16,7 @@ public class SelfCuring implements MonsterAction {
 	@Override
 	public void execute(Monster monster, IBoss1A2BGame game) {
 		GuessRecord mockRecord = new GuessRecord("Curing", new GuessResult(0, 0));
-		int cureNumber = monster.getMaxHp() / 5;
+		int cureNumber = monster.getMaxHp() / 7;
 		monster.costHp(cureNumber * -1);
 		AttackResult curing = new AttackResult((cureNumber*-1), getAttackType(), mockRecord, monster, monster);
 		AttackActionModel model = new AttackActionModel(getAttackName(), getCostMp(), monster, curing);
