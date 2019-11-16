@@ -1,0 +1,99 @@
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: SignIn  ->  handler name: SignInHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: SignOut  ->  handler name: SignOutHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: GetServerInformation  ->  handler name: GetServerInformationHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: CreateRoom  ->  handler name: CreateRoomHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: GetRooms  ->  handler name: GetRoomsHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: JoinRoom  ->  handler name: JoinRoomHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: CloseRoom  ->  handler name: CloseRoomHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: ChangeStatus  ->  handler name: ChangeStatusHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: SendChatMessage  ->  handler name: SendChatMessageHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: LeaveRoom  ->  handler name: LeaveRoomHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: LaunchGame  ->  handler name: LaunchGameHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: Booted  ->  handler name: BootPlayerHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: EnterGame  ->  handler name: EnterGameHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: SetAnswerDuel1A2B  ->  handler name: Duel1A2BSetAnswerHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: GuessDuel1A2B  ->  handler name: Duel1A2BGuessHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: SetAnswerBoss1A2B  ->  handler name: Boss1a2bSetAnswerHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler registering.. event: AttackBoss1A2B  ->  handler name: Boss1a2bAttackHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: SignInHandler  ->  class: class container.eventhandler.handlers.usersigning.SignInHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: SignOutHandler  ->  class: class container.eventhandler.handlers.usersigning.SignOutHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: GetServerInformationHandler  ->  class: class container.eventhandler.handlers.usersigning.GetServerInformationHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: CreateRoomHandler  ->  class: class container.eventhandler.handlers.roomlist.CreateRoomHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: GetRoomsHandler  ->  class: class container.eventhandler.handlers.roomlist.GetRoomsHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: JoinRoomHandler  ->  class: class container.eventhandler.handlers.roomlist.JoinRoomHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: CloseRoomHandler  ->  class: class container.eventhandler.handlers.inroom.CloseRoomHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: ChangeStatusHandler  ->  class: class container.eventhandler.handlers.inroom.ChangeStatusHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: SendChatMessageHandler  ->  class: class container.eventhandler.handlers.chat.SendChatMessageHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: LeaveRoomHandler  ->  class: class container.eventhandler.handlers.inroom.LeaveRoomHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: LaunchGameHandler  ->  class: class container.eventhandler.handlers.inroom.LaunchGameHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: BootPlayerHandler  ->  class: class container.eventhandler.handlers.inroom.BootPlayerHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: EnterGameHandler  ->  class: class container.eventhandler.handlers.games.EnterGameHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: Duel1A2BSetAnswerHandler  ->  class: class container.eventhandler.handlers.games.duel1a2b.SetAnswerHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: Duel1A2BGuessHandler  ->  class: class container.eventhandler.handlers.games.duel1a2b.GuessHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: Boss1a2bSetAnswerHandler  ->  class: class container.eventhandler.handlers.games.boss1a2b.SetAnswerHandler
+13:43:48 [Thread-0] INFO  container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Event handler class mapping.. handler name: Boss1a2bAttackHandler  ->  class: class container.eventhandler.handlers.games.boss1a2b.AttackHandler
+13:43:48 [Thread-0] TRACE container.core.SocketClient 
+          - Socket /127.0.0.1 initialized with id: 909ff235-8f07-403c-824b-48e36fcb0e08
+13:43:53 [Thread-2] INFO  container.core.SocketClient 
+          - Request: SignInXOXOXrequestXOXOX{"name":"Waterball"}
+13:43:53 [Thread-3] TRACE container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Handler creating: event SignIn, handlerName: SignInHandler
+13:43:53 [Thread-3] TRACE gamecore.ReleaseGameCore 
+          - Client added: id: 909ff235-8f07-403c-824b-48e36fcb0e08, player name:瘞渡��GM, address:/127.0.0.1, player status:signedIn
+
+13:43:53 [Thread-3] INFO  container.core.SocketClient 
+          - Broadcast to service(/127.0.0.1): SignInXOXOXsuccessXOXOX{"userStatus":"signedIn","name":"瘞渡��GM","id":"909ff235-8f07-403c-824b-48e36fcb0e08"}
+13:44:03 [Thread-2] INFO  container.core.SocketClient 
+          - Request: GetServerInformationXOXOXrequestXOXOX{}
+13:44:03 [Thread-4] TRACE container.eventhandler.ConfigBasedGameEventHandlerFactory 
+          - Handler creating: event GetServerInformation, handlerName: GetServerInformationHandler
+13:44:03 [Thread-4] DEBUG gamecore.ReleaseGameCore 
+          - Info of gamecore:
+13:44:03 [Thread-4] DEBUG gamecore.ReleaseGameCore 
+          - Clients: 瘞渡��GM signedIn
+
+13:44:03 [Thread-4] DEBUG gamecore.ReleaseGameCore 
+          - Rooms: 
+13:44:03 [Thread-4] INFO  container.core.SocketClient 
+          - Broadcast to service(/127.0.0.1): GetServerInformationXOXOXsuccessXOXOX{"serverVersion":1,"onlineUserAmount":1,"onlineRoomAmount":0}
+13:44:06 [Thread-2] TRACE gamecore.ReleaseGameCore 
+          - Client removing: id: 909ff235-8f07-403c-824b-48e36fcb0e08, player name:瘞渡��GM, address:/127.0.0.1, player status:signedIn
+
+13:44:06 [Thread-2] TRACE gamecore.ReleaseGameCore 
+          - Handling the player removed.
+13:44:06 [Thread-2] TRACE gamecore.ReleaseGameCore 
+          - 瘞渡��GM removed.

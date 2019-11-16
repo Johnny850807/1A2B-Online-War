@@ -2,7 +2,6 @@ package gamecore.model.games.a1b2.boss.core;
 
 import java.io.Serializable;
 
-import org.omg.CORBA.PRIVATE_MEMBER;
 
 import gamecore.model.ClientPlayer;
 import gamecore.model.games.a1b2.core.GuessRecord;

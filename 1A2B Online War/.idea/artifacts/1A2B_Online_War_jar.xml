@@ -1,0 +1,18 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="1A2B Online War:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/1A2B_Online_War_jar</output-path>
+    <root id="archive" name="1A2B Online War.jar">
+      <element id="module-output" name="1A2B Online War" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/log4j-core-2.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/log4j-core-2.3-sources.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/commons-io-2.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/gson-2.2.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/Input.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/LinqToJava.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/log4j-api-2.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$APPLICATION_HOME_DIR$/lib/junit-4.12.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/commons-io-2.5-javadoc.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/log4j-api-2.3-sources.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
